@@ -24,7 +24,6 @@
   $: asset_url = data.asset_url;
   $: canonical_url = documents.canonicalUrl(document).href;
 
-  $: action = data.action;
   $: hasDescription = Boolean(document.description?.trim().length);
 
   onMount(() => {
@@ -74,6 +73,6 @@
 </svelte:head>
 
 <ViewerContext {document} {mode} {text} {asset_url}>
-  <DocumentLayout {action} />
+  <DocumentLayout />
 </ViewerContext>
 <GuidedTour />

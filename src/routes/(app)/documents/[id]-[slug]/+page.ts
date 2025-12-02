@@ -39,8 +39,6 @@ export async function load({
     return redirect(307, canonical);
   }
 
-  let action = url.searchParams.get("action");
-
   const [breadcrumbs, { me }] = await Promise.all([
     breadcrumbTrail(parent, [
       { href: canonical.pathname, title: document.title },
@@ -60,7 +58,6 @@ export async function load({
     document,
     mode,
     asset_url,
-    action,
     breadcrumbs,
   };
 }

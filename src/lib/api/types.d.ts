@@ -77,7 +77,7 @@ interface PremiumOrgFields {
   purchased_credits: number;
   monthly_credits: number;
   monthly_credit_allowance: number;
-  credit_reset_date: string;
+  credit_reset_date: string | null;
 }
 
 export interface Org extends Partial<PremiumOrgFields> {
@@ -87,7 +87,7 @@ export interface Org extends Partial<PremiumOrgFields> {
   slug: string;
   avatar_url: string;
   individual?: boolean;
-  plan?: "Free" | "Professional" | "Organization";
+  plan?: "Free" | "Professional" | "Organization" | "Admin";
 }
 
 export interface NoteHighlight {

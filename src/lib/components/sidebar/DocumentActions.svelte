@@ -3,7 +3,14 @@ This is a menu that wraps all logic around bulk actions for documents.
 Most actual actions are deferred to their own forms, so this is more of a switchboard.
 -->
 <script context="module" lang="ts">
-  type Action = "share" | "edit" | "data" | "reprocess" | "delete" | "project";
+  type Action =
+    | "share"
+    | "edit"
+    | "data"
+    | "reprocess"
+    | "delete"
+    | "project"
+    | "change_owner";
 </script>
 
 <script lang="ts">
@@ -17,6 +24,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
     FileDirectory16,
     IssueReopened16,
     Pencil16,
+    Person16,
     Share16,
     Tag16,
   } from "svelte-octicons";
@@ -25,6 +33,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   import Portal from "../layouts/Portal.svelte";
 
   // forms
+  import ChangeOwner from "../forms/ChangeOwner.svelte";
   import ConfirmDelete from "../forms/ConfirmDelete.svelte";
   import Edit from "../forms/Edit.svelte";
   import EditDataMany from "../forms/EditDataMany.svelte";
@@ -36,10 +45,13 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   import Flex from "../common/Flex.svelte";
   import Button from "../common/Button.svelte";
 
+  import { canChangeOwner, getCurrentUser } from "$lib/utils/permissions";
+
   export let afterClick: Maybe<() => void> = undefined;
 
   const editable: Readable<boolean> = getContext("editable");
   const selected: Readable<Document[]> = getContext("selected");
+  const me = getCurrentUser();
 
   const labels: Record<Action, string> = {
     share: "bulk.actions.share",
@@ -48,6 +60,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
     project: "bulk.actions.project",
     reprocess: "bulk.actions.reprocess",
     delete: "bulk.actions.delete",
+    change_owner: "bulk.actions.change_owner",
   };
 
   let visible: Nullable<Action> = null;
@@ -113,7 +126,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
     ghost
     mode="primary"
     on:click={() => show("project")}
-    disabled={$selected?.length < 1}
+    disabled={!$selected || $selected?.length < 1}
   >
     <FileDirectory16 />
     {$_("bulk.actions.project")}
@@ -129,6 +142,8 @@ Most actual actions are deferred to their own forms, so this is more of a switch
     {$_("bulk.actions.reprocess")}
   </Button>
 
+  <hr class="divider" />
+
   <Button
     ghost
     mode="danger"
@@ -137,6 +152,16 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   >
     <Alert16 />
     {$_("bulk.actions.delete")}
+  </Button>
+
+  <Button
+    ghost
+    mode="danger"
+    on:click={() => show("change_owner")}
+    disabled={!canChangeOwner($me, $selected)}
+  >
+    <Person16 />
+    {$_("bulk.actions.change_owner")}
   </Button>
 </Flex>
 
@@ -175,6 +200,10 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 
       {#if visible === "project"}
         <Projects documents={$selected} on:close={close} />
+      {/if}
+
+      {#if visible === "change_owner"}
+        <ChangeOwner documents={$selected} on:close={close} />
       {/if}
     </Modal>
   </Portal>

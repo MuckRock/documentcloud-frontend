@@ -493,6 +493,21 @@
     "none": "No documents selected. Close this form and select at least one document first.",
     "toomany": "Bulk actions are limited to {n} documents at a time."
   },
+  "change_owner": {
+    "title": "Change Owner",
+    "really": "Change owner for {n, plural, one {the selected document} other {# selected documents}}.",
+    "continue": "Warning: You or members of your organization may lose access to {n, plural, one {this document} other {these documents}} as a result of changing ownership.",
+    "confirm": "Save",
+    "cancel": "Cancel",
+    "user_label": "User",
+    "user_placeholder": "User",
+    "org_label": "Organization",
+    "org_placeholder": "Organization",
+    "help": "At least one of User ID or Organization ID must be provided.",
+    "error": "Error",
+    "none": "No documents selected. Close this form and select at least one document first.",
+    "toomany": "Bulk actions are limited to {n} documents at a time."
+  },
   "data": {
     "title": "Edit Tags & Data",
     "key": "Key",
@@ -514,7 +529,8 @@
       "data": "Edit Tags & Data",
       "project": "Move to Project",
       "reprocess": "Reprocess",
-      "delete": "Delete"
+      "delete": "Delete",
+      "change_owner": "Change owner"
     }
   },
   "addonDispatchDialog": {

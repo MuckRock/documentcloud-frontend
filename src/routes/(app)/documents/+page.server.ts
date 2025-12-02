@@ -131,4 +131,48 @@ export const actions = {
       documents: data,
     };
   },
+  async change_owner({ cookies, fetch, request }) {
+    const csrf_token = cookies.get(CSRF_COOKIE_NAME);
+    if (!csrf_token) {
+      return fail(403, { message: "Missing CSRF token" });
+    }
+    const form = await request.formData();
+
+    const ids = String(form.get("documents")).split(",");
+    const user = form.get("user");
+    const organization = form.get("organization");
+
+    console.log(
+      `CHANGE OWNER: ${form.get("documents")}, User: ${user}, Org: ${organization}`,
+    );
+
+    const docs: Partial<Document>[] = ids.map((id) => {
+      const d: Partial<Document> = { id };
+      if (user) {
+        d.user = +user;
+      }
+      if (organization) {
+        d.organization = +organization;
+      }
+
+      return d;
+    });
+
+    const { error, data } = await edit_many(docs, csrf_token, fetch);
+
+    if (error) {
+      setFlash({ message: error.message, status: "error" }, cookies);
+      return fail(error.status, { ...error });
+    }
+
+    const message =
+      ids.length === 1
+        ? "Updated ownership for one document"
+        : `Updated ownership for ${ids.length} documents`;
+    setFlash({ message, status: "success" }, cookies);
+    return {
+      count: ids.length,
+      documents: data,
+    };
+  },
 } satisfies Actions;
