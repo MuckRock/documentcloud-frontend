@@ -586,7 +586,7 @@
     "customize": "Customize Embed",
     "privateWarning": "This {type} is private.",
     "orgWarning": "This {type} is only visible within your organization.",
-    "privateFix": "Edit metadata",
+    "privateFix": "Make public",
     "fields": {
       "page": "Pick page",
       "note": "Pick note"
