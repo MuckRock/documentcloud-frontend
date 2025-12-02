@@ -1,5 +1,5 @@
 <!-- @component
-Edit the metadata for one document. This touches all top-level data.
+Edit the access level for one document.
 Usually this will be rendered inside a modal, but it doesn't have to be.
 -->
 <script lang="ts">
@@ -21,9 +21,6 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
 
   import AccessLevel from "../inputs/AccessLevel.svelte";
   import Field from "../inputs/Field.svelte";
-  import Switch from "../inputs/Switch.svelte";
-  import Text from "../inputs/Text.svelte";
-  import TextArea from "../inputs/TextArea.svelte";
   import Tip from "../common/Tip.svelte";
 
   import { canonicalUrl, edited } from "$lib/api/documents";
@@ -40,7 +37,6 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
    */
   function onSubmit({ submitter, formData }) {
     submitter.disabled = true;
-
     return async ({ result, update }) => {
       submitter.disabled = false;
       if (result.type === "failure") {
@@ -84,40 +80,6 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
       </Tip>
     {/if}
 
-    <Field title={$_("edit.fields.title")} required>
-      <Text name="title" value={document.title} required autofocus />
-    </Field>
-    <Field
-      title={$_("edit.fields.description")}
-      description={$_("edit.allowedHTML")}
-    >
-      <TextArea name="description" value={document.description} />
-    </Field>
-
-    <Field title={$_("edit.fields.source")}>
-      <Text name="source" value={document.source} />
-    </Field>
-    <Flex gap={2}>
-      <Field title={$_("edit.fields.published_url")}>
-        <Text
-          name="published_url"
-          value={document.published_url?.toString() ?? ""}
-        />
-      </Field>
-      <Field title={$_("edit.fields.related_article")}>
-        <Text
-          name="related_article"
-          value={document.related_article?.toString() ?? ""}
-        />
-      </Field>
-    </Flex>
-
-    <hr class="divider" />
-
-    <Field title={$_("edit.fields.noindex")} inline>
-      <Switch name="noindex" checked={document.noindex} />
-    </Field>
-
     <Field
       title={$_("edit.fields.access.title")}
       description={$_("edit.fields.access.description")}
@@ -126,8 +88,15 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
     </Field>
 
     <Flex class="buttons">
-      <Button type="submit" mode="primary" full>{$_("edit.save")}</Button>
-      <Button full on:click={(e) => dispatch("close")}>
+      <Button
+        type="submit"
+        mode="primary"
+        full
+        disabled={!document.edit_access}
+      >
+        {$_("edit.save")}
+      </Button>
+      <Button full on:click={() => dispatch("close")}>
         {$_("edit.cancel")}
       </Button>
     </Flex>

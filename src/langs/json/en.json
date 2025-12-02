@@ -50,7 +50,8 @@
       "value": "public",
       "title": "Public",
       "description": "Documents will be publicly visible to everyone"
-    }
+    },
+    "edit": "Change document access"
   },
   "notfound": {
     "content": "Please try another URL"
@@ -601,7 +602,7 @@
     "customize": "Customize Embed",
     "privateWarning": "This {type} is private.",
     "orgWarning": "This {type} is only visible within your organization.",
-    "privateFix": "Edit metadata",
+    "privateFix": "Make public",
     "fields": {
       "page": "Pick page",
       "note": "Pick note"

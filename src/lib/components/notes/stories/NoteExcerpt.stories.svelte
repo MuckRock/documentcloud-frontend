@@ -18,7 +18,7 @@
   const notes = document.notes as NoteType[];
 
   export const meta = {
-    title: "Note / Excerpt",
+    title: "Notes / Excerpt",
     component: NoteExcerpt,
     parameters: { layout: "centered" },
   };

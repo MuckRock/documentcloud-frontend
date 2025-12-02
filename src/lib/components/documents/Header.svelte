@@ -11,13 +11,21 @@
   import { _ } from "svelte-i18n";
 
   import Access, { getLevel } from "$lib/components/common/Access.svelte";
-  import SignedIn from "../common/SignedIn.svelte";
+  import Button from "../common/Button.svelte";
+  import EditAccess from "../forms/EditAccess.svelte";
+
+  import Modal from "../layouts/Modal.svelte";
+  import Portal from "../layouts/Portal.svelte";
 
   import { ALLOWED_TAGS, ALLOWED_ATTR } from "@/config/config.js";
   import { remToPx } from "$lib/utils/layout";
+  import { getCurrentUser } from "$lib/utils/permissions";
 
   export let document: Document;
 
+  const me = getCurrentUser();
+
+  let edit = false;
   let width: number;
 
   $: BREAKPOINTS = {
@@ -31,17 +39,25 @@
     return DOMPurify.sanitize(html, { ALLOWED_TAGS, ALLOWED_ATTR });
   }
 
+  function close() {
+    edit = false;
+  }
+
   $: access = getLevel(document.access);
 </script>
 
 <header bind:clientWidth={width}>
-  <SignedIn>
-    {#if access}
-      <div class="access">
+  {#if $me && access}
+    <div class="access">
+      {#if document.edit_access}
+        <Button ghost minW={false} on:click={() => (edit = true)}>
+          <Access level={access} />
+        </Button>
+      {:else}
         <Access level={access} />
-      </div>
-    {/if}
-  </SignedIn>
+      {/if}
+    </div>
+  {/if}
   <h1 class="title">{document.title}</h1>
   {#if description}
     <div class="description" class:twoColumn={BREAKPOINTS.TWO_COLUMN}>
@@ -49,6 +65,17 @@
     </div>
   {/if}
 </header>
+
+{#if edit}
+  <Portal>
+    <Modal on:close={close}>
+      <h2 slot="title">
+        {$_("access.edit")}
+      </h2>
+      <EditAccess {document} on:close={close} />
+    </Modal>
+  </Portal>
+{/if}
 
 <style>
   header {

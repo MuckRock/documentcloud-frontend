@@ -33,11 +33,12 @@
 
   import Portal from "$lib/components/layouts/Portal.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
-  import Edit from "$lib/components/forms/Edit.svelte";
+  import EditAccess from "$lib/components/forms/EditAccess.svelte";
 
   import {
     canonicalPageUrl,
     canonicalUrl,
+    edited,
     embedUrl,
     pageUrl,
   } from "$lib/api/documents";
@@ -64,17 +65,14 @@
   $: note = document.notes?.find((n) => n.id === note_id);
 
   // dimensions and style for note embeds
-
   let permalink: URL;
   let embedSrc: URL;
   let iframe: string;
 
   let customizeEmbedOpen = false;
   let editOpen = false;
-  const closeEditing = () => (editOpen = false);
-  const openEditing = () => (editOpen = true);
 
-  $: isPrivate = document.access === "private";
+  $: access = $edited.get(String(document.id))?.access ?? document.access;
   $: embedUrlParams = createEmbedSearchParams($embedSettings);
   $: {
     switch (currentTab) {
@@ -99,10 +97,18 @@
         break;
     }
   }
+
+  function closeEditing() {
+    editOpen = false;
+  }
+
+  function openEditing() {
+    editOpen = true;
+  }
 </script>
 
 <div class="container">
-  {#if isPrivate}
+  {#if access === "private"}
     <div class="banner">
       <Tip mode="danger">
         <ShieldLock24 slot="icon" />
@@ -118,7 +124,7 @@
         </div>
       </Tip>
     </div>
-  {:else if document.access === "organization"}
+  {:else if access === "organization"}
     <div class="banner">
       <Tip mode="premium">
         <Organization24 slot="icon" />
@@ -258,8 +264,8 @@
 {#if editOpen}
   <Portal>
     <Modal on:close={closeEditing}>
-      <h1 slot="title">{$_("documents.edit")}</h1>
-      <Edit {document} on:close={closeEditing} />
+      <h1 slot="title">{$_("access.edit")}</h1>
+      <EditAccess {document} on:close={closeEditing} />
     </Modal>
   </Portal>
 {/if}
