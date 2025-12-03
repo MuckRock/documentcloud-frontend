@@ -18,7 +18,7 @@
     label: LANGUAGE_MAP.get(DEFAULT_LANGUAGE),
   };
   export let required = false;
-  export let placeholder: string = "";
+  export let placeholder: string = "Language";
   export let multiple = false;
 
   const items = LANGUAGE_CODES.map((code, i) => ({

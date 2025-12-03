@@ -7,8 +7,8 @@ This uses `svelte-select` to let users more easily choose existing keys.
 <script lang="ts">
   import { beforeUpdate, createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
-  import { ChevronDown12, PlusCircle16, Trash16, X12 } from "svelte-octicons";
-  import Select from "svelte-select";
+  import { PlusCircle16, Trash16 } from "svelte-octicons";
+  import Select from "svelecte";
 
   import Button from "../common/Button.svelte";
 
@@ -20,9 +20,7 @@ This uses `svelte-select` to let users more easily choose existing keys.
 
   const dispatch = createEventDispatcher();
 
-  let filterText: string = "";
-
-  $: items = keys.map((key) => {
+  $: options = keys.map((key) => {
     const label = key === "_tag" ? $_("data.tag") : key;
     return { value: key, label, created: false };
   });
@@ -40,40 +38,30 @@ This uses `svelte-select` to let users more easily choose existing keys.
     value = "";
   }
 
-  function onFilter(e) {
-    if (e.detail.length === 0 && filterText.length > 0) {
-      const prev = items.filter((i) => !i.created);
-      items = [
-        ...prev,
-        { value: filterText, label: filterText, created: true },
-      ];
-    }
+  function handleChange(event) {
+    key = event.detail?.value || event.detail || "";
   }
 </script>
 
 <tr class="kv">
   <td class="key">
     <Select
-      {items}
+      {options}
       value={key}
-      bind:filterText
-      showChevron
+      valueField="value"
+      labelField="label"
       placeholder={$_("data.newkey")}
       class="select elevated"
-      bind:justValue={key}
-      on:change
+      creatable
+      on:change={handleChange}
       on:input
       on:blur
+      on:focus
+      on:enterKey
+      on:createoption
       on:clear
-      on:filter={onFilter}
       {disabled}
-    >
-      <ChevronDown12 slot="chevron-icon" />
-      <X12 slot="clear-icon" />
-      <div slot="item" let:item>
-        <p>{item.created ? `Add “${item.label}”` : item.label}</p>
-      </div>
-    </Select>
+    />
     <!-- maybe gross/redundant, but effectively unwraps Select -->
     <input type="hidden" name="key" value={key} />
   </td>
