@@ -19,7 +19,7 @@ export async function breadcrumbTrail(
  * @param {HTMLAnchorElement} node
  * @param {boolean} enable
  */
-export function qs(node: HTMLAnchorElement, enable = true): void {
+export function qs(node: HTMLAnchorElement, enable: boolean = true): void {
   if (typeof window === "undefined") return;
   if (!enable) return;
 

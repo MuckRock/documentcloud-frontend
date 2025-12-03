@@ -7,6 +7,7 @@ import { setFlash, redirect } from "sveltekit-flash-message/server";
 import { CSRF_COOKIE_NAME, EMBED_URL } from "@/config/config.js";
 import { destroy, edit, redact } from "$lib/api/documents";
 import * as notes from "$lib/api/notes";
+import { purge } from "$lib/utils/cache";
 
 export function load({ cookies, request, url }) {
   const inIframe = request.headers.get("Sec-Fetch-Dest") === "iframe";
@@ -76,14 +77,14 @@ export const actions = {
     };
   },
 
-  async delete({ cookies, fetch, params }) {
+  async delete({ cookies, fetch, params, url }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     if (!csrf_token) {
       return fail(403, { message: "Missing CSRF token" });
     }
     const { id } = params;
 
-    console.info(`Deleting document: ${id}`);
+    console.info(`DELETE document: ${id}`);
 
     // data will be null on success
     const { error } = await destroy(id, csrf_token, fetch);
@@ -92,6 +93,8 @@ export const actions = {
       setFlash({ message: error.message, status: "error" }, cookies);
       return fail(error.status, { message: error.message });
     }
+
+    purge([url]);
 
     return redirect(
       302,
@@ -132,7 +135,7 @@ export const actions = {
     };
   },
 
-  async redact({ cookies, fetch, request, params }) {
+  async redact({ cookies, fetch, request, params, url }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     if (!csrf_token) {
       return fail(403, { message: "Missing CSRF token" });
@@ -156,13 +159,14 @@ export const actions = {
       return fail(500, { error: err.message, errors: err.errors });
     }
 
+    purge([url]);
     setFlash({ message: "Redactions saved", status: "success" }, cookies);
     return {
       redactions: data, // this should be the same as above
     };
   },
 
-  async change_owner({ cookies, fetch, params, request }) {
+  async change_owner({ cookies, fetch, params, request, url }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     if (!csrf_token) {
       return fail(403, { message: "Missing CSRF token" });
@@ -194,6 +198,7 @@ export const actions = {
       return fail(error.status, { ...error });
     }
 
+    purge([url]);
     setFlash({ message: "Updated ownership", status: "success" }, cookies);
     return data;
   },
