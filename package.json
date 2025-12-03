@@ -8,7 +8,7 @@
     "@plausible-analytics/tracker": "^0.4.4",
     "@sveltejs/adapter-netlify": "^4.1.0",
     "@sveltejs/kit": "^2.5.10",
-    "@sveltejs/vite-plugin-svelte": "^3.0.0",
+    "@sveltejs/vite-plugin-svelte": "3.1.2",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "autoprefixer": "^10.4.21",
@@ -91,5 +91,8 @@
   "browserslist": "> 0.25%, not dead",
   "msw": {
     "workerDirectory": "./public"
+  },
+  "overrides": {
+    "@sveltejs/vite-plugin-svelte": "3.1.2"
   }
 }
