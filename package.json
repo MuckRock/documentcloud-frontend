@@ -22,6 +22,7 @@
     "marked": "^7.0.5",
     "marked-gfm-heading-id": "^3.0.6",
     "postcss": "^8.5.3",
+    "svelecte": "^4.5.1",
     "svelte": "^4.2.20",
     "svelte-i18n": "^4.0.0",
     "svelte-octicons": "^18.12.0",
