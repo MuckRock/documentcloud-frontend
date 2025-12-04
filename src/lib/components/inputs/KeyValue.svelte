@@ -2,7 +2,7 @@
 
 <!-- @component
 Input for a single key/value pair or tag (where `key` is `_tag`).
-This uses `svelte-select` to let users more easily choose existing keys.
+This uses `svelecte` to let users more easily choose existing keys.
 -->
 <script lang="ts">
   import { beforeUpdate, createEventDispatcher } from "svelte";
@@ -51,7 +51,7 @@ This uses `svelte-select` to let users more easily choose existing keys.
       valueField="value"
       labelField="label"
       placeholder={$_("data.newkey")}
-      class="select elevated"
+      class="elevated"
       creatable
       on:change={handleChange}
       on:input

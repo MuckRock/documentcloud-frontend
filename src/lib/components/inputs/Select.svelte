@@ -35,7 +35,7 @@ Upgrade to v5 when migrating to Svelte 5
 </script>
 
 <Svelecte
-  class="select elevated sourceCodePro gray-4 svelecte-control"
+  class="elevated sourceCodePro gray-4 svelecte-control"
   {name}
   {required}
   options={items}
@@ -46,7 +46,57 @@ Upgrade to v5 when migrating to Svelte 5
   {clearable}
   {placeholder}
   {searchable}
+  --sv-bg="var(--white, #fff)"
+  --sv-border="1px solid var(--gray-2, #99a8b3)"
+  --sv-border-radius="0.5rem"
+  --sv-active-border="1px solid var(--blue-2, #4294f0)"
+  --sv-min-height="2.65rem"
+  --sv-item-btn-bg-hover="var(--blue-1, #eef3f9)"
+  --sv-item-selected-bg="var(--blue-3, #4294f0)"
+  --sv-item-selected-color="var(--white, #fff)"
+  --sv-dropdown-shadow="var(--shadow-1)"
+  --sv-dropdown-border="1px solid var(--gray-2, #d8dee2)"
+  --sv-multi-item-bg="var(--blue-1, #eef3f9)"
+  --sv-multi-item-color="var(--blue-5, #053775)"
+  --sv-multi-clear-icon-color="var(--blue-5, #053775)"
+  --sv-multi-item-outline="var(--blue-2, #b5ceed)"
+  --sv-multi-item-input-margin="0"
+  --sv-multi-item-padding="0 0 0 0.75rem"
 >
   <ChevronDown16 slot="indicator-icon" />
   <X16 slot="clear-icon" />
 </Svelecte>
+
+<style>
+  /* svelecte styling */
+  :global(.select.elevated) {
+    box-shadow: 0px 2px 0px 0px var(--gray-2, #99a8b3);
+  }
+  :global(.select.elevated:hover) {
+    box-shadow: 0px 2px 0px 0px var(--gray-3, #99a8b3);
+  }
+  :global(.select.elevated.is-focused) {
+    box-shadow: 0px 2px 0px 0px var(--blue-2, #1367d0);
+  }
+  :global(.select .indicator) {
+    fill: var(--gray-5, #233944);
+  }
+  :global(.select.is-focused .indicator) {
+    fill: var(--blue-5, #053775);
+  }
+  :global(.select input) {
+    color: var(--gray-5, #233944);
+    font-family: "Source Sans Pro";
+    font-size: 1rem;
+    font-style: normal;
+    line-height: normal;
+  }
+  :global(.select.is-focused input) {
+    color: var(--blue-5, #053775);
+  }
+  :global(.sv-content) {
+    color: var(--gray-5, #233944);
+    font-family: "Source Sans Pro";
+    font-size: 1rem;
+  }
+</style>
