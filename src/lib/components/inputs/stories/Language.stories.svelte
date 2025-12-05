@@ -11,9 +11,17 @@
 </script>
 
 <Template let:args>
-  <Language {...args} />
+  <div>
+    <Language placeholder="Language" {...args} />
+  </div>
 </Template>
 
 <Story name="default" />
 
 <Story name="multiple" args={{ multiple: true }} />
+
+<style>
+  div {
+    min-width: 40ch;
+  }
+</style>

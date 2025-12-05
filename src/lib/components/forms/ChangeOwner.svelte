@@ -156,18 +156,18 @@ Change owner of one or more documents.
         </label>
         <Select
           name="organization"
-          items={orgOptions}
+          options={orgOptions}
           bind:value={org}
           placeholder={$_("change_owner.org_placeholder")}
           clearable
         />
-        {#await userOptions then items}
+        {#await userOptions then options}
           <label for="user-select">
             {$_("change_owner.user_label")}
           </label>
           <Select
             name="user"
-            {items}
+            {options}
             bind:value={user}
             placeholder={$_("change_owner.user_placeholder")}
             clearable
