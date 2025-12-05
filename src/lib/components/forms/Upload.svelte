@@ -388,9 +388,9 @@ progress through the three-part upload process.
             <Select
               name="projects"
               multiple
-              items={projects}
-              itemId="id"
-              label="title"
+              options={projects}
+              valueField="id"
+              labelField="title"
               bind:value={add_to_projects}
             />
           </Field>
@@ -404,7 +404,7 @@ progress through the three-part upload process.
               <FieldLabel>{$_("uploadDialog.ocrEngine")}</FieldLabel>
               <Select
                 name="ocr_engine"
-                items={ocrEngineOptions}
+                options={ocrEngineOptions}
                 bind:value={ocrEngine}
               />
               <p slot="help">

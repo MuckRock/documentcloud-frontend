@@ -21,10 +21,10 @@
   export let placeholder: string = "Language";
   export let multiple = false;
 
-  const items = LANGUAGE_CODES.map((code, i) => ({
+  const options = LANGUAGE_CODES.map((code, i) => ({
     value: code,
     label: LANGUAGE_NAMES[i],
   }));
 </script>
 
-<Select {name} {items} {required} {placeholder} {multiple} bind:value />
+<Select {name} {options} {required} {placeholder} {multiple} bind:value />

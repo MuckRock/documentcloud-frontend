@@ -7,30 +7,15 @@ Upgrade to v5 when migrating to Svelte 5
   import Svelecte from "svelecte";
   import { ChevronDown16, X16 } from "svelte-octicons";
 
-  // Public API (keep same for backward compatibility)
   export let name: string;
   export let required: boolean = false;
-  export let items: any[]; // todo: rename to options
-  export let itemId: string = "value"; // Will map to 'valueField'
-  export let label: string = "label"; // Will map to 'labelField'
+  export let options: any[]; // todo: rename to options
+  export let valueField: string = "value"; // Will map to 'valueField'
+  export let labelField: string = "label"; // Will map to 'labelField'
   export let value: any = null;
   export let multiple: boolean = false;
   export let clearable: boolean = false;
   export let placeholder: string = multiple ? "Select..." : "Select";
-
-  // Computed justValue (read-only, derived from value)
-  export let justValue: any = undefined;
-  $: {
-    if (multiple && Array.isArray(value)) {
-      justValue = value.map((v) => (typeof v === "object" ? v[itemId] : v));
-    } else if (value !== null && typeof value === "object") {
-      justValue = value[itemId];
-    } else {
-      justValue = value;
-    }
-  }
-
-  // Optional: Add searchable prop (Svelecte default is true)
   export let searchable = true;
 </script>
 
@@ -38,14 +23,14 @@ Upgrade to v5 when migrating to Svelte 5
   class="elevated sourceCodePro gray-4 svelecte-control"
   {name}
   {required}
-  options={items}
-  valueField={itemId}
-  labelField={label}
-  bind:value
+  {options}
+  {valueField}
+  {labelField}
   {multiple}
   {clearable}
   {placeholder}
   {searchable}
+  bind:value
   --sv-bg="var(--white, #fff)"
   --sv-border="1px solid var(--gray-2, #99a8b3)"
   --sv-border-radius="0.5rem"
