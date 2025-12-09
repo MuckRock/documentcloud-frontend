@@ -197,6 +197,19 @@ describe("clean() security tests", () => {
     expect(result).toBe("");
   });
 
+  test("handles non-string inputs gracefully", () => {
+    // @ts-expect-error - testing runtime behavior with invalid input
+    expect(clean(null)).toBe("");
+    // @ts-expect-error - testing runtime behavior with invalid input
+    expect(clean(undefined)).toBe("");
+    // @ts-expect-error - testing runtime behavior with invalid input
+    expect(clean(123)).toBe("");
+    // @ts-expect-error - testing runtime behavior with invalid input
+    expect(clean([])).toBe("");
+    // @ts-expect-error - testing runtime behavior with invalid input
+    expect(clean({})).toBe("");
+  });
+
   test("handles plain text without HTML", () => {
     const input = "Hello world";
     const result = clean(input);

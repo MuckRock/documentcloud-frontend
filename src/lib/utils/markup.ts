@@ -11,6 +11,8 @@ export function renderMarkdown(content: string) {
 }
 
 export function clean(html: string): string {
+  if (!html || typeof html !== "string") return "";
+
   return sanitizeHtml(html, {
     allowedTags: ALLOWED_TAGS,
     allowedAttributes: ALLOWED_ATTR,
