@@ -9,7 +9,7 @@ Upgrade to v5 when migrating to Svelte 5
 
   export let name: string;
   export let required: boolean = false;
-  export let options: any[]; // todo: rename to options
+  export let options: any[];
   export let valueField: string = "value"; // Will map to 'valueField'
   export let labelField: string = "label"; // Will map to 'labelField'
   export let value: any = null;
