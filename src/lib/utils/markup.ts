@@ -6,8 +6,8 @@ import { ALLOWED_ATTR, ALLOWED_TAGS } from "@/config/config.js";
 
 marked.use(gfmHeadingId());
 
-export function renderMarkdown(content: string) {
-  return clean(marked.parse(content));
+export function renderMarkdown(content: string, options: IOptions = {}) {
+  return clean(marked.parse(content), options);
 }
 
 export function clean(html: string, options: IOptions = {}): string {
