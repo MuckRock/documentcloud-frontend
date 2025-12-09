@@ -1,15 +1,13 @@
 <script lang="ts">
   import type { AddOnListItem } from "$lib/api/types";
 
-  import DOMPurify from "isomorphic-dompurify";
   import { _ } from "svelte-i18n";
   import { MarkGithub16 } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
   import Metadata from "../common/Metadata.svelte";
-
-  import { ALLOWED_TAGS, ALLOWED_ATTR } from "@/config/config.js";
+  import { clean } from "$lib/utils/markup";
 
   export let addon: AddOnListItem;
 
@@ -18,10 +16,6 @@
   $: instructions = addon.parameters.instructions
     ? clean(addon.parameters.instructions)
     : "";
-
-  function clean(html: string): string {
-    return DOMPurify.sanitize(html, { ALLOWED_TAGS, ALLOWED_ATTR });
-  }
 </script>
 
 <div class="container">

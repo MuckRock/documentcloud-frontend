@@ -1,8 +1,9 @@
 <script lang="ts" context="module">
   import type { Meta } from "@storybook/svelte";
   import { Template, Story } from "@storybook/addon-svelte-csf";
-  import { flatpage, flatpageList } from "@/test/fixtures/flatpages";
   import Flatpage from "../Flatpage.svelte";
+
+  import { flatpage } from "@/test/fixtures/flatpages";
 
   export const meta: Meta = {
     title: "Layout / Flatpage",

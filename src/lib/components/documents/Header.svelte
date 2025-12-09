@@ -7,7 +7,6 @@
 <script lang="ts">
   import type { Document } from "$lib/api/types";
 
-  import DOMPurify from "isomorphic-dompurify";
   import { _ } from "svelte-i18n";
 
   import Access, { getLevel } from "$lib/components/common/Access.svelte";
@@ -17,8 +16,8 @@
   import Modal from "../layouts/Modal.svelte";
   import Portal from "../layouts/Portal.svelte";
 
-  import { ALLOWED_TAGS, ALLOWED_ATTR } from "@/config/config.js";
   import { remToPx } from "$lib/utils/layout";
+  import { clean } from "$lib/utils/markup";
   import { getCurrentUser } from "$lib/utils/permissions";
 
   export let document: Document;
@@ -34,10 +33,6 @@
   $: description = document.description?.trim()
     ? clean(document.description)
     : "";
-
-  function clean(html: string): string {
-    return DOMPurify.sanitize(html, { ALLOWED_TAGS, ALLOWED_ATTR });
-  }
 
   function close() {
     edit = false;

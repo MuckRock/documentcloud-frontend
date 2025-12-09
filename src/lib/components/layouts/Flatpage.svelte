@@ -3,11 +3,23 @@
   import { APP_URL } from "@/config/config.js";
 
   import Logo from "$lib/components/common/Logo.svelte";
-  import { renderMarkdown } from "$lib/utils/markdown";
+  import { renderMarkdown } from "$lib/utils/markup";
+  import { ALLOWED_TAGS } from "@/config/config.js";
 
   export let content: string;
 
-  $: markdownContent = renderMarkdown(content);
+  $: markdownContent = renderMarkdown(content, {
+    allowedTags: ALLOWED_TAGS.concat(
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "h5",
+      "h6",
+      "br",
+      "hr",
+    ),
+  });
 
   interface Heading {
     text: string;

@@ -1,22 +1,17 @@
 <script lang="ts">
   import type { Project } from "$lib/api/types";
 
-  import DOMPurify from "isomorphic-dompurify";
   import { _ } from "svelte-i18n";
   import { Globe16, Lock16 } from "svelte-octicons";
 
   import ProjectPin from "./ProjectPin.svelte";
 
-  import { ALLOWED_ATTR, ALLOWED_TAGS } from "@/config/config.js";
   import { canonicalUrl } from "$lib/api/projects";
+  import { clean } from "$lib/utils/markup";
 
   export let project: Project;
 
   $: href = canonicalUrl(project).href;
-
-  function clean(html: string): string {
-    return DOMPurify.sanitize(html, { ALLOWED_TAGS, ALLOWED_ATTR });
-  }
 </script>
 
 <a {href} id={project.id.toString()}>

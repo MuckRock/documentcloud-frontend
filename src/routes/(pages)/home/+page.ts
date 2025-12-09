@@ -1,14 +1,11 @@
 // load homepage data
 import { error } from "@sveltejs/kit";
-import DOMPurify from "isomorphic-dompurify";
-import { marked } from "marked";
-import { gfmHeadingId } from "marked-gfm-heading-id";
 
 import { PAGE_MAX_AGE } from "@/config/config.js";
 import * as flatpages from "$lib/api/flatpages";
 import { getMe } from "$lib/api/accounts";
-
-marked.use(gfmHeadingId());
+import { renderMarkdown } from "$lib/utils/markup";
+import { ALLOWED_TAGS } from "@/config/config.js";
 
 export const trailingSlash = "ignore";
 
@@ -35,11 +32,9 @@ export async function load({ fetch, setHeaders }) {
   return {
     title: page.title,
     url: page.url,
-    content: render(page.content),
+    content: renderMarkdown(page.content, {
+      allowedTags: ALLOWED_TAGS.concat("h1", "h2", "h3", "h4", "h5", "h6"),
+    }),
     me,
   };
-}
-
-function render(content: string): string {
-  return DOMPurify.sanitize(marked.parse(content));
 }
