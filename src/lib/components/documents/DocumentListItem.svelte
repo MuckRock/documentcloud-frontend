@@ -99,7 +99,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
     {/if}
     {#if document.description && visible.description}
       <p class="description">
-        {clean(document.description)}
+        {clean(document.description, { allowedTags: [] })}
       </p>
     {/if}
     {#if visible.projects || visible.data}

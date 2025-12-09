@@ -1,6 +1,6 @@
 import { marked } from "marked";
 import { gfmHeadingId } from "marked-gfm-heading-id";
-import sanitizeHtml from "sanitize-html";
+import sanitizeHtml, { type IOptions } from "sanitize-html";
 
 import { ALLOWED_ATTR, ALLOWED_TAGS } from "@/config/config.js";
 
@@ -10,11 +10,14 @@ export function renderMarkdown(content: string) {
   return clean(marked.parse(content));
 }
 
-export function clean(html: string): string {
+export function clean(html: string, options: IOptions = {}): string {
   if (!html || typeof html !== "string") return "";
 
+  const { allowedAttributes = ALLOWED_ATTR, allowedTags = ALLOWED_TAGS } =
+    options;
+
   return sanitizeHtml(html, {
-    allowedTags: ALLOWED_TAGS,
-    allowedAttributes: ALLOWED_ATTR,
+    allowedTags,
+    allowedAttributes,
   });
 }

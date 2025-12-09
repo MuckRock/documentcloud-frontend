@@ -6,6 +6,9 @@
   export let inline = false;
   export let required = false;
   export let sronly = false;
+
+  const ALLOWED_TAGS = ["a", "strong", "em", "code"];
+  const ALLOWED_ATTR = { a: ["href"] };
 </script>
 
 <div class="field" class:inline class:required>
@@ -16,7 +19,12 @@
     <slot />
   </label>
   {#if description}
-    <p class="help">{@html clean(description ?? "")}</p>
+    <p class="help">
+      {@html clean(description, {
+        allowedAttributes: ALLOWED_ATTR,
+        allowedTags: ALLOWED_TAGS,
+      })}
+    </p>
   {/if}
   <slot name="error" />
 </div>

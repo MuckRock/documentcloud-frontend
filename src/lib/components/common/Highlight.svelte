@@ -11,7 +11,7 @@
   {#if segments?.length > 0}
     <blockquote>
       {#each segments as segment}
-        <p class="segment">{@html clean(segment)}</p>
+        <p class="segment">{@html clean(segment, { allowedTags: ["em"] })}</p>
       {/each}
     </blockquote>
   {/if}
