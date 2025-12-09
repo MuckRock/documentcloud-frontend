@@ -1,9 +1,8 @@
 <script lang="ts" context="module">
-  import DOMPurify from "isomorphic-dompurify";
   import { writable } from "svelte/store";
 
-  import { ALLOWED_ATTR, ALLOWED_TAGS } from "@/config/config.js";
   import { StorageManager } from "$lib/utils/storage";
+  import { clean } from "$lib/utils/markup";
 
   let show = writable(false);
 
@@ -19,10 +18,6 @@
     show.set(false);
     storage.set("message", message);
     storage.set("show", false);
-  }
-
-  function clean(html: string): string {
-    return DOMPurify.sanitize(html, { ALLOWED_TAGS, ALLOWED_ATTR });
   }
 </script>
 

@@ -1,18 +1,11 @@
 <script lang="ts">
-  import DOMPurify from "isomorphic-dompurify";
+  import { clean } from "$lib/utils/markup";
 
   export let title: string = "";
   export let description: string = "";
   export let inline = false;
   export let required = false;
   export let sronly = false;
-
-  function clean(html: string): string {
-    return DOMPurify.sanitize(html, {
-      ALLOWED_TAGS: ["a", "strong", "em", "code"],
-      ALLOWED_ATTR: ["href"],
-    });
-  }
 </script>
 
 <div class="field" class:inline class:required>

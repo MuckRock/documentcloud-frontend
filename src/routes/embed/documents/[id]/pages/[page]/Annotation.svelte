@@ -1,8 +1,8 @@
 <script lang="ts">
-  import DomPurify from "dompurify";
   import { onMount } from "svelte";
 
   import { APP_URL } from "@/config/config.js";
+  import { clean } from "$lib/utils/markup";
 
   export let note;
   export let slugId;
@@ -54,7 +54,7 @@
     <a href={noteUrl} target="_blank">{note.title}</a>
   </h1>
   <div class="content">
-    {@html DomPurify.sanitize(note.content)}
+    {@html clean(note.content)}
   </div>
 </div>
 

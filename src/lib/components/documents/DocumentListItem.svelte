@@ -8,7 +8,6 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
 <script lang="ts">
   import type { Document, Project } from "$lib/api/types";
 
-  import DOMPurify from "isomorphic-dompurify";
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
 
@@ -23,6 +22,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
     defaultVisibleFields,
     type VisibleFields,
   } from "./VisibleFields.svelte";
+  import { clean } from "$lib/utils/markup";
 
   export let document: Document;
   export let visibleFields: Partial<VisibleFields> = defaultVisibleFields;
@@ -36,10 +36,6 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
 
   $: level = getLevel(document.access);
   $: visible = Object.assign({}, defaultVisibleFields, visibleFields);
-
-  function clean(html: string) {
-    return DOMPurify.sanitize(html, { ALLOWED_TAGS: [] });
-  }
 
   let width: number;
 </script>

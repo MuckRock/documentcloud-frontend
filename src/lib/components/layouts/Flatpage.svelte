@@ -3,7 +3,7 @@
   import { APP_URL } from "@/config/config.js";
 
   import Logo from "$lib/components/common/Logo.svelte";
-  import { renderMarkdown } from "$lib/utils/markdown";
+  import { renderMarkdown } from "$lib/utils/markup";
 
   export let content: string;
 

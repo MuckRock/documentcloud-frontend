@@ -1,21 +1,17 @@
 <script lang="ts">
-  import DOMPurify from "isomorphic-dompurify";
+  import { clean } from "$lib/utils/markup";
 
   export let title: string = "";
   export let segments: string[] = [];
   export let inlineTitle: boolean = false;
-
-  function sanitize(s: string): string {
-    return DOMPurify.sanitize(s, { ALLOWED_TAGS: ["em"] });
-  }
 </script>
 
 <div class="container" class:inlineTitle>
-  {#if title}<h4 class="ellipsis">{@html sanitize(title)}</h4>{/if}
+  {#if title}<h4 class="ellipsis">{@html clean(title)}</h4>{/if}
   {#if segments?.length > 0}
     <blockquote>
       {#each segments as segment}
-        <p class="segment">{@html sanitize(segment)}</p>
+        <p class="segment">{@html clean(segment)}</p>
       {/each}
     </blockquote>
   {/if}

@@ -1,13 +1,11 @@
 <script lang="ts">
   import type { AddOnListItem } from "$lib/api/types";
 
-  import DOMPurify from "isomorphic-dompurify";
   import { _ } from "svelte-i18n";
 
   import AddOnPin from "$lib/components/addons/AddOnPin.svelte";
   import PremiumBadge from "$lib/components/premium-credits/PremiumBadge.svelte";
-
-  import { ALLOWED_TAGS, ALLOWED_ATTR } from "@/config/config.js";
+  import { clean } from "$lib/utils/markup";
 
   export let addon: AddOnListItem;
 
@@ -15,10 +13,6 @@
   $: description = clean(addon?.parameters?.description ?? "");
   $: author = { name: addon?.repository?.split("/")[0] };
   $: isPremium = addon?.parameters?.categories?.includes("premium") ?? false;
-
-  function clean(html: string): string {
-    return DOMPurify.sanitize(html, { ALLOWED_TAGS, ALLOWED_ATTR });
-  }
 </script>
 
 <a class="addon-link" href={url}>
