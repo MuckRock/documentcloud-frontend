@@ -20,7 +20,7 @@ Upgrade to v5 when migrating to Svelte 5
 </script>
 
 <Svelecte
-  class="elevated sourceCodePro gray-4 svelecte-control"
+  class="svelecte select"
   {name}
   {required}
   {options}
@@ -51,37 +51,3 @@ Upgrade to v5 when migrating to Svelte 5
   <ChevronDown16 slot="indicator-icon" />
   <X16 slot="clear-icon" />
 </Svelecte>
-
-<style>
-  /* svelecte styling */
-  :global(.select.elevated) {
-    box-shadow: 0px 2px 0px 0px var(--gray-2, #99a8b3);
-  }
-  :global(.select.elevated:hover) {
-    box-shadow: 0px 2px 0px 0px var(--gray-3, #99a8b3);
-  }
-  :global(.select.elevated.is-focused) {
-    box-shadow: 0px 2px 0px 0px var(--blue-2, #1367d0);
-  }
-  :global(.select .indicator) {
-    fill: var(--gray-5, #233944);
-  }
-  :global(.select.is-focused .indicator) {
-    fill: var(--blue-5, #053775);
-  }
-  :global(.select input) {
-    color: var(--gray-5, #233944);
-    font-family: "Source Sans Pro";
-    font-size: 1rem;
-    font-style: normal;
-    line-height: normal;
-  }
-  :global(.select.is-focused input) {
-    color: var(--blue-5, #053775);
-  }
-  :global(.sv-content) {
-    color: var(--gray-5, #233944);
-    font-family: "Source Sans Pro";
-    font-size: 1rem;
-  }
-</style>

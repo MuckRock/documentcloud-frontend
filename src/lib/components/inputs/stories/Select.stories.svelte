@@ -9,8 +9,8 @@
   };
 
   let args = {
-    name: "selectInput",
-    items: [
+    name: "select",
+    options: [
       { value: "first", label: "First Choice" },
       { value: "second", label: "Second Choice" },
       { value: "third", label: "Third Choice" },

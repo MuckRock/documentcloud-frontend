@@ -235,3 +235,26 @@ hr.divider {
     display: block;
   }
 }
+
+/* svelecte styles */
+.select .indicator {
+  fill: var(--gray-5, #233944);
+}
+.is-focused .indicator {
+  fill: var(--blue-5, #053775);
+}
+.select input {
+  color: var(--gray-5, #233944);
+  font-family: "Source Sans Pro";
+  font-size: 1rem;
+  font-style: normal;
+  line-height: normal;
+}
+.is-focused input {
+  color: var(--blue-5, #053775);
+}
+.sv-content {
+  color: var(--gray-5, #233944);
+  font-family: "Source Sans Pro";
+  font-size: 1rem;
+}
