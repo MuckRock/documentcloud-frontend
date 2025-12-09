@@ -1,5 +1,5 @@
 <script lang="ts">
-  import DOMPurify from "isomorphic-dompurify";
+  import { clean } from "$lib/utils/markup";
 
   export let title: string = "";
   export let description: string = "";
@@ -7,12 +7,8 @@
   export let required = false;
   export let sronly = false;
 
-  function clean(html: string): string {
-    return DOMPurify.sanitize(html, {
-      ALLOWED_TAGS: ["a", "strong", "em", "code"],
-      ALLOWED_ATTR: ["href"],
-    });
-  }
+  const ALLOWED_TAGS = ["a", "strong", "em", "code"];
+  const ALLOWED_ATTR = { a: ["href"] };
 </script>
 
 <div class="field" class:inline class:required>
@@ -23,7 +19,12 @@
     <slot />
   </label>
   {#if description}
-    <p class="help">{@html clean(description ?? "")}</p>
+    <p class="help">
+      {@html clean(description, {
+        allowedAttributes: ALLOWED_ATTR,
+        allowedTags: ALLOWED_TAGS,
+      })}
+    </p>
   {/if}
   <slot name="error" />
 </div>
