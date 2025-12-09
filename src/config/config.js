@@ -84,6 +84,7 @@ export const ALLOWED_TAGS = [
   "b",
   "i",
   "code",
+  "pre",
   "p",
   "ol",
   "ul",
