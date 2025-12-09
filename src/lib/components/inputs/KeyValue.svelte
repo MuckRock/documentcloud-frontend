@@ -179,8 +179,8 @@ This uses `svelecte` to let users more easily choose existing keys.
   }
   :global(.select input) {
     color: var(--gray-5, #233944);
-    font-family: "Source Sans Pro";
-    font-size: 1rem;
+    font-family: var(--font-sans);
+    font-size: var(--font-md, 1rem);
     font-style: normal;
     line-height: normal;
   }
@@ -189,7 +189,7 @@ This uses `svelecte` to let users more easily choose existing keys.
   }
   :global(.sv-content) {
     color: var(--gray-5, #233944);
-    font-family: "Source Sans Pro";
-    font-size: 1rem;
+    font-family: var(--font-sans);
+    font-size: var(--font-md, 1rem);
   }
 </style>

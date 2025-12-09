@@ -245,7 +245,7 @@ hr.divider {
 }
 .select input {
   color: var(--gray-5, #233944);
-  font-family: "Source Sans Pro";
+  font-family: var(--font-sans);
   font-size: 1rem;
   font-style: normal;
   line-height: normal;
@@ -255,6 +255,6 @@ hr.divider {
 }
 .sv-content {
   color: var(--gray-5, #233944);
-  font-family: "Source Sans Pro";
+  font-family: var(--font-sans);
   font-size: 1rem;
 }
