@@ -5,7 +5,7 @@ Upgrade to v5 when migrating to Svelte 5
 -->
 <script lang="ts">
   import Svelecte from "svelecte";
-  import { ChevronDown16, X16 } from "svelte-octicons";
+  import { X16 } from "svelte-octicons";
 
   export let name: string;
   export let required: boolean = false;
@@ -48,6 +48,5 @@ Upgrade to v5 when migrating to Svelte 5
   --sv-multi-item-input-margin="0"
   --sv-multi-item-padding="0 0 0 0.75rem"
 >
-  <ChevronDown16 slot="indicator-icon" />
   <X16 slot="clear-icon" />
 </Svelecte>

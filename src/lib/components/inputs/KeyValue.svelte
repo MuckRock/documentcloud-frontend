@@ -163,33 +163,4 @@ This uses `svelecte` to let users more easily choose existing keys.
   input.value::placeholder {
     color: var(--gray-3, #99a8b3);
   }
-
-  /* svelecte styling */
-  :global(.select.elevated) {
-    box-shadow: 0px 2px 0px 0px var(--gray-3, #99a8b3);
-  }
-  :global(.select.elevated.is-focused) {
-    box-shadow: 0px 2px 0px 0px var(--blue-3, #1367d0);
-  }
-  :global(.select .indicator) {
-    fill: var(--gray-5, #233944);
-  }
-  :global(.select.is-focused .indicator) {
-    fill: var(--blue-5, #053775);
-  }
-  :global(.select input) {
-    color: var(--gray-5, #233944);
-    font-family: var(--font-sans);
-    font-size: var(--font-md, 1rem);
-    font-style: normal;
-    line-height: normal;
-  }
-  :global(.select.is-focused input) {
-    color: var(--blue-5, #053775);
-  }
-  :global(.sv-content) {
-    color: var(--gray-5, #233944);
-    font-family: var(--font-sans);
-    font-size: var(--font-md, 1rem);
-  }
 </style>
