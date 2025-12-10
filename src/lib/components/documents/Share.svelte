@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import type { Document, Maybe } from "$lib/api/types";
+  import type { Document } from "$lib/api/types";
 
   interface NoteOption {
     value: string | number;
@@ -43,12 +43,13 @@
     pageUrl,
   } from "$lib/api/documents";
   import * as embed from "$lib/api/embed";
-  import * as notes from "$lib/api/notes";
+  import { noteUrl, canonicalNoteUrl } from "$lib/api/notes";
   import { createEmbedSearchParams } from "$lib/utils/embed";
+  import { onMount } from "svelte";
 
   export let document: Document;
   export let page: number = 1;
-  export let note_id: null | string | number = null;
+  export let note_id: undefined | string | number = undefined;
   export let currentTab: "document" | "page" | "note" = "document";
 
   const noteOptions = document.notes?.map<NoteOption>((note) => ({
@@ -56,13 +57,8 @@
     label: `pg. ${note.page_number + 1} – ${note.title}`,
   }));
 
-  let selectedNote: Maybe<NoteOption> = note_id
-    ? noteOptions?.find(({ value }) => value === note_id)
-    : noteOptions?.[0];
-
-  // bind the selected note to the note prop
-  $: note_id = selectedNote?.value ?? null;
-  $: note = document.notes?.find((n) => n.id === note_id);
+  $: notes = document.notes || [];
+  $: note = note_id ? notes?.find((n) => n.id === note_id) : notes[0];
 
   // dimensions and style for note embeds
   let permalink: URL;
@@ -89,14 +85,21 @@
         break;
       case "note":
         if (note) {
-          permalink = notes.noteUrl(document, note);
-          embedSrc = notes.canonicalNoteUrl(document, note);
+          permalink = noteUrl(document, note);
+          embedSrc = canonicalNoteUrl(document, note);
           embedSrc.searchParams.set("embed", "1");
           iframe = embed.note(document, note);
         }
         break;
     }
   }
+
+  onMount(() => {
+    if (!note_id) {
+      // try to set a default note
+      note_id = document.notes ? document.notes[0]?.id : undefined;
+    }
+  });
 
   function closeEditing() {
     editOpen = false;
@@ -178,21 +181,17 @@
         <div class="subselection">
           <Field>
             <FieldLabel>{$_("share.fields.note")}:</FieldLabel>
-            <Select
-              name="note"
-              options={noteOptions}
-              bind:value={selectedNote}
-            />
+            <Select name="note" options={noteOptions} bind:value={note_id} />
           </Field>
         </div>
       {/if}
       <Field>
         <FieldLabel>
           {$_("share.permalink")}
-          <Copy slot="action" text={permalink.href} />
+          <Copy slot="action" text={permalink?.href} />
         </FieldLabel>
         <Text
-          value={permalink.href}
+          value={permalink?.href}
           --font-family="var(--font-mono)"
           --font-size="var(--font-sm)"
         />
@@ -201,10 +200,10 @@
       <Field>
         <FieldLabel>
           {$_("share.embed")}
-          <Copy slot="action" text={embedSrc.href} />
+          <Copy slot="action" text={embedSrc?.href} />
         </FieldLabel>
         <Text
-          value={embedSrc.href}
+          value={embedSrc?.href}
           --font-family="var(--font-mono)"
           --font-size="var(--font-sm)"
         />
@@ -260,7 +259,11 @@
           <CustomizeEmbed />
         </div>
       {:else}
-        <iframe class="embed" title="Embed Preview" src={embedSrc.toString()} />
+        <iframe
+          class="embed"
+          title="Embed Preview"
+          src={embedSrc?.toString()}
+        />
       {/if}
     </main>
   </div>
