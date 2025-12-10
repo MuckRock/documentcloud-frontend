@@ -187,6 +187,7 @@ This will mostly be used inside a modal but isn't dependent on one.
           name="ocr_engine"
           options={ocrEngineOptions}
           bind:value={ocrEngine}
+          valueAsObject
         />
         <p slot="help">
           {@html ocrEngine?.help}

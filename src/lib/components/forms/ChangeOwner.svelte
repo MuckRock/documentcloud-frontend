@@ -160,6 +160,7 @@ Change owner of one or more documents.
           bind:value={org}
           placeholder={$_("change_owner.org_placeholder")}
           clearable
+          valueAsObject
         />
         {#await userOptions then options}
           <label for="user-select">
@@ -171,6 +172,7 @@ Change owner of one or more documents.
             bind:value={user}
             placeholder={$_("change_owner.user_placeholder")}
             clearable
+            valueAsObject
           />
         {/await}
 

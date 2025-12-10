@@ -17,6 +17,7 @@ Upgrade to v5 when migrating to Svelte 5
   export let clearable: boolean = false;
   export let placeholder: string = multiple ? "Select..." : "Select";
   export let searchable = true;
+  export let valueAsObject = false;
 </script>
 
 <Svelecte
@@ -30,6 +31,7 @@ Upgrade to v5 when migrating to Svelte 5
   {clearable}
   {placeholder}
   {searchable}
+  {valueAsObject}
   bind:value
   --sv-bg="var(--white, #fff)"
   --sv-border="1px solid var(--gray-2, #99a8b3)"

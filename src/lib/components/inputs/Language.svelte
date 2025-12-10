@@ -27,4 +27,14 @@
   }));
 </script>
 
-<Select {name} {options} {required} {placeholder} {multiple} bind:value />
+<Select
+  {name}
+  {options}
+  {required}
+  {placeholder}
+  {multiple}
+  valueField="value"
+  labelField="label"
+  bind:value
+  valueAsObject
+/>

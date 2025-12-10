@@ -392,6 +392,7 @@ progress through the three-part upload process.
               valueField="id"
               labelField="title"
               bind:value={add_to_projects}
+              valueAsObject
             />
           </Field>
           <hr class="divider" />
@@ -406,6 +407,7 @@ progress through the three-part upload process.
                 name="ocr_engine"
                 options={ocrEngineOptions}
                 bind:value={ocrEngine}
+                valueAsObject
               />
               <p slot="help">
                 {@html ocrEngine.help}
