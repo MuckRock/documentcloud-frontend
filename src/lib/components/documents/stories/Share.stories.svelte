@@ -18,8 +18,10 @@
 </script>
 
 <Template let:args>
-  <Share {document} {...args} />
-  <Toaster />
+  <div class="vh-100 vw-100">
+    <Share {document} {...args} />
+    <Toaster />
+  </div>
 </Template>
 
 <Story name="Document" args={{ ...args, document }} />
@@ -49,3 +51,12 @@
 <Story name="Page" args={{ ...args, document, currentTab: "page" }} />
 
 <Story name="Note" args={{ ...args, document, currentTab: "note" }} />
+
+<style>
+  .vh-100 {
+    height: 100vh;
+  }
+  .vw-100 {
+    width: 100vw;
+  }
+</style>
