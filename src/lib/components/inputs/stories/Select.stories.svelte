@@ -82,3 +82,7 @@
     labelField="label"
   />
 </Story>
+
+<Story name="Disabled">
+  <Select {name} {options} disabled />
+</Story>

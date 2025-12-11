@@ -124,6 +124,7 @@ This uses `svelecte` to let users more easily choose existing keys.
     --sv-item-selected-color: var(--white, #fff);
     --sv-dropdown-shadow: var(--shadow-1);
     --sv-dropdown-border: 0.25px solid var(--gray-2, #d8dee2);
+    --sv-disabled-color: var(--gray-3);
 
     min-width: 20ch;
   }
@@ -162,5 +163,9 @@ This uses `svelecte` to let users more easily choose existing keys.
 
   input.value::placeholder {
     color: var(--gray-3, #99a8b3);
+  }
+
+  input.value:disabled {
+    color: var(--gray-3);
   }
 </style>

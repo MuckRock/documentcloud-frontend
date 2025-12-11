@@ -18,6 +18,7 @@ Upgrade to v5 when migrating to Svelte 5
   export let placeholder: string = multiple ? "Select..." : "Select";
   export let searchable = true;
   export let valueAsObject = false;
+  export let disabled = false;
 </script>
 
 <Svelecte
@@ -32,10 +33,11 @@ Upgrade to v5 when migrating to Svelte 5
   {placeholder}
   {searchable}
   {valueAsObject}
+  {disabled}
   bind:value
   --sv-bg="var(--white, #fff)"
   --sv-border="1px solid var(--gray-2, #99a8b3)"
-  --sv-border-radius="0.5rem"
+  --sv-border-radius="var(--border-radius, 0.5em)"
   --sv-active-border="1px solid var(--blue-2, #4294f0)"
   --sv-min-height="2.65rem"
   --sv-item-btn-bg-hover="var(--blue-1, #eef3f9)"

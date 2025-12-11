@@ -237,24 +237,36 @@ hr.divider {
 }
 
 /* svelecte styles */
-.select .indicator {
+.svelecte .indicator {
   fill: var(--gray-5, #233944);
 }
-.is-focused .indicator {
+
+.svelecte.is-focused .indicator {
   fill: var(--blue-5, #053775);
 }
-.select input {
+
+.svelecte input {
   color: var(--gray-5, #233944);
   font-family: var(--font-sans);
   font-size: 1rem;
   font-style: normal;
   line-height: normal;
 }
-.is-focused input {
+
+.svelecte.is-focused input {
   color: var(--blue-5, #053775);
 }
-.sv-content {
+
+.svelecte .sv-content {
   color: var(--gray-5, #233944);
   font-family: var(--font-sans);
   font-size: 1rem;
+}
+
+.svelecte.is-disabled .sv-content {
+  color: var(--gray-3);
+}
+
+.svelecte.is-disabled .sv-item--content {
+  color: var(--gray-3);
 }
