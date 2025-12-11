@@ -92,3 +92,9 @@ Positioning and generating coordinates should happen outside of this form.
     </Flex>
   </Flex>
 </form>
+
+<style>
+  form {
+    padding: 1rem;
+  }
+</style>

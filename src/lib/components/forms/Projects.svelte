@@ -163,6 +163,7 @@ and we don't want to do that everywhere.
     flex-direction: column;
     gap: 0.5rem;
     width: 100%;
+    padding: 1rem;
   }
 
   .projects {
