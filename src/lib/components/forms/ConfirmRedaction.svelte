@@ -59,7 +59,7 @@ This almost certainly lives in a modal.
   }
 </script>
 
-<form {action} method="post" use:enhance={onSubmit}>
+<form class="modal-form" {action} method="post" use:enhance={onSubmit}>
   <Flex direction="column" gap={1}>
     <p>{$_("redact.really")}</p>
 
@@ -89,10 +89,6 @@ This almost certainly lives in a modal.
 </form>
 
 <style>
-  form {
-    padding: 1rem;
-  }
-
   .error {
     color: var(--error, var(--red-3));
   }

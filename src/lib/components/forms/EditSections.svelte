@@ -36,7 +36,7 @@ This form is entirely client-side.
   });
 </script>
 
-<form method="post">
+<form class="modal-form" method="post">
   <table bind:this={table}>
     {#if sections.length}
       <thead>
@@ -93,11 +93,6 @@ This form is entirely client-side.
   table,
   thead,
   tfoot {
-    width: 100%;
-  }
-
-  form {
-    padding: 1rem;
     width: 100%;
   }
 
