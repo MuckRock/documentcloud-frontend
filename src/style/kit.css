@@ -218,6 +218,20 @@ hr.divider {
   box-shadow: 0px 2px 4px 2px var(--shadow-1, rgba(30, 48, 56, 0.15));
 }
 
+/* Modal Form Utilities */
+.modal-form {
+  width: 100%;
+  padding: 1rem;
+}
+
+.modal-form--flex {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 1rem;
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);

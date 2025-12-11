@@ -47,7 +47,7 @@ Update permissions for a single collaborator on a project
   }
 </script>
 
-<form {action} method="post" use:enhance={onSubmit}>
+<form class="modal-form--flex" {action} method="post" use:enhance={onSubmit}>
   <p>{$_("collaborators.update.message", { values: { name, title } })}</p>
 
   <input type="hidden" name="user" value={user.user.id} />
@@ -58,13 +58,3 @@ Update permissions for a single collaborator on a project
     <Button on:click={() => dispatch("close")}>{$_("dialog.cancel")}</Button>
   </Flex>
 </form>
-
-<style>
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    width: 100%;
-    padding: 1rem;
-  }
-</style>

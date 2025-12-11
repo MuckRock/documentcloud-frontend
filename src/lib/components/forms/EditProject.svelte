@@ -43,7 +43,7 @@ Edit project metadata
   }
 </script>
 
-<form {action} method="post" use:enhance={onSubmit}>
+<form class="modal-form" {action} method="post" use:enhance={onSubmit}>
   <Flex direction="column" gap={1}>
     <Field title={$_("projects.fields.title")} required>
       <Text
@@ -77,10 +77,3 @@ Edit project metadata
     </Flex>
   </Flex>
 </form>
-
-<style>
-  form {
-    width: 100%;
-    padding: 1rem;
-  }
-</style>
