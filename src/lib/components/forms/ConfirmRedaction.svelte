@@ -89,6 +89,10 @@ This almost certainly lives in a modal.
 </form>
 
 <style>
+  form {
+    padding: 1rem;
+  }
+
   .error {
     color: var(--error, var(--red-3));
   }
