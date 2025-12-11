@@ -61,19 +61,6 @@
 </Story>
 
 <Story
-  name="empty organizations"
-  parameters={{
-    msw: {
-      handlers: [organizations.empty, users.data],
-    },
-  }}
->
-  <div style="max-width: 66ch;">
-    <ChangeOwner {documents} />
-  </div>
-</Story>
-
-<Story
   name="error loading data"
   parameters={{
     msw: {
