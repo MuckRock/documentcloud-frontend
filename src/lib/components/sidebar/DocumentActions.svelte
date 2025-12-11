@@ -167,7 +167,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 
 {#if visible}
   <Portal>
-    <Modal on:close={close}>
+    <Modal on:close={close} fillViewport={visible === "share"} maxWidth="90vw" maxHeight="80vh">
       <h1 slot="title">{$_(labels[visible])}</h1>
 
       {#if visible === "share"}
