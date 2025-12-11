@@ -55,7 +55,7 @@
 
 <Modal on:close>
   <h1 slot="title">{$_("mailkey.title")}</h1>
-  <div class="content">
+  <div class="modal-form content">
     <div class="description">{@html $_("mailkey.description")}</div>
     {#if message}
       <p class="message" class:error>
@@ -74,9 +74,6 @@
 </Modal>
 
 <style>
-  .content {
-    padding: 1rem;
-  }
 
   .description {
     columns: 2;

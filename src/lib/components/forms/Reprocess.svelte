@@ -133,7 +133,7 @@ This will mostly be used inside a modal but isn't dependent on one.
   }
 </script>
 
-<form method="post" on:submit={onSubmit}>
+<form class="modal-form--flex" method="post" on:submit={onSubmit}>
   <Flex direction="column" gap={1.5}>
     <!-- Add any header and messaging using this slot -->
     <slot>
@@ -244,11 +244,7 @@ This will mostly be used inside a modal but isn't dependent on one.
 
 <style>
   form {
-    display: flex;
-    flex-flow: column nowrap;
     gap: 0.5rem;
-    width: 100%;
-    padding: 1rem;
   }
 
   .disclaimer {
