@@ -35,6 +35,10 @@ of the $modal store. These are used to set the active modal on any given page.
 
   const dispatch = createEventDispatcher();
 
+  export let maxWidth: string = "48rem";
+  export let maxHeight: string = "90vh";
+  export let fillViewport: boolean = false;
+
   function onKeydown(e: KeyboardEvent) {
     if (e.key === "Escape") {
       dispatch("close");
@@ -47,6 +51,9 @@ of the $modal store. These are used to set the active modal on any given page.
 <div class="backdrop" transition:fade={{ duration: 200 }}>
   <div
     class="dialog card"
+    class:fill-viewport={fillViewport}
+    style:max-width={maxWidth}
+    style:max-height={maxHeight}
     transition:fly={{ duration: 400, easing: quintOut, y: "25vw" }}
   >
     <header>
@@ -87,15 +94,19 @@ of the $modal store. These are used to set the active modal on any given page.
   .card {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    max-width: 48rem;
+    gap: 0 1rem;
     overflow-x: hidden;
     overflow-y: auto;
     position: relative;
-    padding: 1.5rem;
+    padding: 0;
     border-radius: var(--font-md, 1rem);
     background: var(--white, #fff);
     box-shadow: 0px 4px 16px 4px #99a8b3;
+  }
+
+  .card.fill-viewport {
+    width: 100%;
+    height: auto;
   }
 
   .card > header {
@@ -103,6 +114,8 @@ of the $modal store. These are used to set the active modal on any given page.
     align-items: center;
     justify-content: space-between;
     flex-direction: row-reverse;
+    padding: 1rem;
+    border-bottom: 1px solid var(--gray-2, #d8dee2);
   }
 
   .content {

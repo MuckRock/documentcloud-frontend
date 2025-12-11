@@ -283,16 +283,18 @@
 
 <style>
   .container {
+    margin: 0 auto;
+    aspect-ratio: 2 / 3;
     width: 100%;
-    height: 32rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto 1fr;
-    gap: 0 1rem;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1.5rem;
+    overflow-y: auto;
   }
   .banner {
-    grid-column: 1/3;
-    grid-row: 1/2;
+    flex: 1 1 100%;
     margin-bottom: 1rem;
   }
   .privateWarning {
@@ -325,18 +327,21 @@
     display: flex;
     flex-direction: column;
     flex: 1 1 12rem;
-    grid-row: 2/3;
     min-width: 0;
   }
   .right {
-    flex: 2 1 24rem;
+    flex: 2 1 32rem;
+  }
+  .left {
+    flex: 1 1 20rem;
+    min-height: 20rem;
   }
   .right header {
     padding: 0.375rem 0;
     /* margin-bottom: .25rem; */
   }
   .right main {
-    min-height: 0;
+    min-height: 36rem;
     height: 100%;
     width: 100%;
   }

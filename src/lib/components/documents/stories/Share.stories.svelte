@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
   import type { Document } from "$lib/api/types";
 
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { Story, Template } from "@storybook/addon-svelte-csf";
   import Share from "../Share.svelte";
   import Toaster from "../../layouts/Toaster.svelte";
 
@@ -15,10 +15,17 @@
   };
 </script>
 
-<Story name="Document">
-  <Share {document} currentTab="document" />
-  <Toaster />
-</Story>
+<Template let:args>
+  <div class="vh-100 vw-100">
+    <Share
+      document={args.document}
+      currentTab={args.currentTab}
+    />
+    <Toaster />
+  </div>
+</Template>
+
+<Story name="Document" args={{document, currentTab: 'document'}}></Story>
 
 <Story name="Private Document">
   <Share
@@ -49,7 +56,13 @@
   <Toaster />
 </Story>
 
-<Story name="Note">
-  <Share {document} currentTab="note" />
-  <Toaster />
-</Story>
+<Story name="Note" args={{ document, currentTab: "note" }} />
+
+<style>
+  .vh-100 {
+    height: 100vh;
+  }
+  .vw-100 {
+    width: 100vw;
+  }
+</style>
