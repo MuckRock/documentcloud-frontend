@@ -74,6 +74,7 @@ Invite a new collaborator to a project
     flex-direction: column;
     gap: 0.75rem;
     width: 100%;
+    padding: 1rem;
   }
 
   .error {

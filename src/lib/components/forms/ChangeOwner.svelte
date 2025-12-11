@@ -226,6 +226,7 @@ Change owner of one or more documents.
   form {
     color: var(--gray-5, #233944);
     width: 100%;
+    padding: 1rem;
   }
 
   label {

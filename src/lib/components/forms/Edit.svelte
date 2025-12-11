@@ -137,5 +137,6 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
 <style>
   form {
     width: 100%;
+    padding: 1rem;
   }
 </style>

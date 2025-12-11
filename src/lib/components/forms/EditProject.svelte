@@ -81,5 +81,6 @@ Edit project metadata
 <style>
   form {
     width: 100%;
+    padding: 1rem;
   }
 </style>
