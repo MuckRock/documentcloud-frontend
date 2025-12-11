@@ -37,11 +37,10 @@ Upgrade to v5 when migrating to Svelte 5
   bind:value
   --sv-bg="var(--white, #fff)"
   --sv-border="1px solid var(--gray-2, #99a8b3)"
-  --sv-border-radius="var(--border-radius, 0.5em)"
   --sv-active-border="1px solid var(--blue-2, #4294f0)"
   --sv-min-height="2.65rem"
   --sv-item-btn-bg-hover="var(--blue-1, #eef3f9)"
-  --sv-item-selected-bg="var(--blue-3, #4294f0)"
+  --sv-item-selected-bg="var(--blue-1, #4294f0)"
   --sv-item-selected-color="var(--white, #fff)"
   --sv-dropdown-shadow="var(--shadow-1)"
   --sv-dropdown-border="1px solid var(--gray-2, #d8dee2)"

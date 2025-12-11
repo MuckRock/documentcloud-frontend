@@ -270,3 +270,8 @@ hr.divider {
 .svelecte.is-disabled .sv-item--content {
   color: var(--gray-3);
 }
+
+.svelecte button {
+  border-radius: unset;
+}
+
