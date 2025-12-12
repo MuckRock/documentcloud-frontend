@@ -185,8 +185,9 @@ This will mostly be used inside a modal but isn't dependent on one.
         <FieldLabel>{$_("uploadDialog.ocrEngine")}</FieldLabel>
         <Select
           name="ocr_engine"
-          items={ocrEngineOptions}
+          options={ocrEngineOptions}
           bind:value={ocrEngine}
+          valueAsObject
         />
         <p slot="help">
           {@html ocrEngine?.help}

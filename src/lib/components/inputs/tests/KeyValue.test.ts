@@ -1,0 +1,228 @@
+import { vi, describe, it, expect, beforeEach } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/svelte";
+
+import KeyValue from "../KeyValue.svelte";
+
+describe("KeyValue", () => {
+  beforeEach(() => {
+    // Clear all mocks before each test
+    vi.clearAllMocks();
+  });
+
+  it("renders with default values", () => {
+    const { container } = render(KeyValue);
+
+    // Check that the value input is rendered
+    const valueInput = screen.getByPlaceholderText("Value");
+    expect(valueInput).toBeInTheDocument();
+    expect(valueInput).toHaveValue("");
+
+    // Check that the hidden key input is rendered
+    const hiddenInput = container.querySelector('input[name="key"]');
+    expect(hiddenInput).toBeInTheDocument();
+    expect(hiddenInput).toHaveValue("");
+  });
+
+  it("renders with provided key and value", () => {
+    const { container } = render(KeyValue, {
+      props: {
+        key: "testKey",
+        value: "testValue",
+      },
+    });
+
+    // Check that the value input has the correct value
+    const valueInput = screen.getByPlaceholderText("Value");
+    expect(valueInput).toHaveValue("testValue");
+
+    // Check that the hidden key input has the correct value
+    const hiddenInput = container.querySelector('input[name="key"]');
+    expect(hiddenInput).toHaveValue("testKey");
+  });
+
+  it("allows changing the value", async () => {
+    render(KeyValue, {
+      props: {
+        key: "testKey",
+        value: "",
+      },
+    });
+
+    const valueInput = screen.getByPlaceholderText("Value") as HTMLInputElement;
+
+    // Simulate user typing in the value input
+    await fireEvent.input(valueInput, { target: { value: "newValue" } });
+
+    expect(valueInput).toHaveValue("newValue");
+  });
+
+  it("dispatches add event with correct key and value when add button is clicked", async () => {
+    const handleAdd = vi.fn();
+    const { component } = render(KeyValue, {
+      props: {
+        key: "testKey",
+        value: "testValue",
+        add: true,
+      },
+    });
+
+    component.$on("add", handleAdd);
+
+    // Find the add button (in add mode) by title attribute
+    const addButton = screen.getByRole("button", { name: "Update" });
+    await fireEvent.click(addButton);
+
+    expect(handleAdd).toHaveBeenCalledTimes(1);
+    expect(handleAdd).toHaveBeenCalledWith(
+      expect.objectContaining({
+        detail: { key: "testKey", value: "testValue" },
+      }),
+    );
+  });
+
+  it("dispatches delete event with correct key and value when delete button is clicked", async () => {
+    const handleDelete = vi.fn();
+    const { component } = render(KeyValue, {
+      props: {
+        key: "testKey",
+        value: "testValue",
+        add: false,
+      },
+    });
+
+    component.$on("delete", handleDelete);
+
+    // Find the delete button (not in add mode) by title attribute
+    const deleteButton = screen.getByRole("button", { name: "Delete" });
+    await fireEvent.click(deleteButton);
+
+    expect(handleDelete).toHaveBeenCalledTimes(1);
+    expect(handleDelete).toHaveBeenCalledWith(
+      expect.objectContaining({
+        detail: { key: "testKey", value: "testValue" },
+      }),
+    );
+  });
+
+  it("disables add button when key or value is empty", () => {
+    render(KeyValue, {
+      props: {
+        key: "",
+        value: "",
+        add: true,
+      },
+    });
+
+    const addButton = screen.getByRole("button", { name: "Update" });
+    expect(addButton).toBeDisabled();
+  });
+
+  it("enables add button when both key and value are provided", () => {
+    render(KeyValue, {
+      props: {
+        key: "testKey",
+        value: "testValue",
+        add: true,
+      },
+    });
+
+    const addButton = screen.getByRole("button", { name: "Update" });
+    expect(addButton).toBeEnabled();
+  });
+
+  it("clears key and value when clear() method is called", async () => {
+    const { component, container } = render(KeyValue, {
+      props: {
+        key: "testKey",
+        value: "testValue",
+      },
+    });
+
+    // Call the clear method
+    component.clear();
+
+    // Wait for the component to update
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    // Check that both inputs are cleared
+    const valueInput = screen.getByPlaceholderText("Value");
+    expect(valueInput).toHaveValue("");
+
+    const hiddenInput = container.querySelector('input[name="key"]');
+    expect(hiddenInput).toHaveValue("");
+  });
+
+  it("disables inputs and buttons when disabled prop is true", () => {
+    render(KeyValue, {
+      props: {
+        key: "testKey",
+        value: "testValue",
+        add: true,
+        disabled: true,
+      },
+    });
+
+    const valueInput = screen.getByPlaceholderText("Value");
+    expect(valueInput).toBeDisabled();
+
+    const addButton = screen.getByRole("button", { name: "Update" });
+    expect(addButton).toBeDisabled();
+  });
+
+  it("works with custom keys", () => {
+    const { container } = render(KeyValue, {
+      props: {
+        keys: ["customKey1", "customKey2", "_tag"],
+        key: "customKey1",
+        value: "testValue",
+      },
+    });
+
+    // Verify the component renders correctly with custom keys
+    const valueInput = screen.getByPlaceholderText("Value");
+    expect(valueInput).toHaveValue("testValue");
+
+    const hiddenInput = container.querySelector('input[name="key"]');
+    expect(hiddenInput).toHaveValue("customKey1");
+  });
+
+  it("allows setting a new key that is not in the predefined keys array", async () => {
+    const { component, container } = render(KeyValue, {
+      props: {
+        keys: ["existingKey1", "existingKey2", "_tag"],
+        key: "",
+        value: "",
+      },
+    });
+
+    // When a user types a new key in svelecte and selects it,
+    // the key prop gets updated. This simulates that behavior.
+    component.$set({ key: "newCustomKey" });
+
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    // Verify the new key is set even though it wasn't in the original keys array
+    const hiddenInput = container.querySelector('input[name="key"]');
+    expect(hiddenInput).toHaveValue("newCustomKey");
+    expect(component.key).toBe("newCustomKey");
+  });
+
+  it("updates key when a new option is selected", async () => {
+    const { component, container } = render(KeyValue, {
+      props: {
+        keys: ["key1", "key2", "_tag"],
+        key: "",
+        value: "",
+      },
+    });
+
+    // Simulate selecting a new key by directly setting the component prop
+    // This mimics what happens when the user selects an option in svelecte
+    component.$set({ key: "key1" });
+
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    const hiddenInput = container.querySelector('input[name="key"]');
+    expect(hiddenInput).toHaveValue("key1");
+  });
+});

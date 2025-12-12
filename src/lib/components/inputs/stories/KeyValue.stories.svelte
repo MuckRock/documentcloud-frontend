@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+  import { Story } from "@storybook/addon-svelte-csf";
   import KeyValue from "../KeyValue.svelte";
 
   export const meta = {
@@ -12,23 +12,44 @@
   const keys = ["_tag", "author"];
 </script>
 
-<Template let:args>
+<Story name="Add">
   <table>
-    <KeyValue {keys} {...args} />
+    <KeyValue {keys} add key="_tag" value="Foobar" />
   </table>
-</Template>
+</Story>
 
-<Story name="Add" args={{ add: true, key: "_tag", value: "Foobar" }} />
+<Story name="Edit">
+  <table>
+    <KeyValue {keys} key="author" value="Joan Didion" />
+  </table>
+</Story>
 
-<Story name="Edit" args={{ key: "author", value: "Joan Didion" }} />
+<Story name="Tag input">
+  <table>
+    <KeyValue {keys} key="_tag" />
+  </table>
+</Story>
 
-<Story name="Tag input" args={{ key: "_tag" }} />
+<Story name="Tag with value">
+  <table>
+    <KeyValue {keys} key="_tag" value="California" />
+  </table>
+</Story>
 
-<Story name="Tag with value" args={{ key: "_tag", value: "California" }} />
+<Story name="Disabled">
+  <table>
+    <KeyValue {keys} key="_tag" value="California" disabled />
+  </table>
+</Story>
 
-<Story
-  name="Disabled"
-  args={{ key: "_tag", value: "California", disabled: true }}
-/>
+<Story name="Empty">
+  <table>
+    <KeyValue keys={[]} />
+  </table>
+</Story>
 
-<Story name="Empty" />
+<style>
+  table {
+    display: flex;
+  }
+</style>

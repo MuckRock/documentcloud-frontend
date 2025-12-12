@@ -2,30 +2,32 @@
 
 <!-- @component
 Input for a single key/value pair or tag (where `key` is `_tag`).
-This uses `svelte-select` to let users more easily choose existing keys.
+This uses `svelecte` to let users more easily choose existing keys.
 -->
 <script lang="ts">
   import { beforeUpdate, createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
-  import { ChevronDown12, PlusCircle16, Trash16, X12 } from "svelte-octicons";
-  import Select from "svelte-select";
+  import { PlusCircle16, Trash16 } from "svelte-octicons";
+  import Select from "svelecte";
 
   import Button from "../common/Button.svelte";
 
   export let keys: string[] = ["_tag"];
-  export let key: string = "";
-  export let value: string = "";
+  export let key: string | undefined = undefined;
+  export let value: string | undefined = "";
   export let add = false;
   export let disabled = false;
 
   const dispatch = createEventDispatcher();
 
-  let filterText: string = "";
-
-  $: items = keys.map((key) => {
-    const label = key === "_tag" ? $_("data.tag") : key;
-    return { value: key, label, created: false };
-  });
+  $: options = new Set([...keys, "_tag"])
+    .values()
+    .map((key) => {
+      const label = key === "_tag" ? $_("data.tag") : key;
+      return { value: key, label };
+    })
+    .filter((opt) => Boolean(opt.value))
+    .toArray();
 
   beforeUpdate(() => {
     // always include _tag
@@ -40,42 +42,32 @@ This uses `svelte-select` to let users more easily choose existing keys.
     value = "";
   }
 
-  function onFilter(e) {
-    if (e.detail.length === 0 && filterText.length > 0) {
-      const prev = items.filter((i) => !i.created);
-      items = [
-        ...prev,
-        { value: filterText, label: filterText, created: true },
-      ];
-    }
+  function handleChange(event) {
+    key = event.detail?.value || event.detail || "";
   }
 </script>
 
 <tr class="kv">
   <td class="key">
     <Select
-      {items}
+      {options}
       value={key}
-      bind:filterText
-      showChevron
+      valueField="value"
+      labelField="label"
       placeholder={$_("data.newkey")}
-      class="select elevated"
-      bind:justValue={key}
-      on:change
+      class="elevated"
+      creatable
+      on:change={handleChange}
       on:input
       on:blur
+      on:focus
+      on:enterKey
+      on:createoption
       on:clear
-      on:filter={onFilter}
       {disabled}
-    >
-      <ChevronDown12 slot="chevron-icon" />
-      <X12 slot="clear-icon" />
-      <div slot="item" let:item>
-        <p>{item.created ? `Add “${item.label}”` : item.label}</p>
-      </div>
-    </Select>
+    />
     <!-- maybe gross/redundant, but effectively unwraps Select -->
-    <input type="hidden" name="key" value={key} />
+    <input type="hidden" name="key" value={key ?? ""} />
   </td>
   <td class="value">
     <label>
@@ -125,18 +117,18 @@ This uses `svelte-select` to let users more easily choose existing keys.
 
 <style>
   td.key {
-    --background: var(--white, #fff);
-    --border: 0.25px solid var(--gray-3, #99a8b3);
-    --border-radius: 0.25rem;
-    --border-focused: 0.25px solid var(--blue-3, #4294f0);
-    --clear-select-width: 1.5rem;
-    --chevron-width: 1.5rem;
-    --font-size: var(--font-md, 1rem);
-    --padding: 0 0 0 1rem;
-    --item-hover-bg: var(--blue-1, #eef3f9);
-    --item-is-active-bg: var(--blue-3, #4294f0);
-    --list-shadow: var(--shadow-1);
-    --list-border: 0.25px solid var(--gray-2, #d8dee2);
+    /* svelecte v4 CSS custom properties */
+    --sv-bg: var(--white, #fff);
+    --sv-border: 0.25px solid var(--gray-3, #99a8b3);
+    --sv-border-radius: 0.25rem;
+    --sv-active-border: 0.25px solid var(--blue-3, #4294f0);
+    --sv-min-height: 2.65rem;
+    --sv-item-btn-bg-hover: var(--blue-1, #eef3f9);
+    --sv-item-selected-bg: var(--blue-3, #4294f0);
+    --sv-item-selected-color: var(--white, #fff);
+    --sv-dropdown-shadow: var(--shadow-1);
+    --sv-dropdown-border: 0.25px solid var(--gray-2, #d8dee2);
+    --sv-disabled-color: var(--gray-3);
 
     min-width: 20ch;
   }
@@ -177,27 +169,7 @@ This uses `svelte-select` to let users more easily choose existing keys.
     color: var(--gray-3, #99a8b3);
   }
 
-  :global(.select.elevated) {
-    box-shadow: 0px 2px 0px 0px var(--gray-3, #99a8b3);
-  }
-  :global(.select.elevated.focused) {
-    box-shadow: 0px 2px 0px 0px var(--blue-3, #1367d0);
-  }
-  :global(.select .indicators) {
-    fill: var(--gray-5, #233944);
-  }
-  :global(.select.focused .indicators) {
-    fill: var(--blue-5, #053775);
-  }
-  :global(.select input, .select .selected-item) {
-    color: var(--gray-5, #233944);
-    font-family: "Source Sans Pro";
-    font-size: 1rem;
-    font-style: normal;
-    line-height: normal;
-    box-shadow: none;
-  }
-  :global(.select.focused input, .select.focused .selected-item) {
-    color: var(--blue-5, #053775) !important;
+  input.value:disabled {
+    color: var(--gray-3);
   }
 </style>

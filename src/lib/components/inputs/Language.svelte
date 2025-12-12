@@ -18,13 +18,23 @@
     label: LANGUAGE_MAP.get(DEFAULT_LANGUAGE),
   };
   export let required = false;
-  export let placeholder: string = "";
+  export let placeholder: string = "Language";
   export let multiple = false;
 
-  const items = LANGUAGE_CODES.map((code, i) => ({
+  const options = LANGUAGE_CODES.map((code, i) => ({
     value: code,
     label: LANGUAGE_NAMES[i],
   }));
 </script>
 
-<Select {name} {items} {required} {placeholder} {multiple} bind:value />
+<Select
+  {name}
+  {options}
+  {required}
+  {placeholder}
+  {multiple}
+  valueField="value"
+  labelField="label"
+  bind:value
+  valueAsObject
+/>

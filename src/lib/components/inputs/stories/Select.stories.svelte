@@ -1,35 +1,88 @@
 <script context="module" lang="ts">
-  import { Template, Story } from "@storybook/addon-svelte-csf";
+  import { Story } from "@storybook/addon-svelte-csf";
   import Select from "../Select.svelte";
 
   export const meta = {
-    title: "Forms / Inputs /Select",
+    title: "Forms / Inputs / Select",
     component: Select,
     tags: ["autodocs"],
   };
 
-  let args = {
-    name: "selectInput",
-    items: [
-      { value: "first", label: "First Choice" },
-      { value: "second", label: "Second Choice" },
-      { value: "third", label: "Third Choice" },
-      { value: "fourth", label: "Fourth Choice" },
-      { value: "fifth", label: "Fifth Choice" },
-      { value: "sixth", label: "Sixth Choice" },
-    ],
-  };
+  const name = "select";
+  const options = [
+    { value: "first", label: "First Choice" },
+    { value: "second", label: "Second Choice" },
+    { value: "third", label: "Third Choice" },
+    { value: "fourth", label: "Fourth Choice" },
+    { value: "fifth", label: "Fifth Choice" },
+    { value: "sixth", label: "Sixth Choice" },
+  ];
 </script>
 
-<Template let:args>
-  <Select {...args} />
-</Template>
+<Story name="Empty">
+  <Select
+    {name}
+    {options}
+    valueAsObject
+    valueField="value"
+    labelField="label"
+  />
+</Story>
 
-<Story name="Empty" {args} />
-<Story name="Clearable" args={{ ...args, clearable: true }} />
-<Story name="Multiple" args={{ ...args, multiple: true }} />
-<Story
-  name="With Placeholder"
-  args={{ ...args, placeholder: "Go on, make my day…" }}
-/>
-<Story name="With Selection" args={{ ...args, value: "third" }} />
+<Story name="Clearable">
+  <Select
+    {name}
+    {options}
+    clearable={true}
+    valueAsObject
+    valueField="value"
+    labelField="label"
+  />
+</Story>
+
+<Story name="Multiple">
+  <Select
+    {name}
+    {options}
+    multiple={true}
+    valueAsObject
+    valueField="value"
+    labelField="label"
+  />
+</Story>
+
+<Story name="With Placeholder">
+  <Select
+    {name}
+    {options}
+    placeholder="Go on, make my day…"
+    valueAsObject
+    valueField="value"
+    labelField="label"
+  />
+</Story>
+
+<Story name="With Selection">
+  <Select
+    {name}
+    {options}
+    value={{ value: "third", label: "Third Choice" }}
+    valueAsObject
+    valueField="value"
+    labelField="label"
+  />
+</Story>
+
+<Story name="With Selection, not object">
+  <Select
+    {name}
+    {options}
+    value="fourth"
+    valueField="value"
+    labelField="label"
+  />
+</Story>
+
+<Story name="Disabled">
+  <Select {name} {options} disabled />
+</Story>

@@ -33,7 +33,11 @@ Change owner of one or more documents.
   let user: Maybe<{ value: number; label: string; user?: User }> = undefined;
   let org: Maybe<{ value: number; label: string; org?: Org }> =
     $me && isOrg($me.organization)
-      ? { value: $me.organization.id, label: $me.organization.name }
+      ? {
+          value: $me.organization.id,
+          label: $me.organization.name,
+          org: $me.organization,
+        }
       : undefined;
 
   let userOptions: Promise<{ value: number; label: string; user?: User }[]> =
@@ -60,9 +64,6 @@ Change owner of one or more documents.
     if ($me) {
       // Load organizations the user belongs to
       orgOptions = await getOrgOptions($me);
-
-      // don't await, because we expect this to be a promise
-      // userOptions = getUserOptions($me.organization as Org);
     }
     loading = false;
   });
@@ -71,11 +72,13 @@ Change owner of one or more documents.
     me: User,
   ): Promise<{ value: number; label: string; org: Org }[]> {
     const orgs = await userOrgs(me);
-    return orgs.map((org) => ({
-      value: org.id,
-      label: org.individual ? `${org.name} (individual)` : org.name,
-      org,
-    }));
+    return (
+      orgs?.map((org) => ({
+        value: org.id,
+        label: org.individual ? `${org.name} (individual)` : org.name,
+        org,
+      })) ?? [org]
+    );
   }
 
   async function getUserOptions(
@@ -85,11 +88,13 @@ Change owner of one or more documents.
 
     const users = await orgUsers(org);
 
-    return users.map((user) => ({
-      label: getUserName(user),
-      value: user.id,
-      user,
-    }));
+    return (
+      users?.map((user) => ({
+        label: getUserName(user),
+        value: user.id,
+        user,
+      })) ?? []
+    );
   }
 
   /**
@@ -108,7 +113,6 @@ Change owner of one or more documents.
     }
 
     return ({ result }) => {
-      console.log(result);
       switch (result.type) {
         case "error":
           error = result.data.error;
@@ -156,21 +160,23 @@ Change owner of one or more documents.
         </label>
         <Select
           name="organization"
-          items={orgOptions}
+          options={orgOptions}
           bind:value={org}
           placeholder={$_("change_owner.org_placeholder")}
           clearable
+          valueAsObject
         />
-        {#await userOptions then items}
+        {#await userOptions then options}
           <label for="user-select">
             {$_("change_owner.user_label")}
           </label>
           <Select
             name="user"
-            {items}
+            {options}
             bind:value={user}
             placeholder={$_("change_owner.user_placeholder")}
             clearable
+            valueAsObject
           />
         {/await}
 

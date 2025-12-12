@@ -23,7 +23,7 @@
 <Story name="Default" args={{ note: notes[0] }} />
 <Story
   name="Recently Updated"
-  args={{ note: { ...notes[0], updated_at: new Date().toISOString() } }}
+  args={{ note: { ...notes[0], updated_at: "2025-12-11T17:15:11.689Z" } }}
 />
 <Story
   name="Never Updated"
