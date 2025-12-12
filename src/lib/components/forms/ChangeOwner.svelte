@@ -113,7 +113,6 @@ Change owner of one or more documents.
     }
 
     return ({ result }) => {
-      console.log(result);
       switch (result.type) {
         case "error":
           error = result.data.error;
