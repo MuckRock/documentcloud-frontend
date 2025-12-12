@@ -67,7 +67,7 @@ This uses `svelecte` to let users more easily choose existing keys.
       {disabled}
     />
     <!-- maybe gross/redundant, but effectively unwraps Select -->
-    <input type="hidden" name="key" value={key} />
+    <input type="hidden" name="key" value={key ?? ""} />
   </td>
   <td class="value">
     <label>
