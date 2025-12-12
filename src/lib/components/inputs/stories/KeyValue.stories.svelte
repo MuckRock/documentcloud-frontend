@@ -44,7 +44,7 @@
 
 <Story name="Empty">
   <table>
-    <KeyValue {keys} />
+    <KeyValue keys={[]} />
   </table>
 </Story>
 

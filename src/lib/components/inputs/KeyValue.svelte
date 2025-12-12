@@ -13,17 +13,21 @@ This uses `svelecte` to let users more easily choose existing keys.
   import Button from "../common/Button.svelte";
 
   export let keys: string[] = ["_tag"];
-  export let key: string = "";
-  export let value: string = "";
+  export let key: string | undefined = undefined;
+  export let value: string | undefined = "";
   export let add = false;
   export let disabled = false;
 
   const dispatch = createEventDispatcher();
 
-  $: options = keys.map((key) => {
-    const label = key === "_tag" ? $_("data.tag") : key;
-    return { value: key, label, created: false };
-  });
+  $: options = new Set([...keys, "_tag"])
+    .values()
+    .map((key) => {
+      const label = key === "_tag" ? $_("data.tag") : key;
+      return { value: key, label };
+    })
+    .filter((opt) => Boolean(opt.value))
+    .toArray();
 
   beforeUpdate(() => {
     // always include _tag
