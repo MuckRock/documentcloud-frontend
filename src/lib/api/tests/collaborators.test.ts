@@ -20,9 +20,8 @@ const test = base.extend({
   },
 
   async users({}, use: Use<Page<ProjectUser>>) {
-    const { default: users } = await import(
-      "@/test/fixtures/projects/project-users.json"
-    );
+    const { default: users } =
+      await import("@/test/fixtures/projects/project-users.json");
 
     await use(users as Page<ProjectUser>);
   },

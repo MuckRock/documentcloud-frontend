@@ -120,9 +120,7 @@ export const mockGetOrg = {
   ...generateGetHandler(`organizations/:id/*`, {}),
   data: http.get(urls.org, ({ params }) => {
     return HttpResponse.json(
-      organizationsList.results.find(
-        ({ id }) => id.toString() === params.id,
-      ),
+      organizationsList.results.find(({ id }) => id.toString() === params.id),
     );
   }),
   pro: http.get(urls.org, () => HttpResponse.json(proOrg)),

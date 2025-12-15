@@ -13,7 +13,5 @@
       "vitest-setup.js"
     ]
   },
-  "project": [
-    "src/lib/**/*",
-    "!src/legacy"]
+  "project": ["src/lib/**/*", "!src/legacy"]
 }

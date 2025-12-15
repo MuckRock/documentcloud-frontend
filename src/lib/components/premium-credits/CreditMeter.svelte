@@ -43,7 +43,7 @@
     <p class="helpText">{helpText}</p>
   {/if}
   {#if max}
-    <meter {id} {value} {max} {low} class="meter" />
+    <meter {id} {value} {max} {low} class="meter"></meter>
   {/if}
 </label>
 

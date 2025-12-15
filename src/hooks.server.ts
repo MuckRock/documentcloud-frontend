@@ -55,7 +55,4 @@ async function logRequest({ event, resolve }) {
   return response;
 }
 
-export const handle: Handle = sequence(
-  language,
-  logRequest,
-);
+export const handle: Handle = sequence(language, logRequest);

@@ -5,6 +5,6 @@ import Mailkey from "../Mailkey.svelte";
 test("Mailkey", () => {
   let result = render(Mailkey);
   expect(result.container).toMatchSnapshot();
-  result = render(Mailkey, {message: 'Something happened'});
+  result = render(Mailkey, { message: "Something happened" });
   expect(result.container).toMatchSnapshot();
 });

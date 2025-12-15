@@ -97,12 +97,12 @@
 
 <style>
   :global(
-      .driver-popover,
-      .driver-popover-title,
-      .driver-popover-description,
-      .driver-popover-progress-text,
-      .driver-popover-footer button
-    ) {
+    .driver-popover,
+    .driver-popover-title,
+    .driver-popover-description,
+    .driver-popover-progress-text,
+    .driver-popover-footer button
+  ) {
     font-family: var(--font-sans);
   }
   :global(.driver-popover-title) {

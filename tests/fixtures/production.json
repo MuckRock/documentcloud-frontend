@@ -16,10 +16,7 @@
     "original_extension": "pdf",
     "page_count": 47,
     "page_spec": "612.0x792.0:0-46",
-    "projects": [
-      46386,
-      6
-    ],
+    "projects": [46386, 6],
     "publish_at": null,
     "published_url": "",
     "related_article": "",
@@ -77,10 +74,7 @@
     "original_extension": "pdf",
     "page_count": 7,
     "page_spec": "612.0x792.0:0-6",
-    "projects": [
-      46386,
-      6
-    ],
+    "projects": [46386, 6],
     "publish_at": null,
     "published_url": "",
     "related_article": "",
@@ -109,10 +103,7 @@
     "original_extension": "pdf",
     "page_count": 31,
     "page_spec": "612.0x792.0:0-26,28-30;616.7999877929688x795.1199951171875:27",
-    "projects": [
-      2,
-      9352
-    ],
+    "projects": [2, 9352],
     "publish_at": null,
     "published_url": "",
     "related_article": "",
@@ -141,9 +132,7 @@
     "original_extension": "pdf",
     "page_count": 46,
     "page_spec": "612.0x792.0:0-45",
-    "projects": [
-      2
-    ],
+    "projects": [2],
     "publish_at": null,
     "published_url": "",
     "related_article": "",

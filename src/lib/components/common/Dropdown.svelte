@@ -123,7 +123,7 @@
 
 <!-- Optional window overlay -->
 {#if overlay && isOpen}
-  <div class="overlay" />
+  <div class="overlay"></div>
 {/if}
 <!-- Element to Trigger Dropdown -->
 <div
