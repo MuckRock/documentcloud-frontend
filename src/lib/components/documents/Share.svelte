@@ -259,11 +259,8 @@
           <CustomizeEmbed />
         </div>
       {:else}
-        <iframe
-          class="embed"
-          title="Embed Preview"
-          src={embedSrc?.toString()}
-        />
+        <iframe class="embed" title="Embed Preview" src={embedSrc?.toString()}
+        ></iframe>
       {/if}
     </main>
   </div>

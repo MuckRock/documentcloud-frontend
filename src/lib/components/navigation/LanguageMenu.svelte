@@ -38,7 +38,7 @@
         {/if}
       </div>
     </NavItem>
-    <Menu slot="default" let:close>
+    <Menu slot="inner" let:close>
       {#each LANGUAGES as [name, code, flag]}
         <NavItem
           on:click={() => {

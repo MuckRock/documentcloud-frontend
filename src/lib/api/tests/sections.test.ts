@@ -9,9 +9,8 @@ type Use<T> = (value: T) => Promise<void>;
 
 const test = base.extend({
   async document({}, use: Use<Document>) {
-    const document = await import(
-      "@/test/fixtures/documents/document-expanded.json"
-    );
+    const document =
+      await import("@/test/fixtures/documents/document-expanded.json");
 
     await use(document as Document);
   },

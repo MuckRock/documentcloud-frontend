@@ -11,12 +11,9 @@ export const documents = {
   list: http.get(new URL("documents/", BASE_API_URL).href, () => {
     return HttpResponse.json(docs);
   }),
-  pending: http.get(
-    new URL("documents/pending/", BASE_API_URL).href,
-    () => {
-      return HttpResponse.json(pending);
-    },
-  ),
+  pending: http.get(new URL("documents/pending/", BASE_API_URL).href, () => {
+    return HttpResponse.json(pending);
+  }),
   error: http.get(
     new URL("documents/search/", "https://api.www.documentcloud.org/api/").href,
     () => {

@@ -110,12 +110,8 @@
     </fieldset>
   {/if}
   <input type="text" name="url" value={$page.url.href} hidden />
-  <textarea
-    class="feedback"
-    name="message"
-    bind:value={feedback}
-    {placeholder}
-  />
+  <textarea class="feedback" name="message" bind:value={feedback} {placeholder}
+  ></textarea>
 
   <footer class="actions">
     <Flex align="center">

@@ -9,9 +9,11 @@ export const dataHandler = (data) => () => {
   return HttpResponse.json(data);
 };
 
-export const emptyHandler = (emptyData: any = []) => () => {
-  return HttpResponse.json(emptyData);
-};
+export const emptyHandler =
+  (emptyData: any = []) =>
+  () => {
+    return HttpResponse.json(emptyData);
+  };
 
 export const errorHandler = () => {
   return HttpResponse.json(

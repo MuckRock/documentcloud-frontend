@@ -4,7 +4,9 @@
   font-style: normal;
   font-weight: 400;
   src: url("/fonts/source-sans-pro-cyrillic-regular.woff") format("woff");
-  src: local(""), url("/fonts/source-sans-pro-cyrillic-regular.woff2") format("woff2");
+  src:
+    local(""),
+    url("/fonts/source-sans-pro-cyrillic-regular.woff2") format("woff2");
 }
 
 @font-face {
@@ -12,7 +14,9 @@
   font-style: italic;
   font-weight: 400;
   src: url("/fonts/source-sans-pro-cyrillic-italic.woff") format("woff");
-  src: local(""), url("/fonts/source-sans-pro-cyrillic-italic.woff2") format("woff2");
+  src:
+    local(""),
+    url("/fonts/source-sans-pro-cyrillic-italic.woff2") format("woff2");
 }
 
 @font-face {
@@ -20,7 +24,9 @@
   font-style: normal;
   font-weight: 600;
   src: url("/fonts/source-sans-pro-cyrillic-600.woff") format("woff");
-  src: local(""), url("/fonts/source-sans-pro-cyrillic-600.woff2") format("woff2");
+  src:
+    local(""),
+    url("/fonts/source-sans-pro-cyrillic-600.woff2") format("woff2");
 }
 
 @font-face {
@@ -28,7 +34,9 @@
   font-style: normal;
   font-weight: 700;
   src: url("/fonts/source-sans-pro-cyrillic-700.woff") format("woff");
-  src: local(""), url("/fonts/source-sans-pro-cyrillic-700.woff2") format("woff2");
+  src:
+    local(""),
+    url("/fonts/source-sans-pro-cyrillic-700.woff2") format("woff2");
 }
 
 /* Limited Latin charset for Langauge menus */
@@ -37,7 +45,9 @@
   font-style: normal;
   font-weight: 600;
   src: url("/fonts/source-sans-pro-latin-menuset-600.woff") format("woff");
-  src: local(""), url("/fonts/source-sans-pro-latin-menuset-600.woff2") format("woff2");
+  src:
+    local(""),
+    url("/fonts/source-sans-pro-latin-menuset-600.woff2") format("woff2");
 }
 
 /* Source Code Pro */

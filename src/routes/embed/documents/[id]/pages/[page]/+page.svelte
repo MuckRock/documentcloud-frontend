@@ -142,7 +142,7 @@
           tabindex="-1"
           role="dialog"
           aria-modal="true"
-        />
+        ></div>
       {/if}
     {/each}
 

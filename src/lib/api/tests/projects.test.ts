@@ -24,9 +24,8 @@ type Use<T> = (value: T) => Promise<void>;
 
 const test = base.extend({
   async documents({}, use: Use<Page<ProjectMembershipItem>>) {
-    const { default: documents } = await import(
-      "@/test/fixtures/projects/project-documents.json"
-    );
+    const { default: documents } =
+      await import("@/test/fixtures/projects/project-documents.json");
 
     await use(documents);
   },

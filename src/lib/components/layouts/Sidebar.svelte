@@ -80,7 +80,7 @@
     on:click={close}
     on:keydown={close}
     transition:fade={fadeOptions}
-  />
+  ></div>
 {/if}
 
 <style>

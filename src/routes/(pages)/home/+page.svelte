@@ -525,7 +525,7 @@
     {@html data.content}
   </div>
 
-  <footer />
+  <footer></footer>
 </div>
 
 <style>

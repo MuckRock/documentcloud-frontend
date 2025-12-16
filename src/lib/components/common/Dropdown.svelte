@@ -123,7 +123,7 @@
 
 <!-- Optional window overlay -->
 {#if overlay && isOpen}
-  <div class="overlay" />
+  <div class="overlay"></div>
 {/if}
 <!-- Element to Trigger Dropdown -->
 <div
@@ -145,7 +145,7 @@
   class:open={isOpen}
   style="left: {$dropdownCoords.x}px; top: {$dropdownCoords.y}px;"
 >
-  <slot {close} />
+  <slot name="inner" {close} />
 </div>
 
 <style>

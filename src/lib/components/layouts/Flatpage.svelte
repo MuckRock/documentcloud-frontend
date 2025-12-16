@@ -142,7 +142,7 @@
     </div>
   </header>
   <nav class="toccontainer">
-    <div class="toc" bind:this={sidebarElem} />
+    <div class="toc" bind:this={sidebarElem}></div>
   </nav>
   <main class="content" bind:this={contentElem}>
     {@html markdownContent}

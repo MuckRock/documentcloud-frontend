@@ -62,7 +62,7 @@
       <Button minW={false} slot="anchor" ghost mode="primary">
         <KebabHorizontal16 />
       </Button>
-      <Menu slot="default" let:close>
+      <Menu slot="inner" let:close>
         <MenuItem
           on:click={() => {
             close();

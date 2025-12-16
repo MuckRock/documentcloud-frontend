@@ -110,7 +110,7 @@ Assumes it's a child of a ViewerContext
           {current}
           <ChevronDown12 slot="end" />
         </NavItem>
-        <Menu slot="default" let:close>
+        <Menu slot="inner" let:close>
           {#each readModeDropdownItems.entries() as [value, name]}
             <MenuItem
               selected={$mode === value}

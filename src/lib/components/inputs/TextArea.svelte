@@ -36,7 +36,7 @@ A text area for writing text
   export let value = "";
 </script>
 
-<textarea bind:value use:autoResize {...$$restProps} />
+<textarea bind:value use:autoResize {...$$restProps}></textarea>
 
 <style>
   textarea {
