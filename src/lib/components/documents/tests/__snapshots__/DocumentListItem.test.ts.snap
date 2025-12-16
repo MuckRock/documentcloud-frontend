@@ -3,10 +3,10 @@
 exports[`DocumentListItem > renders 1`] = `
 <div>
   <div
-    class="document-list-item svelte-fwx4bk"
+    class="document-list-item svelte-145vmhw small"
   >
     <a
-      class="document-link thumbnail-link svelte-fwx4bk"
+      class="document-link thumbnail-link svelte-145vmhw"
       href="https://www.dev.documentcloud.org/documents/24002098-quarterly-reports-created-pursuant-to-the-letter-from-the-national-archives-and-records-administration-dated-june-1-2018/"
     >
       <div
@@ -25,16 +25,16 @@ exports[`DocumentListItem > renders 1`] = `
     </a>
      
     <div
-      class="document-info svelte-fwx4bk"
+      class="document-info svelte-145vmhw"
     >
       <div
-        class="head svelte-fwx4bk"
+        class="head svelte-145vmhw"
       >
         <h3
-          class="title svelte-fwx4bk"
+          class="title svelte-145vmhw"
         >
           <a
-            class="document-link title-link svelte-fwx4bk"
+            class="document-link title-link svelte-145vmhw"
             href="https://www.dev.documentcloud.org/documents/24002098-quarterly-reports-created-pursuant-to-the-letter-from-the-national-archives-and-records-administration-dated-june-1-2018/"
           >
             Quarterly Reports created pursuant to the letter from the National Archives and Records Administration dated June 1, 2018
@@ -42,7 +42,7 @@ exports[`DocumentListItem > renders 1`] = `
         </h3>
          
         <div
-          class="access svelte-fwx4bk"
+          class="access svelte-145vmhw"
         >
           <div
             class="access public svelte-o63adk"
@@ -66,10 +66,10 @@ exports[`DocumentListItem > renders 1`] = `
       </div>
        
       <p
-        class="meta svelte-fwx4bk"
+        class="meta svelte-145vmhw"
       >
         <a
-          class="document-link svelte-fwx4bk"
+          class="document-link svelte-145vmhw"
           href="https://www.dev.documentcloud.org/documents/24002098-quarterly-reports-created-pursuant-to-the-letter-from-the-national-archives-and-records-administration-dated-june-1-2018/?mode=grid"
         >
           20 pages
@@ -86,13 +86,19 @@ exports[`DocumentListItem > renders 1`] = `
        
        
       <div
-        class="data svelte-fwx4bk"
+        class="data svelte-145vmhw"
       >
         
          
         
       </div>
     </div>
+    <iframe
+      aria-hidden="true"
+      src="about:blank"
+      style="display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; border: 0; opacity: 0; pointer-events: none; z-index: -1;"
+      tabindex="-1"
+    />
   </div>
 </div>
 `;

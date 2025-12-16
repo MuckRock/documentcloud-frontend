@@ -177,7 +177,7 @@
             <p class="orgname">{active_org.name}</p>
             <span class="arrow" slot="end"><ChevronDown12 /></span>
           </NavItem>
-          <Menu --max-height="24rem">
+          <Menu slot="inner" --max-height="24rem">
             {#each otherOrgs as otherOrg}
               <NavItem
                 hover

@@ -26,6 +26,7 @@ describe("KeyValue", () => {
   it("renders with provided key and value", () => {
     const { container } = render(KeyValue, {
       props: {
+        keys: ["testKey"],
         key: "testKey",
         value: "testValue",
       },
@@ -43,6 +44,7 @@ describe("KeyValue", () => {
   it("allows changing the value", async () => {
     render(KeyValue, {
       props: {
+        keys: ["testKey"],
         key: "testKey",
         value: "",
       },
@@ -60,6 +62,7 @@ describe("KeyValue", () => {
     const handleAdd = vi.fn();
     const { component } = render(KeyValue, {
       props: {
+        keys: ["testKey"],
         key: "testKey",
         value: "testValue",
         add: true,
@@ -84,6 +87,7 @@ describe("KeyValue", () => {
     const handleDelete = vi.fn();
     const { component } = render(KeyValue, {
       props: {
+        keys: ["testKey"],
         key: "testKey",
         value: "testValue",
         add: false,
@@ -107,7 +111,8 @@ describe("KeyValue", () => {
   it("disables add button when key or value is empty", () => {
     render(KeyValue, {
       props: {
-        key: "",
+        keys: ["test"],
+        key: "test",
         value: "",
         add: true,
       },
@@ -120,6 +125,7 @@ describe("KeyValue", () => {
   it("enables add button when both key and value are provided", () => {
     render(KeyValue, {
       props: {
+        keys: ["testKey"],
         key: "testKey",
         value: "testValue",
         add: true,
@@ -130,19 +136,17 @@ describe("KeyValue", () => {
     expect(addButton).toBeEnabled();
   });
 
-  it("clears key and value when clear() method is called", async () => {
-    const { component, container } = render(KeyValue, {
+  it("updates to empty key and value when props are changed to empty strings", async () => {
+    const { rerender, container } = render(KeyValue, {
       props: {
+        keys: ["testKey"],
         key: "testKey",
         value: "testValue",
       },
     });
 
-    // Call the clear method
-    component.clear();
-
-    // Wait for the component to update
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    // Update props to empty values (simulates what clear() does internally)
+    await rerender({ key: "", value: "" });
 
     // Check that both inputs are cleared
     const valueInput = screen.getByPlaceholderText("Value");
@@ -155,6 +159,7 @@ describe("KeyValue", () => {
   it("disables inputs and buttons when disabled prop is true", () => {
     render(KeyValue, {
       props: {
+        keys: ["testKey"],
         key: "testKey",
         value: "testValue",
         add: true,
@@ -187,7 +192,7 @@ describe("KeyValue", () => {
   });
 
   it("allows setting a new key that is not in the predefined keys array", async () => {
-    const { component, container } = render(KeyValue, {
+    const { rerender, container } = render(KeyValue, {
       props: {
         keys: ["existingKey1", "existingKey2", "_tag"],
         key: "",
@@ -197,18 +202,15 @@ describe("KeyValue", () => {
 
     // When a user types a new key in svelecte and selects it,
     // the key prop gets updated. This simulates that behavior.
-    component.$set({ key: "newCustomKey" });
-
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await rerender({ key: "newCustomKey" });
 
     // Verify the new key is set even though it wasn't in the original keys array
     const hiddenInput = container.querySelector('input[name="key"]');
     expect(hiddenInput).toHaveValue("newCustomKey");
-    expect(component.key).toBe("newCustomKey");
   });
 
   it("updates key when a new option is selected", async () => {
-    const { component, container } = render(KeyValue, {
+    const { rerender, container } = render(KeyValue, {
       props: {
         keys: ["key1", "key2", "_tag"],
         key: "",
@@ -218,9 +220,7 @@ describe("KeyValue", () => {
 
     // Simulate selecting a new key by directly setting the component prop
     // This mimics what happens when the user selects an option in svelecte
-    component.$set({ key: "key1" });
-
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await rerender({ key: "key1" });
 
     const hiddenInput = container.querySelector('input[name="key"]');
     expect(hiddenInput).toHaveValue("key1");

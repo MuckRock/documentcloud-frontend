@@ -1,5 +1,3 @@
-<svelte:options accessors />
-
 <!-- @component
 Input for a single key/value pair or tag (where `key` is `_tag`).
 This uses `svelecte` to let users more easily choose existing keys.

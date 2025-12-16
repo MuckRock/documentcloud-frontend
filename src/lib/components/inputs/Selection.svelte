@@ -1,5 +1,3 @@
-<svelte:options accessors />
-
 <script lang="ts">
   import type { Readable } from "svelte/store";
   import type { Document } from "$lib/api/types";

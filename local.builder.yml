@@ -11,7 +11,7 @@ services:
   install:
     extends:
       service: base
-    command: npm ci && npm audit fix
+    command: npm ci --legacy-peer-deps
     environment:
       DOCKER: true
       NODE_TLS_REJECT_UNAUTHORIZED: 0 # todo: solve local certificate chain issues

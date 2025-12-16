@@ -62,7 +62,7 @@
     <NavItem slot="anchor">
       <ProcessSummary counts={totalCounts} />
     </NavItem>
-    <Menu>
+    <Menu slot="inner">
       <AddOns />
       <Documents />
     </Menu>

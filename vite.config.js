@@ -45,7 +45,6 @@ export default defineConfig({
     esbuildOptions: {
       target: "esnext",
     },
-    include: ["svelte-fast-dimension/action"],
   },
 
   resolve: {
@@ -55,6 +54,10 @@ export default defineConfig({
   },
 
   server: process.env.NODE_ENV === "remote" ? remoteServer : localServer,
+
+  ssr: {
+    noExternal: ["intl-messageformat"],
+  },
 
   test: {
     setupFiles: ["./vitest-setup.js"],

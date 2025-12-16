@@ -156,7 +156,7 @@ Assumes it's a child of a ViewerContext
           <Search16 />
           {$_("common.search")}
         </Button>
-        <Menu>
+        <Menu slot="inner">
           <Search name="q" {query} otherParams={{ mode: "search" }} />
         </Menu>
       </Dropdown>

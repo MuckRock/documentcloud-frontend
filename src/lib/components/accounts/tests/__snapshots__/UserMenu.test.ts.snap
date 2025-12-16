@@ -4,7 +4,7 @@ exports[`UserMenu 1`] = `
 <div>
    
   <div
-    class="anchor svelte-1hlou74"
+    class="anchor svelte-v01npp"
     role="button"
     tabindex="0"
   >
@@ -57,7 +57,7 @@ exports[`UserMenu 1`] = `
   </div>
    
   <div
-    class="dropdown svelte-1hlou74"
+    class="dropdown svelte-v01npp"
     style="left: 0px; top: 0px;"
   >
     <div

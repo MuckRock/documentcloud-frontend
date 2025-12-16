@@ -34,7 +34,7 @@
           {$_("documentBrowser.fieldsAnchor")}
           <ChevronDown12 slot="end" />
         </NavItem>
-        <Menu>
+        <Menu slot="inner">
           <VisibleFields />
         </Menu>
       </Dropdown>
