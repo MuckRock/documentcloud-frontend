@@ -95,7 +95,7 @@
       </NavItem>
     {/if}
   </svelte:fragment>
-  <Menu slot="default" let:close>
+  <Menu slot="inner" let:close>
     <div class="menu-inner" class:sm={width <= remToPx(32)}>
       {#if isPremium && active_org.monthly_credits && active_org.credit_reset_date}
         <MenuInsert>

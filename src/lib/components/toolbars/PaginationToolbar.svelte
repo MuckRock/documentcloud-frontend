@@ -83,7 +83,7 @@
             <ChevronUp12 slot="end" />
           </NavItem>
         </div>
-        <Menu slot="default" let:close>
+        <Menu slot="inner" let:close>
           {#each sections as section}
             <MenuItem
               on:click={() => {

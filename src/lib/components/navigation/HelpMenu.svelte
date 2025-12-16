@@ -47,7 +47,7 @@
       {/if}
     </div>
   </NavItem>
-  <Menu slot="default" let:close>
+  <Menu slot="inner" let:close>
     {#if showTour}
       <NavItem hover on:click={onTourClick}>
         <Milestone16 slot="start" />

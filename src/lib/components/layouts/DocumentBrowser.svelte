@@ -309,7 +309,7 @@
                   <ChevronUp12 slot="end" />
                 </NavItem>
 
-                <Menu slot="default" let:close>
+                <Menu slot="inner" let:close>
                   <DocumentActions afterClick={() => close()} />
                 </Menu>
               </Dropdown>

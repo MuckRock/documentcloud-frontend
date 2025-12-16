@@ -51,7 +51,7 @@
       {/if}
     </div>
   </NavItem>
-  <Menu slot="default" let:close>
+  <Menu slot="inner" let:close>
     <NavItem href={SQUARELET_BASE} target="_blank" on:click={close}>
       <Gear16 slot="start" />
       {$_("authSection.user.acctSettings")}

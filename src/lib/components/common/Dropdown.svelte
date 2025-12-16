@@ -145,7 +145,7 @@
   class:open={isOpen}
   style="left: {$dropdownCoords.x}px; top: {$dropdownCoords.y}px;"
 >
-  <slot {close} />
+  <slot name="inner" {close} />
 </div>
 
 <style>

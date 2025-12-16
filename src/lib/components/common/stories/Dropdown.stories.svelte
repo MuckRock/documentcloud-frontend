@@ -25,7 +25,7 @@
       Open Dropdown
       <ChevronDown12 slot="end" />
     </NavItem>
-    <Menu slot="default" let:close>
+    <Menu slot="inner" let:close>
       <MenuItem on:click={close}>Item 1</MenuItem>
       <MenuItem on:click={close}>Item 2</MenuItem>
       <MenuItem on:click={close}>Item 3</MenuItem>
@@ -40,7 +40,7 @@
       Open Dropdown
       <ChevronDown12 slot="end" />
     </NavItem>
-    <Menu slot="default" let:close>
+    <Menu slot="inner" let:close>
       <MenuItem on:click={close}>Item 1</MenuItem>
       <MenuItem on:click={close}>Item 2</MenuItem>
       <MenuItem on:click={close}>Item 3</MenuItem>
@@ -55,7 +55,7 @@
       Open Dropdown
       <ChevronDown12 slot="end" />
     </NavItem>
-    <Menu slot="default" let:close>
+    <Menu slot="inner" let:close>
       <MenuItem on:click={close}>Item 1</MenuItem>
       <MenuItem on:click={close}>Item 2</MenuItem>
       <MenuItem on:click={close}>Item 3</MenuItem>
@@ -70,7 +70,7 @@
       Open Dropdown
       <ChevronRight12 slot="end" />
     </NavItem>
-    <Menu slot="default" let:close>
+    <Menu slot="inner" let:close>
       <MenuItem on:click={close}>Item 1</MenuItem>
       <MenuItem on:click={close}>Item 2</MenuItem>
       <MenuItem on:click={close}>Item 3</MenuItem>
@@ -85,7 +85,7 @@
       Open Dropdown
       <ChevronRight12 slot="end" />
     </NavItem>
-    <Menu slot="default" let:close>
+    <Menu slot="inner" let:close>
       <NavItem on:click={close}>Item 1</NavItem>
       <NavItem on:click={close}>Item 2</NavItem>
       <Dropdown position="right">
@@ -93,7 +93,7 @@
           Item 3
           <ChevronRight12 slot="end" />
         </NavItem>
-        <Menu slot="default">
+        <Menu slot="inner">
           <MenuItem>Item 1</MenuItem>
           <MenuItem>Item 2</MenuItem>
         </Menu>
