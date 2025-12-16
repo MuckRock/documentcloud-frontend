@@ -55,7 +55,7 @@ export const EMBED_MAX_AGE = +env.PUBLIC_EMBED_MAX_AGE || 60 * 60 * 24;
 export const PAGE_MAX_AGE = +env.PUBLIC_PAGE_MAX_AGE || 60 * 60 * 24;
 
 // @ts-ignore
-export const VIEWER_MAX_AGE = +env.PUBLIC_VIEWER_MAX_AGE || 60 * 60;
+export const VIEWER_MAX_AGE = +(env.PUBLIC_VIEWER_MAX_AGE || 0) || 60 * 60;
 
 export const VERIFICATION_FORM_URL =
   "https://airtable.com/app93Yt5cwdVWTnqn/pagogIhgB1jZTzq00/form";
