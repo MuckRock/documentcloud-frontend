@@ -1,4 +1,4 @@
-import type { StorybookConfig } from "@storybook/svelte-vite";
+import type { StorybookConfig } from "@storybook/sveltekit";
 
 const config: StorybookConfig = {
   core: {
@@ -24,18 +24,18 @@ const config: StorybookConfig = {
     autodocs: "tag",
   },
 
-  viteFinal(config) {
-    config.resolve = {
-      alias: {
-        "@": new URL("../src", import.meta.url).toString(),
-        "@/*": new URL("../src/*", import.meta.url).toString(),
-      },
-    };
+  async viteFinal(config) {
+    if (config.resolve) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        "@": new URL("../src", import.meta.url).pathname,
+        "@/*": new URL("../src/*", import.meta.url).pathname,
+      };
+    }
 
-    config.build = {
-      ...config.build,
-      target: "esnext",
-    };
+    if (config.build) {
+      config.build.target = "esnext";
+    }
 
     return config;
   },
