@@ -6,6 +6,7 @@ import {
   screen,
   fireEvent,
   createEvent,
+  waitFor,
 } from "@testing-library/svelte";
 
 import DocumentUploadForm from "../Upload.svelte";
@@ -26,7 +27,7 @@ describe("DocumentUpload form", () => {
       },
     });
     await act(() => fireEvent(dropElement, dropEvent));
-    const fileListItem = screen.getByRole("listitem");
+    const fileListItem = await waitFor(() => screen.getByRole("listitem"));
     expect(fileListItem.textContent).toContain("128 kB");
   });
 
@@ -45,7 +46,7 @@ describe("DocumentUpload form", () => {
       },
     });
     await act(() => fireEvent(dropElement, dropEvent));
-    const fileListItem = screen.getByRole("listitem");
+    const fileListItem = await waitFor(() => screen.getByRole("listitem"));
     expect(fileListItem.textContent).toContain(
       "The maximum size for a PDF is 500MB",
     );
