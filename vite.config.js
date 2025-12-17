@@ -3,6 +3,7 @@ import url from "node:url";
 
 import { sveltekit } from "@sveltejs/kit/vite";
 import { defineConfig, configDefaults } from "vitest/config";
+import { svelteTesting } from "@testing-library/svelte/vite";
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,9 +24,7 @@ const remoteServer = {
   },
 };
 
-const plugins = [sveltekit()];
-
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   build: {
     sourcemap: true,
     target: "esnext",
@@ -38,7 +37,7 @@ export default defineConfig({
     ),
   },
 
-  plugins,
+  plugins: [sveltekit(), svelteTesting()],
 
   // allow top-level await
   optimizeDeps: {
@@ -78,4 +77,4 @@ export default defineConfig({
       reporter: ["text", "html", "lcov", "clover", "json", "json-summary"],
     },
   },
-});
+}));

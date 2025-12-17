@@ -14,6 +14,7 @@
   import { toast } from "../layouts/Toaster.svelte";
 
   export let document: Document;
+  export let onclose: ((event: CustomEvent) => void) | undefined = undefined;
 
   const dispatch = createEventDispatcher();
 
@@ -43,6 +44,12 @@
     document.data[key] = (document.data[key] ?? []).filter((v) => v !== value);
   }
 
+  function close() {
+    const event = new CustomEvent("close");
+    dispatch("close");
+    onclose?.(event);
+  }
+
   function onSubmit() {
     return async ({
       result,
@@ -52,7 +59,7 @@
       update: (options?: Record<string, any>) => void;
     }) => {
       // `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
-      dispatch("close");
+      close();
       update(result);
       if (result.type === "success") {
         // do something
@@ -96,7 +103,7 @@
   </table>
   <Flex class="buttons">
     <Button type="submit" mode="primary">{$_("data.save")}</Button>
-    <Button on:click={() => dispatch("close")}>{$_("data.cancel")}</Button>
+    <Button on:click={close}>{$_("data.cancel")}</Button>
   </Flex>
 </form>
 
