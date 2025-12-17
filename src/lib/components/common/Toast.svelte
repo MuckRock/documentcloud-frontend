@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import { createEventDispatcher } from "svelte";
   import { onMount } from "svelte";
   import { quintOut } from "svelte/easing";
@@ -18,9 +19,25 @@
 
   type Status = "info" | "success" | "warning" | "error";
 
-  export let id: undefined | string | number = undefined;
-  export let status: Maybe<Status> = undefined;
-  export let lifespan: number | null = TOAST_LENGTH;
+  interface Props {
+    id?: undefined | string | number;
+    status?: Maybe<Status>;
+    lifespan?: number | null;
+    children?: Snippet;
+    oncancel?: () => void;
+    onreset?: () => void;
+    onclose?: () => void;
+  }
+
+  let {
+    id = undefined,
+    status = undefined,
+    lifespan = TOAST_LENGTH,
+    children,
+    onclose,
+    onreset,
+    oncancel,
+  }: Props = $props();
 
   let toastTimeout: Nullable<ReturnType<typeof setTimeout>> = null;
 
@@ -35,18 +52,18 @@
   const dispatch = createEventDispatcher();
 
   function close() {
-    dispatch("close");
+    onclose?.();
   }
 
   function cancel() {
-    dispatch("cancel");
+    oncancel?.();
     if (toastTimeout) {
       clearTimeout(toastTimeout);
     }
   }
 
   function reset() {
-    dispatch("reset");
+    onreset?.();
     cancel();
     if (lifespan !== null) {
       toastTimeout = setTimeout(close, lifespan);
@@ -58,22 +75,25 @@
       toastTimeout = setTimeout(close, lifespan);
     }
   });
+
+  const Icon = $derived(statusIcons[String(status)]);
 </script>
 
 <div
   id={`toast-${id}`}
   class={["toast", status].join(" ")}
-  on:mouseenter={cancel}
-  on:mouseleave={reset}
+  onmouseenter={cancel}
+  onmouseleave={reset}
   role="dialog"
+  tabindex="0"
   transition:fly={{ duration: 750, easing: quintOut, y: -20 }}
 >
   <div class="icon">
-    <svelte:component this={statusIcons[String(status)]} />
+    <Icon />
   </div>
-  <button class="close" on:click={close}><CloseIcon /></button>
+  <button class="close" onclick={close}><CloseIcon /></button>
   <div class="content">
-    <slot />
+    {@render children?.()}
   </div>
 </div>
 

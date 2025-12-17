@@ -34,7 +34,7 @@
         <code>project:</code>, or <code>organization:</code>, etc. Use
         <code>sort:</code> to order results.
       </span>
-      <a href="https://www.documentcloud.org/help/search">Learn more</a>
+      <a href="https://www.documentcloud.org/help/search/">Learn more</a>
     </Search>
   </div>
 </Story>

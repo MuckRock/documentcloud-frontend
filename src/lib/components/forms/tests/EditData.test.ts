@@ -140,14 +140,17 @@ describe("EditData", () => {
 
   it("dispatches close event when Cancel button is clicked", async () => {
     const handleClose = vi.fn();
-    const { component } = render(EditData, { document: mockDocument });
+    const { container } = render(EditData, { document: mockDocument });
 
-    component.$on("close", handleClose);
+    // Listen to the close event on the container
+    container.addEventListener("close", handleClose);
 
     const cancelButton = screen.getByText("Cancel");
     await fireEvent.click(cancelButton);
 
     expect(handleClose).toHaveBeenCalledTimes(1);
+
+    container.removeEventListener("close", handleClose);
   });
 
   it("handles documents with empty data", () => {

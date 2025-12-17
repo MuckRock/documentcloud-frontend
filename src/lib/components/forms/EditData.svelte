@@ -78,17 +78,12 @@
     <!-- kv -->
     {#each data as [key, values]}
       {#each values as value}
-        <KeyValue {keys} {key} {value} on:delete={(e) => remove(e.detail)} />
+        <KeyValue {keys} {key} {value} ondelete={(e) => remove(e)} />
       {/each}
     {/each}
 
     {#each tags as tag}
-      <KeyValue
-        {keys}
-        key="_tag"
-        value={tag}
-        on:delete={(e) => remove(e.detail)}
-      />
+      <KeyValue {keys} key="_tag" value={tag} ondelete={(e) => remove(e)} />
     {/each}
     <tfoot>
       <tr>
@@ -96,7 +91,7 @@
           {$_("data.addNew")}
         </th>
       </tr>
-      <KeyValue {keys} bind:this={kv} add on:add={(e) => add(e.detail)} />
+      <KeyValue {keys} bind:this={kv} add onadd={(e) => add(e)} />
     </tfoot>
   </table>
   <Flex class="buttons">
