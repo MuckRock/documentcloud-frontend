@@ -31,8 +31,10 @@
               href="http://github.com/{addon.repository}"
               target="_blank"
               rel="noopener noreferrer"
-              title={$_("addonBrowserDialog.viewsource")}>{author.name}</a
+              title={$_("addonBrowserDialog.viewsource")}
             >
+              {author.name}
+            </a>
           </p>
         {/if}
         {#if isPremium}
@@ -93,7 +95,7 @@
     -webkit-line-clamp: 4;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    & > * {
+    & > :global(*) {
       margin-top: 0;
       font-size: 0.875rem;
     }
