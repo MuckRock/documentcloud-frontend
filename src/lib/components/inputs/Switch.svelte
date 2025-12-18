@@ -18,6 +18,7 @@
     {disabled}
     role="switch"
     aria-checked={checked}
+    title={name}
     on:click|preventDefault={handleClick}
   ></button>
   <input {name} type="checkbox" bind:checked class="hidden" on:change />
