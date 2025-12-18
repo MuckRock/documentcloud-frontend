@@ -3,13 +3,14 @@
 exports[`Mailkey 1`] = `
 <div>
   <div
-    class="backdrop svelte-65lbzd"
+    class="backdrop svelte-1r5i0ji"
   >
     <div
-      class="dialog card svelte-65lbzd"
+      class="dialog card svelte-1r5i0ji"
+      style="max-width: 48rem; max-height: 90vh;"
     >
       <header
-        class="svelte-65lbzd"
+        class="svelte-1r5i0ji"
       >
         <button
           class="primary normal ghost svelte-12ugz1l"
@@ -41,55 +42,59 @@ exports[`Mailkey 1`] = `
       </header>
        
       <main
-        class="content svelte-65lbzd"
+        class="content svelte-1r5i0ji"
       >
         <div
-          class="description svelte-mrguwb"
+          class="modal-form content"
         >
-          <p>
-            You can upload documents to your account by sending them to to a special email address as attachments.
-          </p>
-          <p>
-            <strong>
-              For security reasons, this email is only shown to you once. Please copy it to a secure location.
-            </strong>
-          </p>
-          <p>
-            This address will accept attachments from any email account. Documents are uploaded as private. Generating a new upload address will disable any previously created addresses.
-          </p>
-          <p>
-            We’d love your feedback and to hear about creative use cases at 
-            <a
-              href="mailto:info@documentcloud.org"
-              target="_blank"
-            >
-              info@documentcloud.org
-            </a>
-            .
-          </p>
-        </div>
-         
-         
-        <div
-          style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 1rem;"
-        >
-          <button
-            class="primary normal minW svelte-12ugz1l"
-            title=""
-            type="button"
+          <div
+            class="description svelte-1udi41r"
           >
-            Create New Email Address
-          </button>
-          
+            <p>
+              You can upload documents to your account by sending them to to a special email address as attachments.
+            </p>
+            <p>
+              <strong>
+                For security reasons, this email is only shown to you once. Please copy it to a secure location.
+              </strong>
+            </p>
+            <p>
+              This address will accept attachments from any email account. Documents are uploaded as private. Generating a new upload address will disable any previously created addresses.
+            </p>
+            <p>
+              We’d love your feedback and to hear about creative use cases at 
+              <a
+                href="mailto:info@documentcloud.org"
+                target="_blank"
+              >
+                info@documentcloud.org
+              </a>
+              .
+            </p>
+          </div>
            
-          <button
-            class="danger normal minW svelte-12ugz1l"
-            title=""
-            type="button"
+           
+          <div
+            style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 1rem;"
           >
-            Delete Existing Address
-          </button>
-          
+            <button
+              class="primary normal minW svelte-12ugz1l"
+              title=""
+              type="button"
+            >
+              Create New Email Address
+            </button>
+            
+             
+            <button
+              class="danger normal minW svelte-12ugz1l"
+              title=""
+              type="button"
+            >
+              Delete Existing Address
+            </button>
+            
+          </div>
         </div>
       </main>
     </div>
@@ -100,13 +105,14 @@ exports[`Mailkey 1`] = `
 exports[`Mailkey 2`] = `
 <div>
   <div
-    class="backdrop svelte-65lbzd"
+    class="backdrop svelte-1r5i0ji"
   >
     <div
-      class="dialog card svelte-65lbzd"
+      class="dialog card svelte-1r5i0ji"
+      style="max-width: 48rem; max-height: 90vh;"
     >
       <header
-        class="svelte-65lbzd"
+        class="svelte-1r5i0ji"
       >
         <button
           class="primary normal ghost svelte-12ugz1l"
@@ -138,60 +144,64 @@ exports[`Mailkey 2`] = `
       </header>
        
       <main
-        class="content svelte-65lbzd"
+        class="content svelte-1r5i0ji"
       >
         <div
-          class="description svelte-mrguwb"
+          class="modal-form content"
         >
-          <p>
-            You can upload documents to your account by sending them to to a special email address as attachments.
-          </p>
-          <p>
-            <strong>
-              For security reasons, this email is only shown to you once. Please copy it to a secure location.
-            </strong>
-          </p>
-          <p>
-            This address will accept attachments from any email account. Documents are uploaded as private. Generating a new upload address will disable any previously created addresses.
-          </p>
-          <p>
-            We’d love your feedback and to hear about creative use cases at 
-            <a
-              href="mailto:info@documentcloud.org"
-              target="_blank"
-            >
-              info@documentcloud.org
-            </a>
-            .
-          </p>
-        </div>
-         
-        <p
-          class="message svelte-mrguwb"
-        >
-          Something happened
-        </p>
-         
-        <div
-          style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 1rem;"
-        >
-          <button
-            class="primary normal minW svelte-12ugz1l"
-            title=""
-            type="button"
+          <div
+            class="description svelte-1udi41r"
           >
-            Create New Email Address
-          </button>
-          
+            <p>
+              You can upload documents to your account by sending them to to a special email address as attachments.
+            </p>
+            <p>
+              <strong>
+                For security reasons, this email is only shown to you once. Please copy it to a secure location.
+              </strong>
+            </p>
+            <p>
+              This address will accept attachments from any email account. Documents are uploaded as private. Generating a new upload address will disable any previously created addresses.
+            </p>
+            <p>
+              We’d love your feedback and to hear about creative use cases at 
+              <a
+                href="mailto:info@documentcloud.org"
+                target="_blank"
+              >
+                info@documentcloud.org
+              </a>
+              .
+            </p>
+          </div>
            
-          <button
-            class="danger normal minW svelte-12ugz1l"
-            title=""
-            type="button"
+          <p
+            class="message svelte-1udi41r"
           >
-            Delete Existing Address
-          </button>
-          
+            Something happened
+          </p>
+           
+          <div
+            style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 1rem;"
+          >
+            <button
+              class="primary normal minW svelte-12ugz1l"
+              title=""
+              type="button"
+            >
+              Create New Email Address
+            </button>
+            
+             
+            <button
+              class="danger normal minW svelte-12ugz1l"
+              title=""
+              type="button"
+            >
+              Delete Existing Address
+            </button>
+            
+          </div>
         </div>
       </main>
     </div>

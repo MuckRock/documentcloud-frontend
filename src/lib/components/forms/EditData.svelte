@@ -62,7 +62,7 @@
   }
 </script>
 
-<form {action} method="post" use:enhance={onSubmit}>
+<form class="modal-form" {action} method="post" use:enhance={onSubmit}>
   <table>
     <thead>
       <tr>
@@ -110,11 +110,6 @@
   thead,
   tfoot {
     width: 100%;
-  }
-
-  form {
-    width: 100%;
-    padding: 1rem;
   }
 
   th {
