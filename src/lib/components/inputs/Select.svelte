@@ -2,10 +2,11 @@
 Wrapper for Svelecte: https://github.com/mskocik/svelecte
 -->
 <script lang="ts">
+  import type { ComponentProps } from "svelte";
   import Svelecte from "svelecte";
   import { X16 } from "svelte-octicons";
 
-  interface Props {
+  interface Props extends Omit<ComponentProps<typeof Svelecte>, "value"> {
     name: string;
     required?: boolean;
     options: any[];
@@ -22,17 +23,18 @@ Wrapper for Svelecte: https://github.com/mskocik/svelecte
 
   let {
     name,
+    value = $bindable(null),
     required = false,
-    options,
+    options = [],
     valueField = "value",
     labelField = "label",
-    value = $bindable(null),
     multiple = false,
     clearable = false,
     placeholder = multiple ? "Select..." : "Select",
     searchable = true,
     valueAsObject = false,
     disabled = false,
+    ...rest
   }: Props = $props();
 </script>
 
@@ -49,6 +51,7 @@ Wrapper for Svelecte: https://github.com/mskocik/svelecte
   {searchable}
   {valueAsObject}
   {disabled}
+  {...rest}
   bind:value
   --sv-bg="var(--white, #fff)"
   --sv-border="1px solid var(--gray-2, #99a8b3)"

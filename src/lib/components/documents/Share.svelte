@@ -181,7 +181,14 @@
         <div class="subselection">
           <Field>
             <FieldLabel>{$_("share.fields.note")}:</FieldLabel>
-            <Select name="note" options={noteOptions} bind:value={note_id} />
+            <Select
+              name="note"
+              options={noteOptions}
+              value={note_id}
+              onChange={({ value }) => {
+                note_id = value;
+              }}
+            />
           </Field>
         </div>
       {/if}
