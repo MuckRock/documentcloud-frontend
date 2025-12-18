@@ -2,7 +2,14 @@
 Change owner of one or more documents.
 -->
 <script lang="ts">
-  import type { APIError, Document, Maybe, Org, User } from "$lib/api/types";
+  import type {
+    APIError,
+    Document,
+    Maybe,
+    Nullable,
+    Org,
+    User,
+  } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
@@ -29,23 +36,14 @@ Change owner of one or more documents.
 
   const dispatch = createEventDispatcher();
 
-  let error: Maybe<APIError<null>> = undefined;
-  let user: Maybe<{ value: number; label: string; user?: User }> = undefined;
-  let org: Maybe<{ value: number; label: string; org?: Org }> =
-    $me && isOrg($me.organization)
-      ? {
-          value: $me.organization.id,
-          label: $me.organization.name,
-          org: $me.organization,
-        }
-      : undefined;
+  let error: Maybe<APIError<null>>;
+  let user: Nullable<{ value: number; label: string; user?: User }> = null;
+  let org: Nullable<{ value: number; label: string; org?: Org }> = null;
+  let orgOptions: { value: number; label: string; org?: Org }[] = [];
+  let loading = true;
 
   let userOptions: Promise<{ value: number; label: string; user?: User }[]> =
     Promise.resolve([]);
-  let orgOptions: { value: number; label: string; org?: Org }[] = org
-    ? [org]
-    : [];
-  let loading = true;
 
   $: ids = documents.map((d) => d.id);
   $: bulk = documents.length !== 1;
@@ -64,6 +62,11 @@ Change owner of one or more documents.
     if ($me) {
       // Load organizations the user belongs to
       orgOptions = await getOrgOptions($me);
+      // Set initial org value after options are loaded
+      const currentOrg = $me.organization;
+      if (isOrg(currentOrg)) {
+        org = orgOptions.find((opt) => opt.value === currentOrg.id) ?? null;
+      }
     }
     loading = false;
   });
@@ -77,7 +80,7 @@ Change owner of one or more documents.
         value: org.id,
         label: org.individual ? `${org.name} (individual)` : org.name,
         org,
-      })) ?? [org]
+      })) ?? []
     );
   }
 
