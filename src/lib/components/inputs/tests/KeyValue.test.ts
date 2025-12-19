@@ -1,5 +1,6 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/svelte";
+import { render, screen } from "@testing-library/svelte";
+import { userEvent } from "@testing-library/user-event";
 
 import KeyValue from "../KeyValue.svelte";
 
@@ -42,6 +43,7 @@ describe("KeyValue", () => {
   });
 
   it("allows changing the value", async () => {
+    const user = userEvent.setup();
     render(KeyValue, {
       props: {
         keys: ["testKey"],
@@ -53,59 +55,58 @@ describe("KeyValue", () => {
     const valueInput = screen.getByPlaceholderText("Value") as HTMLInputElement;
 
     // Simulate user typing in the value input
-    await fireEvent.input(valueInput, { target: { value: "newValue" } });
+    await user.clear(valueInput);
+    await user.type(valueInput, "newValue");
 
     expect(valueInput).toHaveValue("newValue");
   });
 
   it("dispatches add event with correct key and value when add button is clicked", async () => {
+    const user = userEvent.setup();
     const handleAdd = vi.fn();
-    const { component } = render(KeyValue, {
+    render(KeyValue, {
       props: {
         keys: ["testKey"],
         key: "testKey",
         value: "testValue",
         add: true,
+        onadd: handleAdd,
       },
     });
 
-    component.$on("add", handleAdd);
-
     // Find the add button (in add mode) by title attribute
     const addButton = screen.getByRole("button", { name: "Update" });
-    await fireEvent.click(addButton);
+    await user.click(addButton);
 
     expect(handleAdd).toHaveBeenCalledTimes(1);
-    expect(handleAdd).toHaveBeenCalledWith(
-      expect.objectContaining({
-        detail: { key: "testKey", value: "testValue" },
-      }),
-    );
+    expect(handleAdd).toHaveBeenCalledWith({
+      key: "testKey",
+      value: "testValue",
+    });
   });
 
   it("dispatches delete event with correct key and value when delete button is clicked", async () => {
+    const user = userEvent.setup();
     const handleDelete = vi.fn();
-    const { component } = render(KeyValue, {
+    render(KeyValue, {
       props: {
         keys: ["testKey"],
         key: "testKey",
         value: "testValue",
         add: false,
+        ondelete: handleDelete,
       },
     });
 
-    component.$on("delete", handleDelete);
-
     // Find the delete button (not in add mode) by title attribute
     const deleteButton = screen.getByRole("button", { name: "Delete" });
-    await fireEvent.click(deleteButton);
+    await user.click(deleteButton);
 
     expect(handleDelete).toHaveBeenCalledTimes(1);
-    expect(handleDelete).toHaveBeenCalledWith(
-      expect.objectContaining({
-        detail: { key: "testKey", value: "testValue" },
-      }),
-    );
+    expect(handleDelete).toHaveBeenCalledWith({
+      key: "testKey",
+      value: "testValue",
+    });
   });
 
   it("disables add button when key or value is empty", () => {

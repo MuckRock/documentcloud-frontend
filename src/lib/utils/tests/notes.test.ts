@@ -147,7 +147,9 @@ describe("Image loading utility", () => {
 
     vi.stubGlobal(
       "Image",
-      vi.fn(() => mockImage),
+      vi.fn(function () {
+        return mockImage;
+      }),
     );
 
     const promise = loadImage("test-image.jpg");
@@ -172,7 +174,9 @@ describe("Image loading utility", () => {
 
     vi.stubGlobal(
       "Image",
-      vi.fn(() => mockImage),
+      vi.fn(function () {
+        return mockImage;
+      }),
     );
 
     const promise = loadImage("invalid-image.jpg");

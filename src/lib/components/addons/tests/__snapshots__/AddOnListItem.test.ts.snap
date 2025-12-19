@@ -2,204 +2,209 @@
 
 exports[`AddOnListItem 1`] = `
 <div>
-  <a
-    class="addon-link svelte-1sp09hk"
-    href="/add-ons/MuckRock/documentcloud-bulk-edit-addon/"
+  <div
+    class="container addon-link svelte-155gb3"
+    id="MuckRock/documentcloud-bulk-edit-addon"
   >
     <div
-      class="container svelte-1sp09hk"
-      id="MuckRock/documentcloud-bulk-edit-addon"
+      class="row svelte-155gb3"
     >
       <div
-        class="row svelte-1sp09hk"
+        class="center-self svelte-155gb3"
       >
-        <div
-          class="center-self svelte-1sp09hk"
+        <svelte-css-wrapper
+          style="display: contents; --fill: var(--gray-3);"
         >
-          <div
-            style="display: contents; --fill: var(--gray-3);"
+          <button
+            class="pin svelte-cisk7z"
+            style="--padding: 0.25em; --border-radius: 4px;"
           >
-            <button
-              class="pin svelte-1pb8719"
-              style="--padding:0.25em; --border-radius:4px;"
+            <svg
+              class="svelte-1k3l8iu"
+              height="16px"
+              viewBox="0 0 16 16"
+              width="16px"
             >
-              <svg
-                class="svelte-4esjd6"
-                height="16px"
-                viewBox="0 0 16 16"
-                width="16px"
-              >
-                <title>
-                  Click to Pin
-                </title>
-                <path
-                  d="M3.00220543,1 C3.00220543,0.446875 3.44891524,0 4.00183577,0 L11.9988785,0 C12.551799,0 12.9985088,0.446875 12.9985088,1 C12.9985088,1.553125 12.551799,2 11.9988785,2 L11.0773442,2 L11.4334625,6.63125 C12.5799136,7.253125 13.4858286,8.29375 13.9169192,9.590625 L13.9481576,9.684375 C14.0512445,9.990625 13.9981391,10.325 13.8107084,10.584375 C13.6232777,10.84375 13.3202648,11 12.9985088,11 L3.00220543,11 C2.68044942,11 2.38056032,10.846875 2.19000578,10.584375 C1.99945125,10.321875 1.94946973,9.9875 2.05255661,9.684375 L2.08379506,9.590625 C2.51488564,8.29375 3.42080063,7.253125 4.56725167,6.63125 L4.92336998,2 L4.00183577,2 C3.44891524,2 3.00220543,1.553125 3.00220543,1 Z M7.00072677,12 L8.99998744,12 L8.99998744,15 C8.99998744,15.553125 8.55327764,16 8.00035711,16 C7.44743658,16 7.00072677,15.553125 7.00072677,15 L7.00072677,12 Z"
-                  fill-rule="nonzero"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-         
-        <div
-          class="stretch svelte-1sp09hk"
-        >
-          <h3
-            class="addon-name svelte-1sp09hk"
-          >
-            Bulk Edit
-          </h3>
-        </div>
-         
-        <div
-          class="metadata svelte-1sp09hk"
-        >
-          <p
-            class="author svelte-1sp09hk"
-          >
-            <a
-              class="svelte-1sp09hk"
-              href="http://github.com/MuckRock/documentcloud-bulk-edit-addon"
-              rel="noopener noreferrer"
-              target="_blank"
-              title="View Source"
-            >
-              MuckRock
-            </a>
-          </p>
-           
-        </div>
+              <title>
+                Click to Pin
+              </title>
+              <path
+                d="M3.00220543,1 C3.00220543,0.446875 3.44891524,0 4.00183577,0 L11.9988785,0 C12.551799,0 12.9985088,0.446875 12.9985088,1 C12.9985088,1.553125 12.551799,2 11.9988785,2 L11.0773442,2 L11.4334625,6.63125 C12.5799136,7.253125 13.4858286,8.29375 13.9169192,9.590625 L13.9481576,9.684375 C14.0512445,9.990625 13.9981391,10.325 13.8107084,10.584375 C13.6232777,10.84375 13.3202648,11 12.9985088,11 L3.00220543,11 C2.68044942,11 2.38056032,10.846875 2.19000578,10.584375 C1.99945125,10.321875 1.94946973,9.9875 2.05255661,9.684375 L2.08379506,9.590625 C2.51488564,8.29375 3.42080063,7.253125 4.56725167,6.63125 L4.92336998,2 L4.00183577,2 C3.44891524,2 3.00220543,1.553125 3.00220543,1 Z M7.00072677,12 L8.99998744,12 L8.99998744,15 C8.99998744,15.553125 8.55327764,16 8.00035711,16 C7.44743658,16 7.00072677,15.553125 7.00072677,15 L7.00072677,12 Z"
+                fill-rule="nonzero"
+              />
+            </svg>
+            <!---->
+          </button>
+          <!---->
+        </svelte-css-wrapper>
+        <!---->
       </div>
        
       <div
-        class="description svelte-1sp09hk"
+        class="stretch svelte-155gb3"
       >
-        This will update document information for all documents in your current search.  Please be sure you have edit access to these documents before running this add-on.
+        <h3
+          class="addon-name svelte-155gb3"
+        >
+          <a
+            class="svelte-155gb3"
+            href="/add-ons/MuckRock/documentcloud-bulk-edit-addon/"
+          >
+            Bulk Edit
+          </a>
+        </h3>
+      </div>
+       
+      <div
+        class="metadata svelte-155gb3"
+      >
+        <p
+          class="author svelte-155gb3"
+        >
+          MuckRock
+        </p>
+        <!---->
+         
+        <!---->
       </div>
     </div>
-  </a>
+     
+    <div
+      class="description svelte-155gb3"
+    >
+      This will update document information for all documents in your current search.  Please be sure you have edit access to these documents before running this add-on.
+      <!---->
+    </div>
+    <!---->
+  </div>
+  
+  
 </div>
 `;
 
 exports[`AddOnListItem 2`] = `
 <div>
-  <a
-    class="addon-link svelte-1sp09hk"
-    href="/add-ons/MuckRock/documentcloud-azure-document-intelligence-ocr-addon/"
+  <div
+    class="container addon-link svelte-155gb3"
+    id="MuckRock/documentcloud-azure-document-intelligence-ocr-addon"
   >
     <div
-      class="container svelte-1sp09hk"
-      id="MuckRock/documentcloud-azure-document-intelligence-ocr-addon"
+      class="row svelte-155gb3"
     >
       <div
-        class="row svelte-1sp09hk"
+        class="center-self svelte-155gb3"
       >
-        <div
-          class="center-self svelte-1sp09hk"
+        <svelte-css-wrapper
+          style="display: contents; --fill: var(--gray-3);"
+        >
+          <button
+            class="pin svelte-cisk7z"
+            style="--padding: 0.25em; --border-radius: 4px;"
+          >
+            <svg
+              class="svelte-1k3l8iu"
+              height="16px"
+              viewBox="0 0 16 16"
+              width="16px"
+            >
+              <title>
+                Click to Pin
+              </title>
+              <path
+                d="M3.00220543,1 C3.00220543,0.446875 3.44891524,0 4.00183577,0 L11.9988785,0 C12.551799,0 12.9985088,0.446875 12.9985088,1 C12.9985088,1.553125 12.551799,2 11.9988785,2 L11.0773442,2 L11.4334625,6.63125 C12.5799136,7.253125 13.4858286,8.29375 13.9169192,9.590625 L13.9481576,9.684375 C14.0512445,9.990625 13.9981391,10.325 13.8107084,10.584375 C13.6232777,10.84375 13.3202648,11 12.9985088,11 L3.00220543,11 C2.68044942,11 2.38056032,10.846875 2.19000578,10.584375 C1.99945125,10.321875 1.94946973,9.9875 2.05255661,9.684375 L2.08379506,9.590625 C2.51488564,8.29375 3.42080063,7.253125 4.56725167,6.63125 L4.92336998,2 L4.00183577,2 C3.44891524,2 3.00220543,1.553125 3.00220543,1 Z M7.00072677,12 L8.99998744,12 L8.99998744,15 C8.99998744,15.553125 8.55327764,16 8.00035711,16 C7.44743658,16 7.00072677,15.553125 7.00072677,15 L7.00072677,12 Z"
+                fill-rule="nonzero"
+              />
+            </svg>
+            <!---->
+          </button>
+          <!---->
+        </svelte-css-wrapper>
+        <!---->
+      </div>
+       
+      <div
+        class="stretch svelte-155gb3"
+      >
+        <h3
+          class="addon-name svelte-155gb3"
+        >
+          <a
+            class="svelte-155gb3"
+            href="/add-ons/MuckRock/documentcloud-azure-document-intelligence-ocr-addon/"
+          >
+            Azure Document Intelligence OCR
+          </a>
+        </h3>
+      </div>
+       
+      <div
+        class="metadata svelte-155gb3"
+      >
+        <p
+          class="author svelte-155gb3"
+        >
+          MuckRock
+        </p>
+        <!---->
+         
+        <span
+          class="badge svelte-155gb3"
+          role="status"
         >
           <div
-            style="display: contents; --fill: var(--gray-3);"
+            class="badge svelte-1xa6o93"
+            style="--badge-color: transparent; --label-color: var(--premium);"
           >
-            <button
-              class="pin svelte-1pb8719"
-              style="--padding:0.25em; --border-radius:4px;"
+            <span
+              class="icon svelte-1xa6o93"
             >
               <svg
-                class="svelte-4esjd6"
+                class="svelte-r1tris"
                 height="16px"
                 viewBox="0 0 16 16"
                 width="16px"
               >
                 <title>
-                  Click to Pin
+                  Premium
                 </title>
                 <path
-                  d="M3.00220543,1 C3.00220543,0.446875 3.44891524,0 4.00183577,0 L11.9988785,0 C12.551799,0 12.9985088,0.446875 12.9985088,1 C12.9985088,1.553125 12.551799,2 11.9988785,2 L11.0773442,2 L11.4334625,6.63125 C12.5799136,7.253125 13.4858286,8.29375 13.9169192,9.590625 L13.9481576,9.684375 C14.0512445,9.990625 13.9981391,10.325 13.8107084,10.584375 C13.6232777,10.84375 13.3202648,11 12.9985088,11 L3.00220543,11 C2.68044942,11 2.38056032,10.846875 2.19000578,10.584375 C1.99945125,10.321875 1.94946973,9.9875 2.05255661,9.684375 L2.08379506,9.590625 C2.51488564,8.29375 3.42080063,7.253125 4.56725167,6.63125 L4.92336998,2 L4.00183577,2 C3.44891524,2 3.00220543,1.553125 3.00220543,1 Z M7.00072677,12 L8.99998744,12 L8.99998744,15 C8.99998744,15.553125 8.55327764,16 8.00035711,16 C7.44743658,16 7.00072677,15.553125 7.00072677,15 L7.00072677,12 Z"
-                  fill-rule="nonzero"
+                  clip-rule="evenodd"
+                  d="M7 1C7 3.76142 4.76142 6 2 6C4.76142 6 7 8.23858 7 11C7 8.23858 9.23858 6 12 6C9.23858 6 7 3.76142 7 1Z"
+                  fill-rule="evenodd"
+                />
+                <path
+                  clip-rule="evenodd"
+                  d="M11 9C11 10.6569 9.65685 12 8 12C9.65685 12 11 13.3431 11 15C11 13.3431 12.3431 12 14 12C12.3431 12 11 10.6569 11 9Z"
+                  fill-rule="evenodd"
                 />
               </svg>
-            </button>
+              <!---->
+            </span>
+            <!---->
+             
+            <span
+              class="label svelte-1xa6o93"
+            >
+              Premium
+            </span>
           </div>
-        </div>
-         
-        <div
-          class="stretch svelte-1sp09hk"
-        >
-          <h3
-            class="addon-name svelte-1sp09hk"
-          >
-            Azure Document Intelligence OCR
-          </h3>
-        </div>
-         
-        <div
-          class="metadata svelte-1sp09hk"
-        >
-          <p
-            class="author svelte-1sp09hk"
-          >
-            <a
-              class="svelte-1sp09hk"
-              href="http://github.com/MuckRock/documentcloud-azure-document-intelligence-ocr-addon"
-              rel="noopener noreferrer"
-              target="_blank"
-              title="View Source"
-            >
-              MuckRock
-            </a>
-          </p>
-           
-          <span
-            class="badge svelte-1sp09hk"
-            role="status"
-          >
-            <div
-              class="badge svelte-1draejg"
-              style="--badge-color: transparent; --label-color: var(--premium);"
-            >
-              <span
-                class="icon svelte-1draejg"
-              >
-                <svg
-                  class="svelte-13bl109"
-                  height="16px"
-                  viewBox="0 0 16 16"
-                  width="16px"
-                >
-                  <title>
-                    Premium
-                  </title>
-                  <path
-                    clip-rule="evenodd"
-                    d="M7 1C7 3.76142 4.76142 6 2 6C4.76142 6 7 8.23858 7 11C7 8.23858 9.23858 6 12 6C9.23858 6 7 3.76142 7 1Z"
-                    fill-rule="evenodd"
-                  />
-                  <path
-                    clip-rule="evenodd"
-                    d="M11 9C11 10.6569 9.65685 12 8 12C9.65685 12 11 13.3431 11 15C11 13.3431 12.3431 12 14 12C12.3431 12 11 10.6569 11 9Z"
-                    fill-rule="evenodd"
-                  />
-                </svg>
-              </span>
-               
-              <span
-                class="label svelte-1draejg"
-              >
-                Premium
-              </span>
-            </div>
-          </span>
-        </div>
-      </div>
-       
-      <div
-        class="description svelte-1sp09hk"
-      >
-        <p>
-          This Add-On uses Azure’s Document Intelligence API to OCR documents. The document(s) must be public to be processed. This Add-On uses 1 AI Credit per page.
-        </p>
+          <!---->
+        </span>
+        <!---->
       </div>
     </div>
-  </a>
+     
+    <div
+      class="description svelte-155gb3"
+    >
+      <p>
+        This Add-On uses Azure’s Document Intelligence API to OCR documents. The document(s) must be public to be processed. This Add-On uses 1 AI Credit per page.
+      </p>
+      <!---->
+    </div>
+    <!---->
+  </div>
+  
+  
 </div>
 `;

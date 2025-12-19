@@ -3,8 +3,6 @@
   import CustomizeEmbed, { embedSettings } from "../CustomizeEmbed.svelte";
   import { createEmbedSearchParams } from "$lib/utils/embed";
 
-  let args = {};
-
   export const meta = {
     title: "Documents / Customize Embed",
     component: CustomizeEmbed,
@@ -17,4 +15,4 @@
   <CustomizeEmbed {document} {...args} />
 </Template>
 
-<Story name="Default" args={{ ...args, document }} />
+<Story name="Default" args={{ document }} />

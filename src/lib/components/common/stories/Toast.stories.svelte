@@ -17,26 +17,26 @@
 </script>
 
 <Template let:args>
-  <Toast {...args} on:close={close} on:cancel={cancel} on:reset={reset}>
+  <Toast {...args} onclose={close} oncancel={cancel} onreset={reset}>
     <p>{args.content}</p>
   </Toast>
 </Template>
 
 <Story name="Default">
-  <Toast lifespan={0} on:close={close} on:cancel={cancel} on:reset={reset}>
+  <Toast lifespan={0} onclose={close} oncancel={cancel} onreset={reset}>
     <p>Default toast contains a message</p>
   </Toast>
 </Story>
 
 <Story name="Multiple">
   <Flex direction="column">
-    <Toast lifespan={0} on:close={close} on:cancel={cancel} on:reset={reset}>
+    <Toast lifespan={0} onclose={close} oncancel={cancel} onreset={reset}>
       <p>First message</p>
     </Toast>
-    <Toast lifespan={0} on:close={close} on:cancel={cancel} on:reset={reset}>
+    <Toast lifespan={0} onclose={close} oncancel={cancel} onreset={reset}>
       <p>Second message</p>
     </Toast>
-    <Toast status="success" lifespan={0} on:close={close}>
+    <Toast status="success" lifespan={0} onclose={close}>
       <p>Success message</p>
     </Toast>
   </Flex>

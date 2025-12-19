@@ -269,7 +269,7 @@
     transform-origin: center center;
     animation: spin 2s linear infinite reverse;
     animation-play-state: running;
-    & svg {
+    & :global(svg) {
       display: block;
     }
   }
