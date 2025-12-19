@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
-  import { createEventDispatcher } from "svelte";
+
   import { onMount } from "svelte";
   import { quintOut } from "svelte/easing";
   import { fly } from "svelte/transition";
@@ -48,8 +48,6 @@
     warning: Alert16,
     error: Stop16,
   };
-
-  const dispatch = createEventDispatcher();
 
   function close() {
     onclose?.();
