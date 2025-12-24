@@ -9,7 +9,7 @@ Upgrade to v5 when migrating to Svelte 5
 
   export let name: string;
   export let required: boolean = false;
-  export let options: any[];
+  export let options: any[] = [];
   export let valueField: string = "value"; // Will map to 'valueField'
   export let labelField: string = "label"; // Will map to 'labelField'
   export let value: any = null;
@@ -19,6 +19,9 @@ Upgrade to v5 when migrating to Svelte 5
   export let searchable = true;
   export let valueAsObject = false;
   export let disabled = false;
+  export let fetch: string | undefined = undefined; // For remote data loading
+  export let fetchCallback: ((response: any) => any[]) | undefined = undefined; // Transform fetch response
+  export let fetchProps: RequestInit = { credentials: "include" }; // Fetch options (default: include credentials)
 </script>
 
 <Svelecte
@@ -34,6 +37,9 @@ Upgrade to v5 when migrating to Svelte 5
   {searchable}
   {valueAsObject}
   {disabled}
+  {fetch}
+  {fetchCallback}
+  {fetchProps}
   bind:value
   --sv-bg="var(--white, #fff)"
   --sv-border="1px solid var(--gray-2, #99a8b3)"
@@ -52,4 +58,5 @@ Upgrade to v5 when migrating to Svelte 5
   --sv-multi-item-padding="0 0 0 0.75rem"
 >
   <X16 slot="clear-icon" />
+  <slot name="prepend" slot="icon" />
 </Svelecte>

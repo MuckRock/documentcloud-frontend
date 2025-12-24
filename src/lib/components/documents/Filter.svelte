@@ -36,62 +36,39 @@
   } from "svelte-octicons";
   import Dropdown from "../common/Dropdown.svelte";
   import Menu from "../common/Menu.svelte";
-  import SidebarItem from "../sidebar/SidebarItem.svelte";
-  import type { Org, Project, User } from "@/lib/api/types";
+  import NavItem from "../common/NavItem.svelte";
+  import type { Org, Project, User } from "$lib/api/types";
   import Button from "../common/Button.svelte";
-  import { list as listProjects } from "@/lib/api/projects";
-  import { listUsers, listOrgs } from "@/lib/api/accounts";
   import Select from "../inputs/Select.svelte";
+  import { BASE_API_URL } from "@/config/config.js";
 
   export let filters: FilterFields = defaultFilters;
 
-  async function loadProjects(text: string): Promise<Project[]> {
-    const { data, error } = await listProjects({ query: text });
-    if (data && !error) {
-      return data.results;
-    } else if (!data) {
-      console.warn("Missing response data");
-      return [];
-    } else {
-      throw new Error(error?.message);
-    }
+  // Fetch callbacks for Svelect remote data loading
+  // These transform the API response to return just the results array
+  function fetchProjects(response: any): Project[] {
+    return response.results || [];
   }
 
-  async function loadUsers(text: string): Promise<User[]> {
-    const { data, error } = await listUsers({ name__istartswith: text });
-    if (data && !error) {
-      return data.results;
-    } else if (!data) {
-      console.warn("Missing response data");
-      return [];
-    } else {
-      throw new Error(error?.message);
-    }
+  function fetchUsers(response: any): User[] {
+    return response.results || [];
   }
 
-  async function loadOrgs(text: string): Promise<Org[]> {
-    const { data, error } = await listOrgs({ name__istartswith: text });
-    if (data && !error) {
-      return data.results;
-    } else if (!data) {
-      console.warn("Missing response data");
-      return [];
-    } else {
-      throw new Error(error?.message);
-    }
+  function fetchOrgs(response: any): Org[] {
+    return response.results || [];
   }
 </script>
 
-<Dropdown>
-  <SidebarItem slot="anchor">
+<Dropdown position="bottom-start">
+  <NavItem slot="anchor">
     <Filter16 slot="start" />
     {$_("documentBrowser.filter.label")}
     <ChevronDown16 slot="end" />
-  </SidebarItem>
-  <Menu --overflow-y="visible">
+  </NavItem>
+  <Menu --overflow-y="visible" slot="inner">
     <div class="filters">
       <Select
-        items={[
+        options={[
           {
             label: $_("documentBrowser.filter.access.private"),
             value: "private",
@@ -101,8 +78,7 @@
             value: "public",
           },
         ]}
-        value={filters.access}
-        bind:justValue={filters.access}
+        bind:value={filters.access}
         name="access"
         placeholder="Access"
         clearable
@@ -110,35 +86,41 @@
         <Eye16 slot="prepend" />
       </Select>
       <Select
-        loadOptions={loadUsers}
         bind:value={filters.users}
         name="users"
         placeholder={$_("documentBrowser.filter.users")}
-        itemId="id"
-        label="name"
+        valueField="id"
+        labelField="name"
+        valueAsObject
         multiple
+        fetch={`${BASE_API_URL}users/?name__istartswith=[query]`}
+        fetchCallback={fetchUsers}
       >
         <Person16 slot="prepend" />
       </Select>
       <Select
-        loadOptions={loadOrgs}
         bind:value={filters.orgs}
         name="orgs"
         placeholder={$_("documentBrowser.filter.orgs")}
-        itemId="id"
-        label="name"
+        valueField="id"
+        labelField="name"
+        valueAsObject
         multiple
+        fetch={`${BASE_API_URL}organizations/?name__istartswith=[query]&individual=false`}
+        fetchCallback={fetchOrgs}
       >
         <Organization16 slot="prepend" />
       </Select>
       <Select
-        loadOptions={loadProjects}
         bind:value={filters.projects}
         name="projects"
         placeholder={$_("documentBrowser.filter.projects")}
-        itemId="id"
-        label="title"
+        valueField="id"
+        labelField="title"
+        valueAsObject
         multiple
+        fetch={`${BASE_API_URL}projects/?query=[query]`}
+        fetchCallback={fetchProjects}
       >
         <FileDirectory16 slot="prepend" />
       </Select>

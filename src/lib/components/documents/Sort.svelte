@@ -32,7 +32,7 @@
     {$_(`documentBrowser.sort.label`)}
     <ChevronDown16 slot="end" />
   </NavItem>
-  <Menu>
+  <Menu slot="inner">
     <div class="field options">
       {#each fields as f}
         <label class="field option" class:active={sort === f}>
