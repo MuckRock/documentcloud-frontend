@@ -11,6 +11,18 @@ Change owner of one or more documents.
     User,
   } from "$lib/api/types";
 
+  interface OrgOption {
+    value: number;
+    label: string;
+    org?: Org;
+  }
+
+  interface UserOption {
+    value: number;
+    label: string;
+    user?: User;
+  }
+
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
 
@@ -37,13 +49,12 @@ Change owner of one or more documents.
   const dispatch = createEventDispatcher();
 
   let error: Maybe<APIError<null>>;
-  let user: Nullable<{ value: number; label: string; user?: User }> = null;
-  let org: Nullable<{ value: number; label: string; org?: Org }> = null;
-  let orgOptions: { value: number; label: string; org?: Org }[] = [];
+  let user: Nullable<UserOption> = null;
+  let org: Nullable<OrgOption> = null;
+  let orgOptions: OrgOption[] = [];
   let loading = true;
 
-  let userOptions: Promise<{ value: number; label: string; user?: User }[]> =
-    Promise.resolve([]);
+  let userOptions: Promise<UserOption[]> = Promise.resolve([]);
 
   $: ids = documents.map((d) => d.id);
   $: bulk = documents.length !== 1;
@@ -57,15 +68,15 @@ Change owner of one or more documents.
       : "";
 
   $: userOptions = getUserOptions(org?.org);
+  $: currentOrg = isOrg($me?.organization) ? $me.organization : null;
 
   onMount(async () => {
     if ($me) {
       // Load organizations the user belongs to
       orgOptions = await getOrgOptions($me);
       // Set initial org value after options are loaded
-      const currentOrg = $me.organization;
-      if (isOrg(currentOrg)) {
-        org = orgOptions.find((opt) => opt.value === currentOrg.id) ?? null;
+      if (currentOrg) {
+        org = orgOptions?.find((opt) => opt.value === currentOrg.id) ?? null;
       }
     }
     loading = false;
@@ -75,18 +86,25 @@ Change owner of one or more documents.
     me: User,
   ): Promise<{ value: number; label: string; org: Org }[]> {
     const orgs = await userOrgs(me);
-    return (
-      orgs?.map((org) => ({
-        value: org.id,
-        label: org.individual ? `${org.name} (individual)` : org.name,
-        org,
-      })) ?? []
+
+    const options = orgs ? orgs.map(orgOption) : [orgOption(currentOrg)];
+
+    return options.filter(
+      (opt): opt is OrgOption & { org: Org } =>
+        opt !== null && opt.org !== undefined,
     );
   }
 
-  async function getUserOptions(
-    org: Maybe<Org>,
-  ): Promise<{ label: string; value: number; user: User }[]> {
+  function orgLabel(org: Org): string {
+    return org.individual ? `${org.name} (individual)` : org.name;
+  }
+
+  function orgOption(org: Nullable<Org>): Nullable<OrgOption> {
+    if (!org) return null;
+    return { value: org.id, label: orgLabel(org), org };
+  }
+
+  async function getUserOptions(org: Maybe<Org>): Promise<UserOption[]> {
     if (!org || org.individual) return [];
 
     const users = await orgUsers(org);
@@ -100,9 +118,6 @@ Change owner of one or more documents.
     );
   }
 
-  /**
-   * @type {import('@sveltejs/kit').SubmitFunction}
-   */
   function onSubmit({ formData, cancel, submitter }) {
     submitter.disabled = true;
     if (!$me) {
