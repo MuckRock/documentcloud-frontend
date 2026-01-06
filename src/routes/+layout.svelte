@@ -7,6 +7,7 @@
   import { beforeNavigate } from "$app/navigation";
   import { page, updated } from "$app/state";
   import { onMount } from "svelte";
+  import { on } from "svelte/events";
 
   import { locale } from "svelte-i18n";
   import { getFlash } from "sveltekit-flash-message";
@@ -45,13 +46,15 @@
 
   onMount(() => {
     // https://vite.dev/guide/build#load-error-handling
-    window.addEventListener("vite:preloadError", reload);
+    const unsubscribe = on(window, "vite:preloadError", reload);
     return () => {
-      window.removeEventListener("vite:preloadError", reload);
+      unsubscribe();
     };
   });
 
-  function reload() {
+  function reload(e: Event) {
+    console.warn("Vite preload error");
+    console.warn(e);
     window.location.reload();
   }
 </script>
