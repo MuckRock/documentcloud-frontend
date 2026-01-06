@@ -39,7 +39,7 @@
   // this checks if the site has been updated and triggers a full page reload
   // on the next navigation to update the cache
   beforeNavigate(({ willUnload, to }) => {
-    if (browser && updated && !willUnload && to?.url) {
+    if (browser && updated.current && !willUnload && to?.url) {
       location.href = to.url.href;
     }
   });
