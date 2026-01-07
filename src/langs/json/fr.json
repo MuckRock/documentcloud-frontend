@@ -199,19 +199,23 @@
     }
   },
   "documents": {
+    "documents": "Documents",
+    "publicDocuments": "Documents publics",
     "yourDocuments": "Vos documents",
     "accessDocuments": "Vos documents",
     "nameDocuments": "Segnato come {name}.",
     "allDocuments": "Tous les documents d'acc\u00e8s",
     "upload": "Upload",
     "dropFile": "T\u00e9l\u00e9chargez le fichier pour t\u00e9l\u00e9charger",
-    "matchingPages": "Segnant les {n, plural, one {# page} other {# pages}} correspondances",
-    "matchingNotes": "Segnant des notes correspondant \u00e0 la requ\u00eate",
+    "matchingPages": "{n, plural, one {# page} other {# pages}} correspondant à la requête",
+    "matchingNotes": "{n, plural, one {# note} other {# notes}} correspondant à la requête",
     "page": "Page",
     "pageAbbrev": "p",
     "pageCount": "{n, plural, one {# page} other {# pages}}",
     "select": "S\u00e9lection",
-    "noteCount": "{n, plural, one {# note} other {# notes}}"
+    "noteCount": "{n, plural, one {# note} other {# notes}}",
+    "more": "Charger plus",
+    "retry": "Veuillez réessayer."
   },
   "error": {
     "report": "Signaler un probl\u00e8me"

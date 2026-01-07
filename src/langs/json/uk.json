@@ -100,12 +100,23 @@
     }
   },
   "documents": {
+    "documents": "Документи",
+    "publicDocuments": "Публічні документи",
     "yourDocuments": "Ваші документи",
     "accessDocuments": "Ваші {access}документи",
     "nameDocuments": "Документи {name} {access}",
     "allDocuments": "Всі {access}документи",
     "upload": "Завантажити",
-    "dropFile": "Перетягніть файл, щоб завантажити"
+    "dropFile": "Перетягніть файл, щоб завантажити",
+    "matchingPages": "{n, plural, one {# сторінка} few {# сторінки} many {# сторінок} other {# сторінки}}, що відповідають запиту",
+    "matchingNotes": "{n, plural, one {# примітка} few {# примітки} many {# приміток} other {# примітки}}, що відповідають запиту",
+    "page": "Сторінка",
+    "pageAbbrev": "стор.",
+    "pageCount": "{n, plural, one {# сторінка} few {# сторінки} many {# сторінок} other {# сторінки}}",
+    "select": "Вибрати",
+    "noteCount": "{n, plural, one {# примітка} few {# примітки} many {# приміток} other {# примітки}}",
+    "more": "Завантажити ще",
+    "retry": "Будь ласка, спробуйте знову."
   },
   "document": {
     "remove": "Видалити",
