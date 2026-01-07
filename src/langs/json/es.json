@@ -199,19 +199,23 @@
     }
   },
   "documents": {
+    "documents": "Documentos",
+    "publicDocuments": "Documentos públicos",
     "yourDocuments": "Tu documentos",
     "accessDocuments": "Seguimiento de sus {access}Documentos",
     "nameDocuments": "Segnato como {name}'s Documentos",
     "allDocuments": "Todas las {access}Documentos",
     "upload": "Cargar",
     "dropFile": "Ejectar archivo para subir",
-    "matchingPages": "Mostrando {n, number} de {total, number} resultados coincidente con la solicitud",
-    "matchingNotes": "Seguindo {n, plural, one {nota} other {notas}} coincidente con la consulta",
+    "matchingPages": "{n, plural, one {# página} other {# páginas}} que coinciden con la consulta",
+    "matchingNotes": "{n, plural, one {# nota} other {# notas}} que coinciden con la consulta",
     "page": "P\u00e1gina",
     "pageAbbrev": "p.",
     "pageCount": "{n, plural, one {# página} other {# páginas}}",
     "select": "Seleccionar",
-    "noteCount": "{n, plural, one {# nota} other {# notas}}"
+    "noteCount": "{n, plural, one {# nota} other {# notas}}",
+    "more": "Cargar más",
+    "retry": "Por favor, inténtelo de nuevo."
   },
   "error": {
     "report": "Informar un problema"

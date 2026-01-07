@@ -97,12 +97,23 @@
     "help": "Справка"
   },
   "documents": {
+    "documents": "Документы",
+    "publicDocuments": "Публичные документы",
     "yourDocuments": "Ваши документы",
     "accessDocuments": "Ваши {access}документы",
     "nameDocuments": "Документы {name} {access}",
     "allDocuments": "Все {access}документы",
     "upload": "Загрузка",
-    "dropFile": "Перетащите файл для загрузки"
+    "dropFile": "Перетащите файл для загрузки",
+    "matchingPages": "{n, plural, one {# страница} few {# страницы} many {# страниц} other {# страниц}}, соответствующие запросу",
+    "matchingNotes": "{n, plural, one {# заметка} few {# заметки} many {# заметок} other {# заметок}}, соответствующие запросу",
+    "page": "Страница",
+    "pageAbbrev": "стр.",
+    "pageCount": "{n, plural, one {# страница} few {# страницы} many {# страниц} other {# страниц}}",
+    "select": "Выбрать",
+    "noteCount": "{n, plural, one {# заметка} few {# заметки} many {# заметок} other {# заметок}}",
+    "more": "Загрузить ещё",
+    "retry": "Пожалуйста, попробуйте снова."
   },
   "document": {
     "remove": "Удалить",
