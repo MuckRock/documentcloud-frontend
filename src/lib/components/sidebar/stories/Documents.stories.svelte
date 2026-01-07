@@ -1,5 +1,4 @@
 <script lang="ts" context="module">
-  import { activeAddons } from "@/test/fixtures/addons";
   import { Story, Template } from "@storybook/addon-svelte-csf";
   import Documents from "../Documents.svelte";
   import type { Meta } from "@storybook/svelte";
@@ -7,14 +6,20 @@
   export const meta: Meta = {
     title: "Navigation / Documents",
     component: Documents,
-    parameters: { layout: "centered" },
+    parameters: { layout: "centered" }
   };
-
-  let args = {};
 </script>
 
 <Template let:args>
   <Documents {...args} />
 </Template>
 
-<Story name="Default" />
+<Story name="Signed In" />
+
+<Story
+  name="Signed Out"
+  parameters={{signedOut: true}}
+>
+  <Documents />
+</Story>
+
