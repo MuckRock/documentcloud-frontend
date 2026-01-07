@@ -45,23 +45,23 @@
   }
 </script>
 
-<SidebarGroup name="documents">
-  <NavItem slot="title">
-    <File16 slot="start" />
-    Documents
-  </NavItem>
-  <Button
-    slot="action"
-    ghost
-    minW={false}
-    mode="primary"
-    size="small"
-    href="/documents"
-  >
-    <Search16 height="14" width="14" />
-    {$_("common.explore")}
-  </Button>
-  <SignedIn>
+<SignedIn>
+  <SidebarGroup name="documents">
+    <NavItem slot="title">
+      <File16 slot="start" />
+      {$_("documents.documents")}
+    </NavItem>
+    <Button
+      slot="action"
+      ghost
+      minW={false}
+      mode="primary"
+      size="small"
+      href="/documents"
+    >
+      <Search16 height="14" width="14" />
+      {$_("common.explore")}
+    </Button>
     <NavItem small hover href={searchUrl(mine)} active={query === mine}>
       <Person16 height={14} width={14} slot="start" />
       {$_("documents.yourDocuments")}
@@ -96,5 +96,9 @@
         })}
       </NavItem>
     {/if}
-  </SignedIn>
-</SidebarGroup>
+  </SidebarGroup>
+  <NavItem slot="signedOut">
+    <File16 slot="start" />
+    {$_("documents.publicDocuments")}
+  </NavItem>
+</SignedIn>
