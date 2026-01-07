@@ -87,12 +87,23 @@
     "help": "Hilfe"
   },
   "documents": {
+    "documents": "Dokumente",
+    "publicDocuments": "Öffentliche dokumente",
     "yourDocuments": "Ihre Dokumente",
     "accessDocuments": "Ihre {access}-Dokumente",
     "nameDocuments": "{access}-Dokumente von {name}",
     "allDocuments": "Alle {access}-Dokumente",
     "upload": "Hochladen",
-    "dropFile": "Datei zum Hochladen hier ablegen"
+    "dropFile": "Datei zum Hochladen hier ablegen",
+    "matchingPages": "{n, plural, one {# Seite} other {# Seiten}} entsprechen der Abfrage",
+    "matchingNotes": "{n, plural, one {# Notiz} other {# Notizen}} entsprechen der Abfrage",
+    "page": "Seite",
+    "pageAbbrev": "S.",
+    "pageCount": "{n, plural, one {# Seite} other {# Seiten}}",
+    "select": "Auswählen",
+    "noteCount": "{n, plural, one {# Notiz} other {# Notizen}}",
+    "more": "Mehr laden",
+    "retry": "Bitte versuchen Sie es erneut."
   },
   "document": {
     "remove": "Entfernen",

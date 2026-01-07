@@ -1,4 +1,4 @@
-import type { Preview } from "@storybook/svelte";
+import type { Preview, StoryContext, StoryFn } from "@storybook/svelte";
 
 import "@/style/kit.css";
 import "$lib/i18n/index.js";
@@ -57,7 +57,10 @@ export const loaders = [mswLoader];
 
 export let decorators = [
   () => ViewerContextDecorator,
-  () => UserContextDecorator,
+  (_story: StoryFn, context: StoryContext) => ({
+    Component: UserContextDecorator,
+    props: { context },
+  }),
   () => OrgContextDecorator,
   () => TipOfDayContextDecorator,
 ];

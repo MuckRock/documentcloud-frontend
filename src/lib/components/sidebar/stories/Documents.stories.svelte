@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
   import type { Meta } from "@storybook/svelte";
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { Story, Template } from "@storybook/addon-svelte-csf";
   import Documents from "../Documents.svelte";
 
   export const meta: Meta = {
@@ -10,6 +10,12 @@
   };
 </script>
 
-<Story name="Default">
+<Template let:args>
+  <Documents {...args} />
+</Template>
+
+<Story name="Signed In" />
+
+<Story name="Signed Out" parameters={{ signedOut: true }}>
   <Documents />
 </Story>

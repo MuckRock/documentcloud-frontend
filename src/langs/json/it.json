@@ -199,19 +199,23 @@
     }
   },
   "documents": {
+    "documents": "Documenti",
+    "publicDocuments": "Documenti pubblici",
     "yourDocuments": "I tuoi documenti",
     "accessDocuments": "I tuoi documenti {access}",
     "nameDocuments": "{access} documenti di {name}",
     "allDocuments": "Tutti documenti",
     "upload": "Carico",
     "dropFile": "Inserisci file per caricare",
-    "matchingPages": "{n, plural, one {# pagina} other {# pagine}}",
-    "matchingNotes": "{n, plural, one {# note} other {# notes}}",
-    "page": "Page",
+    "matchingPages": "{n, plural, one {# pagina} other {# pagine}} che corrispondono alla query",
+    "matchingNotes": "{n, plural, one {# nota} other {# note}} che corrispondono alla query",
+    "page": "Pagina",
     "pageAbbrev": "p",
     "pageCount": "{n, plural, one {# pagina} other {# pagine}}",
     "select": "Selezionare",
-    "noteCount": "{n, plural, one {# note} other {# notes}}"
+    "noteCount": "{n, plural, one {# nota} other {# note}}",
+    "more": "Carica altro",
+    "retry": "Per favore, riprova."
   },
   "error": {
     "report": "Segnala un problema"

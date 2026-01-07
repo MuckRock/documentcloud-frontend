@@ -207,6 +207,8 @@
     "faq": "Read more about verification in our FAQ"
   },
   "documents": {
+    "documents": "Documents",
+    "publicDocuments": "Public Documents",
     "yourDocuments": "Your Documents",
     "accessDocuments": "Your {access}Documents",
     "nameDocuments": "{name}’s {access}Documents",
