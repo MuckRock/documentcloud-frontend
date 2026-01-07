@@ -1,11 +1,13 @@
 <script lang="ts" context="module">
   export type { Placement } from "@floating-ui/dom";
+
+  import { writable } from "svelte/store";
+
+  // Shared store to track currently open dropdown
+  const openDropdown = writable<symbol | null>(null);
 </script>
 
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { writable } from "svelte/store";
-
   import {
     autoUpdate,
     computePosition,
@@ -23,10 +25,19 @@
   let dropdown: HTMLDivElement;
   let anchor: HTMLDivElement;
   let cleanup: () => void;
+  let isOpen = false;
+
+  // Unique identifier for this dropdown instance
+  const dropdownId = Symbol();
 
   const dropdownCoords = writable({ x: 0, y: 0 });
 
-  $: isOpen = dropdown?.style.display === "block";
+  // Subscribe to the shared store to close this dropdown when another opens
+  openDropdown.subscribe((id) => {
+    if (id !== null && id !== dropdownId && isOpen) {
+      close();
+    }
+  });
 
   function update() {
     const middleware = [offsetFn(offset), shift({ padding: 6 }), flip()];
@@ -39,13 +50,16 @@
   }
 
   function open() {
-    dropdown.style.display = "block";
+    isOpen = true;
+    $openDropdown = dropdownId;
     update();
     cleanup = autoUpdate(anchor, dropdown, update);
   }
 
   function close() {
-    dropdown.style.display = "";
+    isOpen = false;
+    // Clear the global store if this dropdown was the open one
+    openDropdown.update((current) => (current === dropdownId ? null : current));
     cleanup?.();
   }
 
@@ -61,11 +75,13 @@
   function toggleOnAnchorEvent(event: MouseEvent | KeyboardEvent) {
     switch (event.type) {
       case "click":
+        event.stopPropagation();
         toggle();
         break;
       case "keydown":
         const key = (event as KeyboardEvent).key;
         if (["Spacebar", " ", "Enter", "ArrowDown"].includes(key)) {
+          event.stopPropagation();
           toggle();
         }
         break;
@@ -95,6 +111,9 @@
 
   // Close the dropdown when a click or escape is made outside its subtree
   function closeOnEventOutside(event: MouseEvent) {
+    // Only check if dropdown is open to avoid unnecessary work
+    if (!isOpen) return;
+
     if (event.target instanceof Element) {
       if (!isInSubtree(event.target) && !isInBoundingRect(event)) {
         close();
@@ -104,22 +123,17 @@
 
   // Close the dropdown when using the Escape key
   function closeOnEscape(event: KeyboardEvent) {
+    // Only check if dropdown is open to avoid unnecessary work
+    if (!isOpen) return;
+
     const key = (event as KeyboardEvent).key;
     if (key === "Escape") {
       close();
     }
   }
-
-  onMount(() => {
-    document.addEventListener("click", closeOnEventOutside);
-    document.addEventListener("keydown", closeOnEscape);
-
-    return () => {
-      document.removeEventListener("click", closeOnEventOutside);
-      document.removeEventListener("keydown", closeOnEscape);
-    };
-  });
 </script>
+
+<svelte:document onclick={closeOnEventOutside} onkeydown={closeOnEscape} />
 
 <!-- Optional window overlay -->
 {#if overlay && isOpen}
@@ -174,6 +188,9 @@
     margin: 0.25rem 0;
     width: min-content;
     z-index: var(--z-dropdown);
+  }
+  .dropdown.open {
+    display: block;
   }
   .overlay {
     z-index: var(--z-dropdownBackdrop);

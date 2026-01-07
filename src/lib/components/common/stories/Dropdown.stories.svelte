@@ -101,3 +101,46 @@
     </Menu>
   </Dropdown>
 </Story>
+
+<Story name="Multiple Dropdowns">
+  <div style="display: flex; gap: 2rem; align-items: center;">
+    <Dropdown>
+      <NavItem slot="anchor">
+        <Globe16 slot="start" />
+        First Dropdown
+        <ChevronDown12 slot="end" />
+      </NavItem>
+      <Menu slot="inner" let:close>
+        <MenuItem on:click={close}>First Item 1</MenuItem>
+        <MenuItem on:click={close}>First Item 2</MenuItem>
+        <MenuItem on:click={close}>First Item 3</MenuItem>
+      </Menu>
+    </Dropdown>
+
+    <Dropdown>
+      <NavItem slot="anchor">
+        <Globe16 slot="start" />
+        Second Dropdown
+        <ChevronDown12 slot="end" />
+      </NavItem>
+      <Menu slot="inner" let:close>
+        <MenuItem on:click={close}>Second Item 1</MenuItem>
+        <MenuItem on:click={close}>Second Item 2</MenuItem>
+        <MenuItem on:click={close}>Second Item 3</MenuItem>
+      </Menu>
+    </Dropdown>
+
+    <Dropdown border>
+      <NavItem slot="anchor">
+        <Globe16 slot="start" />
+        Third Dropdown
+        <ChevronDown12 slot="end" />
+      </NavItem>
+      <Menu slot="inner" let:close>
+        <MenuItem on:click={close}>Third Item 1</MenuItem>
+        <MenuItem on:click={close}>Third Item 2</MenuItem>
+        <MenuItem on:click={close}>Third Item 3</MenuItem>
+      </Menu>
+    </Dropdown>
+  </div>
+</Story>
