@@ -57,7 +57,19 @@
   $: sign_in_url = buildSignInUrl($page.url.href, $values);
 
   function buildSignInUrl(pageUrl: string, formValues: Record<string, any>) {
-    const nextUrl = new URL(pageUrl);
+    let nextUrl: URL;
+
+    try {
+      nextUrl = new URL(pageUrl);
+    } catch {
+      // Fallback for URLs missing an origin
+      try {
+        nextUrl = new URL(pageUrl, window.location.origin);
+      } catch {
+        // If all else fails, use the sign-in URL without a ?next parameter
+        return new URL(SIGN_IN_URL);
+      }
+    }
 
     // Preserve current form values in the ?next URL param
     Object.entries(formValues).forEach(([key, value]) => {
