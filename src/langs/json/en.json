@@ -554,7 +554,8 @@
     "history": "History",
     "noHistory": "You have not run this Add-On before",
     "success": "Add-On Dispatched",
-    "selectDocuments": "Select documents"
+    "selectDocuments": "Select documents",
+    "signedOut": "You must <a href=\"{href}\">sign in</a> before dispatching this add-on."
   },
   "addonBrowserDialog": {
     "title": "Browse Add-Ons",
