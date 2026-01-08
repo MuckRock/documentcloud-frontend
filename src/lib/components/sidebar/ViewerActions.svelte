@@ -149,7 +149,12 @@
 
 {#if visible}
   <Portal>
-    <Modal on:close={close}>
+    <Modal
+      on:close={close}
+      fillViewport={visible === "share"}
+      maxWidth={visible === "share" ? "90vw" : "48rem"}
+      maxHeight={visible === "share" ? "80vh" : "90vh"}
+    >
       <h1 slot="title">
         {$_(labels[visible])}
         {#if visible === "revisions"}

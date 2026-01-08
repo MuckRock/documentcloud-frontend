@@ -144,6 +144,7 @@
       </Tip>
     </div>
   {/if}
+  <div class="flex">
   <div class="left">
     <div class="tabs" role="tablist">
       <Tab
@@ -209,60 +210,61 @@
         />
       </Field>
 
-      <Field>
-        <FieldLabel>
-          {$_("share.iframe")}
-          <Copy slot="action" text={iframe} />
-        </FieldLabel>
-        <TextArea
-          value={iframe}
-          --font-family="var(--font-mono)"
-          --font-size="var(--font-sm)"
-          --resize="vertical"
-        />
-      </Field>
+        <Field>
+          <FieldLabel>
+            {$_("share.iframe")}
+            <Copy slot="action" text={iframe} />
+          </FieldLabel>
+          <TextArea
+            value={iframe}
+            --font-family="var(--font-mono)"
+            --font-size="var(--font-sm)"
+            --resize="vertical"
+          />
+        </Field>
+      </div>
     </div>
-  </div>
-  <div class="right">
-    <header>
-      <FieldLabel>
-        {$_("share.preview")}
-        <div slot="action">
-          {#if customizeEmbedOpen}
-            <Button
-              size="small"
-              ghost
-              mode="primary"
-              on:click={() => (customizeEmbedOpen = false)}
-            >
-              <Check16 />
-              {$_("share.save")}
-            </Button>
-          {:else}
-            <Button
-              size="small"
-              ghost
-              mode="primary"
-              on:click={() => (customizeEmbedOpen = true)}
-              disabled={currentTab !== "document"}
-            >
-              <Sliders16 />
-              {$_("share.customize")}
-            </Button>
-          {/if}
-        </div>
-      </FieldLabel>
-    </header>
-    <main>
-      {#if customizeEmbedOpen}
-        <div class="embedSettings">
-          <CustomizeEmbed />
-        </div>
-      {:else}
-        <iframe class="embed" title="Embed Preview" src={embedSrc?.toString()}
-        ></iframe>
-      {/if}
-    </main>
+    <div class="right">
+      <header>
+        <FieldLabel>
+          {$_("share.preview")}
+          <div slot="action">
+            {#if customizeEmbedOpen}
+              <Button
+                size="small"
+                ghost
+                mode="primary"
+                on:click={() => (customizeEmbedOpen = false)}
+              >
+                <Check16 />
+                {$_("share.save")}
+              </Button>
+            {:else}
+              <Button
+                size="small"
+                ghost
+                mode="primary"
+                on:click={() => (customizeEmbedOpen = true)}
+                disabled={currentTab !== "document"}
+              >
+                <Sliders16 />
+                {$_("share.customize")}
+              </Button>
+            {/if}
+          </div>
+        </FieldLabel>
+      </header>
+      <main>
+        {#if customizeEmbedOpen}
+          <div class="embedSettings">
+            <CustomizeEmbed />
+          </div>
+        {:else}
+          <iframe class="embed" title="Embed Preview" src={embedSrc?.toString()}
+          ></iframe>
+        {/if}
+      </main>
+    </div>
   </div>
 </div>
 {#if editOpen}
@@ -276,17 +278,25 @@
 
 <style>
   .container {
+    margin: 0 auto;
+    aspect-ratio: 2 / 3;
     width: 100%;
-    height: 32rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto 1fr;
-    gap: 0 1rem;
+    height: 100%;
+    padding: 1.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .flex {
+    flex: 1 1 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
   }
   .banner {
-    grid-column: 1/3;
-    grid-row: 1/2;
-    margin-bottom: 1rem;
+    flex: 0 0 auto;
+    margin: 0;
   }
   .privateWarning {
     width: 100%;
@@ -318,18 +328,21 @@
     display: flex;
     flex-direction: column;
     flex: 1 1 12rem;
-    grid-row: 2/3;
     min-width: 0;
   }
   .right {
-    flex: 2 1 24rem;
+    flex: 2 1 32rem;
+  }
+  .left {
+    flex: 1 1 20rem;
+    min-height: 20rem;
   }
   .right header {
     padding: 0.375rem 0;
     /* margin-bottom: .25rem; */
   }
   .right main {
-    min-height: 0;
+    min-height: 36rem;
     height: 100%;
     width: 100%;
   }
