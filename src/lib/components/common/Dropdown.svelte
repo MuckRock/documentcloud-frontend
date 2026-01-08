@@ -54,63 +54,36 @@
     }
   }
 
-  // Toggle the dropdown when the anchor is interacted with
   function toggleOnAnchorEvent(event: MouseEvent | KeyboardEvent) {
     switch (event.type) {
       case "click":
-        event.stopPropagation();
         toggle();
         break;
       case "keydown":
         const key = (event as KeyboardEvent).key;
         if (["Spacebar", " ", "Enter", "ArrowDown"].includes(key)) {
-          event.stopPropagation();
           toggle();
         }
         break;
-      default:
     }
   }
 
-  function isInBoundingRect(event: MouseEvent) {
-    const dropdownRect = dropdown.getBoundingClientRect();
-    const anchorRect = anchor.getBoundingClientRect();
-    const clickInsideDropdown =
-      event.clientX >= dropdownRect.left &&
-      event.clientX <= dropdownRect.right &&
-      event.clientY >= dropdownRect.top &&
-      event.clientY <= dropdownRect.bottom;
-    const clickInsideAnchor =
-      event.clientX >= anchorRect.left &&
-      event.clientX <= anchorRect.right &&
-      event.clientY >= anchorRect.top &&
-      event.clientY <= anchorRect.bottom;
-    return clickInsideDropdown || clickInsideAnchor;
-  }
-
-  function isInSubtree(element: Element) {
-    return dropdown.contains(element) || anchor.contains(element);
-  }
-
-  // Close the dropdown when a click or escape is made outside its subtree
   function closeOnEventOutside(event: MouseEvent) {
-    // Only check if dropdown is open to avoid unnecessary work
-    if (!isOpen) return;
+    if (!isOpen || !(event.target instanceof Element)) return;
 
-    if (event.target instanceof Element) {
-      if (!isInSubtree(event.target) && !isInBoundingRect(event)) {
-        close();
-      }
+    // Don't close if clicking this dropdown's own anchor
+    if (anchor.contains(event.target)) return;
+
+    // Close if clicking outside this dropdown's subtree
+    const clickedInside =
+      dropdown.contains(event.target) || anchor.contains(event.target);
+    if (!clickedInside) {
+      close();
     }
   }
 
-  // Close the dropdown when using the Escape key
   function closeOnEscape(event: KeyboardEvent) {
-    // Only check if dropdown is open to avoid unnecessary work
-    if (!isOpen) return;
-
-    const key = (event as KeyboardEvent).key;
-    if (key === "Escape") {
+    if (isOpen && event.key === "Escape") {
       close();
     }
   }
