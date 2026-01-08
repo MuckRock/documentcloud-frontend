@@ -144,6 +144,7 @@
       </Tip>
     </div>
   {/if}
+  <div class="flex">
   <div class="left">
     <div class="tabs" role="tablist">
       <Tab
@@ -216,60 +217,61 @@
         />
       </Field>
 
-      <Field>
-        <FieldLabel>
-          {$_("share.iframe")}
-          <Copy slot="action" text={iframe} />
-        </FieldLabel>
-        <TextArea
-          value={iframe}
-          --font-family="var(--font-mono)"
-          --font-size="var(--font-sm)"
-          --resize="vertical"
-        />
-      </Field>
+        <Field>
+          <FieldLabel>
+            {$_("share.iframe")}
+            <Copy slot="action" text={iframe} />
+          </FieldLabel>
+          <TextArea
+            value={iframe}
+            --font-family="var(--font-mono)"
+            --font-size="var(--font-sm)"
+            --resize="vertical"
+          />
+        </Field>
+      </div>
     </div>
-  </div>
-  <div class="right">
-    <header>
-      <FieldLabel>
-        {$_("share.preview")}
-        <div slot="action">
-          {#if customizeEmbedOpen}
-            <Button
-              size="small"
-              ghost
-              mode="primary"
-              on:click={() => (customizeEmbedOpen = false)}
-            >
-              <Check16 />
-              {$_("share.save")}
-            </Button>
-          {:else}
-            <Button
-              size="small"
-              ghost
-              mode="primary"
-              on:click={() => (customizeEmbedOpen = true)}
-              disabled={currentTab !== "document"}
-            >
-              <Sliders16 />
-              {$_("share.customize")}
-            </Button>
-          {/if}
-        </div>
-      </FieldLabel>
-    </header>
-    <main>
-      {#if customizeEmbedOpen}
-        <div class="embedSettings">
-          <CustomizeEmbed />
-        </div>
-      {:else}
-        <iframe class="embed" title="Embed Preview" src={embedSrc?.toString()}
-        ></iframe>
-      {/if}
-    </main>
+    <div class="right">
+      <header>
+        <FieldLabel>
+          {$_("share.preview")}
+          <div slot="action">
+            {#if customizeEmbedOpen}
+              <Button
+                size="small"
+                ghost
+                mode="primary"
+                on:click={() => (customizeEmbedOpen = false)}
+              >
+                <Check16 />
+                {$_("share.save")}
+              </Button>
+            {:else}
+              <Button
+                size="small"
+                ghost
+                mode="primary"
+                on:click={() => (customizeEmbedOpen = true)}
+                disabled={currentTab !== "document"}
+              >
+                <Sliders16 />
+                {$_("share.customize")}
+              </Button>
+            {/if}
+          </div>
+        </FieldLabel>
+      </header>
+      <main>
+        {#if customizeEmbedOpen}
+          <div class="embedSettings">
+            <CustomizeEmbed />
+          </div>
+        {:else}
+          <iframe class="embed" title="Embed Preview" src={embedSrc?.toString()}
+          ></iframe>
+        {/if}
+      </main>
+    </div>
   </div>
 </div>
 {#if editOpen}
@@ -287,15 +289,21 @@
     aspect-ratio: 2 / 3;
     width: 100%;
     height: 100%;
+    padding: 1.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .flex {
+    flex: 1 1 auto;
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
-    padding: 1.5rem;
-    overflow-y: auto;
   }
   .banner {
-    flex: 1 1 100%;
-    margin-bottom: 1rem;
+    flex: 0 0 auto;
+    margin: 0;
   }
   .privateWarning {
     width: 100%;

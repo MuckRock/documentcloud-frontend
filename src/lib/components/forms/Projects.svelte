@@ -162,6 +162,7 @@ and we don't want to do that everywhere.
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    padding: 0;
   }
 
   .projects {
