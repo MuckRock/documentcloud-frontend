@@ -65,7 +65,8 @@ This uses `svelecte` to let users more easily choose existing keys.
   <td class="key">
     <Svelecte
       {options}
-      value={key}
+      name="key"
+      value={key || null}
       valueField="value"
       labelField="label"
       placeholder={$_("data.newkey")}
@@ -74,8 +75,6 @@ This uses `svelecte` to let users more easily choose existing keys.
       onChange={handleChange}
       {disabled}
     />
-    <!-- maybe gross/redundant, but effectively unwraps Select -->
-    <input type="hidden" name="key" value={key ?? ""} />
   </td>
   <td class="value">
     <label>
@@ -125,7 +124,6 @@ This uses `svelecte` to let users more easily choose existing keys.
 
 <style>
   td.key {
-    /* svelecte v4 CSS custom properties */
     --sv-bg: var(--white, #fff);
     --sv-border: 0.25px solid var(--gray-3, #99a8b3);
     --sv-border-radius: 0.25rem;
