@@ -26,11 +26,13 @@
   import ArrayField from "../inputs/ArrayField.svelte";
   import Button from "../common/Button.svelte";
   import Field from "../inputs/Field.svelte";
+  import SignedIn from "../common/SignedIn.svelte";
   import Tip from "../common/Tip.svelte";
 
   import { autofield } from "../inputs/generator";
   import { schedules } from "$lib/api/addons";
   import { getCurrentUser } from "$lib/utils/permissions";
+  import { SIGN_IN_URL } from "@/config/config";
 
   export let properties: any = {};
   export let required: string[] = [];
@@ -52,6 +54,35 @@
   $: validator = ajv.compile({ type: "object", properties, required });
   $: hasEvents = eventOptions && eventOptions.events.length > 0;
   $: hasFields = Object.keys(properties).length > 0;
+  $: sign_in_url = buildSignInUrl($page.url.href, $values);
+
+  function buildSignInUrl(pageUrl: string, formValues: Record<string, any>) {
+    let nextUrl: URL;
+
+    try {
+      nextUrl = new URL(pageUrl);
+    } catch {
+      // Fallback for URLs missing an origin
+      try {
+        nextUrl = new URL(pageUrl, window.location.origin);
+      } catch {
+        // If all else fails, use the sign-in URL without a ?next parameter
+        return new URL(SIGN_IN_URL);
+      }
+    }
+
+    // Preserve current form values in the ?next URL param
+    Object.entries(formValues).forEach(([key, value]) => {
+      if (key in properties && value !== null && value !== undefined) {
+        nextUrl.searchParams.set(key, String(value));
+      }
+    });
+
+    return new URL(
+      `?next=${encodeURIComponent(nextUrl.href)}`,
+      SIGN_IN_URL,
+    );
+  }
 
   afterNavigate(() => {
     // set initial values
@@ -198,28 +229,33 @@
 
   <slot name="premium" />
 
-  <div class="controls">
-    {#if event}
-      <Button type="submit" mode="primary" disabled={!$me || disablePremium}>
-        {#if running}
-          <span class="in-progress icon" title="In Progress"><Sync24 /></span>
-        {:else}
-          {$_("dialog.save")}
-        {/if}
+  <SignedIn>
+    <div class="controls">
+      {#if event}
+        <Button type="submit" mode="primary" disabled={disablePremium}>
+          {#if running}
+            <span class="in-progress icon" title="In Progress"><Sync24 /></span>
+          {:else}
+            {$_("dialog.save")}
+          {/if}
+        </Button>
+      {:else}
+        <Button type="submit" mode="primary" disabled={disablePremium}>
+          {#if running}
+            <span class="in-progress icon" title="In Progress"><Sync24 /></span>
+          {:else}
+            {$_("dialog.dispatch")}
+          {/if}
+        </Button>
+      {/if}
+      <Button type="button" ghost mode="primary" on:click={reset}>
+        {$_("dialog.reset")}
       </Button>
-    {:else}
-      <Button type="submit" mode="primary" disabled={!$me || disablePremium}>
-        {#if running}
-          <span class="in-progress icon" title="In Progress"><Sync24 /></span>
-        {:else}
-          {$_("dialog.dispatch")}
-        {/if}
-      </Button>
-    {/if}
-    <Button type="button" ghost mode="primary" on:click={reset}>
-      {$_("dialog.reset")}
-    </Button>
-  </div>
+    </div>
+    <div class="controls" slot="signedOut">
+      <p>{@html $_("addonDispatchDialog.signedOut", { values: { href: sign_in_url.href }})}</p>
+    </div>
+  </SignedIn>
 </form>
 
 <style>

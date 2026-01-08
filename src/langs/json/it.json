@@ -499,7 +499,8 @@
     "dispatch": "Dispach",
     "history": "Storia",
     "noHistory": "Hai gi\u00e0 utilizzato questo estensione.",
-    "selectDocuments": "Seleziona documenti"
+    "selectDocuments": "Seleziona documenti",
+    "signedOut": "Devi <a href=\"{href}\">accedere</a> prima di eseguire questo componente aggiuntivo."
   },
   "addonBrowserDialog": {
     "title": "Cerca Add-On",

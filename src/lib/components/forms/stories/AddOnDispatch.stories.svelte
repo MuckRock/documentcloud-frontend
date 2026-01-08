@@ -64,3 +64,5 @@
     },
   }}
 />
+
+<Story name="Signed Out" args={addons[4]} parameters={{signedOut: true}} />

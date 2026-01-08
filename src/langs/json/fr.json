@@ -499,7 +499,8 @@
     "dispatch": "D\u00e9p\u00f4t",
     "history": "Histoire",
     "noHistory": "Vous n'avez pas encore utilis\u00e9 cet ajout",
-    "selectDocuments": "Sélectionner les documents"
+    "selectDocuments": "Sélectionner les documents",
+    "signedOut": "Vous devez <a href=\"{href}\">vous connecter</a> avant d'exécuter ce complément."
   },
   "addonBrowserDialog": {
     "title": "Cliquez sur les extensions",
