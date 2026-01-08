@@ -500,7 +500,8 @@
     "dispatch": "Entrega",
     "history": "Historia",
     "noHistory": "No has ejecutado esta adici\u00f3n antes.",
-    "selectDocuments": "Seleccionar documentos"
+    "selectDocuments": "Seleccionar documentos",
+    "signedOut": "Debe <a href=\"{href}\">iniciar sesión</a> antes de ejecutar este complemento."
   },
   "addonBrowserDialog": {
     "title": "Visualizar Adiciones",
