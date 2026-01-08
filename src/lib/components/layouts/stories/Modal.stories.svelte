@@ -11,9 +11,9 @@
 
 <Story name="With Title">
   <Modal>
-    <h1 slot="title">The Ship</h1>
-    <div>
-      <p>
+    <h1 slot="title" style="margin: 0;">The Ship</h1>
+    <div style="padding: 1rem;">
+      <p style="margin: 0;">
         In bed we concocted our plans for the morrow. But to my surprise and no
         small concern, Queequeg now gave me to understand, that he had been
         diligently consulting Yojo—the name of his black little god—and Yojo had
@@ -33,8 +33,8 @@
 
 <Story name="Without Title">
   <Modal>
-    <div>
-      <p>
+    <div style="padding: 1rem;">
+      <p style="margin: 0;">
         In bed we concocted our plans for the morrow. But to my surprise and no
         small concern, Queequeg now gave me to understand, that he had been
         diligently consulting Yojo—the name of his black little god—and Yojo had
