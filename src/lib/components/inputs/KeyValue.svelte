@@ -14,7 +14,7 @@ This uses `svelecte` to let users more easily choose existing keys.
 
   interface Props {
     keys?: string[];
-    key?: string | undefined;
+    key?: string | null;
     value?: string;
     add?: boolean;
     disabled?: boolean;
@@ -22,9 +22,11 @@ This uses `svelecte` to let users more easily choose existing keys.
     ondelete?: ({ key, value }) => void;
   }
 
+  const DEFAULT_KEYS = ["_tag"];
+
   let {
-    keys = ["_tag"],
-    key = undefined,
+    keys = DEFAULT_KEYS,
+    key = null,
     value = "",
     add = false,
     disabled = false,
@@ -33,7 +35,7 @@ This uses `svelecte` to let users more easily choose existing keys.
   }: Props = $props();
 
   let options = $derived.by(() =>
-    new Set([...keys, "_tag"])
+    new Set([...keys, ...DEFAULT_KEYS])
       .values()
       .map((key) => {
         const label = key === "_tag" ? $_("data.tag") : key;
@@ -45,7 +47,7 @@ This uses `svelecte` to let users more easily choose existing keys.
 
   $effect.pre(() => {
     // always include _tag
-    if (!keys) keys = ["_tag"];
+    if (!keys) keys = DEFAULT_KEYS;
     if (!keys.includes("_tag")) {
       keys = [...keys, "_tag"];
     }
@@ -54,10 +56,6 @@ This uses `svelecte` to let users more easily choose existing keys.
   export function clear() {
     key = "";
     value = "";
-  }
-
-  function handleChange(event) {
-    key = event.detail?.value || event.detail || "";
   }
 </script>
 
@@ -72,7 +70,7 @@ This uses `svelecte` to let users more easily choose existing keys.
       placeholder={$_("data.newkey")}
       class="elevated"
       creatable
-      onChange={handleChange}
+      onChange={({ value }) => (key = value)}
       {disabled}
     />
   </td>
