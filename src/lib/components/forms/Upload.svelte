@@ -137,7 +137,9 @@ progress through the three-part upload process.
   }
 
   onMount(() => {
-    csrf_token = getCsrfToken();
+    if (!csrf_token) {
+      csrf_token = getCsrfToken();
+    }
     addFiles(getFilesToUpload());
   });
 

@@ -78,7 +78,7 @@
     -webkit-line-clamp: 4;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    & > * {
+    & > :global(*) {
       margin-top: 0;
     }
   }

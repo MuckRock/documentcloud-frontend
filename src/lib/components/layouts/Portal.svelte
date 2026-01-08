@@ -15,7 +15,7 @@
   });
 
   onDestroy(() => {
-    if (target) {
+    if (target && target.contains(ref)) {
       target.removeChild(ref);
     }
   });

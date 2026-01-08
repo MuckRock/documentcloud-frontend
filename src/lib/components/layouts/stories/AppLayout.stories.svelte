@@ -40,8 +40,6 @@
   };
 
   const documents = Promise.resolve({ data: documentsList });
-
-  let args = {};
 </script>
 
 <Template let:args>
@@ -65,14 +63,13 @@
   </AppLayout>
 </Template>
 
-<Story name="Desktop" {...args} />
+<Story name="Desktop" />
 
 <Story
   name="Tablet (H)"
   parameters={{
     viewport: { defaultOrientation: "landscape", defaultViewport: "tablet" },
   }}
-  {...args}
 />
 
 <Story
@@ -80,7 +77,6 @@
   parameters={{
     viewport: { defaultOrientation: "tablet", defaultViewport: "tablet" },
   }}
-  {...args}
 />
 
 <Story
@@ -88,7 +84,6 @@
   parameters={{
     viewport: { defaultOrientation: "portrait", defaultViewport: "mobile2" },
   }}
-  {...args}
 />
 
 <Story
@@ -96,5 +91,4 @@
   parameters={{
     viewport: { defaultOrientation: "portrait", defaultViewport: "mobile1" },
   }}
-  {...args}
 />

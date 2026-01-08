@@ -13,6 +13,7 @@
   style="left: {note.x1 * 100}%; top: {note.y1 * 100}%; right: {(1 - note.x2) *
     100}%; bottom: {(1 - note.y2) * 100}%"
   on:click
+  title={note.title}
 ></button>
 
 <style>

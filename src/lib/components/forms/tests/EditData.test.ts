@@ -140,9 +140,7 @@ describe("EditData", () => {
 
   it("dispatches close event when Cancel button is clicked", async () => {
     const handleClose = vi.fn();
-    const { component } = render(EditData, { document: mockDocument });
-
-    component.$on("close", handleClose);
+    render(EditData, { document: mockDocument, onclose: handleClose });
 
     const cancelButton = screen.getByText("Cancel");
     await fireEvent.click(cancelButton);

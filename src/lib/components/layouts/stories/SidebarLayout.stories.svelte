@@ -37,8 +37,6 @@
   };
 
   const documents = Promise.resolve({ data: documentsList });
-
-  let args = {};
 </script>
 
 <Template let:args>
@@ -60,7 +58,7 @@
   </div>
 </Template>
 
-<Story name="Desktop" {...args} />
+<Story name="Desktop" />
 
 <style>
   .vh-100 {
