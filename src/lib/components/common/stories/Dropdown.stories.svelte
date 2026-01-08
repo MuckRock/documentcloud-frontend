@@ -144,3 +144,44 @@
     </Dropdown>
   </div>
 </Story>
+
+<Story name="Sibling Dropdowns With Nested">
+  <div style="display: flex; gap: 2rem; align-items: center;">
+    <Dropdown>
+      <NavItem slot="anchor">
+        <Globe16 slot="start" />
+        Simple Dropdown
+        <ChevronDown12 slot="end" />
+      </NavItem>
+      <Menu slot="inner" let:close>
+        <MenuItem on:click={close}>Item 1</MenuItem>
+        <MenuItem on:click={close}>Item 2</MenuItem>
+        <MenuItem on:click={close}>Item 3</MenuItem>
+      </Menu>
+    </Dropdown>
+
+    <Dropdown position="bottom-start">
+      <NavItem slot="anchor">
+        <Globe16 slot="start" />
+        Dropdown With Nested
+        <ChevronDown12 slot="end" />
+      </NavItem>
+      <Menu slot="inner" let:close>
+        <MenuItem on:click={close}>Item 1</MenuItem>
+        <MenuItem on:click={close}>Item 2</MenuItem>
+        <Dropdown position="right">
+          <NavItem slot="anchor">
+            Nested Item
+            <ChevronRight12 slot="end" />
+          </NavItem>
+          <Menu slot="inner">
+            <MenuItem>Nested Item 1</MenuItem>
+            <MenuItem>Nested Item 2</MenuItem>
+            <MenuItem>Nested Item 3</MenuItem>
+          </Menu>
+        </Dropdown>
+        <MenuItem on:click={close}>Item 4</MenuItem>
+      </Menu>
+    </Dropdown>
+  </div>
+</Story>

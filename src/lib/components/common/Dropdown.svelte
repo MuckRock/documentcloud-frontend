@@ -1,13 +1,9 @@
 <script lang="ts" context="module">
   export type { Placement } from "@floating-ui/dom";
-
-  import { writable } from "svelte/store";
-
-  // Shared store to track currently open dropdown
-  const openDropdown = writable<symbol | null>(null);
 </script>
 
 <script lang="ts">
+  import { writable } from "svelte/store";
   import {
     autoUpdate,
     computePosition,
@@ -27,17 +23,7 @@
   let cleanup: () => void;
   let isOpen = false;
 
-  // Unique identifier for this dropdown instance
-  const dropdownId = Symbol();
-
   const dropdownCoords = writable({ x: 0, y: 0 });
-
-  // Subscribe to the shared store to close this dropdown when another opens
-  openDropdown.subscribe((id) => {
-    if (id !== null && id !== dropdownId && isOpen) {
-      close();
-    }
-  });
 
   function update() {
     const middleware = [offsetFn(offset), shift({ padding: 6 }), flip()];
@@ -51,15 +37,12 @@
 
   function open() {
     isOpen = true;
-    $openDropdown = dropdownId;
     update();
     cleanup = autoUpdate(anchor, dropdown, update);
   }
 
   function close() {
     isOpen = false;
-    // Clear the global store if this dropdown was the open one
-    openDropdown.update((current) => (current === dropdownId ? null : current));
     cleanup?.();
   }
 
