@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
   import type { Document } from "$lib/api/types";
 
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+  import { Story } from "@storybook/addon-svelte-csf";
   import Share from "../Share.svelte";
   import Toaster from "../../layouts/Toaster.svelte";
 
@@ -10,22 +10,17 @@
 
   export const meta = {
     title: "Documents / Share",
-    component: Share,
-    parameters: { layout: "centered" },
+    component: Share
   };
 </script>
 
-<Template let:args>
-  <div class="vh-100 vw-100">
-    <Share
-      document={args.document}
-      currentTab={args.currentTab}
-    />
-    <Toaster />
-  </div>
-</Template>
-
-<Story name="Document" args={{document, currentTab: 'document'}}></Story>
+<Story name="Document">
+  <Share
+    document={document}
+    currentTab="document"
+  />
+  <Toaster />
+</Story>
 
 <Story name="Private Document">
   <Share
@@ -56,7 +51,10 @@
   <Toaster />
 </Story>
 
-<Story name="Note" args={{ document, currentTab: "note" }} />
+<Story name="Note">
+  <Share {document} currentTab="note" />
+  <Toaster />
+</Story>
 
 <style>
   .vh-100 {
