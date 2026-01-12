@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
   import type { ComponentType } from "svelte";
   import { writable } from "svelte/store";
 
@@ -52,7 +52,7 @@
         id={toast.id}
         status={toast.status}
         lifespan={toast.lifespan}
-        on:close={() => {
+        onclose={() => {
           toasts.update((prev) =>
             prev.filter((eachToast) => eachToast.id !== toast.id),
           );
@@ -61,7 +61,7 @@
         {#if typeof toast.contents === "string"}
           {toast.contents}
         {:else}
-          <svelte:component this={toast.contents} {...toast.props} />
+          <toast.contents {...toast.props} />
         {/if}
       </Toast>
     </div>

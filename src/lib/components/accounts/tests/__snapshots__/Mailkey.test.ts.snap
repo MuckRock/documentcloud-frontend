@@ -3,16 +3,17 @@
 exports[`Mailkey 1`] = `
 <div>
   <div
-    class="backdrop svelte-65lbzd"
+    class="backdrop svelte-10x59h"
   >
     <div
-      class="dialog card svelte-65lbzd"
+      class="dialog card svelte-10x59h"
     >
       <header
-        class="svelte-65lbzd"
+        class="svelte-10x59h"
       >
+        <!---->
         <button
-          class="primary normal ghost svelte-12ugz1l"
+          class="primary normal svelte-1owegvi ghost"
           title=""
           type="button"
         >
@@ -23,6 +24,7 @@ exports[`Mailkey 1`] = `
             width="24"
             xmlns="http://www.w3.org/2000/svg"
           >
+            <!---->
             <path
               d="M9.036 7.976a.75.75 0 0 0-1.06 1.06L10.939 12l-2.963 2.963a.75.75 0 1 0 1.06 1.06L12 13.06l2.963 2.964a.75.75 0 0 0 1.061-1.06L13.061 12l2.963-2.964a.75.75 0 1 0-1.06-1.06L12 10.939 9.036 7.976Z"
             />
@@ -30,21 +32,24 @@ exports[`Mailkey 1`] = `
               d="M12 1c6.075 0 11 4.925 11 11s-4.925 11-11 11S1 18.075 1 12 5.925 1 12 1ZM2.5 12a9.5 9.5 0 0 0 9.5 9.5 9.5 9.5 0 0 0 9.5-9.5A9.5 9.5 0 0 0 12 2.5 9.5 9.5 0 0 0 2.5 12Z"
             />
           </svg>
+          <!---->
         </button>
         
+        <!---->
          
         <h1
           slot="title"
         >
           Upload via Email
         </h1>
+        <!---->
       </header>
        
       <main
-        class="content svelte-65lbzd"
+        class="content svelte-10x59h"
       >
         <div
-          class="description svelte-mrguwb"
+          class="description svelte-ifcgmn"
         >
           <p>
             You can upload documents to your account by sending them to to a special email address as attachments.
@@ -67,49 +72,64 @@ exports[`Mailkey 1`] = `
             </a>
             .
           </p>
+          <!---->
         </div>
          
+        <!---->
          
         <div
           style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 1rem;"
         >
+          <!---->
+          <!---->
           <button
-            class="primary normal minW svelte-12ugz1l"
+            class="primary normal svelte-1owegvi minW"
             title=""
             type="button"
           >
             Create New Email Address
+            <!---->
           </button>
           
+          <!---->
            
+          <!---->
           <button
-            class="danger normal minW svelte-12ugz1l"
+            class="danger normal svelte-1owegvi minW"
             title=""
             type="button"
           >
             Delete Existing Address
+            <!---->
           </button>
           
+          <!---->
+          <!---->
         </div>
+        <!---->
+        <!---->
       </main>
     </div>
   </div>
+  
+  
 </div>
 `;
 
 exports[`Mailkey 2`] = `
 <div>
   <div
-    class="backdrop svelte-65lbzd"
+    class="backdrop svelte-10x59h"
   >
     <div
-      class="dialog card svelte-65lbzd"
+      class="dialog card svelte-10x59h"
     >
       <header
-        class="svelte-65lbzd"
+        class="svelte-10x59h"
       >
+        <!---->
         <button
-          class="primary normal ghost svelte-12ugz1l"
+          class="primary normal svelte-1owegvi ghost"
           title=""
           type="button"
         >
@@ -120,6 +140,7 @@ exports[`Mailkey 2`] = `
             width="24"
             xmlns="http://www.w3.org/2000/svg"
           >
+            <!---->
             <path
               d="M9.036 7.976a.75.75 0 0 0-1.06 1.06L10.939 12l-2.963 2.963a.75.75 0 1 0 1.06 1.06L12 13.06l2.963 2.964a.75.75 0 0 0 1.061-1.06L13.061 12l2.963-2.964a.75.75 0 1 0-1.06-1.06L12 10.939 9.036 7.976Z"
             />
@@ -127,21 +148,24 @@ exports[`Mailkey 2`] = `
               d="M12 1c6.075 0 11 4.925 11 11s-4.925 11-11 11S1 18.075 1 12 5.925 1 12 1ZM2.5 12a9.5 9.5 0 0 0 9.5 9.5 9.5 9.5 0 0 0 9.5-9.5A9.5 9.5 0 0 0 12 2.5 9.5 9.5 0 0 0 2.5 12Z"
             />
           </svg>
+          <!---->
         </button>
         
+        <!---->
          
         <h1
           slot="title"
         >
           Upload via Email
         </h1>
+        <!---->
       </header>
        
       <main
-        class="content svelte-65lbzd"
+        class="content svelte-10x59h"
       >
         <div
-          class="description svelte-mrguwb"
+          class="description svelte-ifcgmn"
         >
           <p>
             You can upload documents to your account by sending them to to a special email address as attachments.
@@ -164,37 +188,52 @@ exports[`Mailkey 2`] = `
             </a>
             .
           </p>
+          <!---->
         </div>
          
         <p
-          class="message svelte-mrguwb"
+          class="message svelte-ifcgmn"
         >
           Something happened
+          <!---->
         </p>
+        <!---->
          
         <div
           style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 1rem;"
         >
+          <!---->
+          <!---->
           <button
-            class="primary normal minW svelte-12ugz1l"
+            class="primary normal svelte-1owegvi minW"
             title=""
             type="button"
           >
             Create New Email Address
+            <!---->
           </button>
           
+          <!---->
            
+          <!---->
           <button
-            class="danger normal minW svelte-12ugz1l"
+            class="danger normal svelte-1owegvi minW"
             title=""
             type="button"
           >
             Delete Existing Address
+            <!---->
           </button>
           
+          <!---->
+          <!---->
         </div>
+        <!---->
+        <!---->
       </main>
     </div>
   </div>
+  
+  
 </div>
 `;

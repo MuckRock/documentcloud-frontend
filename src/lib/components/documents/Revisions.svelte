@@ -14,31 +14,33 @@
 </script>
 
 <table class="revisions">
-  {#each revisions as revision}
-    <tr class="revision">
-      <td class="revision-version count">{revision.version}</td>
-      <td class="revision-details">
-        <p class="revision-comment">{revision.comment}</p>
-        <span class="revision-time">
-          <RelativeTime date={new Date(revision.created_at)} />
-        </span>
-      </td>
-      <td class="revision-download">
-        <Button ghost mode="primary" href={revision.url}>
-          <Download16 />
-          {$_("dialogRevisionsDialog.download")}
-        </Button>
-      </td>
-    </tr>
-  {:else}
-    <tr class="empty">
-      <td>
-        <Empty icon={History24}>
-          {$_("dialogRevisionsDialog.empty")}
-        </Empty>
-      </td>
-    </tr>
-  {/each}
+  <tbody>
+    {#each revisions as revision}
+      <tr class="revision">
+        <td class="revision-version count">{revision.version}</td>
+        <td class="revision-details">
+          <p class="revision-comment">{revision.comment}</p>
+          <span class="revision-time">
+            <RelativeTime date={new Date(revision.created_at)} />
+          </span>
+        </td>
+        <td class="revision-download">
+          <Button ghost mode="primary" href={revision.url}>
+            <Download16 />
+            {$_("dialogRevisionsDialog.download")}
+          </Button>
+        </td>
+      </tr>
+    {:else}
+      <tr class="empty">
+        <td>
+          <Empty icon={History24}>
+            {$_("dialogRevisionsDialog.empty")}
+          </Empty>
+        </td>
+      </tr>
+    {/each}
+  </tbody>
 </table>
 
 <style>

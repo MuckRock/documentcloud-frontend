@@ -121,7 +121,7 @@ This will mostly merge with existing data.
     <!-- kv -->
     {#each Object.entries(data) as [key, values]}
       {#each values as value}
-        <KeyValue {keys} {key} {value} on:delete={(e) => remove(e.detail)} />
+        <KeyValue {keys} {key} {value} ondelete={(e) => remove(e)} />
       {/each}
     {/each}
 
@@ -131,7 +131,7 @@ This will mostly merge with existing data.
         key="_tag"
         value={tag}
         {disabled}
-        on:delete={(e) => remove(e.detail)}
+        ondelete={(e) => remove(e)}
       />
     {/each}
     <tfoot>
@@ -140,13 +140,7 @@ This will mostly merge with existing data.
           {$_("data.addNew")}
         </th>
       </tr>
-      <KeyValue
-        {keys}
-        bind:this={kv}
-        add
-        on:add={(e) => add(e.detail)}
-        {disabled}
-      />
+      <KeyValue {keys} bind:this={kv} add onadd={(e) => add(e)} {disabled} />
     </tfoot>
   </table>
 

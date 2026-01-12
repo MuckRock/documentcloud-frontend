@@ -9,21 +9,20 @@
 
   interface Item {
     label: string;
-    value: any;
+    value: string;
   }
 
   export let name = "language";
   export let value: Item = {
     value: DEFAULT_LANGUAGE,
-    label: LANGUAGE_MAP.get(DEFAULT_LANGUAGE),
+    label: LANGUAGE_MAP.get(DEFAULT_LANGUAGE) ?? DEFAULT_LANGUAGE,
   };
   export let required = false;
   export let placeholder: string = "Language";
-  export let multiple = false;
 
-  const options = LANGUAGE_CODES.map((code, i) => ({
+  const options: Item[] = LANGUAGE_CODES.map((code, i) => ({
     value: code,
-    label: LANGUAGE_NAMES[i],
+    label: LANGUAGE_NAMES[i] ?? code,
   }));
 </script>
 
@@ -32,7 +31,6 @@
   {options}
   {required}
   {placeholder}
-  {multiple}
   valueField="value"
   labelField="label"
   bind:value

@@ -16,7 +16,8 @@
   };
 </script>
 
-<Template let:args={addon}>
+<Template let:args>
+  {@const addon = args}
   <Flex direction="column" style="width: 50vw">
     <AddOnDispatch
       on:input

@@ -3,9 +3,7 @@
 </script>
 
 <script lang="ts">
-  import { onMount } from "svelte";
   import { writable } from "svelte/store";
-
   import {
     autoUpdate,
     computePosition,
@@ -23,10 +21,9 @@
   let dropdown: HTMLDivElement;
   let anchor: HTMLDivElement;
   let cleanup: () => void;
+  let isOpen = false;
 
   const dropdownCoords = writable({ x: 0, y: 0 });
-
-  $: isOpen = dropdown?.style.display === "block";
 
   function update() {
     const middleware = [offsetFn(offset), shift({ padding: 6 }), flip()];
@@ -39,13 +36,13 @@
   }
 
   function open() {
-    dropdown.style.display = "block";
+    isOpen = true;
     update();
     cleanup = autoUpdate(anchor, dropdown, update);
   }
 
   function close() {
-    dropdown.style.display = "";
+    isOpen = false;
     cleanup?.();
   }
 
@@ -57,7 +54,6 @@
     }
   }
 
-  // Toggle the dropdown when the anchor is interacted with
   function toggleOnAnchorEvent(event: MouseEvent | KeyboardEvent) {
     switch (event.type) {
       case "click":
@@ -69,57 +65,31 @@
           toggle();
         }
         break;
-      default:
     }
   }
 
-  function isInBoundingRect(event: MouseEvent) {
-    const dropdownRect = dropdown.getBoundingClientRect();
-    const anchorRect = anchor.getBoundingClientRect();
-    const clickInsideDropdown =
-      event.clientX >= dropdownRect.left &&
-      event.clientX <= dropdownRect.right &&
-      event.clientY >= dropdownRect.top &&
-      event.clientY <= dropdownRect.bottom;
-    const clickInsideAnchor =
-      event.clientX >= anchorRect.left &&
-      event.clientX <= anchorRect.right &&
-      event.clientY >= anchorRect.top &&
-      event.clientY <= anchorRect.bottom;
-    return clickInsideDropdown || clickInsideAnchor;
-  }
-
-  function isInSubtree(element: Element) {
-    return dropdown.contains(element) || anchor.contains(element);
-  }
-
-  // Close the dropdown when a click or escape is made outside its subtree
   function closeOnEventOutside(event: MouseEvent) {
-    if (event.target instanceof Element) {
-      if (!isInSubtree(event.target) && !isInBoundingRect(event)) {
-        close();
-      }
-    }
-  }
+    if (!isOpen || !(event.target instanceof Element)) return;
 
-  // Close the dropdown when using the Escape key
-  function closeOnEscape(event: KeyboardEvent) {
-    const key = (event as KeyboardEvent).key;
-    if (key === "Escape") {
+    // Don't close if clicking this dropdown's own anchor
+    if (anchor.contains(event.target)) return;
+
+    // Close if clicking outside this dropdown's subtree
+    const clickedInside =
+      dropdown.contains(event.target) || anchor.contains(event.target);
+    if (!clickedInside) {
       close();
     }
   }
 
-  onMount(() => {
-    document.addEventListener("click", closeOnEventOutside);
-    document.addEventListener("keydown", closeOnEscape);
-
-    return () => {
-      document.removeEventListener("click", closeOnEventOutside);
-      document.removeEventListener("keydown", closeOnEscape);
-    };
-  });
+  function closeOnEscape(event: KeyboardEvent) {
+    if (isOpen && event.key === "Escape") {
+      close();
+    }
+  }
 </script>
+
+<svelte:document onclick={closeOnEventOutside} onkeydown={closeOnEscape} />
 
 <!-- Optional window overlay -->
 {#if overlay && isOpen}
@@ -174,6 +144,9 @@
     margin: 0.25rem 0;
     width: min-content;
     z-index: var(--z-dropdown);
+  }
+  .dropdown.open {
+    display: block;
   }
   .overlay {
     z-index: var(--z-dropdownBackdrop);

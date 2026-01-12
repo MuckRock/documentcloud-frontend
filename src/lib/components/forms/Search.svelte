@@ -1,4 +1,8 @@
 <script lang="ts">
+  import { createBubbler } from "svelte/legacy";
+
+  const bubble = createBubbler();
+  import type { Snippet } from "svelte";
   import type { Maybe } from "$lib/api/types";
 
   import { goto } from "$app/navigation";
@@ -7,19 +11,34 @@
   import { Search16, XCircleFill24 } from "svelte-octicons";
   import { _ } from "svelte-i18n";
 
-  export let name: string = "q";
-  export let query: string = "";
-  export let placeholder: string = $_("common.search");
-  export let action: Maybe<string> = undefined;
-  export let id = "query";
-  export let otherParams = {};
+  interface Props {
+    name?: string;
+    query?: string;
+    placeholder?: string;
+    action?: Maybe<string>;
+    id?: string;
+    otherParams?: any;
+    help?: Snippet;
+    onchange?: (event: Event) => void;
+    onsubmit?: (event: SubmitEvent) => void;
+  }
 
-  let input: HTMLInputElement;
-  let form: HTMLFormElement;
+  let {
+    name = "q",
+    query = $bindable(""),
+    placeholder = $_("common.search"),
+    action = undefined,
+    id = "query",
+    otherParams = {},
+    help,
+  }: Props = $props();
+
+  let input: HTMLInputElement | undefined = $state();
+  let form: HTMLFormElement | undefined = $state();
 
   function clear(): Promise<void> {
     query = "";
-    input.focus();
+    input?.focus();
 
     const url = new URL($page.url);
     url.searchParams.delete(name);
@@ -50,8 +69,8 @@
 <form
   class="container"
   {action}
-  on:submit={search}
-  on:reset={clear}
+  onsubmit={search}
+  onreset={clear}
   bind:this={form}
 >
   <label for={id} title={$_("common.search")}>
@@ -66,19 +85,19 @@
       {placeholder}
       bind:value={query}
       bind:this={input}
-      on:change
-      on:input
+      onchange={bubble("change")}
+      oninput={bubble("input")}
     />
     <button
       title={$_("search.reset")}
       type="reset"
       class:hidden={!query}
-      on:click={clear}
+      onclick={clear}
     >
       <XCircleFill24 />
     </button>
   </label>
-  {#if $$slots.help}<div class="help"><slot name="help" /></div>{/if}
+  {#if help}<div class="help">{@render help?.()}</div>{/if}
 </form>
 
 <style>

@@ -1,24 +1,41 @@
 <!-- @component
-Wrapper for Svelecte v4: https://github.com/mskocik/svelecte
-
-Upgrade to v5 when migrating to Svelte 5
+Wrapper for Svelecte: https://github.com/mskocik/svelecte
 -->
 <script lang="ts">
+  import type { ComponentProps } from "svelte";
   import Svelecte from "svelecte";
   import { X16 } from "svelte-octicons";
 
-  export let name: string;
-  export let required: boolean = false;
-  export let options: any[];
-  export let valueField: string = "value"; // Will map to 'valueField'
-  export let labelField: string = "label"; // Will map to 'labelField'
-  export let value: any = null;
-  export let multiple: boolean = false;
-  export let clearable: boolean = false;
-  export let placeholder: string = multiple ? "Select..." : "Select";
-  export let searchable = true;
-  export let valueAsObject = false;
-  export let disabled = false;
+  interface Props extends Omit<ComponentProps<typeof Svelecte>, "value"> {
+    name: string;
+    required?: boolean;
+    options: any[];
+    valueField?: string;
+    labelField?: string;
+    value?: any;
+    multiple?: boolean;
+    clearable?: boolean;
+    placeholder?: string;
+    searchable?: boolean;
+    valueAsObject?: boolean;
+    disabled?: boolean;
+  }
+
+  let {
+    name,
+    value = $bindable(null),
+    required = false,
+    options = [],
+    valueField = "value",
+    labelField = "label",
+    multiple = false,
+    clearable = false,
+    placeholder = multiple ? "Select..." : "Select",
+    searchable = true,
+    valueAsObject = false,
+    disabled = false,
+    ...rest
+  }: Props = $props();
 </script>
 
 <Svelecte
@@ -34,6 +51,7 @@ Upgrade to v5 when migrating to Svelte 5
   {searchable}
   {valueAsObject}
   {disabled}
+  {...rest}
   bind:value
   --sv-bg="var(--white, #fff)"
   --sv-border="1px solid var(--gray-2, #99a8b3)"
@@ -51,5 +69,7 @@ Upgrade to v5 when migrating to Svelte 5
   --sv-multi-item-input-margin="0"
   --sv-multi-item-padding="0 0 0 0.75rem"
 >
-  <X16 slot="clear-icon" />
+  {#snippet clearIcon()}
+    <X16 />
+  {/snippet}
 </Svelecte>

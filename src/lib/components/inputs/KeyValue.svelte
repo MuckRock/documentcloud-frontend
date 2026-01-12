@@ -3,33 +3,51 @@ Input for a single key/value pair or tag (where `key` is `_tag`).
 This uses `svelecte` to let users more easily choose existing keys.
 -->
 <script lang="ts">
-  import { beforeUpdate, createEventDispatcher } from "svelte";
+  import { createBubbler } from "svelte/legacy";
+
+  const bubble = createBubbler();
   import { _ } from "svelte-i18n";
   import { PlusCircle16, Trash16 } from "svelte-octicons";
-  import Select from "svelecte";
+  import Svelecte from "svelecte";
 
   import Button from "../common/Button.svelte";
 
-  export let keys: string[] = ["_tag"];
-  export let key: string | undefined = undefined;
-  export let value: string | undefined = "";
-  export let add = false;
-  export let disabled = false;
+  interface Props {
+    keys?: string[];
+    key?: string | null;
+    value?: string;
+    add?: boolean;
+    disabled?: boolean;
+    onadd?: ({ key, value }) => void;
+    ondelete?: ({ key, value }) => void;
+  }
 
-  const dispatch = createEventDispatcher();
+  const DEFAULT_KEYS = ["_tag"];
 
-  $: options = new Set([...keys, "_tag"])
-    .values()
-    .map((key) => {
-      const label = key === "_tag" ? $_("data.tag") : key;
-      return { value: key, label };
-    })
-    .filter((opt) => Boolean(opt.value))
-    .toArray();
+  let {
+    keys = DEFAULT_KEYS,
+    key = null,
+    value = "",
+    add = false,
+    disabled = false,
+    onadd,
+    ondelete,
+  }: Props = $props();
 
-  beforeUpdate(() => {
+  let options = $derived.by(() =>
+    new Set([...keys, ...DEFAULT_KEYS])
+      .values()
+      .map((key) => {
+        const label = key === "_tag" ? $_("data.tag") : key;
+        return { value: key, label };
+      })
+      .filter((opt) => Boolean(opt.value))
+      .toArray(),
+  );
+
+  $effect.pre(() => {
     // always include _tag
-    if (!keys) keys = ["_tag"];
+    if (!keys) keys = DEFAULT_KEYS;
     if (!keys.includes("_tag")) {
       keys = [...keys, "_tag"];
     }
@@ -39,33 +57,22 @@ This uses `svelecte` to let users more easily choose existing keys.
     key = "";
     value = "";
   }
-
-  function handleChange(event) {
-    key = event.detail?.value || event.detail || "";
-  }
 </script>
 
 <tr class="kv">
   <td class="key">
-    <Select
+    <Svelecte
       {options}
-      value={key}
+      name="key"
+      value={key || null}
       valueField="value"
       labelField="label"
       placeholder={$_("data.newkey")}
       class="elevated"
       creatable
-      on:change={handleChange}
-      on:input
-      on:blur
-      on:focus
-      on:enterKey
-      on:createoption
-      on:clear
+      onChange={({ value }) => (key = value)}
       {disabled}
     />
-    <!-- maybe gross/redundant, but effectively unwraps Select -->
-    <input type="hidden" name="key" value={key ?? ""} />
   </td>
   <td class="value">
     <label>
@@ -76,8 +83,8 @@ This uses `svelecte` to let users more easily choose existing keys.
         name="value"
         placeholder={$_("data.value")}
         bind:value
-        on:change
-        on:input
+        onchange={bubble("change")}
+        oninput={bubble("input")}
         {disabled}
       />
     </label>
@@ -91,7 +98,7 @@ This uses `svelecte` to let users more easily choose existing keys.
         minW={false}
         value="add"
         disabled={!key || !value || disabled}
-        on:click={() => dispatch("add", { key, value })}
+        on:click={() => onadd?.({ key, value })}
       >
         <PlusCircle16 />
       </Button>
@@ -103,7 +110,7 @@ This uses `svelecte` to let users more easily choose existing keys.
         minW={false}
         value="delete"
         {disabled}
-        on:click={() => dispatch("delete", { key, value })}
+        on:click={() => ondelete?.({ key, value })}
         --fill="var(--caution)"
         --background="var(--orange-2)"
       >
@@ -115,7 +122,6 @@ This uses `svelecte` to let users more easily choose existing keys.
 
 <style>
   td.key {
-    /* svelecte v4 CSS custom properties */
     --sv-bg: var(--white, #fff);
     --sv-border: 0.25px solid var(--gray-3, #99a8b3);
     --sv-border-radius: 0.25rem;

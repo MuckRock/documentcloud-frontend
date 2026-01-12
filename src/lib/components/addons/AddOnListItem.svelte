@@ -15,36 +15,29 @@
   $: isPremium = addon?.parameters?.categories?.includes("premium") ?? false;
 </script>
 
-<a class="addon-link" href={url}>
-  <div class="container" id={addon.repository}>
-    <div class="row">
-      <div class="center-self">
-        <AddOnPin {addon} />
-      </div>
-      <div class="stretch">
-        <h3 class="addon-name">{addon.name}</h3>
-      </div>
-      <div class="metadata">
-        {#if author?.name}
-          <p class="author">
-            <a
-              href="http://github.com/{addon.repository}"
-              target="_blank"
-              rel="noopener noreferrer"
-              title={$_("addonBrowserDialog.viewsource")}>{author.name}</a
-            >
-          </p>
-        {/if}
-        {#if isPremium}
-          <span class="badge" role="status"><PremiumBadge /></span>
-        {/if}
-      </div>
+<div class="container addon-link" id={addon.repository}>
+  <div class="row">
+    <div class="center-self">
+      <AddOnPin {addon} />
     </div>
-    {#if description}
-      <div class="description">{@html description}</div>
-    {/if}
+    <div class="stretch">
+      <h3 class="addon-name"><a href={url}>{addon.name}</a></h3>
+    </div>
+    <div class="metadata">
+      {#if author?.name}
+        <p class="author">
+          {author.name}
+        </p>
+      {/if}
+      {#if isPremium}
+        <span class="badge" role="status"><PremiumBadge /></span>
+      {/if}
+    </div>
   </div>
-</a>
+  {#if description}
+    <div class="description">{@html description}</div>
+  {/if}
+</div>
 
 <style>
   a {
@@ -59,7 +52,7 @@
     text-align: left;
   }
 
-  .addon-link:hover .container {
+  .container:hover {
     background-color: var(--blue-1);
   }
 
@@ -93,7 +86,7 @@
     -webkit-line-clamp: 4;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    & > * {
+    & > :global(*) {
       margin-top: 0;
       font-size: 0.875rem;
     }
@@ -111,10 +104,6 @@
 
   .stretch {
     flex: 1 1 auto;
-  }
-
-  .author a:hover {
-    opacity: 0.7;
   }
 
   p {
