@@ -8,15 +8,15 @@
   import * as projects from "$lib/api/projects";
   import { embedUrl } from "$lib/api/embed";
 
-  export let data;
+  let { data } = $props();
 
-  $: project = data.project;
-  $: documents = data.documents;
-  $: query = data.query;
-  $: users = data.users ?? [];
+  let project = $derived(data.project);
+  let documents = $derived(data.documents);
+  let query = $derived(data.query);
+  let users = $derived(data.users ?? []);
 
-  $: canonical_url = projects.canonicalUrl(project);
-  $: embed_url = embedUrl(canonical_url);
+  let canonical_url = $derived(projects.canonicalUrl(project));
+  let embed_url = $derived(embedUrl(canonical_url));
 
   setContext("selected", selected);
 </script>

@@ -28,14 +28,14 @@
 
   const me = getCurrentUser();
 
-  export let data;
+  let { data } = $props();
 
-  let create = false;
+  let create = $state(false);
 
-  $: query = data.query;
-  $: projects = data.projects.results;
-  $: next = data.projects.next; // this will be an API url with a cursor
-  $: previous = data.projects.previous; // this will be an API url with a cursor
+  let query = $derived(data.query);
+  let projects = $derived(data.projects.results);
+  let next = $derived(data.projects.next); // this will be an API url with a cursor
+  let previous = $derived(data.projects.previous); // this will be an API url with a cursor
 
   function paginate(u: Nullable<URL | string>) {
     if (!u) return;
@@ -60,42 +60,40 @@
   </svelte:fragment>
 
   <ContentLayout slot="content">
-    <svelte:fragment slot="header">
-      <Flex>
-        {#if $sidebars["navigation"] === false}
-          <div class="toolbar w-auto">
-            <Button
-              ghost
-              minW={false}
-              on:click={() => ($sidebars["navigation"] = true)}
-            >
-              <span class="flipV">
-                <SidebarExpand16 />
-              </span>
-            </Button>
-          </div>
-        {/if}
-        <PageToolbar>
-          <Search
-            slot="center"
-            name="query"
-            placeholder={$_("projects.placeholder.projects")}
-            {query}
-          />
-        </PageToolbar>
-        {#if $sidebars["action"] === false}
-          <div class="toolbar w-auto">
-            <Button
-              ghost
-              minW={false}
-              on:click={() => ($sidebars["action"] = true)}
-            >
+    <Flex slot="header">
+      {#if $sidebars["navigation"] === false}
+        <div class="toolbar w-auto">
+          <Button
+            ghost
+            minW={false}
+            on:click={() => ($sidebars["navigation"] = true)}
+          >
+            <span class="flipV">
               <SidebarExpand16 />
-            </Button>
-          </div>
-        {/if}
-      </Flex>
-    </svelte:fragment>
+            </span>
+          </Button>
+        </div>
+      {/if}
+      <PageToolbar>
+        <Search
+          slot="center"
+          name="query"
+          placeholder={$_("projects.placeholder.projects")}
+          {query}
+        />
+      </PageToolbar>
+      {#if $sidebars["action"] === false}
+        <div class="toolbar w-auto">
+          <Button
+            ghost
+            minW={false}
+            on:click={() => ($sidebars["action"] = true)}
+          >
+            <SidebarExpand16 />
+          </Button>
+        </div>
+      {/if}
+    </Flex>
 
     {#each projects as project}
       <ProjectListItem {project} />
@@ -126,7 +124,9 @@
 {#if create}
   <Portal>
     <Modal on:close={() => (create = false)}>
-      <h1 slot="title">{$_("projects.create")}</h1>
+      {#snippet title()}
+        <h1>{$_("projects.create")}</h1>
+      {/snippet}
       <EditProject on:close={() => (create = false)} />
     </Modal>
   </Portal>
