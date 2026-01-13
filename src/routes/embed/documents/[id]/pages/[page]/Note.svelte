@@ -1,7 +1,13 @@
 <script lang="ts">
   import type { Note } from "$lib/api/types";
-  export let note: Note;
-  export let active = false;
+
+  interface Props {
+    note: Note;
+    active?: boolean;
+    onclick?: () => void;
+  }
+
+  let { note, active = false, onclick }: Props = $props();
 </script>
 
 <button
@@ -12,7 +18,7 @@
   class:active
   style="left: {note.x1 * 100}%; top: {note.y1 * 100}%; right: {(1 - note.x2) *
     100}%; bottom: {(1 - note.y2) * 100}%"
-  on:click
+  onclick={onclick}
   title={note.title}
 ></button>
 

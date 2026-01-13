@@ -1,12 +1,12 @@
 <script lang="ts">
   import * as embed from "$lib/api/embed";
 
-  export let data;
+  let { data } = $props();
 
-  $: document = data.document;
-  $: page = data.page;
-  $: debug = data.debug;
-  $: iframe = embed.page(document, page, debug);
+  let document = $derived(data.document);
+  let page = $derived(data.page);
+  let debug = $derived(data.debug);
+  let iframe = $derived(embed.page(document, page, debug));
 </script>
 
 <svelte:head>

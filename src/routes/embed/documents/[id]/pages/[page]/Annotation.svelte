@@ -1,34 +1,40 @@
 <script lang="ts">
+  import type { Note as NoteType } from "$lib/api/types";
+
   import { onMount } from "svelte";
 
   import { APP_URL } from "@/config/config.js";
   import { clean } from "$lib/utils/markup";
 
-  export let note;
-  export let slugId;
-  export let page;
+  interface Props {
+    note: NoteType;
+    slugId: string;
+    page: number;
+    onclose?: () => void;
+  }
 
-  $: noteUrl = `${APP_URL}documents/${slugId}/#document/p${page}/a${note.id}`;
-  $: leftRightStyle = rightMount
-    ? `right:${(1 - note.x2) * 100}%`
-    : `left:${note.x1 * 100}%`;
-  $: topDownStyle = bottomMount
-    ? `bottom:${(1 - note.y1) * 100}%`
-    : `top:${note.y2 * 100}%`;
+  let { note, slugId, page, onclose }: Props = $props();
 
-  function nearestParent(elem, className) {
-    if (elem.className.indexOf(className) != -1) return elem;
+  function nearestParent(
+    elem: HTMLElement,
+    className: string,
+  ): HTMLElement | null {
+    if (elem.className.indexOf(className) !== -1) return elem;
+    if (!elem.parentElement) return null;
     return nearestParent(elem.parentElement, className);
   }
 
   const PADDING = 10;
 
-  let annotationElem;
-  let rightMount = false;
-  let bottomMount = false;
+  let annotationElem = $state<HTMLElement | undefined>();
+  let rightMount = $state(false);
+  let bottomMount = $state(false);
 
   onMount(() => {
+    if (!annotationElem) return;
+
     const container = nearestParent(annotationElem, "dc-embed-container");
+    if (!container) return;
 
     if (
       annotationElem.offsetWidth + annotationElem.offsetLeft >
@@ -43,6 +49,15 @@
       bottomMount = true;
     }
   });
+  let noteUrl = $derived(
+    `${APP_URL}documents/${slugId}/#document/p${page}/a${note.id}`,
+  );
+  let leftRightStyle = $derived(
+    rightMount ? `right:${(1 - note.x2) * 100}%` : `left:${note.x1 * 100}%`,
+  );
+  let topDownStyle = $derived(
+    bottomMount ? `bottom:${(1 - note.y1) * 100}%` : `top:${note.y2 * 100}%`,
+  );
 </script>
 
 <div
@@ -54,7 +69,7 @@
     <a href={noteUrl} target="_blank">{note.title}</a>
   </h1>
   <div class="content">
-    {@html clean(note.content)}
+    {@html clean(note.content ?? "")}
   </div>
 </div>
 

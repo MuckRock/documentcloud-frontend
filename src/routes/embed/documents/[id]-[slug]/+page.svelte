@@ -12,15 +12,15 @@ Assumes it's a child of a ViewerContext
   // config and utils
   import { text as textData, canonicalUrl, pdfUrl } from "$lib/api/documents";
 
-  export let data;
+  let { data } = $props();
 
-  $: document = data.document;
-  $: mode = data.mode;
-  $: text = browser
-    ? textData(document)
-    : Promise.resolve({ pages: [], updated: 0 });
-  $: asset_url = data.asset_url;
-  $: canonical_url = canonicalUrl(document).href;
+  let document = $derived(data.document);
+  let mode = $derived(data.mode);
+  let text = $derived(
+    browser ? textData(document) : Promise.resolve({ pages: [], updated: 0 }),
+  );
+  let asset_url = $derived(data.asset_url);
+  let canonical_url = $derived(canonicalUrl(document).href);
 </script>
 
 <svelte:head>
