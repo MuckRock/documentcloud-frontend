@@ -1,7 +1,8 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import type { Maybe } from "$lib/api/types";
 
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 
   import { _ } from "svelte-i18n";
 
@@ -17,13 +18,18 @@
 
   const me = getCurrentUser();
 
-  export let status: Maybe<number> = undefined;
+  interface Props {
+    status?: Maybe<number>;
+    message?: Snippet;
+    children?: Snippet;
+  }
 
-  let feedbackOpen = false;
+  let { status = undefined, message, children }: Props = $props();
 
-  $: sign_in_url = new URL(
-    `?next=${encodeURIComponent($page.url.href)}`,
-    SIGN_IN_URL,
+  let feedbackOpen = $state(false);
+
+  let sign_in_url = $derived(
+    new URL(`?next=${encodeURIComponent(page.url.href)}`, SIGN_IN_URL),
   );
 </script>
 
@@ -35,9 +41,9 @@
         {$_("error.error")}
       </h1>
     {/if}
-    <slot name="message" />
+    {@render message?.()}
   </Error>
-  <slot />
+  {@render children?.()}
   {#if status === 404 && !$me}
     <p class="signInMessage">
       {@html $_("error.signIn", { values: { href: sign_in_url.href } })}
@@ -58,7 +64,9 @@
 {#if feedbackOpen}
   <Portal>
     <Modal on:close={() => (feedbackOpen = false)}>
-      <h1 slot="title">{$_("feedback.title")}</h1>
+      {#snippet title()}
+        <h1>{$_("feedback.title")}</h1>
+      {/snippet}
       <UserFeedback
         user={$me}
         feedbackType="Bug"
