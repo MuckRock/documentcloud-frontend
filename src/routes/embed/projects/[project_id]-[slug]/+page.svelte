@@ -9,10 +9,10 @@
 
   setContext("embed", true);
 
-  export let data;
+  let { data } = $props();
 
-  $: documents = data.documents;
-  $: project = data.project;
+  let documents = $derived(data.documents);
+  let project = $derived(data.project);
 </script>
 
 <svelte:head>

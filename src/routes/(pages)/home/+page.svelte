@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
@@ -20,10 +20,10 @@
   // Show the login controls
   const showLogin = true;
 
-  export let data;
+  let { data } = $props();
 
-  $: me = data.me;
-  $: sign_in_url = new URL(`?next=${APP_URL}`, SIGN_IN_URL);
+  let me = $derived(data.me);
+  let sign_in_url = $derived(new URL(`?next=${APP_URL}`, SIGN_IN_URL));
 
   onMount(async () => {
     const { init } = await import("@plausible-analytics/tracker");
@@ -65,7 +65,7 @@
               <div class="signin">
                 <a href={sign_in_url.href}>{$_("homeTemplate.signIn")}</a>
               </div>
-              <a href={SIGN_UP_URL + $page.url}>
+              <a href={SIGN_UP_URL + page.url}>
                 <Button>{$_("homeTemplate.signUp")}</Button>
               </a>
             </div>

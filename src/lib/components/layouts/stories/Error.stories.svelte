@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import { Story } from "@storybook/addon-svelte-csf";
   import Error from "../Error.svelte";
 
@@ -12,7 +12,9 @@
 <Story name="Error 500">
   <div class="vh-100">
     <Error status={500}>
-      <p slot="message">Something broke on our end!</p>
+      {#snippet message()}
+        <p>Something broke on our end!</p>
+      {/snippet}
     </Error>
   </div>
 </Story>
@@ -20,7 +22,9 @@
 <Story name="Error 404">
   <div class="vh-100">
     <Error status={404}>
-      <p slot="message">Page not found</p>
+      {#snippet message()}
+        <p>Page not found</p>
+      {/snippet}
     </Error>
   </div>
 </Story>

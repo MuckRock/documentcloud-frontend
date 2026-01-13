@@ -1,10 +1,10 @@
 <script lang="ts">
   import Flatpage from "$lib/components/layouts/Flatpage.svelte";
 
-  export let data;
+  let { data } = $props();
 
-  $: title = data.title;
-  $: content = data.content;
+  let title = $derived(data.title);
+  let content = $derived(data.content);
 </script>
 
 <svelte:head>
