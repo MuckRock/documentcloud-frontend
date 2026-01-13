@@ -1,7 +1,11 @@
 <script lang="ts">
   const REM = 16;
-  export let size = 1;
-  export let title = "Premium";
+  interface Props {
+    size?: number;
+    title?: string;
+  }
+
+  let { size = 1, title = "Premium" }: Props = $props();
 </script>
 
 <svg width={`${size * REM}px`} height={`${size * REM}px`} viewBox="0 0 16 16">

@@ -1,9 +1,18 @@
 <script lang="ts">
   const REM = 16;
-  export let size = 1;
-  export let title = "Credit";
-  export let badge = false;
-  export let color = "#24CC99";
+  interface Props {
+    size?: number;
+    title?: string;
+    badge?: boolean;
+    color?: string;
+  }
+
+  let {
+    size = 1,
+    title = "Credit",
+    badge = false,
+    color = "#24CC99",
+  }: Props = $props();
 </script>
 
 <svg
