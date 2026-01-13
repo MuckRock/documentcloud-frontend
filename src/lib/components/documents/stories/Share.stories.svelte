@@ -52,12 +52,3 @@
   <Share {document} currentTab="note" />
   <Toaster />
 </Story>
-
-<style>
-  .vh-100 {
-    height: 100vh;
-  }
-  .vw-100 {
-    width: 100vw;
-  }
-</style>
