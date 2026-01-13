@@ -10,15 +10,12 @@
 
   export const meta = {
     title: "Documents / Share",
-    component: Share
+    component: Share,
   };
 </script>
 
 <Story name="Document">
-  <Share
-    document={document}
-    currentTab="document"
-  />
+  <Share {document} currentTab="document" />
   <Toaster />
 </Story>
 

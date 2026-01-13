@@ -102,7 +102,12 @@
 </div>
 {#if !embed && shareNoteOpen}
   <Portal>
-    <Modal on:close={() => (shareNoteOpen = false)} fillViewport maxWidth="66rem" maxHeight="80vh">
+    <Modal
+      on:close={() => (shareNoteOpen = false)}
+      fillViewport
+      maxWidth="66rem"
+      maxHeight="80vh"
+    >
       <h1 slot="title">{$_("dialog.share")}</h1>
       <Share document={doc} note_id={note.id} currentTab="note" />
     </Modal>

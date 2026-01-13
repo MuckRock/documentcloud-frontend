@@ -145,77 +145,77 @@
     </div>
   {/if}
   <div class="flex">
-  <div class="left">
-    <div class="tabs" role="tablist">
-      <Tab
-        on:click={() => (currentTab = "document")}
-        active={currentTab === "document"}
-      >
-        <File16 />
-        {$_("share.document")}
-      </Tab>
-      <Tab
-        on:click={() => (currentTab = "page")}
-        active={currentTab === "page"}
-      >
-        <Hash16 />
-        {$_("share.page")}
-      </Tab>
-      <Tab
-        on:click={() => (currentTab = "note")}
-        active={currentTab === "note"}
-        disabled={!document.notes || document.notes.length === 0}
-      >
-        <Note16 />
-        {$_("share.note")}
-      </Tab>
-    </div>
-    <div class="fields {currentTab}">
-      {#if currentTab === "page"}
-        <div class="subselection">
-          <Field>
-            <FieldLabel>{$_("share.fields.page")}:</FieldLabel>
-            <Number bind:value={page} min={1} max={document.page_count} />
-          </Field>
-        </div>
-      {:else if currentTab === "note" && noteOptions && noteOptions.length > 0}
-        <div class="subselection">
-          <Field>
-            <FieldLabel>{$_("share.fields.note")}:</FieldLabel>
-            <Select
-              name="note"
-              options={noteOptions}
-              value={note_id}
-              onChange={({ value }) => {
-                note_id = value;
-              }}
-            />
-          </Field>
-        </div>
-      {/if}
-      <Field>
-        <FieldLabel>
-          {$_("share.permalink")}
-          <Copy slot="action" text={permalink?.href} />
-        </FieldLabel>
-        <Text
-          value={permalink?.href}
-          --font-family="var(--font-mono)"
-          --font-size="var(--font-sm)"
-        />
-      </Field>
+    <div class="left">
+      <div class="tabs" role="tablist">
+        <Tab
+          on:click={() => (currentTab = "document")}
+          active={currentTab === "document"}
+        >
+          <File16 />
+          {$_("share.document")}
+        </Tab>
+        <Tab
+          on:click={() => (currentTab = "page")}
+          active={currentTab === "page"}
+        >
+          <Hash16 />
+          {$_("share.page")}
+        </Tab>
+        <Tab
+          on:click={() => (currentTab = "note")}
+          active={currentTab === "note"}
+          disabled={!document.notes || document.notes.length === 0}
+        >
+          <Note16 />
+          {$_("share.note")}
+        </Tab>
+      </div>
+      <div class="fields {currentTab}">
+        {#if currentTab === "page"}
+          <div class="subselection">
+            <Field>
+              <FieldLabel>{$_("share.fields.page")}:</FieldLabel>
+              <Number bind:value={page} min={1} max={document.page_count} />
+            </Field>
+          </div>
+        {:else if currentTab === "note" && noteOptions && noteOptions.length > 0}
+          <div class="subselection">
+            <Field>
+              <FieldLabel>{$_("share.fields.note")}:</FieldLabel>
+              <Select
+                name="note"
+                options={noteOptions}
+                value={note_id}
+                onChange={({ value }) => {
+                  note_id = value;
+                }}
+              />
+            </Field>
+          </div>
+        {/if}
+        <Field>
+          <FieldLabel>
+            {$_("share.permalink")}
+            <Copy slot="action" text={permalink?.href} />
+          </FieldLabel>
+          <Text
+            value={permalink?.href}
+            --font-family="var(--font-mono)"
+            --font-size="var(--font-sm)"
+          />
+        </Field>
 
-      <Field>
-        <FieldLabel>
-          {$_("share.embed")}
-          <Copy slot="action" text={embedSrc?.href} />
-        </FieldLabel>
-        <Text
-          value={embedSrc?.href}
-          --font-family="var(--font-mono)"
-          --font-size="var(--font-sm)"
-        />
-      </Field>
+        <Field>
+          <FieldLabel>
+            {$_("share.embed")}
+            <Copy slot="action" text={embedSrc?.href} />
+          </FieldLabel>
+          <Text
+            value={embedSrc?.href}
+            --font-family="var(--font-mono)"
+            --font-size="var(--font-sm)"
+          />
+        </Field>
 
         <Field>
           <FieldLabel>

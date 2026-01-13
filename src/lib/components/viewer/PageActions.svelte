@@ -103,7 +103,12 @@
 </div>
 {#if pageShareOpen}
   <Portal>
-    <Modal on:close={() => (pageShareOpen = false)} fillViewport maxWidth="90vw" maxHeight="80vh">
+    <Modal
+      on:close={() => (pageShareOpen = false)}
+      fillViewport
+      maxWidth="90vw"
+      maxHeight="80vh"
+    >
       <h1 slot="title">{$_("dialog.share")}</h1>
       <Share {document} page={page_number} currentTab="page" />
     </Modal>

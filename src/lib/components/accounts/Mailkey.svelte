@@ -74,7 +74,6 @@
 </Modal>
 
 <style>
-
   .description {
     columns: 2;
     column-gap: 2rem;

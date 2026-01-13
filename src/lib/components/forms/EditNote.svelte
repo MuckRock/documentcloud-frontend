@@ -46,7 +46,13 @@ Positioning and generating coordinates should happen outside of this form.
   }
 </script>
 
-<form class="modal-form" {action} method="post" class:page_level use:enhance={onSubmit}>
+<form
+  class="modal-form"
+  {action}
+  method="post"
+  class:page_level
+  use:enhance={onSubmit}
+>
   <Flex direction="column" gap={1}>
     <Field title={$_("annotate.fields.title")} required>
       <Text
