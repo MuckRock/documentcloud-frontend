@@ -19,7 +19,11 @@ a user who is logged in but has `verified_journalist = false`.
   } from "@/config/config.js";
   import { isOrg } from "$lib/api/accounts";
 
-  export let user: Nullable<User> = null;
+  interface Props {
+    user?: Nullable<User>;
+  }
+
+  let { user = null }: Props = $props();
 
   const FAQ = `${APP_URL}help/faq#verification`;
 
