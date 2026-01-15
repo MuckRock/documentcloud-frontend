@@ -2,12 +2,12 @@
   import { createEmbedSearchParams } from "$lib/utils/embed";
   import * as embed from "$lib/api/embed";
 
-  export let data;
+  let { data } = $props();
 
-  $: document = data.document;
-  $: settings = data.settings;
-  $: params = createEmbedSearchParams(settings);
-  $: iframe = embed.document(document, params);
+  let document = $derived(data.document);
+  let settings = $derived(data.settings);
+  let params = $derived(createEmbedSearchParams(settings));
+  let iframe = $derived(embed.document(document, params));
 </script>
 
 <svelte:head>

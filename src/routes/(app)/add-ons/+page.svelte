@@ -1,22 +1,23 @@
 <script lang="ts">
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 
   import { _ } from "svelte-i18n";
 
   import AddOnBrowser from "$lib/components/layouts/AddOnBrowser.svelte";
 
-  export let data;
+  let { data } = $props();
 
-  $: addons = data.addons;
-  $: events = data.events;
-  $: runs = data.runs;
-  $: active =
-    Array.from(($page.url as URL).searchParams.entries()).find(
+  let addons = $derived(data.addons);
+  let events = $derived(data.events);
+  let runs = $derived(data.runs);
+  let active = $derived(
+    Array.from(page.url.searchParams.entries()).find(
       ([_, value]) => value === "true",
     )?.[0] ??
-    ($page.url as URL).searchParams.get("category") ??
-    "all";
-  $: query = ($page.url as URL).searchParams.get("query") ?? "";
+      page.url.searchParams.get("category") ??
+      "all",
+  );
+  let query = $derived(page.url.searchParams.get("query") ?? "");
 </script>
 
 <svelte:head>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import { onMount, setContext } from "svelte";
   import { writable } from "svelte/store";
   import { _ } from "svelte-i18n";
@@ -13,27 +13,29 @@
   import { canonicalNoteUrl, noteUrl } from "$lib/api/notes";
   import { SIZE } from "$lib/utils/notes";
 
-  export let data;
+  let { data } = $props();
 
-  let embedContainer: HTMLElement;
+  let embedContainer: HTMLElement | undefined = $state();
 
-  $: doc = data.document;
-  $: note = data.note;
-  $: src = pageImageUrl(doc, note.page_number + 1, "normal").toString();
-  $: url = canonicalNoteUrl(doc, note).toString();
-  $: viewerUrl = noteUrl(doc, note).href;
-  $: title = `${note.title} (${$_("documents.pageAbbrev")} ${
-    note.page_number + 1
-  })`;
-  $: debug = $page?.url?.searchParams?.has("debug") ?? false;
+  let doc = $derived(data.document);
+  let note = $derived(data.note);
+  let src = $derived(
+    pageImageUrl(doc, note.page_number + 1, "normal").toString(),
+  );
+  let url = $derived(canonicalNoteUrl(doc, note).toString());
+  let viewerUrl = $derived(noteUrl(doc, note).href);
+  let title = $derived(
+    `${note.title} (${$_("documents.pageAbbrev")} ${note.page_number + 1})`,
+  );
+  let debug = $derived(page?.url?.searchParams?.has("debug") ?? false);
 
-  setContext("document", writable(doc));
+  setContext("document", () => writable(doc));
   setContext("embed", true);
   setContext("currentMode", writable("note"));
   setContext("pdf", undefined);
 
   onMount(() => {
-    if (window.document.readyState === "complete") {
+    if (window.document.readyState === "complete" && embedContainer) {
       informSize({ element: embedContainer, timeout: 500, debug });
     }
   });
@@ -64,7 +66,9 @@
 </svelte:head>
 
 <svelte:window
-  on:load={() => informSize({ element: embedContainer, timeout: 500, debug })}
+  onload={() =>
+    embedContainer &&
+    informSize({ element: embedContainer, timeout: 500, debug })}
 />
 
 <div class="embed-container">

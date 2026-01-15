@@ -19,12 +19,12 @@
     selected,
   } from "$lib/components/documents/ResultsList.svelte";
 
-  export let data;
+  let { data } = $props();
 
   setContext("editable", editable);
   setContext("selected", selected);
 
-  $: query = data.query;
+  let query = $derived(data.query);
 </script>
 
 <svelte:head>

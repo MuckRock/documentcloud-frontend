@@ -7,15 +7,16 @@
   import SidebarLayout from "$lib/components/layouts/SidebarLayout.svelte";
   import Upload from "$lib/components/forms/Upload.svelte";
 
-  export let data;
+  let { data } = $props();
 
-  $: projects = data.projects?.results ?? [];
+  let projects = $derived(data.projects?.results ?? []);
 </script>
 
 <svelte:head>
   <title>Upload | DocumentCloud</title>
 </svelte:head>
 
+<!-- todo: convert these to snippets once SidebarLayout has been migrated -->
 <SidebarLayout>
   <svelte:fragment slot="navigation">
     <Documents />
@@ -23,7 +24,7 @@
     <AddOns />
   </svelte:fragment>
 
-  <div slot="content" class="form-container">
+  <div class="form-container" slot="content">
     <Upload {projects} />
   </div>
 </SidebarLayout>

@@ -4,7 +4,7 @@
 
 <script lang="ts">
   import { browser } from "$app/environment";
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 
   import { onMount } from "svelte";
   import { embedUrl } from "$lib/api/embed";
@@ -14,23 +14,25 @@
   import GuidedTour from "$lib/components/onboarding/GuidedTour.svelte";
   import ViewerContext from "$lib/components/viewer/ViewerContext.svelte";
 
-  export let data;
+  let { data } = $props();
 
-  $: document = data.document;
-  $: mode = data.mode;
-  $: text = browser
-    ? documents.text(document)
-    : Promise.resolve({ pages: [], updated: 0 });
-  $: asset_url = data.asset_url;
-  $: canonical_url = documents.canonicalUrl(document).href;
+  let document = $derived(data.document);
+  let mode = $derived(data.mode);
+  let text = $derived(
+    browser
+      ? documents.text(document)
+      : Promise.resolve({ pages: [], updated: 0 }),
+  );
+  let asset_url = $derived(data.asset_url);
+  let canonical_url = $derived(documents.canonicalUrl(document).href);
 
-  $: hasDescription = Boolean(document.description?.trim().length);
+  let hasDescription = $derived(Boolean(document.description?.trim().length));
 
   onMount(() => {
     // if we're in an iframe, redirect to the embed route
     const inIframe = window.self !== window.top;
     if (inIframe) {
-      const embedUrl = documents.embedUrl(document, $page.url.searchParams);
+      const embedUrl = documents.embedUrl(document, page.url.searchParams);
       window.location.href = embedUrl.href;
     }
   });

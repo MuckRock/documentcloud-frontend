@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { Maybe, Note as NoteType, Nullable } from "$lib/api/types";
 
-  import { page as pageStore } from "$app/stores";
+  import { page as pageState } from "$app/state";
 
-  import { createEventDispatcher, onMount } from "svelte";
+  import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
   import Annotation from "./Annotation.svelte";
@@ -21,44 +21,44 @@
   import { informSize } from "$lib/utils/embed";
   import { pageSizesFromSpec } from "$lib/utils/pageSize";
 
-  export let data;
+  let { data } = $props();
 
-  const dispatch = createEventDispatcher();
+  let elem: HTMLElement | undefined = $state();
+  let active: Nullable<NoteType> = $state(null);
 
-  let elem: HTMLElement;
-  let active: Nullable<NoteType> = null;
+  let doc = $derived(data.document);
+  let slugId = $derived(`${doc.id}-${doc.slug}`);
+  let notes = $derived(data.notes);
+  let page = $derived(+data.page);
+  let title = $derived(
+    `${doc.title} (${$_("documents.pageAbbrev")} ${data.page})`,
+  );
+  let url = $derived(canonicalPageUrl(doc, page).toString());
+  let sizes = $derived(doc.page_spec ? pageSizesFromSpec(doc.page_spec) : []);
+  let aspect = $derived(sizes[page - 1] ?? 11 / 8.5);
+  let width = $derived(IMAGE_WIDTHS_MAP.get("large") ?? 1000);
+  let height = $derived(width * aspect);
+  let shimPlacements = $derived.by(() => {
+    if (active === null) return [];
+    return [
+      [0, 0, 1, active.y1], // top
+      [0, active.y1, active.x1, active.y2], // left
+      [active.x2, active.y1, 1, active.y2], // right
+      [0, active.y2, 1, 1], // bottom
+    ];
+  });
 
-  $: doc = data.document;
-  $: slugId = `${doc.id}-${doc.slug}`;
-  $: notes = data.notes;
-  $: page = +data.page;
-  $: title = `${doc.title} (${$_("documents.pageAbbrev")} ${data.page})`;
-  $: url = canonicalPageUrl(doc, page).toString();
-  $: sizes = doc.page_spec ? pageSizesFromSpec(doc.page_spec) : [];
-  $: aspect = sizes[page - 1] ?? 11 / 8.5;
-  $: width = IMAGE_WIDTHS_MAP.get("large") ?? 1000;
-  $: height = width * aspect;
-  $: shimPlacements =
-    active === null
-      ? []
-      : [
-          [0, 0, 1, active.y1], // top
-          [0, active.y1, active.x1, active.y2], // left
-          [active.x2, active.y1, 1, active.y2], // right
-          [0, active.y2, 1, 1], // bottom
-        ];
-
-  $: debug = $pageStore?.url?.searchParams?.has("debug") ?? false;
+  let debug = $derived(pageState?.url?.searchParams?.has("debug") ?? false);
 
   onMount(() => {
-    if (window.document.readyState === "complete") {
+    if (window.document.readyState === "complete" && elem) {
       informSize({ element: elem, timeout: 500, debug });
     }
   });
 
-  function onKeyup(e) {
+  function onKeyup(e: KeyboardEvent) {
     if (e.key === "Escape") {
-      dispatch("close");
+      active = null;
     }
   }
 
@@ -93,8 +93,8 @@
 </svelte:head>
 
 <svelte:window
-  on:keydown={onKeyup}
-  on:load={() => informSize({ element: elem, timeout: 500, debug })}
+  onkeydown={onKeyup}
+  onload={() => elem && informSize({ element: elem, timeout: 500, debug })}
 />
 
 <div class="dc-embed" bind:this={elem}>
@@ -120,13 +120,14 @@
       })}
       width="{width}px"
       height="{height}px"
-      on:load={() => informSize({ element: elem, timeout: false, debug })}
+      onload={() =>
+        elem && informSize({ element: elem, timeout: false, debug })}
     />
 
     <!-- Place notes on image -->
     {#each notes as note}
       {#if active != note}
-        <Note on:click={() => (active = note)} {note} />
+        <Note onclick={() => (active = note)} {note} />
       {/if}
     {/each}
 
@@ -152,7 +153,7 @@
         note={active}
         {slugId}
         {page}
-        on:close={() => (active = null)}
+        onclose={() => (active = null)}
       />
       <Note active={true} note={active} />
     {/if}

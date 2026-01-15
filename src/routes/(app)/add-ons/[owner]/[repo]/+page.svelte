@@ -5,22 +5,26 @@
   import { isPremiumOrg, getCreditBalance } from "$lib/api/accounts";
   import { getCurrentUser } from "$lib/utils/permissions";
 
-  export let data;
+  let { data } = $props();
 
   const me = getCurrentUser();
 
-  $: addon = data.addon;
-  $: query = data.query;
-  $: search = data.searchResults;
-  $: scheduled = data.scheduled;
-  $: organization =
-    typeof $me?.organization === "object" ? $me.organization : null;
-  $: isPremiumUser = isPremiumOrg(organization);
-  $: creditBalance = getCreditBalance(organization) ?? 0;
-  $: isPremiumAddon =
-    addon?.parameters.categories?.includes("premium") ?? false;
-  $: disablePremium = isPremiumAddon && (!isPremiumUser || creditBalance === 0);
-  $: history = data.history;
+  let addon = $derived(data.addon);
+  let query = $derived(data.query);
+  let search = $derived(data.searchResults);
+  let scheduled = $derived(data.scheduled);
+  let organization = $derived(
+    typeof $me?.organization === "object" ? $me.organization : null,
+  );
+  let isPremiumUser = $derived(isPremiumOrg(organization));
+  let creditBalance = $derived(getCreditBalance(organization) ?? 0);
+  let isPremiumAddon = $derived(
+    addon?.parameters.categories?.includes("premium") ?? false,
+  );
+  let disablePremium = $derived(
+    isPremiumAddon && (!isPremiumUser || creditBalance === 0),
+  );
+  let history = $derived(data.history);
 </script>
 
 <svelte:head>
