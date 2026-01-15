@@ -2,8 +2,12 @@
   import type { User, Org, Maybe } from "$lib/api/types";
   import { Person16, Organization16 } from "svelte-octicons";
 
-  export let user: Maybe<User> = undefined;
-  export let org: Maybe<Org> = undefined;
+  interface Props {
+    user?: Maybe<User>;
+    org?: Maybe<Org>;
+  }
+
+  let { user = undefined, org = undefined }: Props = $props();
 </script>
 
 <div class="avatar">
