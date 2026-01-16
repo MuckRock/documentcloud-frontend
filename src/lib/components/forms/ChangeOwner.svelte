@@ -152,7 +152,7 @@ Change owner of one or more documents.
   }
 </script>
 
-<form {action} method="post" use:enhance={onSubmit}>
+<form class="modal-form" {action} method="post" use:enhance={onSubmit}>
   <Flex direction="column" gap={1}>
     <ShowSize size={count}>
       <Flex direction="column">
@@ -225,7 +225,6 @@ Change owner of one or more documents.
 <style>
   form {
     color: var(--gray-5, #233944);
-    width: 100%;
   }
 
   label {

@@ -78,10 +78,7 @@
       }
     });
 
-    return new URL(
-      `?next=${encodeURIComponent(nextUrl.href)}`,
-      SIGN_IN_URL,
-    );
+    return new URL(`?next=${encodeURIComponent(nextUrl.href)}`, SIGN_IN_URL);
   }
 
   afterNavigate(() => {
@@ -253,7 +250,11 @@
       </Button>
     </div>
     <div class="controls" slot="signedOut">
-      <p>{@html $_("addonDispatchDialog.signedOut", { values: { href: sign_in_url.href }})}</p>
+      <p>
+        {@html $_("addonDispatchDialog.signedOut", {
+          values: { href: sign_in_url.href },
+        })}
+      </p>
     </div>
   </SignedIn>
 </form>

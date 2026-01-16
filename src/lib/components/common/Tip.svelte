@@ -27,6 +27,7 @@
   .icon {
     display: flex;
     align-items: center;
+    align-self: center;
   }
   .inner {
     margin-top: 0.125rem;

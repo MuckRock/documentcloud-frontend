@@ -97,7 +97,7 @@
       </NavItem>
     {/if}
   </SidebarGroup>
-  <NavItem slot="signedOut" href={searchUrl('')}>
+  <NavItem slot="signedOut" href={searchUrl("")}>
     <File16 slot="start" />
     {$_("documents.publicDocuments")}
   </NavItem>

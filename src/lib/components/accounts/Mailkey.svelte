@@ -55,20 +55,22 @@
 
 <Modal on:close>
   <h1 slot="title">{$_("mailkey.title")}</h1>
-  <div class="description">{@html $_("mailkey.description")}</div>
-  {#if message}
-    <p class="message" class:error>
-      {@html message}
-    </p>
-  {/if}
-  <Flex gap={1} wrap justify="center">
-    <Button mode="primary" on:click={create}>
-      {$_("mailkey.create.button")}
-    </Button>
-    <Button mode="danger" on:click={destroy}>
-      {$_("mailkey.destroy.button")}
-    </Button>
-  </Flex>
+  <div class="modal-form content">
+    <div class="description">{@html $_("mailkey.description")}</div>
+    {#if message}
+      <p class="message" class:error>
+        {@html message}
+      </p>
+    {/if}
+    <Flex gap={1} wrap justify="center">
+      <Button mode="primary" on:click={create}>
+        {$_("mailkey.create.button")}
+      </Button>
+      <Button mode="danger" on:click={destroy}>
+        {$_("mailkey.destroy.button")}
+      </Button>
+    </Flex>
+  </div>
 </Modal>
 
 <style>

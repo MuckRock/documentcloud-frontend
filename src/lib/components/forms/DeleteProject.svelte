@@ -20,7 +20,7 @@ Confirm project deletion.
   $: action = new URL("?/delete", canonicalUrl(project)).href;
 </script>
 
-<form {action} method="post">
+<form class="modal-form--flex" {action} method="post">
   <p>{$_("projects.delete.really", { values: { project: project.title } })}</p>
 
   <Flex>
@@ -36,9 +36,6 @@ Confirm project deletion.
 
 <style>
   form {
-    display: flex;
-    flex-direction: column;
     gap: 1rem;
-    width: 100%;
   }
 </style>
