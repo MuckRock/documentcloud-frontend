@@ -108,10 +108,27 @@
 />
 
 <Story
-  name="Truncate Title"
+  name="Wrap title"
   args={{
     document: {
       ...expanded,
+      description:
+        "Makes David Cameron the new prime minister and installs Nick Clegg as his deputy",
+    },
+    visibleFields: {
+      ...defaultVisibleFields,
+      description: true,
+      fullTitle: false,
+    },
+  }}
+/>
+
+<Story
+  name="Wrap title without breaks"
+  args={{
+    document: {
+      ...expanded,
+      title: "Makes%20David%20Cameron%20the%20new%20prime%20minister%20and%20installs%20Nick%20Clegg%20as%20his%20deputy",
       description:
         "Makes David Cameron the new prime minister and installs Nick Clegg as his deputy",
     },
