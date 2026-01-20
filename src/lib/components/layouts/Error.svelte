@@ -64,9 +64,7 @@
 {#if feedbackOpen}
   <Portal>
     <Modal on:close={() => (feedbackOpen = false)}>
-      {#snippet title()}
-        <h1>{$_("feedback.title")}</h1>
-      {/snippet}
+      <h1 slot="title">{$_("feedback.title")}</h1>
       <UserFeedback
         user={$me}
         feedbackType="Bug"

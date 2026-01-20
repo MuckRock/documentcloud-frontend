@@ -63,7 +63,7 @@
 </script>
 
 <form
-  class="userFeedback"
+  class="modal-form--flex userFeedback"
   method="POST"
   action="{APP_URL}?/feedback"
   use:enhance={handleSubmit}
@@ -126,8 +126,6 @@
 
 <style>
   form {
-    display: flex;
-    flex-direction: column;
     gap: 0.5rem;
   }
   header,

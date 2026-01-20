@@ -71,7 +71,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
   }
 </script>
 
-<form {action} method="post" use:enhance={onSubmit}>
+<form class="modal-form" {action} method="post" use:enhance={onSubmit}>
   <Flex direction="column" gap={1}>
     <!-- Add any header and messaging using this slot -->
     <slot />
@@ -146,9 +146,3 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
     </Flex>
   </Flex>
 </form>
-
-<style>
-  form {
-    width: 100%;
-  }
-</style>

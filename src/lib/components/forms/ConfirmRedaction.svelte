@@ -59,7 +59,7 @@ This almost certainly lives in a modal.
   }
 </script>
 
-<form {action} method="post" use:enhance={onSubmit}>
+<form class="modal-form" {action} method="post" use:enhance={onSubmit}>
   <Flex direction="column" gap={1}>
     <p>{$_("redact.really")}</p>
 

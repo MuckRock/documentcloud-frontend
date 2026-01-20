@@ -43,7 +43,7 @@ Invite a new collaborator to a project
   }
 </script>
 
-<form {action} method="post" use:enhance={onSubmit}>
+<form class="modal-form--flex" {action} method="post" use:enhance={onSubmit}>
   <Field
     title={$_("common.emailAddress")}
     sronly
@@ -69,13 +69,6 @@ Invite a new collaborator to a project
 </form>
 
 <style>
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    width: 100%;
-  }
-
   .error {
     color: var(--error);
     font-size: var(--font-sm);

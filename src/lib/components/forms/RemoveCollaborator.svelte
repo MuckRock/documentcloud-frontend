@@ -43,7 +43,7 @@ Remove a collaborator from a project
   }
 </script>
 
-<form {action} method="post" on:submit={onSubmit}>
+<form class="modal-form--flex" {action} method="post" on:submit={onSubmit}>
   <p>{$_("collaborators.remove.message", { values: { name, title } })}</p>
   <input type="hidden" name="user" value={user.user.id} />
   <Flex class="buttons">
@@ -51,12 +51,3 @@ Remove a collaborator from a project
     <Button on:click={() => dispatch("close")}>{$_("dialog.cancel")}</Button>
   </Flex>
 </form>
-
-<style>
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    width: 100%;
-  }
-</style>
