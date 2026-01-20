@@ -216,6 +216,10 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
     margin: 0;
   }
 
+  .title {
+    overflow-wrap: anywhere;
+  }
+
   .ellipsis {
     overflow: hidden;
     text-overflow: ellipsis;
