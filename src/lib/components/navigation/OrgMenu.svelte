@@ -45,8 +45,12 @@
   // Only show credit meter if the org has any allowance
   $: showCredits = (active_org.monthly_credit_allowance ?? 0) > 0;
 
-  // Show upgrade button only if allowance is 0
-  $: showUpgrade = !showCredits;
+  $: creditHelpText = active_org.credit_reset_date
+    ? $_("authSection.credits.refreshOn", {
+        values: { date: formatResetDate(active_org.credit_reset_date, $locale) },
+      })
+    : undefined;
+
 
   // wrapping setOrg here
   async function switchOrg(org: Org) {
@@ -110,11 +114,7 @@
             label={isPro
               ? $_("authSection.credits.monthlyPro")
               : $_("authSection.credits.monthlyOrg")}
-            {#if active_org.credit_reset_date}
-              helpText={$_("authSection.credits.refreshOn", {
-                values: { date: formatResetDate(active_org.credit_reset_date, $locale) },
-              })}
-            {/if}
+            helpText={creditHelpText}
             value={active_org.monthly_credits}
             max={active_org.monthly_credit_allowance}
           />
