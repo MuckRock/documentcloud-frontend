@@ -37,7 +37,7 @@
   import UpgradePrompt from "$lib/components/premium-credits/UpgradePrompt.svelte";
 
   import Revisions from "$lib/components/documents/Revisions.svelte";
-  import Share from "$lib/components/documents/Share.svelte";
+  import Share from "$lib/components/forms/Share.svelte";
 
   import { getCurrentPage } from "../viewer/ViewerContext.svelte";
   import { getPendingDocuments } from "$lib/components/processing/ProcessContext.svelte";

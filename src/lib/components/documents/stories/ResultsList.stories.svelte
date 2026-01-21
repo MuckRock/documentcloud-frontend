@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import type { Document } from "$lib/api/types";
 
   import { Story } from "@storybook/addon-svelte-csf";
@@ -44,7 +44,9 @@
 
 <Story name="Pending documents">
   <ResultsList {results} {count} {next}>
-    <Pending {pending} slot="start" />
+    {#snippet start()}
+      <Pending {pending} />
+    {/snippet}
   </ResultsList>
 </Story>
 
@@ -56,7 +58,9 @@
 
 <Story name="Unverified user">
   <ResultsList {results} {count} {next}>
-    <Unverified {user} slot="start" />
+    {#snippet start()}
+      <Unverified {user} />
+    {/snippet}
   </ResultsList>
 </Story>
 

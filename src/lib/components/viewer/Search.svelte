@@ -13,7 +13,7 @@ Assumes it's a child of a ViewerContext
 
   import Empty from "../common/Empty.svelte";
   import Error from "../common/Error.svelte";
-  import Highlight from "../common/Highlight.svelte";
+  import Highlight from "../documents/Highlight.svelte";
 
   import { getDocument } from "./ViewerContext.svelte";
   import { getQuery, highlight, pageNumber } from "$lib/utils/search";

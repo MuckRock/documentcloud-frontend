@@ -15,10 +15,14 @@
 
   import { canonicalUrl } from "$lib/api/projects";
 
-  export let document: Document;
-  export let projects: Project[];
+  interface Props {
+    document: Document;
+    projects: Project[];
+  }
 
-  let edit = false;
+  let { document, projects }: Props = $props();
+
+  let edit = $state(false);
 
   function hide() {
     edit = false;
@@ -56,7 +60,9 @@
 {#if edit}
   <Portal>
     <Modal on:close={hide}>
-      <h1 slot="title">{$_("projects.header")}</h1>
+      {#snippet title()}
+        <h1>{$_("projects.header")}</h1>
+      {/snippet}
       <Projects documents={[document]} on:close={hide} />
     </Modal>
   </Portal>

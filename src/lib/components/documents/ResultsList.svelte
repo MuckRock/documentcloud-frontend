@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import type { Document, DocumentResults, Maybe } from "$lib/api/types";
   import {
     derived,
@@ -9,6 +9,7 @@
 
   import {
     defaultVisibleFields,
+    getVisibleFieldsContext,
     type VisibleFields,
   } from "./VisibleFields.svelte";
 
@@ -52,7 +53,7 @@
 </script>
 
 <script lang="ts">
-  import { getContext, onMount, setContext } from "svelte";
+  import { getContext, onMount, setContext, type Snippet } from "svelte";
   import { _ } from "svelte-i18n";
   import { Search24 } from "svelte-octicons";
 
@@ -66,19 +67,34 @@
   import { getApiResponse } from "$lib/utils/api";
   import { StorageManager } from "$lib/utils/storage";
 
-  export let results: Document[] = [];
-  export let count: Maybe<number> = undefined;
-  export let next: string | null = null;
-  export let auto = false;
-  export let preload: "hover" | "tap" = "hover";
+  interface Props {
+    results?: Document[];
+    count?: Maybe<number>;
+    next?: string | null;
+    auto?: boolean;
+    preload?: "hover" | "tap";
+    start?: Snippet;
+    end?: Snippet;
+  }
 
-  let loading = false;
-  let end: HTMLElement;
+  let {
+    results = $bindable([]),
+    count = undefined,
+    next = $bindable(null),
+    auto = $bindable(false),
+    preload = "hover",
+    start,
+    end,
+  }: Props = $props();
+
+  let container: Maybe<HTMLElement> = $state();
+  let endEl: Maybe<HTMLElement> = $state();
+  let error: string = $state("");
+  let loading = $state(false);
   let observer: Maybe<IntersectionObserver>;
-  let error: string = "";
 
   const embed: boolean = getContext("embed");
-  const visibleFields = getContext<Writable<VisibleFields>>("visibleFields");
+  const visibleFields = getVisibleFieldsContext();
 
   setContext("highlightState", highlightState);
 
@@ -91,7 +107,9 @@
   }
 
   // track what's visible so we can compare to $selected
-  $: $visible = new Map(results.map((d) => [String(d.id), d]));
+  $effect(() => {
+    $visible = new Map(results.map((d) => [String(d.id), d]));
+  });
 
   // load the next set of results
   async function load(url: string | URL) {
@@ -125,7 +143,7 @@
       $total = data.count ?? $total;
       next = data.next;
       error = "";
-      if (auto) watch(end);
+      if (auto && endEl) watch(endEl);
     }
     loading = false;
   }
@@ -154,28 +172,34 @@
     return io;
   }
 
-  function unwatch(io: IntersectionObserver, el: HTMLElement) {
-    io?.unobserve(el);
+  function unwatch(io: IntersectionObserver, el?: HTMLElement) {
+    if (el) {
+      io?.unobserve(el);
+    }
   }
 
   onMount(() => {
     // set initial total, update later
     $total = count ?? 0;
-    if (auto && end) {
-      observer = watch(end);
+    if (auto && endEl) {
+      observer = watch(endEl);
     }
 
     return () => {
       if (observer) {
-        unwatch(observer, end);
+        unwatch(observer, endEl);
       }
     };
   });
 </script>
 
-<div class="container" data-sveltekit-preload-data={preload}>
+<div
+  class="container"
+  data-sveltekit-preload-data={preload}
+  bind:this={container}
+>
   <Flex direction="column" gap={1}>
-    <slot name="start" />
+    {@render start?.()}
     {#each results as document (document.id)}
       <div
         class="result-row"
@@ -217,7 +241,7 @@
     {/each}
   </Flex>
 
-  <div bind:this={end} class="end">
+  <div bind:this={endEl} class="end">
     {#if next}
       <Button
         ghost
@@ -245,7 +269,7 @@
     {/if}
   </div>
 
-  <slot name="end" />
+  {@render end?.()}
 </div>
 
 <style>

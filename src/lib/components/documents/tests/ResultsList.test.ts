@@ -3,7 +3,8 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { get } from "svelte/store";
 import { render, screen, fireEvent } from "@testing-library/svelte";
 
-import ResultsList, { selected, selectedIds } from "../ResultsList.svelte";
+import ResultsList from "./ResultsList.demo.svelte";
+import { selected, selectedIds } from "../ResultsList.svelte";
 import searchResults from "@/test/fixtures/documents/search-highlight.json";
 
 const results = searchResults as unknown as DocumentResults;

@@ -5,7 +5,11 @@
   import { Sync24 } from "svelte-octicons";
   import Tip from "../common/Tip.svelte";
 
-  export let pending: Pending[];
+  interface Props {
+    pending: Pending[];
+  }
+
+  let { pending }: Props = $props();
 </script>
 
 {#if pending.length > 0}

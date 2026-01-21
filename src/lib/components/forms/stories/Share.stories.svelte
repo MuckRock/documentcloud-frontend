@@ -3,7 +3,7 @@
 
   import { Story } from "@storybook/addon-svelte-csf";
   import Share from "../Share.svelte";
-  import Toaster from "../../layouts/Toaster.svelte";
+  import Toaster from "$lib/components/layouts/Toaster.svelte";
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
   const document = doc as Document;

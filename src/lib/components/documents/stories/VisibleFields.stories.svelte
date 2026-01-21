@@ -6,7 +6,6 @@
   } from "../VisibleFields.svelte";
 
   import { documentExpanded, data } from "@/test/fixtures/documents";
-  import { setContext } from "svelte";
   import { get, writable } from "svelte/store";
 
   export const meta = {
@@ -21,9 +20,10 @@
 <script lang="ts">
   import DocumentListItem from "../DocumentListItem.svelte";
   import Menu from "../../common/Menu.svelte";
+  import { setVisibleFieldsContext } from "../VisibleFields.svelte";
 
   const vF = writable(defaultVisibleFields);
-  setContext("visibleFields", vF);
+  setVisibleFieldsContext(vF);
 </script>
 
 <Template let:args>

@@ -17,8 +17,12 @@
   import Metadata from "../common/Metadata.svelte";
   import { LinkExternal16 } from "svelte-octicons";
 
-  export let document: Document;
-  export let text: Maybe<DocumentText>;
+  interface Props {
+    document: Document;
+    text: Maybe<DocumentText>;
+  }
+
+  let { document, text }: Props = $props();
 
   const ocrEngineMap = {
     tess4: "Tesseract",
@@ -29,15 +33,13 @@
     doctr: "docTR",
   };
 
-  const engines = Object.keys(ocrEngineMap);
-  let engine: Maybe<string>;
-
-  $: ocrEngine =
+  let ocrEngine = $derived(
     text?.pages
       .map((page) => page?.ocr)
-      .reduce((acc, cur) => (acc = cur ?? acc), null) ?? null;
+      .reduce((acc, cur) => (acc = cur ?? acc), null) ?? null,
+  );
 
-  $: engine = ocrEngine?.split("_")[0];
+  let engine: Maybe<string> = $derived(ocrEngine?.split("_")[0]);
 
   function dateFormat(date: Date | string) {
     return new Date(date).toLocaleDateString();

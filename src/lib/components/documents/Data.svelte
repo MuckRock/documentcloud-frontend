@@ -18,13 +18,19 @@
   import * as search from "$lib/utils/search";
   import SidebarGroup from "../sidebar/SidebarGroup.svelte";
 
-  export let document: Document;
+  interface Props {
+    document: Document;
+  }
 
-  let edit = false;
+  let { document }: Props = $props();
 
-  $: tags = document.data["_tag"];
-  $: data = Object.entries(document.data).filter(([k, v]) => k !== "_tag");
-  $: empty = Object.keys(document.data).length === 0;
+  let edit = $state(false);
+
+  let tags = $derived(document.data["_tag"]);
+  let data = $derived(
+    Object.entries(document.data).filter(([k, v]) => k !== "_tag"),
+  );
+  let empty = $derived(Object.keys(document.data).length === 0);
 </script>
 
 <SidebarGroup name="projects:viewer">
@@ -79,7 +85,9 @@
 {#if edit}
   <Portal>
     <Modal on:close={() => (edit = false)}>
-      <h2 slot="title">{$_("data.title")}</h2>
+      {#snippet title()}
+        <h2>{$_("data.title")}</h2>
+      {/snippet}
       <EditData {document} on:close={() => (edit = false)} />
     </Modal>
   </Portal>

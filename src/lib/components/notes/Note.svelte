@@ -26,7 +26,7 @@
   import Button from "../common/Button.svelte";
   import Portal from "../layouts/Portal.svelte";
   import Modal from "../layouts/Modal.svelte";
-  import Share from "../documents/Share.svelte";
+  import Share from "../forms/Share.svelte";
 
   import { width, height, isPageLevel } from "$lib/api/notes";
   import {

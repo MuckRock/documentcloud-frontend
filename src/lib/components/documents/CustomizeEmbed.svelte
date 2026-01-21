@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
   import { writable } from "svelte/store";
   import { settings, settingsConfig } from "$lib/utils/embed";
 
@@ -18,7 +18,12 @@
   // The embed customization allows a user to control settings
   // that customize the presentation of a document embed. The user's
   // preferences should be saved to localStorage for future embeds.
-  export let storageManager = new StorageManager("vieweroptions");
+  interface Props {
+    storageManager?: any;
+  }
+
+  let { storageManager = new StorageManager("vieweroptions") }: Props =
+    $props();
 
   // initialize settings with loaded values
   onMount(() => {

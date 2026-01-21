@@ -21,7 +21,9 @@
 
   import Button from "$lib/components/common/Button.svelte";
   import Copy from "../common/Copy.svelte";
-  import CustomizeEmbed, { embedSettings } from "./CustomizeEmbed.svelte";
+  import CustomizeEmbed, {
+    embedSettings,
+  } from "../documents/CustomizeEmbed.svelte";
   import Field from "$lib/components/common/Field.svelte";
   import FieldLabel from "$lib/components/common/FieldLabel.svelte";
   import Number from "$lib/components/inputs/Number.svelte";

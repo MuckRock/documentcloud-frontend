@@ -1,4 +1,7 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
+  import type { Writable } from "svelte/store";
+  import { createContext } from "svelte";
+
   export interface VisibleFields {
     access: boolean;
     thumbnail: boolean;
@@ -43,13 +46,13 @@
   ];
 
   export const defaultVisibleFields = defaultViews[1]?.fields!;
+
+  export const [getVisibleFieldsContext, setVisibleFieldsContext] =
+    createContext<Writable<VisibleFields>>();
 </script>
 
 <script lang="ts">
-  import type { Writable } from "svelte/store";
-
   import deepEqual from "fast-deep-equal";
-  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
 
   import {
@@ -63,9 +66,15 @@
   import NavItem from "$lib/components/common/NavItem.svelte";
   import { remToPx } from "$lib/utils/layout";
 
-  export let showAdvanced = false;
-  export let visibleFields: Writable<VisibleFields> =
-    getContext("visibleFields");
+  interface Props {
+    showAdvanced?: boolean;
+    visibleFields?: Writable<VisibleFields>;
+  }
+
+  let {
+    showAdvanced = false,
+    visibleFields = getVisibleFieldsContext(),
+  }: Props = $props();
 
   const labels: Record<keyof VisibleFields, string> = {
     access: "documentBrowser.fields.access",
@@ -77,7 +86,7 @@
     wrapTitle: "documentBrowser.fields.wrapTitle",
   };
 
-  let width: number;
+  let width: number = $state(800);
 </script>
 
 <div
@@ -91,9 +100,9 @@
         <NavItem
           active={deepEqual(view.fields, $visibleFields)}
           hover
-          on:click={() => visibleFields.set(view.fields)}
+          on:click={() => visibleFields?.set(view.fields)}
         >
-          <svelte:component this={view.icon} slot="start" />
+          <view.icon slot="start" />
           {$_(view.label)}
         </NavItem>
       </div>
@@ -103,11 +112,11 @@
     <fieldset class="fields">
       <legend>
         <NavItem small>
-          <Paintbrush16 slot="start" height={14} width={14} />
+          <Paintbrush16 height={14} width={14} slot="start" />
           {$_("documentBrowser.fields.customize")}
         </NavItem>
       </legend>
-      {#each Object.keys($visibleFields) as key}
+      {#each Object.keys($visibleFields ?? {}) as key}
         <label class="field">
           <input
             type="checkbox"

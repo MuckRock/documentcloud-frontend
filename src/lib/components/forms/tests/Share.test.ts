@@ -1,5 +1,5 @@
-import { vi, test, describe, it, expect, beforeEach } from "vitest";
-import { render, screen, within } from "@testing-library/svelte";
+import { describe, it, expect, beforeEach } from "vitest";
+import { render, screen } from "@testing-library/svelte";
 import { userEvent } from "@testing-library/user-event";
 
 import Share from "../Share.svelte";

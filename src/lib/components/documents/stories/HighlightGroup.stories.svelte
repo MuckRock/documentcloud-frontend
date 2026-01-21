@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import { _ } from "svelte-i18n";
   import { Story } from "@storybook/addon-svelte-csf";
   import Highlight from "../Highlight.svelte";
@@ -20,16 +20,16 @@
 
 <Story name="With Highlights">
   <HighlightGroup {highlights} {getHref}>
-    <svelte:fragment let:id let:highlight>
+    {#snippet children({ id, highlight })}
       <Highlight title={id} segments={highlight} />
-    </svelte:fragment>
+    {/snippet}
   </HighlightGroup>
 </Story>
 
 <Story name="With All Controls">
   <HighlightGroup {highlights} {getHref} showAll>
-    <svelte:fragment let:id let:highlight>
+    {#snippet children({ id, highlight })}
       <Highlight title={id} segments={highlight} />
-    </svelte:fragment>
+    {/snippet}
   </HighlightGroup>
 </Story>
