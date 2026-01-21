@@ -24,12 +24,16 @@
   import { remToPx } from "$lib/utils/layout";
   import { getUserName } from "$lib/api/accounts";
 
-  export let user: User;
-  export let position: Placement = "bottom-end";
+  interface Props {
+    user: User;
+    position?: Placement;
+  }
 
-  let width: number;
+  let { user, position = "bottom-end" }: Props = $props();
 
-  let mailkeyOpen = false;
+  let width: number | undefined = $state();
+
+  let mailkeyOpen = $state(false);
   function setMailkeyOpen(open?: boolean) {
     mailkeyOpen = open ?? !mailkeyOpen;
   }
@@ -40,7 +44,7 @@
 <Dropdown {position}>
   <NavItem slot="anchor" title="Open Menu">
     <Avatar {user} slot="start" />
-    {#if width > remToPx(48)}
+    {#if width && width > remToPx(48)}
       <span class="name">{getUserName(user)}</span>
     {/if}
     <div class="dropdownArrow" slot="end">

@@ -8,9 +8,13 @@
   import { createMailkey, destroyMailkey } from "$lib/api/accounts";
   import { getCsrfToken } from "$lib/utils/api";
 
-  export let fetch = globalThis.fetch;
-  export let message: string = "";
-  let error = false;
+  interface Props {
+    fetch?: any;
+    message?: string;
+  }
+
+  let { fetch = globalThis.fetch, message = $bindable("") }: Props = $props();
+  let error = $state(false);
 
   function reset() {
     message = "";
@@ -54,7 +58,9 @@
 </script>
 
 <Modal on:close>
-  <h1 slot="title">{$_("mailkey.title")}</h1>
+  {#snippet title()}
+    <h1>{$_("mailkey.title")}</h1>
+  {/snippet}
   <div class="description">{@html $_("mailkey.description")}</div>
   {#if message}
     <p class="message" class:error>
