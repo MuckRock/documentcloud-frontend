@@ -30,6 +30,19 @@
   const user = { ...me, verified_journalist: false };
 </script>
 
+<script lang="ts">
+  import { writable } from "svelte/store";
+  import { setContext } from "svelte";
+  import {
+    defaultVisibleFields,
+    setVisibleFieldsContext,
+  } from "../VisibleFields.svelte";
+
+  // Set up contexts needed by ResultsList
+  setContext("embed", false);
+  setVisibleFieldsContext(writable(defaultVisibleFields));
+</script>
+
 <Story name="With Results">
   <ResultsList {results} {count} {next} />
 </Story>
