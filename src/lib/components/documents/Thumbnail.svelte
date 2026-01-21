@@ -24,7 +24,7 @@
   };
 
   function onError() {
-    document.status = "error";
+    document = { ...document, status: "error" };
   }
 
   let sizes = $derived(
