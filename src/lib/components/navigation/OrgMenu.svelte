@@ -114,9 +114,9 @@
             label={isPro
               ? $_("authSection.credits.monthlyPro")
               : $_("authSection.credits.monthlyOrg")}
-            helpText={creditHelpText}
-            value={active_org.monthly_credits}
-            max={active_org.monthly_credit_allowance}
+            helpText={creditHelpText ?? ""}
+            value={active_org.monthly_credits ?? 0}
+            max={active_org.monthly_credit_allowance ?? 0}
           />
         </MenuInsert>
       {:else}
