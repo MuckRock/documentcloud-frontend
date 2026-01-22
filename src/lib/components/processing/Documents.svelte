@@ -152,9 +152,7 @@ so we can invalidate documents as they finish processing.
 {#if reprocess}
   <Portal>
     <Modal on:close={() => (reprocess = null)}>
-      {#snippet title()}
-        <h1>{$_("dialogReprocessDialog.title")}</h1>
-      {/snippet}
+      <h1 slot="title">{$_("dialogReprocessDialog.title")}</h1>
       <Reprocess documents={[reprocess]} on:close={() => (reprocess = null)} />
     </Modal>
   </Portal>

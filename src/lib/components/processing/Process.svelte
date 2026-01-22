@@ -46,14 +46,14 @@
 
   let isRunning = $derived(["in_progress", "queued"].includes(status));
 
-  const SvelteComponent = $derived(icons[status]);
+  const Icon = $derived(icons[status]);
 </script>
 
 <div {id} class="{status} process" class:dismissed>
   <div class="info">
     <div class="icon" class:spin>
       {#if icon}{@render icon()}{:else}
-        <SvelteComponent />
+        <Icon />
       {/if}
     </div>
 

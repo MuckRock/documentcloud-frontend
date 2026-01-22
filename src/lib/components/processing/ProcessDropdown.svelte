@@ -1,9 +1,5 @@
 <script lang="ts">
-  import { run } from "svelte/legacy";
-
   import type { RunStatus } from "$lib/api/types";
-
-  import { _ } from "svelte-i18n";
 
   import AddOns from "./AddOns.svelte";
   import Documents, { getStatus } from "./Documents.svelte";
@@ -56,7 +52,7 @@
     ),
   );
 
-  run(() => {
+  $effect(() => {
     for (const status of Object.keys(totalCounts)) {
       totalCounts[status] =
         (addons?.[status] || 0) + (documents?.[status] || 0);

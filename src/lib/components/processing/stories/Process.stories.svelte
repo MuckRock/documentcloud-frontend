@@ -1,9 +1,10 @@
 <script lang="ts" module>
-  import { Template, Story } from "@storybook/addon-svelte-csf";
   import type { Meta } from "@storybook/svelte";
+  import { Template, Story } from "@storybook/addon-svelte-csf";
+  import { XCircle16, Thumbsup16, Thumbsdown16 } from "svelte-octicons";
+
   import Process from "../Process.svelte";
   import Button from "../../common/Button.svelte";
-  import { XCircle16, Thumbsup16, Thumbsdown16 } from "svelte-octicons";
   import Flex from "../../common/Flex.svelte";
 
   export const meta: Meta = {
