@@ -61,11 +61,9 @@
       {@render children?.()}
     </div>
     {#if actions}
-      {#snippet end()}
-        <Flex>
-          {@render actions?.({ isRunning })}
-        </Flex>
-      {/snippet}
+      <Flex>
+        {@render actions?.({ isRunning })}
+      </Flex>
     {/if}
   </div>
   {#if ["success", "failure", "cancelled"].includes(status)}

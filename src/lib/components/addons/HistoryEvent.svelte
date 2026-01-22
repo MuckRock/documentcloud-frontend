@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Maybe, Run, RunStatus } from "$lib/api/types";
-  import { onMount, type ComponentType } from "svelte";
+  import { onMount } from "svelte";
 
   import { _ } from "svelte-i18n";
   import {
@@ -11,6 +11,7 @@
     Sync24,
     X24,
     XCircle16,
+    type SvgComponent,
   } from "svelte-octicons";
 
   import Action from "../common/Action.svelte";
@@ -22,15 +23,19 @@
   import * as addons from "$lib/api/addons";
   import { getCsrfToken } from "$lib/utils/api";
 
-  export let run: Run;
-  export let dismissable = false;
+  interface Props {
+    run: Run;
+    dismissable?: boolean;
+  }
 
-  let csrftoken: Maybe<string> = undefined;
+  let { run = $bindable(), dismissable = false }: Props = $props();
 
-  $: ranAt = new Date(run.created_at);
-  $: isRunning = ["in_progress", "queued"].includes(run.status);
+  let csrftoken: Maybe<string> = $state(undefined);
 
-  const icons: Record<RunStatus, ComponentType> = {
+  let ranAt = $derived(new Date(run.created_at));
+  let isRunning = $derived(["in_progress", "queued"].includes(run.status));
+
+  const icons: Record<RunStatus, typeof SvgComponent> = {
     success: CheckCircle24,
     failure: Alert24,
     queued: Hourglass24,
@@ -85,7 +90,10 @@
   progress={run.progress}
   dismissed={dismissable && run.dismissed}
 >
-  <svelte:component this={icons[run.status]} slot="icon" />
+  {#snippet icon()}
+    {@const Icon = icons[run.status]}
+    <Icon />
+  {/snippet}
   <div class="info">
     <div class="row">
       <div class="primary-info">
@@ -118,32 +126,34 @@
     </div>
   </div>
 
-  <Flex slot="actions">
-    {#if isRunning}
-      <!-- Cancel -->
-      <Button
-        minW={false}
-        mode="danger"
-        ghost
-        disabled={!csrftoken}
-        on:click={() => cancelRun()}
-        title={$_("dialog.cancel")}
-      >
-        <XCircle16 />
-      </Button>
-    {:else if dismissable && !run.dismissed}
-      <Button
-        size="small"
-        minW={false}
-        ghost
-        disabled={!csrftoken}
-        on:click={() => dismissRun()}
-      >
-        {$_("dialog.dismiss")}
-      </Button>
-      <!-- todo: retry -->
-    {/if}
-  </Flex>
+  {#snippet actions()}
+    <Flex>
+      {#if isRunning}
+        <!-- Cancel -->
+        <Button
+          minW={false}
+          mode="danger"
+          ghost
+          disabled={!csrftoken}
+          on:click={() => cancelRun()}
+          title={$_("dialog.cancel")}
+        >
+          <XCircle16 />
+        </Button>
+      {:else if dismissable && !run.dismissed}
+        <Button
+          size="small"
+          minW={false}
+          ghost
+          disabled={!csrftoken}
+          on:click={() => dismissRun()}
+        >
+          {$_("dialog.dismiss")}
+        </Button>
+        <!-- todo: retry -->
+      {/if}
+    </Flex>
+  {/snippet}
 </Process>
 
 <style>
