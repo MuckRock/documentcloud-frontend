@@ -1,21 +1,22 @@
-<!-- @component
+<!-- 
+@component
 Global process manager for things happening in the background.
 Processing documents and running add-ons get updated on a timer.
 This makes the state of those processes available via context.
 -->
 
-<script lang="ts" context="module">
+<script lang="ts" module>
   import type { Maybe, Pending, Run } from "$lib/api/types";
 
-  import { invalidate, invalidateAll } from "$app/navigation";
+  import { invalidate } from "$app/navigation";
 
   import throttle from "lodash-es/throttle";
   import {
     getContext,
     setContext,
     onMount,
-    afterUpdate,
     onDestroy,
+    type Snippet,
   } from "svelte";
   import { type Writable, writable, derived } from "svelte/store";
 
@@ -58,22 +59,26 @@ This makes the state of those processes available via context.
 
   // loading, exported so other components can restart this process
   async function _load() {
-    const inProgress = await pending();
-    documents.set(inProgress);
+    const promises = [
+      pending().then((inProgress) => {
+        documents.set(inProgress);
 
-    // if we've processed these docs before, take them out of finished
-    if (inProgress.length > 0) {
-      finished.update((f) => {
-        inProgress.forEach((d) => f.delete(d.doc_id));
-        return f;
-      });
-    }
+        // if we've processed these docs before, take them out of finished
+        if (inProgress.length > 0) {
+          finished.update((f) => {
+            inProgress.forEach((d) => f.delete(d.doc_id));
+            return f;
+          });
+        }
+      }),
+      history({ dismissed: false, per_page: 100 }).then(({ data, error }) => {
+        if (!error && data) {
+          addons.set(data.results);
+        }
+      }),
+    ];
 
-    // addons
-    const { data, error } = await history({ dismissed: false, per_page: 100 });
-    if (!error && data) {
-      addons.set(data.results);
-    }
+    await Promise.all(promises);
   }
 
   // throttled load
@@ -84,6 +89,11 @@ This makes the state of those processes available via context.
 </script>
 
 <script lang="ts">
+  interface Props {
+    children?: Snippet;
+  }
+
+  let { children }: Props = $props();
   // keep track of processed documents
   let started: Set<number> = new Set();
 
@@ -100,6 +110,8 @@ This makes the state of those processes available via context.
     finished,
   });
 
+  $inspect($addons);
+
   onMount(() => {
     load();
     // started grows indefinitely, so we need to manage it here
@@ -108,7 +120,7 @@ This makes the state of those processes available via context.
     });
   });
 
-  afterUpdate(() => {
+  $effect(() => {
     if ($documents.length > 0 || $addons.length > 0) {
       load();
     }
@@ -129,4 +141,4 @@ This makes the state of those processes available via context.
   });
 </script>
 
-<slot />
+{@render children?.()}

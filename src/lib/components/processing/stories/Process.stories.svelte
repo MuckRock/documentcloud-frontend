@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
   import { Template, Story } from "@storybook/addon-svelte-csf";
   import type { Meta } from "@storybook/svelte";
   import Process from "../Process.svelte";
@@ -16,15 +16,19 @@
   };
 </script>
 
-<Template let:args>
-  <Process {...args}>
-    <span class="name">Example process</span>
-    <Flex slot="actions" align="center">
-      <Button ghost mode="danger" size="small" minW={false}>
-        <XCircle16 />
-      </Button>
-    </Flex>
-  </Process>
+<Template>
+  {#snippet children({ args })}
+    <Process {...args}>
+      <span class="name">Example process</span>
+      {#snippet actions()}
+        <Flex align="center">
+          <Button ghost mode="danger" size="small" minW={false}>
+            <XCircle16 />
+          </Button>
+        </Flex>
+      {/snippet}
+    </Process>
+  {/snippet}
 </Template>
 
 <Story
@@ -45,14 +49,16 @@
 <Story name="With Actions">
   <Process status="success">
     <span class="name">Completed event</span>
-    <Flex slot="actions">
-      <Button size="small" ghost>Dismiss</Button>
-      <Button size="small" ghost minW={false} mode="success">
-        <Thumbsup16 />
-      </Button>
-      <Button size="small" ghost minW={false} mode="danger">
-        <Thumbsdown16 />
-      </Button>
-    </Flex>
+    {#snippet actions()}
+      <Flex>
+        <Button size="small" ghost>Dismiss</Button>
+        <Button size="small" ghost minW={false} mode="success">
+          <Thumbsup16 />
+        </Button>
+        <Button size="small" ghost minW={false} mode="danger">
+          <Thumbsdown16 />
+        </Button>
+      </Flex>
+    {/snippet}
   </Process>
 </Story>

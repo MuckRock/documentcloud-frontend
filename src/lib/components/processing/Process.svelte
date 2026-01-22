@@ -1,5 +1,5 @@
-<script lang="ts" context="module">
-  import type { ComponentType } from "svelte";
+<script lang="ts" module>
+  import type { ComponentType, Snippet } from "svelte";
   import type { Maybe, RunStatus } from "$lib/api/types";
   import {
     Alert16,
@@ -22,30 +22,50 @@
 
   import Flex from "../common/Flex.svelte";
 
-  export let dismissed = false;
-  export let id: Maybe<string> = undefined;
-  export let progress: Maybe<number> = undefined;
-  export let spin = false;
-  export let status: RunStatus;
+  interface Props {
+    dismissed?: boolean;
+    id?: Maybe<string>;
+    progress?: Maybe<number>;
+    spin?: boolean;
+    status: RunStatus;
+    icon?: Snippet;
+    children?: Snippet;
+    actions?: Snippet<[any]>;
+  }
 
-  $: isRunning = ["in_progress", "queued"].includes(status);
+  let {
+    dismissed = false,
+    id = undefined,
+    progress = undefined,
+    spin = false,
+    status,
+    icon,
+    children,
+    actions,
+  }: Props = $props();
+
+  let isRunning = $derived(["in_progress", "queued"].includes(status));
+
+  const SvelteComponent = $derived(icons[status]);
 </script>
 
 <div {id} class="{status} process" class:dismissed>
   <div class="info">
     <div class="icon" class:spin>
-      <slot name="icon">
-        <svelte:component this={icons[status]} />
-      </slot>
+      {#if icon}{@render icon()}{:else}
+        <SvelteComponent />
+      {/if}
     </div>
 
     <div class="details">
-      <slot />
+      {@render children?.()}
     </div>
-    {#if $$slots.actions}
-      <Flex slot="end">
-        <slot name="actions" {isRunning} />
-      </Flex>
+    {#if actions}
+      {#snippet end()}
+        <Flex>
+          {@render actions?.({ isRunning })}
+        </Flex>
+      {/snippet}
     {/if}
   </div>
   {#if ["success", "failure", "cancelled"].includes(status)}

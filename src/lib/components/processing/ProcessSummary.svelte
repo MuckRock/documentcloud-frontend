@@ -4,22 +4,29 @@
   import Flex from "../common/Flex.svelte";
   import { icons } from "./Process.svelte";
 
-  export let counts: Record<RunStatus, number> = {
-    queued: 0,
-    in_progress: 0,
-    success: 0,
-    failure: 0,
-    cancelled: 0,
-  };
+  interface Props {
+    counts?: Record<RunStatus, number>;
+  }
+
+  let {
+    counts = {
+      queued: 0,
+      in_progress: 0,
+      success: 0,
+      failure: 0,
+      cancelled: 0,
+    },
+  }: Props = $props();
 </script>
 
 <Flex align="baseline">
   {#each Object.entries(counts) as [status, count]}
     {#if count > 0}
+      {@const Icon = icons[status]}
       <div class="{status} count">
         {count}
         <div class="icon" class:spin={status === "in_progress"}>
-          <svelte:component this={icons[status]} />
+          <Icon />
         </div>
       </div>
     {/if}
