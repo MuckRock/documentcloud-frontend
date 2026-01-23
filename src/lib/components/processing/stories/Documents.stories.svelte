@@ -10,6 +10,7 @@
     component: Documents,
     parameters: {
       layout: "centered",
+      delay: 5000, // give the mock time to load
     },
   };
 </script>
