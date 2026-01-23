@@ -1,8 +1,12 @@
 <script lang="ts">
   import Credit from "$lib/components/icons/Credit.svelte";
 
-  export let value: number;
-  export let iconSize = 1;
+  interface Props {
+    value: number;
+    iconSize?: number;
+  }
+
+  let { value, iconSize = 1 }: Props = $props();
 </script>
 
 <span class="price">
