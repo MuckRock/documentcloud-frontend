@@ -11,7 +11,14 @@ This makes the state of those processes available via context.
   import { invalidate } from "$app/navigation";
 
   import throttle from "lodash-es/throttle";
-  import { createContext, onMount, onDestroy, type Snippet } from "svelte";
+  import {
+    createContext,
+    getContext,
+    setContext,
+    onMount,
+    onDestroy,
+    type Snippet,
+  } from "svelte";
   import { type Writable, writable, derived } from "svelte/store";
 
   import { history } from "$lib/api/addons";
@@ -35,19 +42,19 @@ This makes the state of those processes available via context.
     createContext<ProcessContext>();
 
   export function getPendingDocuments(): Maybe<Writable<Pending[]>> {
-    return getProcessContext().documents;
+    return getContext<ProcessContext>("processing")?.documents;
   }
 
   export function getFinishedDocuments(): Maybe<Writable<Set<number>>> {
-    return getProcessContext().finished;
+    return getContext<ProcessContext>("processing")?.finished;
   }
 
   export function getRunningAddons(): Maybe<Writable<Run[]>> {
-    return getProcessContext().addons;
+    return getContext<ProcessContext>("processing")?.addons;
   }
 
   export function getProcessLoader(): Maybe<() => void> {
-    return getProcessContext().load;
+    return getContext<ProcessContext>("processing")?.load;
   }
 
   export let addons: Writable<Run[]> = writable([]);
@@ -100,7 +107,7 @@ This makes the state of those processes available via context.
   );
 
   // stores we need deeper in the component tree, available via context
-  setProcessContext({
+  setContext<ProcessContext>("processing", {
     addons,
     documents,
     load,
