@@ -10,6 +10,7 @@
     component: Documents,
     parameters: {
       layout: "centered",
+      chromatic: { delay: 5000 }, // https://www.chromatic.com/docs/delay/
     },
   };
 </script>
