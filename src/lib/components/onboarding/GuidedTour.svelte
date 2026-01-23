@@ -4,15 +4,14 @@
   taken in a LocalStorage object. If a script exists for the current route,
   and if the user hasn't already taken it, we'll prompt them to take the guided tour.
  -->
-<script lang="ts" context="module">
+<script lang="ts" module>
   import type { Maybe, Nullable } from "$lib/api/types";
 
   import "driver.js/dist/driver.css";
 
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 
   import { driver, type Driver, type DriveStep, type Config } from "driver.js";
-  import { get } from "svelte/store";
 
   import { StorageManager } from "$lib/utils/storage";
   import { scripts } from "./scripts";
@@ -30,7 +29,7 @@
   type Tours = Record<string, boolean>;
 
   export function getRoute(): Maybe<Nullable<string>> {
-    return get(page)?.route?.id;
+    return page.route.id;
   }
 
   export function getScript(route?: Nullable<string>): Maybe<DriveStep[]> {
@@ -62,8 +61,14 @@
 
 <script lang="ts">
   import { afterNavigate } from "$app/navigation";
-  import { onMount } from "svelte";
+  import { onMount, type Snippet } from "svelte";
   import { getCurrentUser } from "$lib/utils/permissions";
+
+  interface Props {
+    children?: Snippet;
+  }
+
+  let { children }: Props = $props();
 
   const user = getCurrentUser();
 
@@ -93,7 +98,7 @@
   });
 </script>
 
-<slot />
+{@render children?.()}
 
 <style>
   :global(

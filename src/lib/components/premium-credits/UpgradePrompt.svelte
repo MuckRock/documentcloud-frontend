@@ -3,9 +3,13 @@
   import Credit from "$lib/components/icons/Credit.svelte";
   import Button from "$lib/components/common/Button.svelte";
 
-  export let message: string;
-  export let callToAction: string | null = null;
-  export let href: string | undefined = undefined;
+  interface Props {
+    message: string;
+    callToAction?: string | null;
+    href?: string | undefined;
+  }
+
+  let { message, callToAction = null, href = undefined }: Props = $props();
 </script>
 
 <div class="container">
