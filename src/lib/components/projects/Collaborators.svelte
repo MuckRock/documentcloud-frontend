@@ -92,25 +92,29 @@
 
 {#if users.length > 0 || project.add_remove_access}
   <SidebarGroup name="collaborators">
-    <NavItem slot="title">
-      <People16 slot="start" />
-      {$_("projects.collaborators.title")}
-    </NavItem>
+    {#snippet title()}
+      <NavItem>
+        <People16 slot="start" />
+        {$_("projects.collaborators.title")}
+      </NavItem>
+    {/snippet}
 
-    <span slot="action">
-      {#if project.add_remove_access}
-        <Button
-          ghost
-          mode="primary"
-          size="small"
-          minW={false}
-          on:click={() => (show = "invite")}
-        >
-          <PlusCircle16 height={14} width={14} />
-          {$_("projects.collaborators.add")}
-        </Button>
-      {/if}
-    </span>
+    {#snippet action()}
+      <span>
+        {#if project.add_remove_access}
+          <Button
+            ghost
+            mode="primary"
+            size="small"
+            minW={false}
+            on:click={() => (show = "invite")}
+          >
+            <PlusCircle16 height={14} width={14} />
+            {$_("projects.collaborators.add")}
+          </Button>
+        {/if}
+      </span>
+    {/snippet}
 
     {#each Object.entries(group(sort(users))) as [key, members]}
       {#if members.length}

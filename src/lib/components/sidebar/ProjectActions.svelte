@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   type Action = "edit" | "share" | "delete";
 </script>
 
@@ -18,9 +18,13 @@
   import ProjectShare from "../projects/ProjectShare.svelte";
   import Flex from "../common/Flex.svelte";
 
-  export let project: Project;
+  interface Props {
+    project: Project;
+  }
 
-  let show: Nullable<Action> = null;
+  let { project }: Props = $props();
+
+  let show: Nullable<Action> = $state(null);
 
   const actions: Record<Action, string> = {
     edit: $_("projects.edit"),
