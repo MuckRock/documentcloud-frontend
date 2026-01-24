@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
   import type { Meta } from "@storybook/svelte";
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+  import { Story } from "@storybook/addon-svelte-csf";
   import Project from "../Project.svelte";
 
   import { project, projectUsers } from "@/test/fixtures/projects";
@@ -15,32 +15,39 @@
     },
   };
 
-  let args = {
+  const args = {
     project,
     users: projectUsers.results,
-    documents: Promise.resolve(documentsList),
+    documents: Promise.resolve({ data: documentsList }),
     addons: Promise.resolve(activeAddons),
   };
 </script>
 
-<Template let:args>
+<Story name="Viewer">
   <div class="vh-100">
     <Project {...args} />
   </div>
-</Template>
+</Story>
 
-<Story name="Viewer" {args} />
-<Story
-  name="Editor"
-  args={{ ...args, project: { ...project, edit_access: true } }}
-/>
-<Story
-  name="Admin"
-  args={{
-    ...args,
-    project: { ...project, edit_access: true, add_remove_access: true },
-  }}
-/>
+<Story name="Editor">
+  <div class="vh-100">
+    <Project
+      project={{ ...project, edit_access: true }}
+      users={projectUsers.results}
+      documents={Promise.resolve({ data: documentsList })}
+    />
+  </div>
+</Story>
+
+<Story name="Admin">
+  <div class="vh-100">
+    <Project
+      project={{ ...project, edit_access: true, add_remove_access: true }}
+      users={projectUsers.results}
+      documents={Promise.resolve({ data: documentsList })}
+    />
+  </div>
+</Story>
 
 <style>
   .vh-100 {
