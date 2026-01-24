@@ -30,17 +30,19 @@
 </script>
 
 <SidebarGroup name="projects:viewer">
-  <NavItem slot="title">
-    <FileDirectory16 slot="start" />
-    {$_("projects.header")}
-  </NavItem>
-  <div slot="action">
+  {#snippet title()}
+    <NavItem>
+      <FileDirectory16 slot="start" />
+      {$_("projects.header")}
+    </NavItem>
+  {/snippet}
+  {#snippet action()}
     {#if document.edit_access}
       <Action on:click={() => (edit = true)} icon={Pencil16}>
         {$_("common.edit", { values: { n: 1 } })}
       </Action>
     {/if}
-  </div>
+  {/snippet}
 
   {#each projects as project}
     <NavItem small href={canonicalUrl(project).href}>
