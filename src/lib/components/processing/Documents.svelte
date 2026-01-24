@@ -113,10 +113,12 @@ so we can invalidate documents as they finish processing.
 
 {#if $current?.length}
   <SidebarGroup name="processing.documents">
-    <NavItem slot="title">
-      <File16 slot="start" />
-      {$_("processing.documents")}
-    </NavItem>
+    {#snippet title()}
+      <NavItem>
+        <File16 slot="start" />
+        {$_("processing.documents")}
+      </NavItem>
+    {/snippet}
     {#each $current as process (process.doc_id)}
       {@const document = documents.get(process.doc_id)}
       <div role="menuitem" animate:flip>

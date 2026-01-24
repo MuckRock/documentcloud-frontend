@@ -19,10 +19,12 @@
 </script>
 
 <SidebarGroup name="notes">
-  <NavItem slot="title">
-    <Note16 slot="start" />
-    {$_("sidebar.toc.notes")}
-  </NavItem>
+  {#snippet title()}
+    <NavItem>
+      <Note16 slot="start" />
+      {$_("sidebar.toc.notes")}
+    </NavItem>
+  {/snippet}
 
   <ol class="notes">
     {#each notes as note}
