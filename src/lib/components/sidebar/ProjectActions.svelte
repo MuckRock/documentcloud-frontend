@@ -67,7 +67,7 @@
       {/if}
 
       {#if show === "share"}
-        <ProjectShare {project} on:close={hide} />
+        <ProjectShare {project} />
       {/if}
 
       {#if show === "delete"}
