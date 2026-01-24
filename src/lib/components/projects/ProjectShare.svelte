@@ -19,17 +19,25 @@
   import { canonicalUrl, embedUrl } from "$lib/api/projects";
   import * as embed from "$lib/api/embed";
 
-  export let project: Project;
+  interface Props {
+    project: Project;
+  }
 
-  let editing = false;
-  const closeEditing = () => (editing = false);
-  const openEditing = () => (editing = true);
+  let { project }: Props = $props();
 
-  $: isPrivate = project.private;
+  let editing = $state(false);
 
-  $: permalink = canonicalUrl(project);
-  $: embedSrc = embedUrl(project);
-  $: iframe = embed.project(project);
+  let isPrivate = $derived(project.private);
+  let permalink = $derived(canonicalUrl(project));
+  let embedSrc = $derived(embedUrl(project));
+  let iframe = $derived(embed.project(project));
+
+  function closeEditing() {
+    editing = false;
+  }
+  function openEditing() {
+    editing = true;
+  }
 </script>
 
 <div class="share">
@@ -56,7 +64,7 @@
     <Field>
       <FieldLabel>
         {$_("share.permalink")}
-        <Copy slot="action" text={permalink.href} />
+        <Copy text={permalink.href} slot="action" />
       </FieldLabel>
       <Text
         value={permalink.href}
@@ -68,7 +76,7 @@
     <Field>
       <FieldLabel>
         {$_("share.embed")}
-        <Copy slot="action" text={embedSrc.href} />
+        <Copy text={embedSrc.href} slot="action" />
       </FieldLabel>
       <Text
         value={embedSrc.href}
@@ -80,7 +88,7 @@
     <Field>
       <FieldLabel>
         {$_("share.iframe")}
-        <Copy slot="action" text={iframe} />
+        <Copy text={iframe} slot="action" />
       </FieldLabel>
       <TextArea
         value={iframe}
