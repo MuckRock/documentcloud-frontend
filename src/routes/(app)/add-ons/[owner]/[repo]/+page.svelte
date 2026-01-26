@@ -16,13 +16,12 @@
   let organization = $derived(
     typeof $me?.organization === "object" ? $me.organization : null,
   );
-  let isPremiumUser = $derived(isPremiumOrg(organization));
   let creditBalance = $derived(getCreditBalance(organization) ?? 0);
   let isPremiumAddon = $derived(
     addon?.parameters.categories?.includes("premium") ?? false,
   );
   let disablePremium = $derived(
-    isPremiumAddon && (!isPremiumUser || creditBalance === 0),
+    isPremiumAddon && creditBalance === 0,
   );
   let history = $derived(data.history);
 </script>

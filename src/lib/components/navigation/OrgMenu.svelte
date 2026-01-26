@@ -42,6 +42,16 @@
   $: upgrade_url = getUpgradeUrl(active_org).href;
   $: otherOrgs = orgs.filter((org) => org.id !== active_org.id);
 
+  // Only show credit meter if the org has any allowance
+  $: showCredits = (active_org.monthly_credit_allowance ?? 0) > 0;
+
+  $: creditHelpText = active_org.credit_reset_date
+    ? $_("authSection.credits.refreshOn", {
+        values: { date: formatResetDate(active_org.credit_reset_date, $locale) },
+      })
+    : undefined;
+
+
   // wrapping setOrg here
   async function switchOrg(org: Org) {
     const csrf_token = getCsrfToken();
@@ -97,20 +107,16 @@
   </svelte:fragment>
   <Menu slot="inner" let:close>
     <div class="menu-inner" class:sm={width <= remToPx(32)}>
-      {#if isPremium && active_org.monthly_credits && active_org.credit_reset_date}
+      {#if showCredits}
         <MenuInsert>
           <CreditMeter
             id="org-credits"
             label={isPro
               ? $_("authSection.credits.monthlyPro")
               : $_("authSection.credits.monthlyOrg")}
-            helpText={$_("authSection.credits.refreshOn", {
-              values: {
-                date: formatResetDate(active_org.credit_reset_date, $locale),
-              },
-            })}
-            value={active_org.monthly_credits}
-            max={active_org.monthly_credit_allowance}
+            helpText={creditHelpText ?? ""}
+            value={active_org.monthly_credits ?? 0}
+            max={active_org.monthly_credit_allowance ?? 0}
           />
         </MenuInsert>
       {:else}
