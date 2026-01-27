@@ -1,15 +1,13 @@
 <script lang="ts" context="module">
-  import type { Meta } from "@storybook/svelte";
-
   import { projectList } from "@/test/fixtures/projects";
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import Projects from "../Projects.svelte";
 
-  export const meta: Meta = {
+  const { Story } = defineMeta({
     title: "Navigation / Projects",
     component: Projects,
     parameters: { layout: "centered" },
-  };
+  });
 </script>
 
 <Story
@@ -28,9 +26,7 @@
       },
     },
   }}
->
-  <Projects />
-</Story>
+/>
 
 <Story
   name="Without Pinned Projects"
@@ -43,6 +39,4 @@
       },
     },
   }}
->
-  <Projects />
-</Story>
+/>

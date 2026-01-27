@@ -27,7 +27,7 @@
         handlers: [addons.data, organizations.data, users.data],
       },
       sveltekit_experimental: {
-        stores: {
+        state: {
           page: {
             url: "/",
             data: {
