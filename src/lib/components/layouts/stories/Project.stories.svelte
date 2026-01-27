@@ -1,19 +1,19 @@
 <script lang="ts" context="module">
-  import type { Meta } from "@storybook/svelte";
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
+
   import Project from "../Project.svelte";
 
   import { project, projectUsers } from "@/test/fixtures/projects";
   import { documentsList } from "@/test/fixtures/documents";
   import { activeAddons } from "@/test/fixtures/addons";
 
-  export const meta: Meta = {
+  const { Story } = defineMeta({
     title: "Layout / Project",
     component: Project,
     parameters: {
       layout: "fullscreen",
     },
-  };
+  });
 
   const args = {
     project,
