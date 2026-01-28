@@ -21,9 +21,9 @@
 </Story>
 
 <Story name="many documents">
-  <EditDataMany documents={[document]} />
+  <EditDataMany documents={[document]} onclose={() => {}} />
 </Story>
 
 <Story name="too many documents">
-  <EditDataMany documents={Array(100).fill(document)} />
+  <EditDataMany documents={Array(100).fill(document)} onclose={() => {}} />
 </Story>
