@@ -13,7 +13,6 @@ This will mostly merge with existing data.
 
   import { enhance } from "$app/forms";
 
-  import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
   import { Alert24 } from "svelte-octicons";
 
@@ -25,18 +24,25 @@ This will mostly merge with existing data.
 
   import { MAX_EDIT_BATCH } from "@/config/config.js";
 
-  export let documents: Document[];
-  export let error: Maybe<APIError<ValidationError>> = undefined;
+  interface Props {
+    documents: Document[];
+    error?: Maybe<APIError<ValidationError>>;
+    onclose: () => void;
+  }
 
-  const dispatch = createEventDispatcher();
+  let { documents, error = $bindable(undefined), onclose }: Props = $props();
+
   const action = "/documents/?/data";
 
-  let kv: KeyValue;
-  let data: Data = {};
+  let kv: Maybe<KeyValue> = $state();
 
-  $: keys = documents.map((d) => Object.keys(d.data)).flat();
-  $: tags = documents.map((d) => d.data["_tag"] ?? []).flat();
-  $: disabled = documents.length > MAX_EDIT_BATCH;
+  let data: Data = $state({});
+
+  let keys = $derived(documents.map((d) => Object.keys(d.data)).flat());
+  let tags = $derived(documents.map((d) => d.data["_tag"] ?? []).flat());
+  let disabled = $derived(documents.length > MAX_EDIT_BATCH);
+
+  $inspect(keys, data);
 
   function add({ key, value }) {
     if (!key || !value) return;
@@ -47,13 +53,19 @@ This will mostly merge with existing data.
       data[key] = [value];
     }
 
-    kv.clear();
+    kv?.clear();
   }
 
   function remove({ key, value }) {
-    if (!(key in data)) return;
-
-    data[key] = (data[key] ?? []).filter((v) => v !== value);
+    console.log({ key, value });
+    if (key in data) {
+      data[key] = (data[key] ?? []).filter((v) => v !== value);
+    } else if (keys.includes(key)) {
+      console.log(`Removing key: ${key}`);
+      keys = keys.filter((k) => k !== key);
+    } else {
+      console.warn(`Unknown key: ${key}`);
+    }
   }
 
   /**
@@ -71,7 +83,7 @@ This will mostly merge with existing data.
 
       if (result.type === "success") {
         update(result);
-        dispatch("close");
+        onclose();
       }
     };
   }
@@ -152,7 +164,7 @@ This will mostly merge with existing data.
 
   <Flex class="buttons">
     <Button type="submit" mode="primary" {disabled}>{$_("data.save")}</Button>
-    <Button on:click={() => dispatch("close")}>{$_("data.cancel")}</Button>
+    <Button on:click={() => onclose()}>{$_("data.cancel")}</Button>
   </Flex>
 </form>
 
