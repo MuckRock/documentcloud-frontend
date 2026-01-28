@@ -1,16 +1,34 @@
 <script lang="ts">
-  export let key: string = "";
-  export let value: string;
-  export let href: null | string = null;
-  export let inline: boolean = false;
-  export let tag: boolean = false;
+  interface Props {
+    key?: string;
+    value: string;
+    href?: null | string;
+    inline?: boolean;
+    tag?: boolean;
+    [key: string]: any;
+  }
 
-  let el = href ? "a" : "span";
+  let {
+    key = "",
+    value,
+    href = null,
+    inline = false,
+    tag = false,
+    ...rest
+  }: Props = $props();
 
-  $: props = { ...$$restProps, href };
+  let el = $derived(href ? "a" : "span");
+
+  let allprops = $derived({ ...rest, href });
 </script>
 
-<svelte:element this={el} class="kv" class:link={href} class:inline {...props}>
+<svelte:element
+  this={el}
+  class="kv"
+  class:link={href}
+  class:inline
+  {...allprops}
+>
   {#if !tag}
     <span class="key">{key}</span>
   {/if}

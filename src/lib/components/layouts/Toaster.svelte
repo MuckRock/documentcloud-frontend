@@ -1,8 +1,8 @@
 <script lang="ts" module>
-  import type { ComponentType } from "svelte";
+  import type { Component } from "svelte";
   import { writable } from "svelte/store";
 
-  type ToastContents = string | ComponentType;
+  type ToastContents = string | Component;
 
   interface ToastOptions<P = any> {
     status?: "info" | "success" | "warning" | "error";

@@ -82,31 +82,26 @@
   const pending = getPendingDocuments();
   const finished = getFinishedDocuments();
 
-  export let documents: Promise<APIResponse<DocumentResults, any>>;
-  export let query: string = "";
-  export let project: Nullable<Project> = null;
-  export let uiText: UITextProps = {
-    loading: "common.loading",
-    error: "common.error",
-    empty: "common.empty",
-    search: "common.search",
-  };
+  interface Props {
+    documents: Promise<APIResponse<DocumentResults, any>>;
+    query?: string;
+    project?: Nullable<Project>;
+    uiText?: UITextProps;
+  }
 
-  let footerToolbarWidth: number;
-
-  $: BREAKPOINTS = {
-    HIDE_COUNT: footerToolbarWidth < remToPx(26),
-  };
-
-  $: pending_ids = new Set($pending?.map((d) => String(d.doc_id)));
-
-  $: searchResults = fixResults(
+  let {
     documents,
-    $deleted,
-    $edited,
-    pending_ids,
-    $finished,
-  );
+    query = "",
+    project = null,
+    uiText = {
+      loading: "common.loading",
+      error: "common.error",
+      empty: "common.empty",
+      search: "common.search",
+    },
+  }: Props = $props();
+
+  let footerToolbarWidth: number = $state(800);
 
   function fixResults(
     documents: Promise<APIResponse<DocumentResults, any>>,
@@ -212,120 +207,130 @@
       goto("/upload/");
     }
   }
+  let BREAKPOINTS = $derived({
+    HIDE_COUNT: footerToolbarWidth < remToPx(26),
+  });
+  let pending_ids = $derived(new Set($pending?.map((d) => String(d.doc_id))));
+  let searchResults = $derived(
+    fixResults(documents, $deleted, $edited, pending_ids, $finished),
+  );
 </script>
 
 <div class="container">
-  <Dropzone {onDrop} disabled={!canUploadFiles($me)} let:active let:disabled>
-    <div class:active class:disabled class="dropOverlay">
-      <Empty
-        icon={Upload24}
-        --color="var(--blue-5)"
-        --fill="var(--blue-4)"
-        --font-size="var(--font-md)"
-        >{$_("documents.dropFile")}
-      </Empty>
-    </div>
-    <ContentLayout>
-      <svelte:fragment slot="header">
-        {#if !embed}
-          <Flex>
-            {#if $sidebars["navigation"] === false}
-              <div class="toolbar w-auto">
-                <Button
-                  ghost
-                  minW={false}
-                  on:click={() => ($sidebars["navigation"] = true)}
-                >
-                  <span class="flipV">
-                    <SidebarExpand16 />
-                  </span>
-                </Button>
-              </div>
-            {/if}
-            <DocumentListToolbar {query} />
-            {#if $sidebars["action"] === false}
-              <div class="toolbar w-auto">
-                <Button
-                  ghost
-                  minW={false}
-                  on:click={() => ($sidebars["action"] = true)}
-                >
-                  <SidebarExpand16 />
-                </Button>
-              </div>
-            {/if}
-          </Flex>
-        {/if}
-      </svelte:fragment>
-      {#await searchResults}
-        <Empty icon={Hourglass24}>{$_(uiText.loading)}</Empty>
-      {:then documentsResults}
-        {#if !query && !documentsResults.results?.length}
-          <Empty icon={FileDirectory24}>{$_(uiText.empty)}</Empty>
-        {:else}
-          <ResultsList
-            results={documentsResults.results}
-            next={documentsResults.next}
-            count={documentsResults.count}
-            auto
-          >
-            {#snippet start()}
-              {#if $me && !canUploadFiles($me)}
-                <Unverified user={$me} />
+  <Dropzone {onDrop} disabled={!canUploadFiles($me)}>
+    {#snippet children({ active, disabled })}
+      <div class:active class:disabled class="dropOverlay">
+        <Empty
+          icon={Upload24}
+          --color="var(--blue-5)"
+          --fill="var(--blue-4)"
+          --font-size="var(--font-md)"
+          >{$_("documents.dropFile")}
+        </Empty>
+      </div>
+      <ContentLayout>
+        <svelte:fragment slot="header">
+          {#if !embed}
+            <Flex>
+              {#if $sidebars["navigation"] === false}
+                <div class="toolbar w-auto">
+                  <Button
+                    ghost
+                    minW={false}
+                    on:click={() => ($sidebars["navigation"] = true)}
+                  >
+                    <span class="flipV">
+                      <SidebarExpand16 />
+                    </span>
+                  </Button>
+                </div>
               {/if}
-            {/snippet}
-          </ResultsList>
-        {/if}
-      {:catch}
-        <Error>{$_(uiText.error)}</Error>
-      {/await}
-      <svelte:fragment slot="footer">
-        {#if !embed}
-          <div class="toolbar" bind:clientWidth={footerToolbarWidth}>
-            <Flex align="center">
-              <NavItem>
-                <label class="select-all">
-                  <input
-                    type="checkbox"
-                    name="select_all"
-                    checked={$selected.length > 0 &&
-                      $selected.length === $visible.size}
-                    indeterminate={$selected.length > 0 &&
-                      $selected.length < $visible.size}
-                    on:change={selectAll}
-                  />
-                  {#if $selected.length > 0}
-                    {$selected.length.toLocaleString()} {$_("inputs.selected")}
-                  {:else}
-                    {$_("inputs.selectAll")}
-                  {/if}
-                </label>
-              </NavItem>
-              <Dropdown position="top-start">
-                <NavItem
-                  slot="anchor"
-                  disabled={!$me || $selected?.length < 1 || !$editable}
-                >
-                  {$_("bulk.title")}
-                  <ChevronUp12 slot="end" />
-                </NavItem>
-
-                <Menu slot="inner" let:close>
-                  <DocumentActions afterClick={() => close()} />
-                </Menu>
-              </Dropdown>
+              <DocumentListToolbar {query} />
+              {#if $sidebars["action"] === false}
+                <div class="toolbar w-auto">
+                  <Button
+                    ghost
+                    minW={false}
+                    on:click={() => ($sidebars["action"] = true)}
+                  >
+                    <SidebarExpand16 />
+                  </Button>
+                </div>
+              {/if}
             </Flex>
-            {#if !BREAKPOINTS.HIDE_COUNT && $visible && $total}
-              <p class="resultsCount">
-                {$_("inputs.resultsCount", {
-                  values: { n: $visible.size, total: $total },
-                })}
-              </p>
-            {/if}
-          </div>
-        {/if}
-      </svelte:fragment>
-    </ContentLayout>
+          {/if}
+        </svelte:fragment>
+        {#await searchResults}
+          <Empty icon={Hourglass24}>{$_(uiText.loading)}</Empty>
+        {:then documentsResults}
+          {#if !query && !documentsResults.results?.length}
+            <Empty icon={FileDirectory24}>{$_(uiText.empty)}</Empty>
+          {:else}
+            <ResultsList
+              results={documentsResults.results}
+              next={documentsResults.next}
+              count={documentsResults.count}
+              auto
+            >
+              {#snippet start()}
+                {#if $me && !canUploadFiles($me)}
+                  <Unverified user={$me} />
+                {/if}
+              {/snippet}
+            </ResultsList>
+          {/if}
+        {:catch}
+          <Error>{$_(uiText.error)}</Error>
+        {/await}
+        <svelte:fragment slot="footer">
+          {#if !embed}
+            <div class="toolbar" bind:clientWidth={footerToolbarWidth}>
+              <Flex align="center">
+                <NavItem>
+                  <label class="select-all">
+                    <input
+                      type="checkbox"
+                      name="select_all"
+                      checked={$selected.length > 0 &&
+                        $selected.length === $visible.size}
+                      indeterminate={$selected.length > 0 &&
+                        $selected.length < $visible.size}
+                      onchange={selectAll}
+                    />
+                    {#if $selected.length > 0}
+                      {$selected.length.toLocaleString()}
+                      {$_("inputs.selected")}
+                    {:else}
+                      {$_("inputs.selectAll")}
+                    {/if}
+                  </label>
+                </NavItem>
+                <Dropdown position="top-start">
+                  <NavItem
+                    slot="anchor"
+                    disabled={!$me || $selected?.length < 1 || !$editable}
+                  >
+                    {$_("bulk.title")}
+                    <ChevronUp12 slot="end" />
+                  </NavItem>
+
+                  <Menu slot="inner" let:close>
+                    <DocumentActions afterClick={() => close()} />
+                  </Menu>
+                </Dropdown>
+              </Flex>
+              {#if !BREAKPOINTS.HIDE_COUNT && $visible && $total}
+                <p class="resultsCount">
+                  {$_("inputs.resultsCount", {
+                    values: { n: $visible.size, total: $total },
+                  })}
+                </p>
+              {/if}
+            </div>
+          {/if}
+        </svelte:fragment>
+      </ContentLayout>
+    {/snippet}
   </Dropzone>
 </div>
 
