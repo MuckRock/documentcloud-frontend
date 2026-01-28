@@ -60,10 +60,12 @@
 </script>
 
 <SidebarGroup>
-  <NavItem slot="title">
-    <History16 slot="start" />
-    {$_("addonRuns.previous")}
-  </NavItem>
+  {#snippet title()}
+    <NavItem>
+      <History16 slot="start" />
+      {$_("addonRuns.previous")}
+    </NavItem>
+  {/snippet}
 
   {#if loading}
     <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>

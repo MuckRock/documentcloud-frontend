@@ -34,17 +34,19 @@
 </script>
 
 <SidebarGroup name="projects:viewer">
-  <NavItem slot="title">
-    <Tag16 slot="start" />
-    {$_("sidebar.data.title")}
-  </NavItem>
-  <div slot="action">
+  {#snippet title()}
+    <NavItem>
+      <Tag16 slot="start" />
+      {$_("sidebar.data.title")}
+    </NavItem>
+  {/snippet}
+  {#snippet action()}
     {#if document.edit_access}
       <Action on:click={() => (edit = true)} icon={Pencil16}>
         {$_("common.edit")}
       </Action>
     {/if}
-  </div>
+  {/snippet}
   <div>
     {#if empty}
       <Empty icon={Tag24}>

@@ -12,7 +12,7 @@
     Organization16,
     Person16,
   } from "svelte-octicons";
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 
   import NavItem from "$lib/components/common/NavItem.svelte";
   import SignedIn from "$lib/components/common/SignedIn.svelte";
@@ -27,13 +27,15 @@
   const me = getCurrentUser();
   const org: Writable<Org> = getContext("org");
 
-  $: query = $page.url.searchParams?.get("q") || "";
+  let query = $derived(page.url.searchParams?.get("q") || "");
 
-  $: mine = $me ? userDocs($me) : "";
-  $: minePublic = $me ? userDocs($me, "public") : "";
-  $: minePrivate = $me ? userDocs($me, "private") : "";
+  let mine = $derived($me ? userDocs($me) : "");
+  let minePublic = $derived($me ? userDocs($me, "public") : "");
+  let minePrivate = $derived($me ? userDocs($me, "private") : "");
 
-  $: orgDocs = $org ? `+organization:${slugify($org.name)}-${$org.id}` : "";
+  let orgDocs = $derived(
+    $org ? `+organization:${slugify($org.name)}-${$org.id}` : "",
+  );
 
   function searchUrl(query: string) {
     const q = new URLSearchParams([["q", query]]);
@@ -47,21 +49,20 @@
 
 <SignedIn>
   <SidebarGroup name="documents">
-    <NavItem slot="title">
-      <File16 slot="start" />
-      {$_("documents.documents")}
-    </NavItem>
-    <Button
-      slot="action"
-      ghost
-      minW={false}
-      mode="primary"
-      size="small"
-      href="/documents"
-    >
-      <Search16 height="14" width="14" />
-      {$_("common.explore")}
-    </Button>
+    {#snippet title()}
+      <NavItem>
+        <File16 slot="start" />
+        {$_("documents.documents")}
+      </NavItem>
+    {/snippet}
+
+    {#snippet action()}
+      <Button ghost minW={false} mode="primary" size="small" href="/documents">
+        <Search16 height="14" width="14" />
+        {$_("common.explore")}
+      </Button>
+    {/snippet}
+
     <NavItem small hover href={searchUrl(mine)} active={query === mine}>
       <Person16 height={14} width={14} slot="start" />
       {$_("documents.yourDocuments")}
@@ -97,7 +98,7 @@
       </NavItem>
     {/if}
   </SidebarGroup>
-  <NavItem slot="signedOut" href={searchUrl('')}>
+  <NavItem slot="signedOut" href={searchUrl("")}>
     <File16 slot="start" />
     {$_("documents.publicDocuments")}
   </NavItem>

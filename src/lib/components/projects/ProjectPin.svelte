@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
   import type { Project } from "$lib/api/types";
 
   import { writable, type Writable } from "svelte/store";
@@ -24,8 +24,12 @@
   import Pin from "$lib/components/common/Pin.svelte";
   import { pinProject } from "$lib/api/projects";
 
-  export let project: Project;
-  export let size = 1;
+  interface Props {
+    project: Project;
+    size?: number;
+  }
+
+  let { project = $bindable(), size = 1 }: Props = $props();
 
   const me = getCurrentUser();
 

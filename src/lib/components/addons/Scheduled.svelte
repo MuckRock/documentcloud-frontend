@@ -45,10 +45,12 @@
 </script>
 
 <SidebarGroup>
-  <NavItem slot="title">
-    <Clock16 slot="start" />
-    {$_("addonRuns.scheduled")}
-  </NavItem>
+  {#snippet title()}
+    <NavItem>
+      <Clock16 slot="start" />
+      {$_("addonRuns.scheduled")}
+    </NavItem>
+  {/snippet}
 
   {#if loading}
     <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>

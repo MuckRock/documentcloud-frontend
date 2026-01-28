@@ -40,6 +40,13 @@ const preview: Preview = {
           },
         },
       },
+      state: {
+        page: {
+          data: {
+            breadcrumbs: [],
+          },
+        },
+      },
     },
     options: {
       storySort: {

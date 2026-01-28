@@ -1,12 +1,29 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
+  import { createBubbler, stopPropagation } from "svelte/legacy";
+
+  const bubble = createBubbler();
   import { browser } from "$app/environment";
   import { onMount } from "svelte";
   import { ChevronDown16 } from "svelte-octicons";
 
-  export let collapsed = false;
-  export let name: string | undefined = undefined;
+  interface Props {
+    collapsed?: boolean;
+    name?: string | undefined;
+    title?: Snippet;
+    action?: Snippet;
+    children?: Snippet;
+  }
 
-  $: key = `SidebarGroup:${name}`;
+  let {
+    collapsed = $bindable(false),
+    name = undefined,
+    title,
+    action,
+    children,
+  }: Props = $props();
+
+  let key = $derived(`SidebarGroup:${name}`);
 
   function toggle(val: boolean) {
     collapsed = !val;
@@ -37,28 +54,26 @@
 </script>
 
 <div class="container" id={name}>
-  {#if $$slots.title || $$slots.action}
-    <header
-      role="button"
-      tabindex={0}
-      on:click={onClick}
-      on:keydown={onKeydown}
-    >
+  {#if title || action}
+    <header role="button" tabindex={0} onclick={onClick} onkeydown={onKeydown}>
       <span class="indicator" class:collapsed>
         <ChevronDown16 />
       </span>
-      {#if $$slots.title}<span class="title"><slot name="title" /></span>{/if}
-      {#if $$slots.action}<span
+      {#if title}<span class="title">{@render title?.()}</span>{/if}
+      {#if action}
+        <span
           role="button"
           tabindex="0"
-          on:click|stopPropagation
-          on:keydown|stopPropagation><slot name="action" /></span
-        >{/if}
+          onclick={stopPropagation(bubble("click"))}
+          onkeydown={stopPropagation(bubble("keydown"))}
+        >
+          {@render action?.()}
+        </span>{/if}
     </header>
   {/if}
   {#if !collapsed}
     <main>
-      <slot />
+      {@render children?.()}
     </main>
   {/if}
 </div>

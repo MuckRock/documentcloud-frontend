@@ -9,9 +9,13 @@
   import { canonicalUrl } from "$lib/api/projects";
   import { clean } from "$lib/utils/markup";
 
-  export let project: Project;
+  interface Props {
+    project: Project;
+  }
 
-  $: href = canonicalUrl(project).href;
+  let { project }: Props = $props();
+
+  let href = $derived(canonicalUrl(project).href);
 </script>
 
 <a {href} id={project.id.toString()}>

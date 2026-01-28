@@ -2,7 +2,7 @@
 This is a menu that wraps all logic around bulk actions for documents.
 Most actual actions are deferred to their own forms, so this is more of a switchboard.
 -->
-<script context="module" lang="ts">
+<script module lang="ts">
   type Action =
     | "share"
     | "edit"
@@ -47,7 +47,11 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 
   import { canChangeOwner, getCurrentUser } from "$lib/utils/permissions";
 
-  export let afterClick: Maybe<() => void> = undefined;
+  interface Props {
+    afterClick?: Maybe<() => void>;
+  }
+
+  let { afterClick = undefined }: Props = $props();
 
   const editable: Readable<boolean> = getContext("editable");
   const selected: Readable<Document[]> = getContext("selected");
@@ -63,9 +67,9 @@ Most actual actions are deferred to their own forms, so this is more of a switch
     change_owner: "bulk.actions.change_owner",
   };
 
-  let visible: Nullable<Action> = null;
+  let visible: Nullable<Action> = $state(null);
 
-  $: toShare = $selected?.[0]!;
+  let toShare = $derived($selected?.[0]!);
 
   // svelte 5 will let us do type coercion in templates
   function show(action: string) {

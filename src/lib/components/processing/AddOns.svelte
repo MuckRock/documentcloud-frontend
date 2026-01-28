@@ -20,10 +20,12 @@ This component should update on a timer.
 
 {#if $running?.length && $running.length > 0}
   <SidebarGroup name="processing.addons">
-    <NavItem slot="title">
-      <Plug16 slot="start" />
-      {$_("processing.addons")}
-    </NavItem>
+    {#snippet title()}
+      <NavItem>
+        <Plug16 slot="start" />
+        {$_("processing.addons")}
+      </NavItem>
+    {/snippet}
 
     {#each $running as run (run.uuid)}
       <div role="menuitem" animate:flip><HistoryEvent {run} dismissable /></div>
