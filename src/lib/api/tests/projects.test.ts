@@ -406,6 +406,19 @@ describe("project utils", () => {
       new URL(`/projects/${project.id}-${project.slug}/?embed=1`, EMBED_URL),
     );
   });
+
+  test("projects.embedUrl with params", () => {
+    const url = projects.embedUrl(
+      project,
+      new URLSearchParams("test=yes&first=1"),
+    );
+    expect(url).toStrictEqual(
+      new URL(
+        `/projects/${project.id}-${project.slug}/?embed=1&test=yes&first=1`,
+        EMBED_URL,
+      ),
+    );
+  });
 });
 
 describe("manage project documents", () => {

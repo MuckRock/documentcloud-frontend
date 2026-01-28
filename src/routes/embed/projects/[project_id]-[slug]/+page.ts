@@ -36,7 +36,14 @@ export async function load({ params, fetch, url, setHeaders }) {
     return error(404, "Project not found");
   }
 
-  const documents = search(`+project:${project_id}`, undefined, fetch);
+  // build our search query, handle sorting options
+  let query = [`+project:${project_id}`];
+  if (url.searchParams.get("sort")) {
+    const sort = url.searchParams.get("sort") ?? "";
+    query.push(`sort:${sort}`);
+  }
+
+  const documents = search(query.join(" ").trim(), undefined, fetch);
 
   if (url.pathname !== embedUrl(project.data).pathname) {
     return redirect(302, embedUrl(project.data));

@@ -70,4 +70,14 @@ describe("embed tests", () => {
 
     expect(iframe).toEqual(result);
   });
+
+  test("project embed with params", () => {
+    const iframe = embed.project(
+      project,
+      new URLSearchParams("test=yes&first=1"),
+    );
+    const result = `<iframe src="${EMBED_URL}projects/215178-ocr-reprise/?embed=1&test=yes&first=1" width="100%" height="600px"></iframe>`;
+
+    expect(iframe).toEqual(result);
+  });
 });

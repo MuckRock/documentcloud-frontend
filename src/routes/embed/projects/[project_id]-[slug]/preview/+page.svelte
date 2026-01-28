@@ -1,10 +1,15 @@
 <script lang="ts">
+  import { page } from "$app/state";
+
   import * as embed from "$lib/api/embed";
 
   let { data } = $props();
 
   let project = $derived(data.project);
-  let iframe = $derived(embed.project(project));
+  let params = $derived(
+    [...page.url.searchParams].filter(([k, v]) => k !== "embed"),
+  );
+  let iframe = $derived(embed.project(project, new URLSearchParams(params)));
 </script>
 
 <svelte:head>
