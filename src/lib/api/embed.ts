@@ -1,5 +1,5 @@
 // api utilities for embeds
-import type { Document, Note, Project } from "./types";
+import type { Document, Maybe, Note, Project } from "./types";
 import { BASE_API_URL, EMBED_URL } from "@/config/config.js";
 import * as documents from "$lib/api/documents";
 import * as notes from "$lib/api/notes";
@@ -67,7 +67,10 @@ export function note(document: Document, note: Note, debug: boolean = false) {
 <script src="${resize.href}"></script>`;
 }
 
-export function project(project: Project) {
-  const embedSrc = projects.embedUrl(project);
+export function project(
+  project: Project,
+  params: Maybe<URLSearchParams> = undefined,
+) {
+  const embedSrc = projects.embedUrl(project, params);
   return `<iframe src="${embedSrc.href}" width="100%" height="600px"></iframe>`;
 }

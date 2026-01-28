@@ -1,9 +1,9 @@
-import { error, redirect } from "@sveltejs/kit";
+import { error } from "@sveltejs/kit";
 
 import { EMBED_MAX_AGE } from "@/config/config.js";
 import { get } from "$lib/api/projects";
 
-export async function load({ params, fetch, url, setHeaders }) {
+export async function load({ params, fetch, setHeaders }) {
   let { project_id } = params;
   let project = await get(+project_id, fetch);
 

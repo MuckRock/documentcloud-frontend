@@ -1,5 +1,5 @@
 // api methods for projects
-import type { Page } from "$lib/api/types";
+import type { Maybe, Page } from "$lib/api/types";
 import type {
   APIResponse,
   Document,
@@ -303,6 +303,21 @@ export function canonicalUrl(project: Project): URL {
   return new URL(`/projects/${project.id}-${project.slug}/`, APP_URL);
 }
 
-export function embedUrl(project: Project): URL {
-  return new URL(`/projects/${project.id}-${project.slug}/?embed=1`, EMBED_URL);
+export function embedUrl(
+  project: Project,
+  params: Maybe<URLSearchParams> = undefined,
+): URL {
+  const url = new URL(
+    `/projects/${project.id}-${project.slug}/?embed=1`,
+    EMBED_URL,
+  );
+
+  if (params) {
+    url.search = new URLSearchParams([
+      ...url.searchParams,
+      ...params,
+    ]).toString();
+  }
+
+  return url;
 }
