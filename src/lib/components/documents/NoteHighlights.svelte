@@ -17,28 +17,36 @@
 -->
 
 <script lang="ts">
+  import { run } from "svelte/legacy";
+
   import type { Writable } from "svelte/store";
   import type { Document } from "$lib/api/types";
 
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
 
-  import Highlight from "../common/Highlight.svelte";
-  import HighlightGroup from "../common/HighlightGroup.svelte";
+  import Highlight from "./Highlight.svelte";
+  import HighlightGroup from "./HighlightGroup.svelte";
 
   import { noteUrl } from "$lib/api/notes";
 
-  export let document: Document;
-  export let open = true;
+  interface Props {
+    document: Document;
+    open?: boolean;
+  }
+
+  let { document, open = $bindable(true) }: Props = $props();
 
   const { subscribe } =
     getContext<Writable<{ allOpen: boolean }>>("highlightState") ?? {};
-  $: subscribe?.((state) => {
-    open = state.allOpen;
+  run(() => {
+    subscribe?.((state) => {
+      open = state.allOpen;
+    });
   });
 
-  $: highlights = Object.entries(document.note_highlights ?? {});
-  $: notes = new Map(document.notes?.map((n) => [n.id, n]));
+  let highlights = $derived(Object.entries(document.note_highlights ?? {}));
+  let notes = $derived(new Map(document.notes?.map((n) => [n.id, n])));
 
   function noteHref(id: string): string {
     const note = notes.get(id);
@@ -55,13 +63,13 @@
   on:collapseAll
   on:expandAll
 >
-  <svelte:fragment slot="summary">
+  {#snippet summary()}
     {$_("documents.matchingNotes", { values: { n: highlights.length } })}
-  </svelte:fragment>
-  <svelte:fragment let:highlight>
+  {/snippet}
+  {#snippet children({ highlight })}
     <Highlight
       title={(highlight.title ?? []).join("\n").trim()}
       segments={highlight.description}
     />
-  </svelte:fragment>
+  {/snippet}
 </HighlightGroup>

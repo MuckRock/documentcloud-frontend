@@ -20,25 +20,29 @@
   import { clean } from "$lib/utils/markup";
   import { getCurrentUser } from "$lib/utils/permissions";
 
-  export let document: Document;
+  interface Props {
+    document: Document;
+  }
+
+  let { document }: Props = $props();
 
   const me = getCurrentUser();
 
-  let edit = false;
-  let width: number;
+  let edit = $state(false);
+  let width: number = $state(800);
 
-  $: BREAKPOINTS = {
+  let BREAKPOINTS = $derived({
     TWO_COLUMN: width > remToPx(48),
-  };
-  $: description = document.description?.trim()
-    ? clean(document.description)
-    : "";
+  });
+  let description = $derived(
+    document.description?.trim() ? clean(document.description) : "",
+  );
 
   function close() {
     edit = false;
   }
 
-  $: access = getLevel(document.access);
+  let access = $derived(getLevel(document.access));
 </script>
 
 <header bind:clientWidth={width}>
@@ -64,9 +68,11 @@
 {#if edit}
   <Portal>
     <Modal on:close={close}>
-      <h2 slot="title">
-        {$_("access.edit")}
-      </h2>
+      {#snippet title()}
+        <h2>
+          {$_("access.edit")}
+        </h2>
+      {/snippet}
       <EditAccess {document} on:close={close} />
     </Modal>
   </Portal>

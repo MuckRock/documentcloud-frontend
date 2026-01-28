@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import type { Document } from "$lib/api/types";
 
   import { Story } from "@storybook/addon-svelte-csf";
@@ -30,6 +30,19 @@
   const user = { ...me, verified_journalist: false };
 </script>
 
+<script lang="ts">
+  import { writable } from "svelte/store";
+  import { setContext } from "svelte";
+  import {
+    defaultVisibleFields,
+    setVisibleFieldsContext,
+  } from "../VisibleFields.svelte";
+
+  // Set up contexts needed by ResultsList
+  setContext("embed", false);
+  setVisibleFieldsContext(writable(defaultVisibleFields));
+</script>
+
 <Story name="With Results">
   <ResultsList {results} {count} {next} />
 </Story>
@@ -44,7 +57,9 @@
 
 <Story name="Pending documents">
   <ResultsList {results} {count} {next}>
-    <Pending {pending} slot="start" />
+    {#snippet start()}
+      <Pending {pending} />
+    {/snippet}
   </ResultsList>
 </Story>
 
@@ -56,7 +71,9 @@
 
 <Story name="Unverified user">
   <ResultsList {results} {count} {next}>
-    <Unverified {user} slot="start" />
+    {#snippet start()}
+      <Unverified {user} />
+    {/snippet}
   </ResultsList>
 </Story>
 

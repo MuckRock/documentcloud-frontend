@@ -27,6 +27,19 @@
   };
 </script>
 
+<script lang="ts">
+  import { writable } from "svelte/store";
+  import { setContext } from "svelte";
+  import {
+    defaultVisibleFields,
+    setVisibleFieldsContext,
+  } from "$lib/components/documents/VisibleFields.svelte";
+
+  // Set up contexts needed by ResultsList (used in AddOnLayout -> DocumentList)
+  setContext("embed", false);
+  setVisibleFieldsContext(writable(defaultVisibleFields));
+</script>
+
 <Template let:args>
   <div class="vh">
     <AddOnLayout {...args} />

@@ -1,6 +1,7 @@
 <!-- @component A collection of highlights from search results.-->
 
 <script lang="ts" generics="H">
+  import type { Snippet } from "svelte";
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
   import {
@@ -11,15 +12,28 @@
   } from "svelte-octicons";
 
   import { remToPx } from "$lib/utils/layout";
-  import Button from "./Button.svelte";
+  import Button from "../common/Button.svelte";
 
-  export let open = false;
-  export let highlights: [string, H][] = [];
-  export let getHref: (id: string) => string;
-  export let showAll = false;
+  interface Props {
+    open?: boolean;
+    highlights?: [string, H][];
+    getHref: (id: string) => string;
+    showAll?: boolean;
+    summary?: Snippet;
+    children?: Snippet<[any]>;
+  }
 
-  let clientWidth = 1000;
-  $: isSmall = clientWidth < remToPx(27);
+  let {
+    open = $bindable(false),
+    highlights = [],
+    getHref,
+    showAll = false,
+    summary,
+    children,
+  }: Props = $props();
+
+  let clientWidth = $state(1000);
+  let isSmall = $derived(clientWidth < remToPx(27));
 
   const dispatch = createEventDispatcher();
 
@@ -43,9 +57,9 @@
         {:else}
           <ChevronRight12 />
         {/if}
-        <slot name="summary">
+        {#if summary}{@render summary()}{:else}
           {$_("search.matchingResults", { values: { n: highlights.length } })}
-        </slot>
+        {/if}
       </div>
       {#if showAll}
         <div class="right">
@@ -79,7 +93,7 @@
       {#each highlights as [id, highlight]}
         <li>
           <a class="highlight" href={getHref(id)}>
-            <slot {id} {highlight} />
+            {@render children?.({ id, highlight })}
           </a>
         </li>
       {/each}

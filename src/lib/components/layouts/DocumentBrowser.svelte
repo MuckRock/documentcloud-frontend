@@ -36,6 +36,7 @@
     visible,
     visibleFields,
   } from "$lib/components/documents/ResultsList.svelte";
+  import { setVisibleFieldsContext } from "$lib/components/documents/VisibleFields.svelte";
 
   // Form components
   import Dropzone from "$lib/components/inputs/Dropzone.svelte";
@@ -74,7 +75,7 @@
   // these just pass through
   setContext("editable", editable);
   setContext("selected", selected);
-  setContext("visibleFields", visibleFields);
+  setVisibleFieldsContext(visibleFields);
 
   const embed: boolean = getContext("embed");
   const me = getCurrentUser();
@@ -268,11 +269,11 @@
             count={documentsResults.count}
             auto
           >
-            <svelte:fragment slot="start">
+            {#snippet start()}
               {#if $me && !canUploadFiles($me)}
                 <Unverified user={$me} />
               {/if}
-            </svelte:fragment>
+            {/snippet}
           </ResultsList>
         {/if}
       {:catch}

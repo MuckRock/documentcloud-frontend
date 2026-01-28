@@ -24,20 +24,28 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
   } from "./VisibleFields.svelte";
   import { clean } from "$lib/utils/markup";
 
-  export let document: Document;
-  export let visibleFields: Partial<VisibleFields> = defaultVisibleFields;
+  interface Props {
+    document: Document;
+    visibleFields?: Partial<VisibleFields>;
+  }
+
+  let { document, visibleFields = defaultVisibleFields }: Props = $props();
 
   const embed: boolean = getContext("embed");
 
-  $: date = new Date(document.created_at).toDateString();
-  $: projects = document.projects?.every((p) => typeof p === "object")
-    ? (document.projects as Project[])
-    : []; // only show projects if we've loaded them
+  let date = $derived(new Date(document.created_at).toDateString());
+  let projects = $derived(
+    document.projects?.every((p) => typeof p === "object")
+      ? (document.projects as Project[])
+      : [],
+  ); // only show projects if we've loaded them
 
-  $: level = getLevel(document.access);
-  $: visible = Object.assign({}, defaultVisibleFields, visibleFields);
+  let level = $derived(getLevel(document.access));
+  let visible = $derived(
+    Object.assign({}, defaultVisibleFields, visibleFields),
+  );
 
-  let width: number;
+  let width: number = $state(800);
 </script>
 
 <div

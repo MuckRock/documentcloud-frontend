@@ -1,9 +1,13 @@
 <script lang="ts">
   import { clean } from "$lib/utils/markup";
 
-  export let title: string = "";
-  export let segments: string[] = [];
-  export let inlineTitle: boolean = false;
+  interface Props {
+    title?: string;
+    segments?: string[];
+    inlineTitle?: boolean;
+  }
+
+  let { title = "", segments = [], inlineTitle = false }: Props = $props();
 </script>
 
 <div class="container" class:inlineTitle>

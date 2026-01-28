@@ -9,7 +9,11 @@
   import { pageImageUrl } from "$lib/api/documents";
   import { pageSizesFromSpec } from "$lib/utils/pageSize";
 
-  export let document: Document;
+  interface Props {
+    document: Document;
+  }
+
+  let { document = $bindable() }: Props = $props();
 
   const thumbnailWidth = IMAGE_WIDTHS_MAP.get("thumbnail") ?? 60;
   // this can be updated later if we want different icons
@@ -20,24 +24,30 @@
   };
 
   function onError() {
-    document.status = "error";
+    document = { ...document, status: "error" };
   }
 
-  $: sizes = document.page_spec ? pageSizesFromSpec(document.page_spec) : null;
-  $: aspect = sizes?.[0] ?? 11 / 8.5; // fallback to US letter for now
-  $: height = thumbnailWidth * aspect;
-  $: hasPublicNotes = document.notes?.some((note) => note.access === "public");
-  $: hasOrgNotes = document.notes?.some(
-    (note) => note.access === "organization",
+  let sizes = $derived(
+    document.page_spec ? pageSizesFromSpec(document.page_spec) : null,
   );
-  $: hasPrivateNotes = document.notes?.some(
-    (note) => note.access === "private",
+  let aspect = $derived(sizes?.[0] ?? 11 / 8.5); // fallback to US letter for now
+  let height = $derived(thumbnailWidth * aspect);
+  let hasPublicNotes = $derived(
+    document.notes?.some((note) => note.access === "public"),
   );
-  $: tabs = [
-    hasPublicNotes && ("public" as Access),
-    hasOrgNotes && ("organization" as Access),
-    hasPrivateNotes && ("private" as Access),
-  ].filter(Boolean);
+  let hasOrgNotes = $derived(
+    document.notes?.some((note) => note.access === "organization"),
+  );
+  let hasPrivateNotes = $derived(
+    document.notes?.some((note) => note.access === "private"),
+  );
+  let tabs = $derived(
+    [
+      hasPublicNotes && ("public" as Access),
+      hasOrgNotes && ("organization" as Access),
+      hasPrivateNotes && ("private" as Access),
+    ].filter(Boolean),
+  );
 </script>
 
 <div class="thumbnail">
@@ -48,11 +58,12 @@
       width="{thumbnailWidth}px"
       height="{height}px"
       loading="lazy"
-      on:error={onError}
+      onerror={onError}
     />
   {:else}
+    {@const Icon = statusIcons[document.status]}
     <div class="fallback {document.status}">
-      <svelte:component this={statusIcons[document.status]} />
+      <Icon />
     </div>
   {/if}
 

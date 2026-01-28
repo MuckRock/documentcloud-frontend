@@ -13,6 +13,7 @@
 
   import { _ } from "svelte-i18n";
   import { setContext } from "svelte";
+  import { writable } from "svelte/store";
   import { fade, slide } from "svelte/transition";
   import {
     Clock16,
@@ -45,6 +46,11 @@
   import { selected } from "../documents/ResultsList.svelte";
   import { sidebars } from "./Sidebar.svelte";
 
+  import {
+    defaultVisibleFields,
+    setVisibleFieldsContext,
+  } from "$lib/components/documents/VisibleFields.svelte";
+
   export let addon: AddOnListItem;
   export let event: Event | null = null;
   export let scheduled: Promise<Maybe<Page<Event>>> | null = null;
@@ -69,6 +75,7 @@
   let docSelectModalOpen = false;
 
   setContext("selected", selected);
+  setVisibleFieldsContext(writable(defaultVisibleFields));
 
   $: action = event
     ? `/add-ons/${addon.repository}/${event.id}/?/update`

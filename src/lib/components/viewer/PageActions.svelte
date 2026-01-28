@@ -19,7 +19,7 @@
   import MenuItem from "$lib/components/common/MenuItem.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
   import Portal from "$lib/components/layouts/Portal.svelte";
-  import Share from "$lib/components/documents/Share.svelte";
+  import Share from "$lib/components/forms/Share.svelte";
 
   import { remToPx } from "$lib/utils/layout";
   import { getSections } from "$lib/utils/viewer";

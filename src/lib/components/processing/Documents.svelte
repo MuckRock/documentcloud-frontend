@@ -5,7 +5,7 @@ This component should update on a timer.
 This component keeps track of pending items it has seen,
 so we can invalidate documents as they finish processing.
 -->
-<script context="module" lang="ts">
+<script module lang="ts">
   import type {
     Document,
     Maybe,
@@ -36,7 +36,7 @@ so we can invalidate documents as they finish processing.
 <script lang="ts">
   import { invalidate } from "$app/navigation";
 
-  import { onMount, onDestroy } from "svelte";
+  import { onDestroy } from "svelte";
   import { flip } from "svelte/animate";
   import { _ } from "svelte-i18n";
   import { File16, IssueReopened16 } from "svelte-octicons";
@@ -52,29 +52,20 @@ so we can invalidate documents as they finish processing.
   import Reprocess from "../forms/Reprocess.svelte";
   import Tooltip from "$lib/components/common/Tooltip.svelte";
 
-  import { POLL_INTERVAL } from "@/config/config";
-  import { canonicalUrl, list, pending } from "$lib/api/documents";
+  import { canonicalUrl, list } from "$lib/api/documents";
   import { getPendingDocuments } from "./ProcessContext.svelte";
 
-  let documents: Map<number, Document> = new Map();
+  let documents: Map<number, Document> = $state(new Map());
   let seen: Set<number> = new Set();
   let finished: number[] = [];
   let timeout: Nullable<string | number | NodeJS.Timeout>;
-  let loading = false;
-  let reprocess: Nullable<Maybe<Document>> = null;
+  let reprocess: Nullable<Maybe<Document>> = $state(null);
 
   const current = getPendingDocuments();
-
-  onMount(() => {
-    // await load();
-  });
 
   onDestroy(() => {
     stop();
   });
-
-  // update whenever $current changes
-  $: update($current);
 
   async function update(current: Maybe<Pending[]>) {
     // track our initial set
@@ -107,31 +98,17 @@ so we can invalidate documents as they finish processing.
     }
   }
 
-  async function load() {
-    if (loading) return;
-    loading = true;
-    if ($current?.length === 0 || timeout) {
-      $current = await pending();
-    }
-
-    // track our initial set
-    await update($current);
-
-    // set the timer for next update if we still have pending
-    loading = false;
-    if ($current?.length && $current.length > 0) {
-      timeout = setTimeout(load, POLL_INTERVAL);
-    } else {
-      stop();
-    }
-  }
-
   function stop() {
     if (timeout) {
       clearTimeout(timeout);
       timeout = null;
     }
   }
+
+  // update whenever $current changes
+  $effect(() => {
+    update($current);
+  });
 </script>
 
 {#if $current?.length}
@@ -152,18 +129,20 @@ so we can invalidate documents as they finish processing.
             <a href={canonicalUrl(document).href} class="name">
               {document?.title}
             </a>
-            <Flex slot="actions">
-              <Tooltip caption={$_("bulk.actions.reprocess")}>
-                <Button
-                  ghost
-                  minW={false}
-                  mode="danger"
-                  on:click={() => (reprocess = document)}
-                >
-                  <IssueReopened16 />
-                </Button>
-              </Tooltip>
-            </Flex>
+            {#snippet actions()}
+              <Flex>
+                <Tooltip caption={$_("bulk.actions.reprocess")}>
+                  <Button
+                    ghost
+                    minW={false}
+                    mode="danger"
+                    onclick={() => (reprocess = document)}
+                  >
+                    <IssueReopened16 />
+                  </Button>
+                </Tooltip>
+              </Flex>
+            {/snippet}
           </Process>
         {/if}
       </div>

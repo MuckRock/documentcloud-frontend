@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import type { Maybe, Nullable } from "$lib/api/types";
 
   export function formatResetDate(
@@ -18,13 +18,17 @@
 <script lang="ts">
   import Price from "./Price.svelte";
 
-  export let id: string;
-  export let max: number | undefined = undefined;
-  export let value: number;
-  export let label: string;
-  export let helpText: string;
+  interface Props {
+    id: string;
+    max?: number | undefined;
+    value: number;
+    label: string;
+    helpText: string;
+  }
 
-  const low = max ? max / 4 : undefined;
+  let { id, max = undefined, value, label, helpText }: Props = $props();
+
+  let low = $derived(max ? max / 4 : undefined);
 </script>
 
 <label for={id} class="creditMeter">

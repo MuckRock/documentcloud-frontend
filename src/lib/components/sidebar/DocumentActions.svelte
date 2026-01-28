@@ -41,7 +41,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   import Reprocess from "../forms/Reprocess.svelte";
   import Projects from "../forms/Projects.svelte";
 
-  import Share from "../documents/Share.svelte";
+  import Share from "../forms/Share.svelte";
   import Flex from "../common/Flex.svelte";
   import Button from "../common/Button.svelte";
 

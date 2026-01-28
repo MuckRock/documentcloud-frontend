@@ -8,9 +8,13 @@
   import { Download16, History24 } from "svelte-octicons";
   import Empty from "../common/Empty.svelte";
 
-  export let document: Document;
+  interface Props {
+    document: Document;
+  }
 
-  $: revisions = document.revisions || [];
+  let { document }: Props = $props();
+
+  let revisions = $derived(document.revisions || []);
 </script>
 
 <table class="revisions">
