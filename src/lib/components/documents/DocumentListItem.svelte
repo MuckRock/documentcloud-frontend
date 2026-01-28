@@ -83,6 +83,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
         <a
           class="document-link"
           href={`${canonicalUrl(document).href}?mode=grid`}
+          target={embed ? "_blank" : undefined}
         >
           {$_("documents.pageCount", {
             values: { n: document.page_count },
@@ -93,6 +94,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
           <a
             class="document-link"
             href={`${canonicalUrl(document).href}?mode=notes`}
+            target={embed ? "_blank" : undefined}
           >
             {$_("documents.noteCount", {
               values: { n: document.notes.length },
@@ -131,6 +133,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
                 {value}
                 tag={key === "_tag"}
                 href={searchUrl(kv(key, value)).href}
+                target={embed ? "_blank" : undefined}
               />
             {/each}
           {/each}
