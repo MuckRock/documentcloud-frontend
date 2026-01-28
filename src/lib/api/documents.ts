@@ -2,7 +2,6 @@
  * Lots of duplicated code here that should get consolidated at some point.
  */
 import type {
-  APIError,
   APIResponse,
   Data,
   DataUpdate,
