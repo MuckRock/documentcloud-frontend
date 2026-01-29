@@ -68,7 +68,7 @@
 
   function sort(users: ProjectUser[]) {
     if (!users) return [];
-    return users.sort(
+    return [...users].sort(
       (a, b) =>
         a.access.localeCompare(b.access) ||
         getUserName(a.user).localeCompare(getUserName(b.user)),

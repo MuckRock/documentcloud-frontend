@@ -27,12 +27,18 @@
   setContext("editable", editable);
   setContext("selected", selected);
 
-  export let project: Project;
-  export let users: ProjectUser[];
-  export let documents: Promise<APIResponse<DocumentResults>>;
-  export let query: string = "";
+  interface Props {
+    project: Project;
+    users: ProjectUser[];
+    documents: Promise<APIResponse<DocumentResults>>;
+    query?: string;
+  }
 
-  $: combinedQuery = `+project:${project.slug}-${project.id} ${query}`.trim();
+  let { project, users, documents, query = "" }: Props = $props();
+
+  let combinedQuery = $derived(
+    `+project:${project.slug}-${project.id} ${query}`.trim(),
+  );
 </script>
 
 <SidebarLayout>
