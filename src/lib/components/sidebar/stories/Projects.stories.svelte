@@ -14,7 +14,7 @@
   name="With Pinned Projects"
   parameters={{
     sveltekit_experimental: {
-      state: {
+      stores: {
         page: {
           data: {
             pinnedProjects: projectList.results.slice(0, 4).map((project) => {

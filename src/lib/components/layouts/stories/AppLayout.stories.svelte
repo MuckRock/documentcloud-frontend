@@ -57,7 +57,7 @@
 
       <svelte:fragment slot="action">
         <Button mode="primary" href="/upload/">
-          <PlusCircle16 />Upload
+          <PlusCircle16 />Upload Documents
         </Button>
         <BulkActions />
       </svelte:fragment>
