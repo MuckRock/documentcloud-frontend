@@ -1,7 +1,8 @@
 <script lang="ts">
   import type { Project } from "$lib/api/types";
 
-  import { page } from "$app/state";
+  // Storybook doesn't support page state yet
+  import { page } from "$app/stores";
 
   import { _ } from "svelte-i18n";
   import {
@@ -23,7 +24,7 @@
   import { canonicalUrl } from "$lib/api/projects";
 
   let pinned: Project[] | Promise<Project[]> = $derived(
-    page.data.pinnedProjects || [],
+    $page.data.pinnedProjects || [],
   );
 
   function sort(projects: Project[]) {
@@ -53,7 +54,7 @@
     {/snippet}
     <NavItem
       small
-      active={page.url.searchParams?.get("list") === "owned"}
+      active={$page.url.searchParams?.get("list") === "owned"}
       href="/projects?list=owned"
     >
       <Person16 height={14} width={14} slot="start" />
@@ -61,7 +62,7 @@
     </NavItem>
     <NavItem
       small
-      active={page.url.searchParams?.get("list") === "shared"}
+      active={$page.url.searchParams?.get("list") === "shared"}
       href="/projects?list=shared"
     >
       <People16 height={14} width={14} slot="start" />
