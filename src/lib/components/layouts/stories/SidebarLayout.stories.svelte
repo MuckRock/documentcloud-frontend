@@ -1,5 +1,5 @@
-<script context="module" lang="ts">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
 
   import { _ } from "svelte-i18n";
 
@@ -15,7 +15,9 @@
   import { activeAddons } from "@/test/fixtures/addons";
   import { addons } from "@/test/handlers/addons";
 
-  export const meta = {
+  const documents = Promise.resolve({ data: documentsList });
+
+  const { Story } = defineMeta({
     title: "Layout / Sidebar",
     component: SidebarLayout,
     parameters: {
@@ -34,12 +36,10 @@
         },
       },
     },
-  };
-
-  const documents = Promise.resolve({ data: documentsList });
+  });
 </script>
 
-<Template let:args>
+{#snippet template(args)}
   <div class="vh-100 vw-100">
     <SidebarLayout {...args}>
       <svelte:fragment slot="navigation">
@@ -56,9 +56,9 @@
       </svelte:fragment>
     </SidebarLayout>
   </div>
-</Template>
+{/snippet}
 
-<Story name="Desktop" />
+<Story name="Desktop" {template} />
 
 <style>
   .vh-100 {
