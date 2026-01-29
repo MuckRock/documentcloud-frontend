@@ -1,11 +1,9 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
   import { defineMeta } from "@storybook/addon-svelte-csf";
 
   import Project from "../Project.svelte";
-
   import { project, projectUsers } from "@/test/fixtures/projects";
   import { documentsList } from "@/test/fixtures/documents";
-  import { activeAddons } from "@/test/fixtures/addons";
 
   const { Story } = defineMeta({
     title: "Layout / Project",
@@ -14,43 +12,31 @@
       layout: "fullscreen",
     },
   });
-
-  const args = {
-    project,
-    users: projectUsers.results,
-    documents: Promise.resolve({ data: documentsList }),
-    addons: Promise.resolve(activeAddons),
-  };
 </script>
 
-<Story name="Viewer">
-  <div class="vh-100">
-    <Project {...args} />
-  </div>
-</Story>
+<Story
+  name="Viewer"
+  args={{
+    project: project,
+    users: projectUsers.results,
+    documents: Promise.resolve({ data: documentsList }),
+  }}
+/>
 
-<Story name="Editor">
-  <div class="vh-100">
-    <Project
-      project={{ ...project, edit_access: true }}
-      users={projectUsers.results}
-      documents={Promise.resolve({ data: documentsList })}
-    />
-  </div>
-</Story>
+<Story
+  name="Editor"
+  args={{
+    project: { ...project, edit_access: true },
+    users: projectUsers.results,
+    documents: Promise.resolve({ data: documentsList }),
+  }}
+/>
 
-<Story name="Admin">
-  <div class="vh-100">
-    <Project
-      project={{ ...project, edit_access: true, add_remove_access: true }}
-      users={projectUsers.results}
-      documents={Promise.resolve({ data: documentsList })}
-    />
-  </div>
-</Story>
-
-<style>
-  .vh-100 {
-    height: 100vh;
-  }
-</style>
+<Story
+  name="Admin"
+  args={{
+    project: { ...project, edit_access: true, add_remove_access: true },
+    users: projectUsers.results,
+    documents: Promise.resolve({ data: documentsList }),
+  }}
+/>
