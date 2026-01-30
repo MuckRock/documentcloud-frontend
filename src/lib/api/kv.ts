@@ -88,7 +88,7 @@ export async function update(
 
   const body: DataPayload = {};
 
-  if (values && values.length > 0) {
+  if (values && values.length) {
     body.values = values;
   }
 
@@ -98,7 +98,7 @@ export async function update(
 
   const response = await fetch(endpoint, {
     credentials: "include",
-    method: "PUT",
+    method: "PATCH",
     headers: {
       "Content-type": "application/json",
       [CSRF_HEADER_NAME]: csrf_token,

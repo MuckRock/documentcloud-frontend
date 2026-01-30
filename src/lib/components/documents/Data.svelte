@@ -85,10 +85,8 @@
 {#if edit}
   <Portal>
     <Modal on:close={() => (edit = false)}>
-      {#snippet title()}
-        <h2>{$_("data.title")}</h2>
-      {/snippet}
-      <EditData {document} on:close={() => (edit = false)} />
+      <h2 slot="title">{$_("data.title")}</h2>
+      <EditData {document} onclose={() => (edit = false)} />
     </Modal>
   </Portal>
 {/if}

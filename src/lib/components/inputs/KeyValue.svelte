@@ -2,12 +2,18 @@
 Input for a single key/value pair or tag (where `key` is `_tag`).
 This uses `svelecte` to let users more easily choose existing keys.
 -->
-<script lang="ts">
-  import { createBubbler } from "svelte/legacy";
+<script module lang="ts">
+  export interface Result {
+    keys?: string[];
+    key?: string | null;
+    value?: string;
+    clear?: boolean;
+  }
+</script>
 
-  const bubble = createBubbler();
+<script lang="ts">
   import { _ } from "svelte-i18n";
-  import { PlusCircle16, Trash16 } from "svelte-octicons";
+  import { CheckCircle16, PlusCircle16, Trash16 } from "svelte-octicons";
   import Svelecte from "svelecte";
 
   import Button from "../common/Button.svelte";
@@ -18,8 +24,9 @@ This uses `svelecte` to let users more easily choose existing keys.
     value?: string;
     add?: boolean;
     disabled?: boolean;
-    onadd?: ({ key, value }) => void;
-    ondelete?: ({ key, value }) => void;
+    onadd?: ({ key, value }) => Promise<Result>;
+    ondelete?: ({ key, value }) => Promise<Result>;
+    onedit?: ({ key, value }) => Promise<Result>;
   }
 
   const DEFAULT_KEYS = ["_tag"];
@@ -32,7 +39,10 @@ This uses `svelecte` to let users more easily choose existing keys.
     disabled = false,
     onadd,
     ondelete,
+    onedit,
   }: Props = $props();
+
+  let edited: boolean = $state(false);
 
   let options = $derived.by(() =>
     new Set([...keys, ...DEFAULT_KEYS])
@@ -57,6 +67,69 @@ This uses `svelecte` to let users more easily choose existing keys.
     key = "";
     value = "";
   }
+
+  function setKey({ value }) {
+    key = value;
+    edited = true;
+  }
+
+  async function handleAdd() {
+    disabled = true;
+
+    if (!onadd) return;
+
+    const result = await onadd({ key, value });
+
+    if (result.keys) {
+      keys = result.keys;
+    }
+
+    if (result.key) {
+      key = result.key;
+    }
+
+    if (result.value) {
+      value = result.value;
+    }
+
+    if (result.clear) clear();
+
+    disabled = false;
+    edited = false;
+  }
+
+  async function handleEdit() {
+    disabled = true;
+
+    if (!onedit) return;
+
+    const result = await onedit({ key, value });
+
+    if (result.keys) {
+      keys = result.keys;
+    }
+
+    if (result.key) {
+      key = result.key;
+    }
+
+    if (result.value) {
+      value = result.value;
+    }
+
+    if (result.clear) clear();
+
+    disabled = false;
+    edited = false;
+  }
+
+  async function handleDelete() {
+    disabled = true;
+
+    await ondelete?.({ key, value });
+
+    disabled = false;
+  }
 </script>
 
 <tr class="kv">
@@ -70,7 +143,7 @@ This uses `svelecte` to let users more easily choose existing keys.
       placeholder={$_("data.newkey")}
       class="elevated"
       creatable
-      onChange={({ value }) => (key = value)}
+      onChange={setKey}
       {disabled}
     />
   </td>
@@ -83,8 +156,7 @@ This uses `svelecte` to let users more easily choose existing keys.
         name="value"
         placeholder={$_("data.value")}
         bind:value
-        onchange={bubble("change")}
-        oninput={bubble("input")}
+        oninput={() => (edited = true)}
         {disabled}
       />
     </label>
@@ -97,20 +169,32 @@ This uses `svelecte` to let users more easily choose existing keys.
         title={$_("data.update")}
         minW={false}
         value="add"
-        disabled={!key || !value || disabled}
-        on:click={() => onadd?.({ key, value })}
+        disabled={!key || !value || !onadd || disabled}
+        on:click={handleAdd}
       >
         <PlusCircle16 />
       </Button>
     {:else}
       <Button
         ghost
+        minW={false}
+        mode="primary"
+        disabled={!edited || !onedit || !value.trim() || disabled}
+        title={$_("dialog.update")}
+        value="edit"
+        on:click={handleEdit}
+      >
+        <CheckCircle16 />
+      </Button>
+
+      <Button
+        ghost
         mode="danger"
         title={$_("data.delete")}
         minW={false}
         value="delete"
-        {disabled}
-        on:click={() => ondelete?.({ key, value })}
+        disabled={!ondelete || disabled}
+        on:click={handleDelete}
         --fill="var(--caution)"
         --background="var(--orange-2)"
       >

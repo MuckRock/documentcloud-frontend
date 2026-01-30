@@ -18,7 +18,9 @@ This will mostly merge with existing data.
 
   import Button from "$lib/components/common/Button.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
-  import KeyValue from "$lib/components/inputs/KeyValue.svelte";
+  import KeyValue, {
+    type Result,
+  } from "$lib/components/inputs/KeyValue.svelte";
   import ShowSize from "../common/ShowSize.svelte";
   import Tip from "../common/Tip.svelte";
 
@@ -44,8 +46,8 @@ This will mostly merge with existing data.
 
   $inspect(keys, data);
 
-  function add({ key, value }) {
-    if (!key || !value) return;
+  async function add({ key, value }): Promise<Result> {
+    if (!key || !value) return {};
 
     if (key in data) {
       data[key] = [...(data[key] ?? []), value];
@@ -53,10 +55,10 @@ This will mostly merge with existing data.
       data[key] = [value];
     }
 
-    kv?.clear();
+    return { clear: true };
   }
 
-  function remove({ key, value }) {
+  async function remove({ key, value }): Promise<Result> {
     console.log({ key, value });
     if (key in data) {
       data[key] = (data[key] ?? []).filter((v) => v !== value);
@@ -66,6 +68,8 @@ This will mostly merge with existing data.
     } else {
       console.warn(`Unknown key: ${key}`);
     }
+
+    return {};
   }
 
   /**
@@ -133,18 +137,12 @@ This will mostly merge with existing data.
     <!-- kv -->
     {#each Object.entries(data) as [key, values]}
       {#each values as value}
-        <KeyValue {keys} {key} {value} ondelete={(e) => remove(e)} />
+        <KeyValue {keys} {key} {value} ondelete={remove} />
       {/each}
     {/each}
 
     {#each tags as tag}
-      <KeyValue
-        {keys}
-        key="_tag"
-        value={tag}
-        {disabled}
-        ondelete={(e) => remove(e)}
-      />
+      <KeyValue {keys} key="_tag" value={tag} {disabled} ondelete={remove} />
     {/each}
     <tfoot>
       <tr>
@@ -152,7 +150,7 @@ This will mostly merge with existing data.
           {$_("data.addNew")}
         </th>
       </tr>
-      <KeyValue {keys} bind:this={kv} add onadd={(e) => add(e)} {disabled} />
+      <KeyValue {keys} bind:this={kv} add onadd={add} {disabled} />
     </tfoot>
   </table>
 

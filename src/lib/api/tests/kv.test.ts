@@ -177,7 +177,7 @@ describe("writing key-value data", () => {
       new URL(`documents/${document.id}/data/${key}/`, BASE_API_URL),
       {
         credentials: "include",
-        method: "PUT",
+        method: "PATCH",
         headers: {
           "Content-type": "application/json",
           [CSRF_HEADER_NAME]: csrf_token,
@@ -219,7 +219,7 @@ describe("writing key-value data", () => {
       new URL(`documents/${document.id}/data/${key}/`, BASE_API_URL),
       {
         credentials: "include",
-        method: "PUT",
+        method: "PATCH",
         headers: {
           "Content-type": "application/json",
           [CSRF_HEADER_NAME]: csrf_token,
@@ -263,7 +263,7 @@ describe("writing key-value data", () => {
       new URL(`documents/${document.id}/data/${key}/`, BASE_API_URL),
       {
         credentials: "include",
-        method: "PUT",
+        method: "PATCH",
         headers: {
           "Content-type": "application/json",
           [CSRF_HEADER_NAME]: csrf_token,

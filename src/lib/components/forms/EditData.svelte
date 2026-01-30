@@ -2,52 +2,105 @@
   import type { ActionResult } from "@sveltejs/kit";
   import type { Document } from "$lib/api/types";
 
-  import { enhance } from "$app/forms";
-  import { createEventDispatcher } from "svelte";
+  import { invalidate } from "$app/navigation";
+
+  import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
   import Button from "$lib/components/common/Button.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
-  import KeyValue from "$lib/components/inputs/KeyValue.svelte";
+  import KeyValue, {
+    type Result,
+  } from "$lib/components/inputs/KeyValue.svelte";
 
   import { canonicalUrl } from "$lib/api/documents";
+  import * as kv from "$lib/api/kv";
+  import { getCsrfToken } from "$lib/utils/api";
   import { toast } from "../layouts/Toaster.svelte";
 
-  export let document: Document;
-  export let onclose: ((event: CustomEvent) => void) | undefined = undefined;
-
-  const dispatch = createEventDispatcher();
-
-  let kv: KeyValue;
-
-  $: keys = Object.keys(document.data) ?? [];
-  $: tags = document.data["_tag"] ?? [];
-  $: data =
-    Object.entries(document?.data)?.filter(([k, v]) => k !== "_tag") ?? [];
-  $: action = new URL("?/data", canonicalUrl(document)).href;
-
-  function add({ key, value }) {
-    if (!key || !value) return;
-
-    if (key in document.data) {
-      document.data[key] = [...(document.data[key] ?? []), value];
-    } else {
-      document.data[key] = [value];
-    }
-
-    kv.clear();
+  interface Props {
+    document: Document;
+    onclose?: (() => void) | undefined;
   }
 
-  function remove({ key, value }) {
-    if (!(key in document.data)) return;
+  let { document = $bindable(), onclose = undefined }: Props = $props();
 
-    document.data[key] = (document.data[key] ?? []).filter((v) => v !== value);
+  let csrf_token: string = $state("");
+  let keys = $derived(Object.keys(document.data) ?? []);
+  let tags = $derived(document.data["_tag"] ?? []);
+  let data = $derived(
+    Object.entries(document?.data)?.filter(([k, v]) => k !== "_tag") ?? [],
+  );
+  let action = $derived(new URL("?/data", canonicalUrl(document)).href);
+
+  onMount(() => {
+    csrf_token = getCsrfToken() ?? "";
+  });
+
+  async function add({ key, value }): Promise<Result> {
+    if (!key || !value) {
+      console.warn(`Missing values: ${{ key, value }}`);
+      return {};
+    }
+
+    const { data } = await kv.update(
+      document,
+      key,
+      [value],
+      undefined,
+      csrf_token,
+    );
+
+    if (data) {
+      document = { ...document, data };
+      await invalidate(`document:${document.id}`);
+    }
+
+    return {
+      clear: true,
+    };
+  }
+
+  async function onedit({ key, value }): Promise<Result> {
+    if (!key || !value) {
+      console.warn(`Missing values: ${{ key, value }}`);
+      return {};
+    }
+
+    const { data } = await kv.update(
+      document,
+      key,
+      [value],
+      undefined,
+      csrf_token,
+    );
+
+    if (data) {
+      document = { ...document, data };
+      await invalidate(`document:${document.id}`);
+    }
+
+    return { key, value };
+  }
+
+  async function remove({ key, value }): Promise<Result> {
+    if (!(key in document.data)) {
+      console.warn(`Unknown key: ${key}`);
+      return {};
+    }
+
+    const { data } = await kv.update(document, key, [], [value], csrf_token);
+
+    if (data) {
+      document = { ...document, data };
+      await invalidate(`document:${document.id}`);
+    }
+
+    return {};
   }
 
   function close() {
-    const event = new CustomEvent("close");
-    dispatch("close");
-    onclose?.(event);
+    onclose?.();
   }
 
   function onSubmit() {
@@ -69,7 +122,7 @@
   }
 </script>
 
-<form {action} method="post" use:enhance={onSubmit}>
+<form {action} method="post">
   <table>
     <thead>
       <tr>
@@ -85,12 +138,12 @@
     <!-- kv -->
     {#each data as [key, values]}
       {#each values as value}
-        <KeyValue {keys} {key} {value} ondelete={(e) => remove(e)} />
+        <KeyValue {keys} {key} {value} ondelete={remove} />
       {/each}
     {/each}
 
     {#each tags as tag}
-      <KeyValue {keys} key="_tag" value={tag} ondelete={(e) => remove(e)} />
+      <KeyValue {keys} key="_tag" value={tag} ondelete={remove} {onedit} />
     {/each}
     <tfoot>
       <tr>
@@ -98,12 +151,11 @@
           {$_("data.addNew")}
         </th>
       </tr>
-      <KeyValue {keys} bind:this={kv} add onadd={(e) => add(e)} />
+      <KeyValue {keys} add onadd={add} />
     </tfoot>
   </table>
   <Flex class="buttons">
-    <Button type="submit" mode="primary">{$_("data.save")}</Button>
-    <Button on:click={close}>{$_("data.cancel")}</Button>
+    <Button on:click={close}>{$_("dialog.done")}</Button>
   </Flex>
 </form>
 

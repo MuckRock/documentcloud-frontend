@@ -6,7 +6,6 @@ import KeyValue from "../KeyValue.svelte";
 
 describe("KeyValue", () => {
   beforeEach(() => {
-    // Clear all mocks before each test
     vi.clearAllMocks();
   });
 
