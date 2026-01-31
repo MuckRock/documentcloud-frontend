@@ -61,7 +61,7 @@
     };
   }
 
-  async function onedit({ key, value }): Promise<Result> {
+  async function onedit({ key, value, previous }): Promise<Result> {
     if (!key || !value) {
       console.warn(`Missing values: ${{ key, value }}`);
       return {};
@@ -71,7 +71,7 @@
       document,
       key,
       [value],
-      undefined,
+      [previous.value],
       csrf_token,
     );
 
@@ -138,7 +138,7 @@
     <!-- kv -->
     {#each data as [key, values]}
       {#each values as value}
-        <KeyValue {keys} {key} {value} ondelete={remove} />
+        <KeyValue {keys} {key} {value} ondelete={remove} {onedit} />
       {/each}
     {/each}
 

@@ -61,7 +61,7 @@ This will mostly merge with existing data.
       return {};
     }
 
-    const promises = documents.map(async (doc, i) => {
+    const promises = documents.map(async (doc) => {
       const { data } = await kv.update(
         doc,
         key,
@@ -82,25 +82,29 @@ This will mostly merge with existing data.
     return { clear: true };
   }
 
-  async function edit({ key, value }): Promise<Result> {
+  async function edit({ key, value, previous }): Promise<Result> {
     if (!key || !value) {
       console.warn(`Missing values: ${{ key, value }}`);
       return {};
     }
 
-    documents.forEach(async (doc, i) => {
+    const promises = documents.map(async (doc) => {
       const { data } = await kv.update(
         doc,
         key,
         [value],
-        undefined,
+        [previous.value],
         csrf_token,
       );
 
       if (data) {
-        documents[i] = { ...doc, data };
+        doc.data = data;
       }
+
+      return doc;
     });
+
+    documents = await Promise.all(promises);
 
     return {};
   }

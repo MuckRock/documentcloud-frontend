@@ -25,6 +25,11 @@
     return { clear: true };
   }
 
+  async function onedit({ key, value, previous }) {
+    await delay(1000);
+    return { value: "Edited" };
+  }
+
   async function ondelete({ key, value }): Promise<Result> {
     await delay(1000);
     return { clear: true };
@@ -52,7 +57,7 @@
 
 <Story
   name="Edit"
-  args={{ keys, key: "author", value: "Joan Didion", onadd, ondelete }}
+  args={{ keys, key: "author", value: "Joan Didion", onadd, onedit, ondelete }}
   {template}
 />
 

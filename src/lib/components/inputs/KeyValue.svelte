@@ -12,6 +12,7 @@ This uses `svelecte` to let users more easily choose existing keys.
 </script>
 
 <script lang="ts">
+  import { untrack } from "svelte";
   import { _ } from "svelte-i18n";
   import { CheckCircle16, PlusCircle16, Trash16 } from "svelte-octicons";
   import Svelecte from "svelecte";
@@ -26,7 +27,7 @@ This uses `svelecte` to let users more easily choose existing keys.
     disabled?: boolean;
     onadd?: ({ key, value }) => Promise<Result>;
     ondelete?: ({ key, value }) => Promise<Result>;
-    onedit?: ({ key, value }) => Promise<Result>;
+    onedit?: ({ key, value, previous }) => Promise<Result>;
   }
 
   const DEFAULT_KEYS = ["_tag"];
@@ -43,6 +44,10 @@ This uses `svelecte` to let users more easily choose existing keys.
   }: Props = $props();
 
   let edited: boolean = $state(false);
+  let previous: { key?: string | null; value?: string } = $state({
+    key: untrack(() => key),
+    value: untrack(() => value),
+  });
 
   let options = $derived.by(() =>
     new Set([...keys, ...DEFAULT_KEYS])
@@ -69,6 +74,7 @@ This uses `svelecte` to let users more easily choose existing keys.
   }
 
   function setKey({ value }) {
+    previous.key = key;
     key = value;
     edited = true;
   }
@@ -103,7 +109,7 @@ This uses `svelecte` to let users more easily choose existing keys.
 
     if (!onedit) return;
 
-    const result = await onedit({ key, value });
+    const result = await onedit({ key, value, previous });
 
     if (result.keys) {
       keys = result.keys;
@@ -111,10 +117,12 @@ This uses `svelecte` to let users more easily choose existing keys.
 
     if (result.key) {
       key = result.key;
+      previous.key = result.key;
     }
 
     if (result.value) {
       value = result.value;
+      previous.value = value;
     }
 
     if (result.clear) clear();
