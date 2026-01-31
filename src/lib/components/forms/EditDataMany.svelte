@@ -89,16 +89,34 @@ This will mostly merge with existing data.
     }
 
     const promises = documents.map(async (doc) => {
-      const { data } = await kv.update(
-        doc,
-        key,
-        [value],
-        [previous.value],
-        csrf_token,
-      );
+      let updated: Maybe<Data>;
 
-      if (data) {
-        doc.data = data;
+      // changing a key just creates a new entry, for now
+      // and users can delete old keys if needed
+      if (previous.key !== key) {
+        const { data } = await kv.update(
+          doc,
+          key,
+          [value],
+          undefined,
+          csrf_token,
+        );
+        updated = data;
+      } else {
+        // updating a value removes the previous value and inserts a new value
+        const { data } = await kv.update(
+          doc,
+          key,
+          [value],
+          [previous.value],
+          csrf_token,
+        );
+
+        updated = data;
+      }
+
+      if (updated) {
+        doc.data = updated;
       }
 
       return doc;

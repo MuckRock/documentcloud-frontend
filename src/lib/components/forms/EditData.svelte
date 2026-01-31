@@ -1,6 +1,5 @@
 <script lang="ts">
-  import type { ActionResult } from "@sveltejs/kit";
-  import type { Document } from "$lib/api/types";
+  import type { Data, Document, Maybe } from "$lib/api/types";
 
   import { invalidate } from "$app/navigation";
 
@@ -16,7 +15,6 @@
   import { canonicalUrl } from "$lib/api/documents";
   import * as kv from "$lib/api/kv";
   import { getCsrfToken } from "$lib/utils/api";
-  import { toast } from "../layouts/Toaster.svelte";
 
   interface Props {
     document: Document;
@@ -67,16 +65,34 @@
       return {};
     }
 
-    const { data } = await kv.update(
-      document,
-      key,
-      [value],
-      [previous.value],
-      csrf_token,
-    );
+    let updated: Maybe<Data>;
 
-    if (data) {
-      document = { ...document, data };
+    // changing a key just creates a new entry, for now
+    // and users can delete old keys if needed
+    if (previous.key !== key) {
+      const { data } = await kv.update(
+        document,
+        key,
+        [value],
+        undefined,
+        csrf_token,
+      );
+      updated = data;
+    } else {
+      // updating a value removes the previous value and inserts a new value
+      const { data } = await kv.update(
+        document,
+        key,
+        [value],
+        [previous.value],
+        csrf_token,
+      );
+
+      updated = data;
+    }
+
+    if (updated) {
+      document = { ...document, data: updated };
       await invalidate(`document:${document.id}`);
     }
 
@@ -101,24 +117,6 @@
 
   function close() {
     onclose?.();
-  }
-
-  function onSubmit() {
-    return async ({
-      result,
-      update,
-    }: {
-      result: ActionResult;
-      update: (options?: Record<string, any>) => void;
-    }) => {
-      // `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
-      close();
-      update(result);
-      if (result.type === "success") {
-        // do something
-        toast($_("edit.success"), { status: "success" });
-      }
-    };
   }
 </script>
 
