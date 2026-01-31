@@ -109,3 +109,29 @@ export async function update(
 
   return getApiResponse<Data, ValidationError>(response);
 }
+
+// utils, colocated here to reduce the number of files we need
+
+/**
+ * Generate a common set of unique keys for a group of documents
+ */
+export function keys(documents: Document[]): Set<string> {
+  return new Set(documents.flatMap((d) => Object.keys(d.data)));
+}
+
+/**
+ * Generate a Data object with only keys and values common to all documents
+ */
+export function common(documents: Document[]): Data {
+  return documents.reduce((m: Data, d: Document, index: number) => {
+    // use the first document as our baseline
+    if (index === 0) return d.data;
+
+    for (const [k, v] of Object.entries(m)) {
+      const shared = new Set(d.data[k]).intersection(new Set(v));
+      m[k] = [...shared];
+    }
+
+    return m;
+  }, {} as Data);
+}

@@ -131,18 +131,11 @@ describe("EditData", () => {
     expect(deleteButtons.length).toBeGreaterThan(0);
   });
 
-  it("renders Save and Cancel buttons", () => {
-    render(EditData, { document: mockDocument });
-
-    expect(screen.getByText("Save")).toBeInTheDocument();
-    expect(screen.getByText("Cancel")).toBeInTheDocument();
-  });
-
-  it("dispatches close event when Cancel button is clicked", async () => {
+  it("dispatches close event when Done button is clicked", async () => {
     const handleClose = vi.fn();
     render(EditData, { document: mockDocument, onclose: handleClose });
 
-    const cancelButton = screen.getByText("Cancel");
+    const cancelButton = screen.getByText("Done");
     await fireEvent.click(cancelButton);
 
     expect(handleClose).toHaveBeenCalledTimes(1);

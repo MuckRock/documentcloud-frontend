@@ -522,7 +522,7 @@
     "save": "Save",
     "cancel": "Cancel",
     "addNew": "Add New Item:",
-    "many": "Saving will add the following tags and data to {n, plural, one {the selected document} other {all # selected documents}}. No tags or data will be removed."
+    "many": "Add tags and data to {n, plural, one {the selected document} other {all # selected documents}}. Only common entries are shown here. Removing items will remove them from all selected documents."
   },
   "bulk": {
     "title": "Actions",

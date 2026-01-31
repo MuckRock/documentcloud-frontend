@@ -53,7 +53,7 @@ describe("KeyValue", () => {
 
   it("dispatches add event with correct key and value when add button is clicked", async () => {
     const user = userEvent.setup();
-    const handleAdd = vi.fn();
+    const handleAdd = vi.fn(async () => ({}));
     render(KeyValue, {
       props: {
         keys: ["testKey"],
@@ -120,6 +120,7 @@ describe("KeyValue", () => {
         key: "testKey",
         value: "testValue",
         add: true,
+        onadd: async ({ key, value }) => ({}),
       },
     });
 

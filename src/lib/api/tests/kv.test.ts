@@ -16,13 +16,13 @@ const test = base.extend({
   },
 
   async keyValues({}, use: Use<string[]>) {
-    await use(["value1", "value2", "value3"]);
+    await use(["Author", "Location", "Genre"]);
   },
 
   async dataResponse({}, use: Use<Data>) {
     await use({
-      customKey: ["value1", "value2"],
-      _tag: ["tag1", "tag2"],
+      _tag: ["Environment", "California"],
+      Author: ["Joan Didion"],
     });
   },
 });
@@ -45,7 +45,7 @@ describe("reading key-value data", () => {
       };
     });
 
-    const key = "customKey";
+    const key = "Author";
     const { data: result, error } = await kv.get(document, key, mockFetch);
 
     expect(error).toBeUndefined();
@@ -90,7 +90,7 @@ describe("writing key-value data", () => {
       };
     });
 
-    const key = "customKey";
+    const key = "Author";
     const { data: result, error } = await kv.set(
       document,
       key,
@@ -161,7 +161,7 @@ describe("writing key-value data", () => {
       };
     });
 
-    const key = "customKey";
+    const key = "Author";
     const { data: result, error } = await kv.update(
       document,
       key,
@@ -202,7 +202,7 @@ describe("writing key-value data", () => {
       };
     });
 
-    const key = "customKey";
+    const key = "Author";
     const removeValues = ["value2"];
     const { data: result, error } = await kv.update(
       document,
@@ -244,7 +244,7 @@ describe("writing key-value data", () => {
       };
     });
 
-    const key = "customKey";
+    const key = "Author";
     const addValues = ["value4", "value5"];
     const removeValues = ["value1"];
 
@@ -294,7 +294,7 @@ describe("writing key-value data", () => {
       };
     });
 
-    const key = "customKey";
+    const key = "Author";
     const { data: result, error } = await kv.update(
       document,
       key,
@@ -328,7 +328,7 @@ describe("writing key-value data", () => {
       };
     });
 
-    const key = "customKey";
+    const key = "Author";
     const { data: result, error } = await kv.update(
       document,
       key,
@@ -358,5 +358,48 @@ describe("writing key-value data", () => {
 
     expect(data).toBeUndefined();
     expect(error).toBeDefined();
+  });
+});
+
+describe("kv utils", () => {
+  test("kv.keys empty", ({ document }) => {
+    const keys = kv.keys([document]);
+    expect(keys).toEqual(new Set());
+  });
+
+  test("kv.keys", ({ document, dataResponse }) => {
+    const keys = kv.keys([document, { ...document, data: dataResponse }]);
+
+    expect(keys).toEqual(new Set(["Author", "_tag"]));
+  });
+
+  test("kv.common empty", ({ document }) => {
+    // give nothing, get nothing
+    expect(kv.common([document])).toEqual({});
+  });
+
+  test("kv.common one empty", ({ document, dataResponse }) => {
+    // one is empty, so there's no intersection
+    const common = kv.common([document, { ...document, data: dataResponse }]);
+
+    expect(common).toEqual({});
+  });
+
+  test("kv.common _tags", ({ document, dataResponse }) => {
+    const common = kv.common([
+      { ...document, data: { _tag: ["Environment"] } },
+      { ...document, data: dataResponse },
+    ]);
+
+    expect(common).toEqual({ _tag: ["Environment"] });
+  });
+
+  test("kv.common data", ({ document, dataResponse }) => {
+    const common = kv.common([
+      { ...document, data: { _tag: ["Environment"], Author: ["Joan Didion"] } },
+      { ...document, data: dataResponse },
+    ]);
+
+    expect(common).toEqual({ _tag: ["Environment"], Author: ["Joan Didion"] });
   });
 });

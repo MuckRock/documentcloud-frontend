@@ -20,9 +20,19 @@
 </Story>
 
 <Story name="many documents">
-  <EditDataMany documents={[document]} onclose={() => {}} />
+  <div class="wrap">
+    <EditDataMany documents={[document]} />
+  </div>
 </Story>
 
 <Story name="too many documents">
-  <EditDataMany documents={Array(100).fill(document)} onclose={() => {}} />
+  <div class="wrap">
+    <EditDataMany documents={Array(100).fill(document)} />
+  </div>
 </Story>
+
+<style>
+  .wrap {
+    max-width: 80ch;
+  }
+</style>

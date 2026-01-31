@@ -11,8 +11,7 @@ This will mostly merge with existing data.
     ValidationError,
   } from "$lib/api/types";
 
-  import { enhance } from "$app/forms";
-
+  import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
   import { Alert24 } from "svelte-octicons";
 
@@ -25,75 +24,102 @@ This will mostly merge with existing data.
   import Tip from "../common/Tip.svelte";
 
   import { MAX_EDIT_BATCH } from "@/config/config.js";
+  import * as kv from "$lib/api/kv";
+  import { getCsrfToken } from "$lib/utils/api";
 
   interface Props {
     documents: Document[];
     error?: Maybe<APIError<ValidationError>>;
-    onclose: () => void;
+    onclose?: () => void;
   }
 
   let { documents, error = $bindable(undefined), onclose }: Props = $props();
 
   const action = "/documents/?/data";
 
-  let kv: Maybe<KeyValue> = $state();
+  let csrf_token: string = $state("");
 
-  let data: Data = $state({});
+  // common, unique keys across documents
+  let keys = $derived([...kv.keys(documents)]);
 
-  let keys = $derived(documents.map((d) => Object.keys(d.data)).flat());
-  let tags = $derived(documents.map((d) => d.data["_tag"] ?? []).flat());
-  let disabled = $derived(documents.length > MAX_EDIT_BATCH);
+  let shared = $derived(kv.common(documents));
 
-  $inspect(keys, data);
+  let pairs = $derived(Object.entries(shared).filter(([k, v]) => k !== "_tag"));
+  let tags = $derived(shared["_tag"] ?? []);
+
+  let disabled = $derived(
+    documents.length === 0 || documents.length > MAX_EDIT_BATCH,
+  );
+
+  onMount(() => {
+    csrf_token = getCsrfToken() ?? "";
+  });
 
   async function add({ key, value }): Promise<Result> {
-    if (!key || !value) return {};
-
-    if (key in data) {
-      data[key] = [...(data[key] ?? []), value];
-    } else {
-      data[key] = [value];
+    if (!key || !value) {
+      console.warn(`Missing values: ${{ key, value }}`);
+      return {};
     }
+
+    const promises = documents.map(async (doc, i) => {
+      const { data } = await kv.update(
+        doc,
+        key,
+        [value],
+        undefined,
+        csrf_token,
+      );
+
+      if (data) {
+        doc.data = data;
+      }
+
+      return doc;
+    });
+
+    documents = await Promise.all(promises);
 
     return { clear: true };
   }
 
+  async function edit({ key, value }): Promise<Result> {
+    if (!key || !value) {
+      console.warn(`Missing values: ${{ key, value }}`);
+      return {};
+    }
+
+    documents.forEach(async (doc, i) => {
+      const { data } = await kv.update(
+        doc,
+        key,
+        [value],
+        undefined,
+        csrf_token,
+      );
+
+      if (data) {
+        documents[i] = { ...doc, data };
+      }
+    });
+
+    return {};
+  }
+
   async function remove({ key, value }): Promise<Result> {
-    console.log({ key, value });
-    if (key in data) {
-      data[key] = (data[key] ?? []).filter((v) => v !== value);
-    } else if (keys.includes(key)) {
-      console.log(`Removing key: ${key}`);
-      keys = keys.filter((k) => k !== key);
-    } else {
-      console.warn(`Unknown key: ${key}`);
+    if (!key || !value) {
+      console.warn(`Missing values: ${{ key, value }}`);
+      return {};
     }
 
     return {};
   }
 
-  /**
-   * @type {import('@sveltejs/kit').SubmitFunction}
-   */
-  function onSubmit({ submitter }) {
-    submitter.disabled = true;
-
-    return async ({ result, update }) => {
-      submitter.disabled = false;
-      if (result.type === "failure") {
-        console.error(result);
-        error = result.data.error;
-      }
-
-      if (result.type === "success") {
-        update(result);
-        onclose();
-      }
-    };
+  function close() {
+    onclose?.();
   }
 </script>
 
-<form {action} class="card" method="post" use:enhance={onSubmit}>
+<form {action} class="card" method="post">
   <ShowSize size={documents.length}>
     <p>{$_("data.many", { values: { n: documents.length } })}</p>
     <Tip mode="error" slot="empty">
@@ -135,14 +161,28 @@ This will mostly merge with existing data.
     </thead>
 
     <!-- kv -->
-    {#each Object.entries(data) as [key, values]}
+    {#each pairs as [key, values]}
       {#each values as value}
-        <KeyValue {keys} {key} {value} ondelete={remove} />
+        <KeyValue
+          {keys}
+          {key}
+          {value}
+          {disabled}
+          onedit={edit}
+          ondelete={remove}
+        />
       {/each}
     {/each}
 
     {#each tags as tag}
-      <KeyValue {keys} key="_tag" value={tag} {disabled} ondelete={remove} />
+      <KeyValue
+        {keys}
+        key="_tag"
+        value={tag}
+        {disabled}
+        onedit={edit}
+        ondelete={remove}
+      />
     {/each}
     <tfoot>
       <tr>
@@ -150,7 +190,7 @@ This will mostly merge with existing data.
           {$_("data.addNew")}
         </th>
       </tr>
-      <KeyValue {keys} bind:this={kv} add onadd={add} {disabled} />
+      <KeyValue {keys} add onadd={add} {disabled} />
     </tfoot>
   </table>
 
@@ -161,8 +201,7 @@ This will mostly merge with existing data.
   />
 
   <Flex class="buttons">
-    <Button type="submit" mode="primary" {disabled}>{$_("data.save")}</Button>
-    <Button on:click={() => onclose()}>{$_("data.cancel")}</Button>
+    <Button on:click={close}>{$_("dialog.done")}</Button>
   </Flex>
 </form>
 

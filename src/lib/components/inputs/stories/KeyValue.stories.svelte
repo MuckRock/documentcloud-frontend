@@ -24,10 +24,7 @@
     await delay(1000);
     return { clear: true };
   }
-  async function onedit({ key, value }): Promise<Result> {
-    await delay(1000);
-    return { value };
-  }
+
   async function ondelete({ key, value }): Promise<Result> {
     await delay(1000);
     return { clear: true };
@@ -48,35 +45,43 @@
     key: "_tag",
     value: "Foobar",
     onadd,
+    ondelete,
   }}
   {template}
 />
 
 <Story
   name="Edit"
-  args={{ keys, key: "author", value: "Joan Didion", onedit, ondelete }}
+  args={{ keys, key: "author", value: "Joan Didion", onadd, ondelete }}
   {template}
 />
 
 <Story
   name="Tag input"
-  args={{ keys, key: "_tag", onedit, ondelete }}
+  args={{ keys, key: "_tag", onadd, ondelete }}
   {template}
 />
 
 <Story
   name="Tag with value"
-  args={{ keys, key: "_tag", value: "California", onadd, onedit, ondelete }}
+  args={{ keys, key: "_tag", value: "California", onadd, ondelete }}
   {template}
 />
 
 <Story
   name="Disabled"
-  args={{ keys, key: "_tag", value: "California", disabled: true }}
+  args={{
+    keys,
+    key: "_tag",
+    value: "California",
+    disabled: true,
+    onadd,
+    ondelete,
+  }}
   {template}
 />
 
-<Story name="Empty" args={{ keys: [], onedit, ondelete }} {template} />
+<Story name="Empty" args={{ keys: [], onadd, ondelete }} {template} />
 
 <style>
   table {
