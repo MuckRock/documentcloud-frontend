@@ -191,6 +191,7 @@ This uses `svelecte` to let users more easily choose existing keys.
           value="add"
           disabled={!key || !value || !onadd || disabled}
           on:click={handleAdd}
+          aria-label={$_("data.update")}
         >
           <PlusCircle16 />
         </Button>
@@ -204,6 +205,7 @@ This uses `svelecte` to let users more easily choose existing keys.
           disabled={!edited || !onedit || !value.trim() || disabled}
           value="edit"
           on:click={handleEdit}
+          aria-label={$_("dialog.update")}
         >
           <CheckCircle16 />
         </Button>
@@ -217,6 +219,7 @@ This uses `svelecte` to let users more easily choose existing keys.
           value="delete"
           disabled={!ondelete || disabled}
           on:click={handleDelete}
+          aria-label={$_("data.delete")}
           --fill="var(--caution)"
           --background="var(--orange-2)"
         >
