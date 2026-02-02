@@ -41,7 +41,6 @@
   let data = $derived(
     Object.entries(document?.data)?.filter(([k, v]) => k !== "_tag") ?? [],
   );
-  let action = $derived(new URL("?/data", canonicalUrl(document)).href);
   let total_edited: number = $derived(
     Object.values(edited).filter(Boolean).length,
   );
@@ -156,7 +155,7 @@
   }
 </script>
 
-<form {action} method="post">
+<div class="container">
   {#if error}
     <Tip mode="error">
       <Alert24 slot="icon" />
@@ -225,18 +224,18 @@
       </p>
     {/if}
   </Flex>
-</form>
+</div>
 
 <style>
+  .container {
+    width: 100%;
+    padding: 1rem;
+  }
+
   table,
   thead,
   tfoot {
     width: 100%;
-  }
-
-  form {
-    width: 100%;
-    padding: 1rem;
   }
 
   th {

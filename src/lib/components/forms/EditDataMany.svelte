@@ -188,7 +188,7 @@ This will mostly merge with existing data.
   }
 </script>
 
-<form {action} class="card" method="post">
+<div class="card container">
   <ShowSize size={documents.length}>
     <p>{$_("data.many", { values: { n: documents.length } })}</p>
     <Tip mode="error" slot="empty">
@@ -279,17 +279,17 @@ This will mostly merge with existing data.
       </p>
     {/if}
   </Flex>
-</form>
+</div>
 
 <style>
+  .container {
+    padding: 1rem;
+  }
+
   table,
   thead,
   tfoot {
     width: 100%;
-  }
-
-  form {
-    padding: 1rem;
   }
 
   th {

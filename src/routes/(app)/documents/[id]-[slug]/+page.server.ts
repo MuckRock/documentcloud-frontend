@@ -28,54 +28,6 @@ export function load({ cookies, request, url }) {
  * back on the document viewer after any successful action.
  */
 export const actions = {
-  // like edit but specifically for data
-  async data({ cookies, request, fetch, params, url }) {
-    const csrf_token = cookies.get(CSRF_COOKIE_NAME);
-    if (!csrf_token) {
-      return fail(403, { message: "Missing CSRF token" });
-    }
-    const { id } = params;
-
-    // array of [['key', '...'], ['value', '...']]
-    const form = await request.formData();
-    const keys = form.getAll("key") as string[];
-    const values = form.getAll("value") as string[];
-
-    const data = keys.reduce((m, key, i) => {
-      const value = values[i];
-
-      // filter out blanks
-      if (key === "" || value === "") return m;
-
-      if (key in m) {
-        m[key].push(value);
-      } else {
-        m[key] = [value];
-      }
-      return m;
-    }, {});
-
-    const { data: document, error } = await edit(
-      id,
-      { data },
-      csrf_token,
-      fetch,
-    );
-
-    if (error) {
-      setFlash({ message: error.message, status: "error" }, cookies);
-      return fail(error.status, {
-        message: error.message,
-        error: error.errors,
-      });
-    }
-    setFlash({ message: "Data saved", status: "success" }, cookies);
-    return {
-      success: true,
-      document,
-    };
-  },
-
   async delete({ cookies, fetch, params }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     if (!csrf_token) {
