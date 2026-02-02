@@ -34,6 +34,13 @@
     await delay(1000);
     return { clear: true };
   }
+
+  async function error({ key, value }): Promise<Result> {
+    await delay(1000);
+    return {
+      error: false,
+    };
+  }
 </script>
 
 {#snippet template(args: Args)}
@@ -87,6 +94,19 @@
 />
 
 <Story name="Empty" args={{ keys: [], onadd, ondelete }} {template} />
+
+<Story
+  name="Error state"
+  args={{
+    keys,
+    key: "author",
+    value: "Joan Didion",
+    error: true,
+    onedit: error,
+    ondelete: error,
+  }}
+  {template}
+/>
 
 <style>
   table {

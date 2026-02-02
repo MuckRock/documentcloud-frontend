@@ -1,16 +1,24 @@
 <script lang="ts">
-  import type { Data, Document, Maybe } from "$lib/api/types";
+  import type {
+    APIError,
+    Data,
+    Document,
+    Maybe,
+    ValidationError,
+  } from "$lib/api/types";
 
   import { invalidate } from "$app/navigation";
 
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
+  import { Alert24 } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
   import KeyValue, {
     type Result,
   } from "$lib/components/inputs/KeyValue.svelte";
+  import Tip from "$lib/components/common/Tip.svelte";
 
   import { canonicalUrl } from "$lib/api/documents";
   import * as kv from "$lib/api/kv";
@@ -24,6 +32,8 @@
   let { document = $bindable(), onclose = undefined }: Props = $props();
 
   let csrf_token: string = $state("");
+  let error: Maybe<APIError<ValidationError>> = $state();
+
   let keys = $derived(Object.keys(document.data) ?? []);
   let tags = $derived(document.data["_tag"] ?? []);
   let data = $derived(
@@ -41,7 +51,7 @@
       return {};
     }
 
-    const { data } = await kv.update(
+    const { data, error: err } = await kv.update(
       document,
       key,
       [value],
@@ -54,8 +64,11 @@
       await invalidate(`document:${document.id}`);
     }
 
+    error = err;
+
     return {
-      clear: true,
+      clear: !err,
+      error: Boolean(err),
     };
   }
 
@@ -70,7 +83,7 @@
     // changing a key just creates a new entry, for now
     // and users can delete old keys if needed
     if (previous.key !== key) {
-      const { data } = await kv.update(
+      const { data, error: err } = await kv.update(
         document,
         key,
         [value],
@@ -78,9 +91,10 @@
         csrf_token,
       );
       updated = data;
+      error = err;
     } else {
       // updating a value removes the previous value and inserts a new value
-      const { data } = await kv.update(
+      const { data, error: err } = await kv.update(
         document,
         key,
         [value],
@@ -89,6 +103,7 @@
       );
 
       updated = data;
+      error = err;
     }
 
     if (updated) {
@@ -96,7 +111,7 @@
       await invalidate(`document:${document.id}`);
     }
 
-    return { key, value };
+    return { key, value, error: Boolean(error) };
   }
 
   async function remove({ key, value }): Promise<Result> {
@@ -105,14 +120,22 @@
       return {};
     }
 
-    const { data } = await kv.update(document, key, [], [value], csrf_token);
+    const { data, error: err } = await kv.update(
+      document,
+      key,
+      [],
+      [value],
+      csrf_token,
+    );
 
     if (data) {
       document = { ...document, data };
       await invalidate(`document:${document.id}`);
     }
 
-    return {};
+    error = err;
+
+    return { error: Boolean(err) };
   }
 
   function close() {
@@ -121,6 +144,21 @@
 </script>
 
 <form {action} method="post">
+  {#if error}
+    <Tip mode="error">
+      <Alert24 slot="icon" />
+      <p>{error.message}</p>
+      {#if Object.keys(error.errors ?? {}).length}
+        <ul>
+          {#each Object.entries(error.errors ?? {}) as [field, errs]}
+            <li>
+              <strong>{field}</strong>: {errs.join(";")}
+            </li>
+          {/each}
+        </ul>
+      {/if}
+    </Tip>
+  {/if}
   <table>
     <thead>
       <tr>

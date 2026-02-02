@@ -62,7 +62,7 @@ This will mostly merge with existing data.
     }
 
     const promises = documents.map(async (doc) => {
-      const { data } = await kv.update(
+      const { data, error: err } = await kv.update(
         doc,
         key,
         [value],
@@ -74,12 +74,16 @@ This will mostly merge with existing data.
         doc.data = data;
       }
 
+      if (err) {
+        error = err;
+      }
+
       return doc;
     });
 
     documents = await Promise.all(promises);
 
-    return { clear: true };
+    return { clear: !error, error: Boolean(error) };
   }
 
   async function edit({ key, value, previous }): Promise<Result> {
@@ -94,7 +98,7 @@ This will mostly merge with existing data.
       // changing a key just creates a new entry, for now
       // and users can delete old keys if needed
       if (previous.key !== key) {
-        const { data } = await kv.update(
+        const { data, error: err } = await kv.update(
           doc,
           key,
           [value],
@@ -102,17 +106,24 @@ This will mostly merge with existing data.
           csrf_token,
         );
         updated = data;
+
+        if (err) {
+          error = err;
+        }
       } else {
         // updating a value removes the previous value and inserts a new value
-        const { data } = await kv.update(
+        const { data, error: err } = await kv.update(
           doc,
           key,
           [value],
           [previous.value],
           csrf_token,
         );
-
         updated = data;
+
+        if (err) {
+          error = err;
+        }
       }
 
       if (updated) {
@@ -124,7 +135,7 @@ This will mostly merge with existing data.
 
     documents = await Promise.all(promises);
 
-    return {};
+    return { error: Boolean(error) };
   }
 
   async function remove({ key, value }): Promise<Result> {
@@ -133,7 +144,29 @@ This will mostly merge with existing data.
       return {};
     }
 
-    return {};
+    const promises = documents.map(async (doc) => {
+      const { data, error: err } = await kv.update(
+        doc,
+        key,
+        undefined,
+        [value],
+        csrf_token,
+      );
+
+      if (err) {
+        error = err;
+      }
+
+      if (data) {
+        doc.data = data;
+      }
+
+      return doc;
+    });
+
+    documents = await Promise.all(promises);
+
+    return { error: Boolean(error) };
   }
 
   function close() {

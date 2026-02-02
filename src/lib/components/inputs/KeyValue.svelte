@@ -3,11 +3,14 @@ Input for a single key/value pair or tag (where `key` is `_tag`).
 This uses `svelecte` to let users more easily choose existing keys.
 -->
 <script module lang="ts">
+  import type { APIError, ValidationError } from "$lib/api/types";
+
   export interface Result {
     keys?: string[];
     key?: string | null;
     value?: string;
     clear?: boolean;
+    error?: boolean;
   }
 </script>
 
@@ -25,6 +28,7 @@ This uses `svelecte` to let users more easily choose existing keys.
     value?: string;
     add?: boolean;
     disabled?: boolean;
+    error?: boolean;
     onadd?: ({ key, value }) => Promise<Result>;
     ondelete?: ({ key, value }) => Promise<Result>;
     onedit?: ({ key, value, previous }) => Promise<Result>;
@@ -38,6 +42,7 @@ This uses `svelecte` to let users more easily choose existing keys.
     value = "",
     add = false,
     disabled = false,
+    error = false,
     onadd,
     ondelete,
     onedit,
@@ -98,6 +103,8 @@ This uses `svelecte` to let users more easily choose existing keys.
       value = result.value;
     }
 
+    error = Boolean(result.error);
+
     if (result.clear) clear();
 
     disabled = false;
@@ -125,6 +132,8 @@ This uses `svelecte` to let users more easily choose existing keys.
       previous.value = value;
     }
 
+    error = Boolean(result.error);
+
     if (result.clear) clear();
 
     disabled = false;
@@ -134,13 +143,17 @@ This uses `svelecte` to let users more easily choose existing keys.
   async function handleDelete() {
     disabled = true;
 
-    await ondelete?.({ key, value });
+    if (!ondelete) return;
+
+    const result = await ondelete({ key, value });
+
+    error = Boolean(result.error);
 
     disabled = false;
   }
 </script>
 
-<tr class="kv">
+<tr class="kv" class:error>
   <td class="key">
     <Svelecte
       {options}
@@ -267,5 +280,13 @@ This uses `svelecte` to let users more easily choose existing keys.
 
   input.value:disabled {
     color: var(--gray-3);
+  }
+
+  .error input {
+    color: var(--error);
+  }
+
+  .error td.key {
+    --sv-color: var(--error);
   }
 </style>
