@@ -3,8 +3,6 @@ Input for a single key/value pair or tag (where `key` is `_tag`).
 This uses `svelecte` to let users more easily choose existing keys.
 -->
 <script module lang="ts">
-  import type { APIError, ValidationError } from "$lib/api/types";
-
   export interface Result {
     keys?: string[];
     key?: string | null;
@@ -21,6 +19,7 @@ This uses `svelecte` to let users more easily choose existing keys.
   import Svelecte from "svelecte";
 
   import Button from "../common/Button.svelte";
+  import Tooltip from "../common/Tooltip.svelte";
 
   interface Props {
     keys?: string[];
@@ -184,43 +183,46 @@ This uses `svelecte` to let users more easily choose existing keys.
   </td>
   <td class="action">
     {#if add}
-      <Button
-        ghost
-        mode="primary"
-        title={$_("data.update")}
-        minW={false}
-        value="add"
-        disabled={!key || !value || !onadd || disabled}
-        on:click={handleAdd}
-      >
-        <PlusCircle16 />
-      </Button>
+      <Tooltip caption={$_("data.update")}>
+        <Button
+          ghost
+          mode="primary"
+          minW={false}
+          value="add"
+          disabled={!key || !value || !onadd || disabled}
+          on:click={handleAdd}
+        >
+          <PlusCircle16 />
+        </Button>
+      </Tooltip>
     {:else}
-      <Button
-        ghost
-        minW={false}
-        mode="primary"
-        disabled={!edited || !onedit || !value.trim() || disabled}
-        title={$_("dialog.update")}
-        value="edit"
-        on:click={handleEdit}
-      >
-        <CheckCircle16 />
-      </Button>
+      <Tooltip caption={$_("dialog.update")}>
+        <Button
+          ghost
+          minW={false}
+          mode="primary"
+          disabled={!edited || !onedit || !value.trim() || disabled}
+          value="edit"
+          on:click={handleEdit}
+        >
+          <CheckCircle16 />
+        </Button>
+      </Tooltip>
 
-      <Button
-        ghost
-        mode="danger"
-        title={$_("data.delete")}
-        minW={false}
-        value="delete"
-        disabled={!ondelete || disabled}
-        on:click={handleDelete}
-        --fill="var(--caution)"
-        --background="var(--orange-2)"
-      >
-        <Trash16 />
-      </Button>
+      <Tooltip caption={$_("data.delete")}>
+        <Button
+          ghost
+          mode="danger"
+          minW={false}
+          value="delete"
+          disabled={!ondelete || disabled}
+          on:click={handleDelete}
+          --fill="var(--caution)"
+          --background="var(--orange-2)"
+        >
+          <Trash16 />
+        </Button>
+      </Tooltip>
     {/if}
   </td>
 </tr>
@@ -249,6 +251,10 @@ This uses `svelecte` to let users more easily choose existing keys.
   td {
     padding: 0 0.25rem 0.5rem 0;
     --font-size: var(--font-sm);
+  }
+
+  td.action {
+    --display: "inline-block";
   }
 
   input.value {

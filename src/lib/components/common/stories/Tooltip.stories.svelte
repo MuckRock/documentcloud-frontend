@@ -1,36 +1,38 @@
 <script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+  import type { ComponentProps } from "svelte";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import Button from "../Button.svelte";
   import Tooltip from "../Tooltip.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Common / Tooltip",
     component: Tooltip,
     tags: ["autodocs"],
     parameters: { layout: "centered" },
-  };
+  });
 
-  let args = {
-    mode: "normal",
-  };
+  type Args = ComponentProps<typeof Tooltip>;
 </script>
 
-<Story name="Basic" let:args>
-  <Tooltip caption="I'm a tooltip">
+{#snippet template(args: Args)}
+  <Tooltip {...args}>
     <Button>Hover me</Button>
   </Tooltip>
-</Story>
+{/snippet}
 
-<Story name="Long Message" let:args>
-  <Tooltip
-    caption="I'm a tooltip with a really long message that may overflow the anchor position"
-  >
-    <Button>Hover me</Button>
-  </Tooltip>
-</Story>
+<Story name="Basic" args={{ caption: "I'm a tooltip" }} {template} />
 
-<Story name="With Arrow" let:args>
-  <Tooltip caption="I'm a tooltip with an arrow" arrow>
-    <Button>Hover me</Button>
-  </Tooltip>
-</Story>
+<Story
+  name="Long Message"
+  args={{
+    caption:
+      "I'm a tooltip with a really long message that may overflow the anchor position",
+  }}
+  {template}
+/>
+
+<Story
+  name="With Arrow"
+  args={{ caption: "I'm a tooltip with an arrow", arrow: true }}
+  {template}
+/>

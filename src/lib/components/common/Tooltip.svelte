@@ -1,5 +1,7 @@
 <script lang="ts">
-  import type { ComponentType } from "svelte";
+  import type { Component } from "svelte";
+  import type { Maybe } from "$lib/api/types";
+
   import { writable } from "svelte/store";
   import {
     computePosition,
@@ -11,17 +13,29 @@
     type MiddlewareData,
   } from "@floating-ui/dom";
 
-  export let caption: string | ComponentType | undefined;
-  export let placement: Placement = "bottom";
-  export let offset: number = 6;
-  export let arrow = false;
+  interface Props {
+    caption: string | Component | undefined;
+    placement?: Placement;
+    offset?: number;
+    arrow?: boolean;
+    children?: import("svelte").Snippet;
+  }
 
-  let anchor: HTMLDivElement;
-  let arrowRef: HTMLDivElement;
-  let tooltip: HTMLDivElement;
+  let {
+    caption,
+    placement = "bottom",
+    offset = 6,
+    arrow = false,
+    children,
+  }: Props = $props();
+
+  let anchor: Maybe<HTMLDivElement> = $state();
+  let arrowRef: Maybe<HTMLDivElement> = $state();
+  let tooltip: Maybe<HTMLDivElement> = $state();
   let tooltipCoords = writable({ x: 0, y: 0 });
 
   function positionArrow(placement: Placement, middlewareData: MiddlewareData) {
+    if (!arrowRef) return;
     // Accessing the data
     const { x: arrowX, y: arrowY } = middlewareData.arrow ?? {};
 
@@ -46,6 +60,7 @@
   function update() {
     const middleware = [offsetFn(offset), shift({ padding: 6 }), flip()];
     if (arrowRef) middleware.push(arrowFn({ element: arrowRef }));
+    if (!anchor || !tooltip) return;
     computePosition(anchor, tooltip, {
       placement,
       middleware,
@@ -58,12 +73,16 @@
   }
 
   function showTooltip() {
-    tooltip.style.display = "block";
+    if (tooltip) {
+      tooltip.style.display = "block";
+    }
     update();
   }
 
   function hideTooltip() {
-    tooltip.style.display = "";
+    if (tooltip) {
+      tooltip.style.display = "";
+    }
   }
 </script>
 
@@ -73,26 +92,26 @@
   class="tooltip"
   style="left: {$tooltipCoords.x}px; top: {$tooltipCoords.y}px;"
 >
-  <slot name="caption">{caption}</slot>
+  {caption}
   {#if arrow}<div class="arrow" bind:this={arrowRef}></div>{/if}
 </div>
-<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 <div
   role="presentation"
   class="anchor"
   bind:this={anchor}
   tabindex="0"
-  on:mouseenter={showTooltip}
-  on:mouseleave={hideTooltip}
-  on:focus={showTooltip}
-  on:blur={hideTooltip}
+  onmouseenter={showTooltip}
+  onmouseleave={hideTooltip}
+  onfocus={showTooltip}
+  onblur={hideTooltip}
 >
-  <slot />
+  {@render children?.()}
 </div>
 
 <style>
   .anchor {
-    display: flex;
+    display: var(--display, flex);
   }
   .arrow {
     position: absolute;
