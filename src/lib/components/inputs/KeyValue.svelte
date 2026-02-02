@@ -132,7 +132,7 @@ This uses `svelecte` to let users more easily choose existing keys.
       previous.value = value;
     }
 
-    error = Boolean(result.error);
+    error = Boolean(result?.error);
 
     if (result.clear) clear();
 

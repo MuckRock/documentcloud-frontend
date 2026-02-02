@@ -10,6 +10,7 @@
   import { invalidate } from "$app/navigation";
 
   import { onMount } from "svelte";
+  import { fade } from "svelte/transition";
   import { _ } from "svelte-i18n";
   import { Alert24 } from "svelte-octicons";
 
@@ -23,7 +24,6 @@
   import { canonicalUrl } from "$lib/api/documents";
   import * as kv from "$lib/api/kv";
   import { getCsrfToken } from "$lib/utils/api";
-  import { fade } from "svelte/transition";
 
   interface Props {
     document: Document;

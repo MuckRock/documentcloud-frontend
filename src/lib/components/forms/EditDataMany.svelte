@@ -12,6 +12,7 @@ This will mostly merge with existing data.
   } from "$lib/api/types";
 
   import { onMount } from "svelte";
+  import { fade } from "svelte/transition";
   import { _ } from "svelte-i18n";
   import { Alert24 } from "svelte-octicons";
 
@@ -38,6 +39,7 @@ This will mostly merge with existing data.
   const action = "/documents/?/data";
 
   let csrf_token: string = $state("");
+  let edited: Record<string, boolean> = $state({});
 
   // common, unique keys across documents
   let keys = $derived([...kv.keys(documents)]);
@@ -49,6 +51,10 @@ This will mostly merge with existing data.
 
   let disabled = $derived(
     documents.length === 0 || documents.length > MAX_EDIT_BATCH,
+  );
+
+  let total_edited: number = $derived(
+    Object.values(edited).filter(Boolean).length,
   );
 
   onMount(() => {
@@ -90,6 +96,14 @@ This will mostly merge with existing data.
     if (!key || !value) {
       console.warn(`Missing values: ${{ key, value }}`);
       return {};
+    }
+
+    // handle unchanged, normalizing whitespace
+    if (
+      previous.key.trim() === key.trim() &&
+      previous.value.trim() == value.trim()
+    ) {
+      return { key: key.trim(), value: value.trim() };
     }
 
     const promises = documents.map(async (doc) => {
@@ -216,7 +230,7 @@ This will mostly merge with existing data.
     </thead>
 
     <!-- kv -->
-    {#each pairs as [key, values]}
+    {#each pairs as [key, values], i}
       {#each values as value}
         <KeyValue
           {keys}
@@ -225,11 +239,12 @@ This will mostly merge with existing data.
           {disabled}
           onedit={edit}
           ondelete={remove}
+          bind:edited={edited[`${key}-${i}`]}
         />
       {/each}
     {/each}
 
-    {#each tags as tag}
+    {#each tags as tag, i}
       <KeyValue
         {keys}
         key="_tag"
@@ -237,6 +252,7 @@ This will mostly merge with existing data.
         {disabled}
         onedit={edit}
         ondelete={remove}
+        bind:edited={edited[`_tag-${i}`]}
       />
     {/each}
     <tfoot>
@@ -245,7 +261,7 @@ This will mostly merge with existing data.
           {$_("data.addNew")}
         </th>
       </tr>
-      <KeyValue {keys} add onadd={add} {disabled} />
+      <KeyValue {keys} add onadd={add} {disabled} bind:edited={edited["add"]} />
     </tfoot>
   </table>
 
@@ -255,8 +271,13 @@ This will mostly merge with existing data.
     value={documents.map((d) => d.id).join(",")}
   />
 
-  <Flex class="buttons">
+  <Flex class="buttons" align="center" gap={1}>
     <Button on:click={close}>{$_("dialog.done")}</Button>
+    {#if total_edited > 0}
+      <p class="unsaved" transition:fade>
+        {$_("data.total_edited", { values: { n: total_edited } })}
+      </p>
+    {/if}
   </Flex>
 </form>
 
@@ -279,5 +300,9 @@ This will mostly merge with existing data.
 
   th {
     padding: 0.5rem 0.5rem 0.5rem 0;
+  }
+
+  .unsaved {
+    color: var(--gray-5);
   }
 </style>
