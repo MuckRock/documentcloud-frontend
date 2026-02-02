@@ -77,7 +77,7 @@ describe("KeyValue", () => {
 
   it("dispatches delete event with correct key and value when delete button is clicked", async () => {
     const user = userEvent.setup();
-    const handleDelete = vi.fn();
+    const handleDelete = vi.fn(async () => ({}));
     render(KeyValue, {
       props: {
         keys: ["testKey"],
