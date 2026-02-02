@@ -15,7 +15,7 @@ This uses `svelecte` to let users more easily choose existing keys.
 <script lang="ts">
   import { untrack } from "svelte";
   import { _ } from "svelte-i18n";
-  import { CheckCircle16, PlusCircle16, Trash16 } from "svelte-octicons";
+  import { CheckCircle24, PlusCircle24, Trash24 } from "svelte-octicons";
   import Svelecte from "svelecte";
 
   import Button from "../common/Button.svelte";
@@ -28,6 +28,7 @@ This uses `svelecte` to let users more easily choose existing keys.
     add?: boolean;
     disabled?: boolean;
     error?: boolean;
+    edited?: boolean;
     onadd?: ({ key, value }) => Promise<Result>;
     ondelete?: ({ key, value }) => Promise<Result>;
     onedit?: ({ key, value, previous }) => Promise<Result>;
@@ -42,12 +43,12 @@ This uses `svelecte` to let users more easily choose existing keys.
     add = false,
     disabled = false,
     error = false,
+    edited = $bindable(),
     onadd,
     ondelete,
     onedit,
   }: Props = $props();
 
-  let edited: boolean = $state(false);
   let previous: { key?: string | null; value?: string } = $state({
     key: untrack(() => key),
     value: untrack(() => value),
@@ -107,7 +108,7 @@ This uses `svelecte` to let users more easily choose existing keys.
     if (result.clear) clear();
 
     disabled = false;
-    edited = false;
+    edited = Boolean(error);
   }
 
   async function handleEdit() {
@@ -136,7 +137,7 @@ This uses `svelecte` to let users more easily choose existing keys.
     if (result.clear) clear();
 
     disabled = false;
-    edited = false;
+    edited = Boolean(error);
   }
 
   async function handleDelete() {
@@ -193,7 +194,7 @@ This uses `svelecte` to let users more easily choose existing keys.
           on:click={handleAdd}
           aria-label={$_("data.update")}
         >
-          <PlusCircle16 />
+          <PlusCircle24 />
         </Button>
       </Tooltip>
     {:else}
@@ -207,7 +208,7 @@ This uses `svelecte` to let users more easily choose existing keys.
           on:click={handleEdit}
           aria-label={$_("dialog.update")}
         >
-          <CheckCircle16 />
+          <CheckCircle24 />
         </Button>
       </Tooltip>
 
@@ -223,7 +224,7 @@ This uses `svelecte` to let users more easily choose existing keys.
           --fill="var(--caution)"
           --background="var(--orange-2)"
         >
-          <Trash16 />
+          <Trash24 />
         </Button>
       </Tooltip>
     {/if}

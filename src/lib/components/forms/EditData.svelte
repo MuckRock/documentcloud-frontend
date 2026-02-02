@@ -23,6 +23,7 @@
   import { canonicalUrl } from "$lib/api/documents";
   import * as kv from "$lib/api/kv";
   import { getCsrfToken } from "$lib/utils/api";
+  import { fade } from "svelte/transition";
 
   interface Props {
     document: Document;
@@ -33,6 +34,7 @@
 
   let csrf_token: string = $state("");
   let error: Maybe<APIError<ValidationError>> = $state();
+  let edited: Record<string, boolean> = $state({});
 
   let keys = $derived(Object.keys(document.data) ?? []);
   let tags = $derived(document.data["_tag"] ?? []);
@@ -40,6 +42,9 @@
     Object.entries(document?.data)?.filter(([k, v]) => k !== "_tag") ?? [],
   );
   let action = $derived(new URL("?/data", canonicalUrl(document)).href);
+  let total_edited: number = $derived(
+    Object.values(edited).filter(Boolean).length,
+  );
 
   onMount(() => {
     csrf_token = getCsrfToken() ?? "";
@@ -76,6 +81,14 @@
     if (!key || !value) {
       console.warn(`Missing values: ${{ key, value }}`);
       return {};
+    }
+
+    // handle unchanged, normalizing whitespace
+    if (
+      previous.key.trim() === key.trim() &&
+      previous.value.trim() == value.trim()
+    ) {
+      return { key: key.trim(), value: value.trim() };
     }
 
     let updated: Maybe<Data>;
@@ -172,14 +185,28 @@
     </thead>
 
     <!-- kv -->
-    {#each data as [key, values]}
+    {#each data as [key, values], i}
       {#each values as value}
-        <KeyValue {keys} {key} {value} ondelete={remove} {onedit} />
+        <KeyValue
+          {keys}
+          {key}
+          {value}
+          ondelete={remove}
+          {onedit}
+          bind:edited={edited[`${key}-${i}`]}
+        />
       {/each}
     {/each}
 
-    {#each tags as tag}
-      <KeyValue {keys} key="_tag" value={tag} ondelete={remove} {onedit} />
+    {#each tags as tag, i}
+      <KeyValue
+        {keys}
+        key="_tag"
+        value={tag}
+        ondelete={remove}
+        {onedit}
+        bind:edited={edited[`_tag-${i}`]}
+      />
     {/each}
     <tfoot>
       <tr>
@@ -187,11 +214,16 @@
           {$_("data.addNew")}
         </th>
       </tr>
-      <KeyValue {keys} add onadd={add} />
+      <KeyValue {keys} add onadd={add} bind:edited={edited["add"]} />
     </tfoot>
   </table>
-  <Flex class="buttons">
+  <Flex class="buttons" align="center" gap={1}>
     <Button on:click={close}>{$_("dialog.done")}</Button>
+    {#if total_edited > 0}
+      <p class="unsaved" transition:fade>
+        {$_("data.total_edited", { values: { n: total_edited } })}
+      </p>
+    {/if}
   </Flex>
 </form>
 
@@ -215,5 +247,9 @@
 
   th {
     padding: 0.5rem 0.5rem 0.5rem 0;
+  }
+
+  .unsaved {
+    color: var(--gray-5);
   }
 </style>
