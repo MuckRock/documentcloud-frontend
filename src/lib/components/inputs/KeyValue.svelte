@@ -79,9 +79,16 @@ This uses `svelecte` to let users more easily choose existing keys.
   }
 
   function setKey({ value }) {
-    previous.key = key;
-    key = value;
-    edited = true;
+    if (value !== previous.key) {
+      previous.key = key;
+      key = value;
+      edited = true;
+    }
+  }
+
+  function oninput(e: InputEvent) {
+    const target = e.target as HTMLInputElement;
+    edited = target.value !== previous.value;
   }
 
   async function handleAdd() {
@@ -178,7 +185,7 @@ This uses `svelecte` to let users more easily choose existing keys.
         name="value"
         placeholder={$_("data.value")}
         bind:value
-        oninput={() => (edited = true)}
+        {oninput}
         {disabled}
       />
     </label>
