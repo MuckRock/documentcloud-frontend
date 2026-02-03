@@ -1,8 +1,9 @@
 <script lang="ts">
+  import type { DocumentResults, Maybe } from "$lib/api/types";
+
   import { _ } from "svelte-i18n";
   import { Hourglass24, SidebarExpand16 } from "svelte-octicons";
 
-  import type { DocumentResults, Maybe } from "$lib/api/types";
   import Flex from "../common/Flex.svelte";
   import Empty from "../common/Empty.svelte";
   import Button from "../common/Button.svelte";
@@ -50,7 +51,9 @@
         </div>
       {/if}
       <PageToolbar>
-        <Search name="q" {query} slot="center" />
+        {#snippet center()}
+          <Search name="q" {query} />
+        {/snippet}
       </PageToolbar>
     </Flex>
     <svelte:fragment>
@@ -67,29 +70,31 @@
     </svelte:fragment>
 
     <PageToolbar slot="footer">
-      <label slot="left" class="select-all">
-        <input
-          type="checkbox"
-          name="select_all"
-          checked={$selected.length === $visible.size}
-          indeterminate={$selected.length > 0 &&
-            $selected.length < $visible.size}
-          on:change={selectAll}
-        />
-        {#if $selected.length > 0}
-          {$selected.length.toLocaleString()} {$_("inputs.selected")}
-        {:else}
-          {$_("inputs.selectAll")}
-        {/if}
-      </label>
+      {#snippet left()}
+        <label class="select-all">
+          <input
+            type="checkbox"
+            name="select_all"
+            checked={$selected.length === $visible.size}
+            indeterminate={$selected.length > 0 &&
+              $selected.length < $visible.size}
+            on:change={selectAll}
+          />
+          {#if $selected.length > 0}
+            {$selected.length.toLocaleString()} {$_("inputs.selected")}
+          {:else}
+            {$_("inputs.selectAll")}
+          {/if}
+        </label>
+      {/snippet}
 
-      <svelte:fragment slot="right">
+      {#snippet right()}
         {#if $visible && $total}
           {$_("inputs.resultsCount", {
             values: { n: $visible.size, total: $total },
           })}
         {/if}
-      </svelte:fragment>
+      {/snippet}
     </PageToolbar>
   </ContentLayout>
 </div>
