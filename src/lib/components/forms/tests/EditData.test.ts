@@ -3,7 +3,7 @@ import type { Document } from "$lib/api/types";
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/svelte";
 
-import EditData from "../EditData.svelte";
+import EditData from "../EditDataMany.svelte";
 import documentFixture from "@/test/fixtures/documents/document.json";
 
 // Mock the toast function
@@ -27,7 +27,7 @@ describe("EditData", () => {
   });
 
   it("renders existing key-value pairs from document data", () => {
-    render(EditData, { document: mockDocument });
+    render(EditData, { documents: [mockDocument] });
 
     // Check that the table headers are rendered
     expect(screen.getByText("Key")).toBeInTheDocument();
@@ -42,7 +42,7 @@ describe("EditData", () => {
   });
 
   it("renders tags separately from other data", () => {
-    render(EditData, { document: mockDocument });
+    render(EditData, { documents: [mockDocument] });
 
     // Tags should be rendered
     const valueInputs = screen.getAllByPlaceholderText("Value");
@@ -59,7 +59,7 @@ describe("EditData", () => {
   });
 
   it("renders an add new row with add button", () => {
-    render(EditData, { document: mockDocument });
+    render(EditData, { documents: [mockDocument] });
 
     // Check for "Add new" header (using a matcher that handles split text)
     expect(screen.getByText(/Add new/i)).toBeInTheDocument();
@@ -70,7 +70,7 @@ describe("EditData", () => {
   });
 
   it("adds a new key-value pair to an existing key", () => {
-    render(EditData, { document: mockDocument });
+    render(EditData, { documents: [mockDocument] });
 
     // Get the initial data count
     const initialAuthorCount = mockDocument.data.author?.length || 0;
@@ -91,7 +91,7 @@ describe("EditData", () => {
   });
 
   it("creates a new key when adding a value with a new key", () => {
-    render(EditData, { document: mockDocument });
+    render(EditData, { documents: [mockDocument] });
 
     // Initially, "category" key doesn't exist
     expect(mockDocument.data).not.toHaveProperty("category");
@@ -107,7 +107,7 @@ describe("EditData", () => {
   });
 
   it("removes a value from a key when delete is triggered", () => {
-    render(EditData, { document: mockDocument });
+    render(EditData, { documents: [mockDocument] });
 
     const initialYearCount = mockDocument.data.year?.length || 0;
 
@@ -124,7 +124,7 @@ describe("EditData", () => {
   });
 
   it("renders delete buttons for existing key-value pairs", () => {
-    render(EditData, { document: mockDocument });
+    render(EditData, { documents: [mockDocument] });
 
     // Should have Delete buttons for existing items (not the add row)
     const deleteButtons = screen.getAllByRole("button", { name: "Delete" });
@@ -133,7 +133,7 @@ describe("EditData", () => {
 
   it("dispatches close event when Done button is clicked", async () => {
     const handleClose = vi.fn();
-    render(EditData, { document: mockDocument, onclose: handleClose });
+    render(EditData, { documents: [mockDocument], onclose: handleClose });
 
     const cancelButton = screen.getByText("Done");
     await fireEvent.click(cancelButton);
@@ -147,12 +147,13 @@ describe("EditData", () => {
       data: {},
     } as Document;
 
-    render(EditData, { document: emptyDocument });
+    render(EditData, { documents: [emptyDocument] });
 
-    // Should still render the table structure
-    expect(screen.getByText("Key")).toBeInTheDocument();
-    expect(screen.getAllByText("Value").length).toBeGreaterThan(0);
-    expect(screen.getByText(/Add new/i)).toBeInTheDocument();
+    // Should render an Empty component
+    expect(
+      screen.getByText("No tags or data have been set. Add new items below."),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Add New Item:")).toBeInTheDocument();
   });
 
   it("handles documents with only tags", () => {
@@ -163,7 +164,7 @@ describe("EditData", () => {
       },
     } as Document;
 
-    render(EditData, { document: tagOnlyDocument });
+    render(EditData, { documents: [tagOnlyDocument] });
 
     // Should render the tag
     const valueInputs = screen.getAllByPlaceholderText("Value");
@@ -173,7 +174,7 @@ describe("EditData", () => {
   });
 
   it("does not add when key or value is empty", () => {
-    render(EditData, { document: mockDocument });
+    render(EditData, { documents: [mockDocument] });
 
     const initialDataKeys = Object.keys(mockDocument.data).length;
 
@@ -199,7 +200,7 @@ describe("EditData", () => {
   });
 
   it("does not remove when key does not exist", () => {
-    render(EditData, { document: mockDocument });
+    render(EditData, { documents: [mockDocument] });
 
     const initialDataStr = JSON.stringify(mockDocument.data);
 
@@ -217,7 +218,7 @@ describe("EditData", () => {
   });
 
   it("provides the correct keys to KeyValue components", () => {
-    render(EditData, { document: mockDocument });
+    render(EditData, { documents: [mockDocument] });
 
     // The keys should be derived from document.data
     // We can't easily test this directly, but we can verify that the component renders
