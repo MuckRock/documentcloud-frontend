@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import type { AriaRole } from "svelte/elements";
 
   /* Based on https://github.com/himynameisdave/svelte-flex */
@@ -7,13 +8,29 @@
   type Justify = "around" | "between" | "center" | "end" | "evenly" | "start";
   type Direction = "column" | "row";
 
-  export let direction: Direction = "row";
-  export let align: Align = "stretch";
-  export let justify: Justify = "start";
-  export let reverse = false;
-  export let gap: number = 0.5;
-  export let wrap: boolean = false;
-  export let role: null | AriaRole = null;
+  interface Props {
+    direction?: Direction;
+    align?: Align;
+    justify?: Justify;
+    reverse?: boolean;
+    gap?: number;
+    wrap?: boolean;
+    role?: null | AriaRole;
+    children: Snippet;
+    [key: string]: any;
+  }
+
+  let {
+    direction = "row",
+    align = "stretch",
+    justify = "start",
+    reverse = false,
+    gap = 0.5,
+    wrap = false,
+    role = null,
+    children,
+    ...rest
+  }: Props = $props();
 
   const alignMap: Record<Align, string> = {
     start: "flex-start",
@@ -32,19 +49,21 @@
     evenly: "space-evenly",
   };
 
-  $: directionWithReverse = reverse ? `${direction}-reverse` : direction;
+  let directionWithReverse = $derived(
+    reverse ? `${direction}-reverse` : direction,
+  );
 </script>
 
 <div
-  {...$$restProps}
+  {...rest}
   style:display="flex"
   style:flex-direction={directionWithReverse}
   style:flex-wrap={wrap ? "wrap" : "nowrap"}
   style:align-items={alignMap[align]}
   style:justify-content={justifyMap[justify]}
   style:gap={`${gap}rem`}
-  class={$$restProps.class}
+  class={rest.class}
   {role}
 >
-  <slot />
+  {@render children()}
 </div>
