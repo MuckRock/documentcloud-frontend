@@ -4,11 +4,12 @@
   It's slotted for composition based on the page it's on.
 -->
 <script lang="ts">
+  import type { Snippet } from "svelte";
   interface Props {
     width?: undefined | number;
-    left?: import("svelte").Snippet;
-    center?: import("svelte").Snippet;
-    right?: import("svelte").Snippet;
+    left?: Snippet;
+    center?: Snippet;
+    right?: Snippet;
   }
 
   let { width = $bindable(undefined), left, center, right }: Props = $props();
