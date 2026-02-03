@@ -1,24 +1,24 @@
-<script lang="ts" context="module">
-  import type { Meta } from "@storybook/svelte";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import LoadingToolbar from "../LoadingToolbar.svelte";
-  import { Story, Template } from "@storybook/addon-svelte-csf";
 
-  export const meta: Meta = {
+  const { Story } = defineMeta({
     title: "Toolbars / Loading",
     component: LoadingToolbar,
     parameters: {
       layout: "fullscreen",
     },
-  };
+  });
 
   let args = {
     progress: 0.5,
   };
 </script>
 
-<Template let:args>
+<Story name="With Progress" args={args}>
   <LoadingToolbar {...args} />
-</Template>
+</Story>
 
-<Story name="With Progress" {args} />
-<Story name="Indeterminate" args={{ ...args, progress: undefined }} />
+<Story name="Indeterminate" args={{ ...args, progress: undefined }}>
+  <LoadingToolbar progress={undefined} />
+</Story>
