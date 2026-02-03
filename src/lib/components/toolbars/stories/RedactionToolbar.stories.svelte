@@ -1,59 +1,56 @@
-<script lang="ts" context="module">
-  import type { Meta } from "@storybook/svelte";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import RedactionToolbar from "../RedactionToolbar.svelte";
-  import { Template, Story } from "@storybook/addon-svelte-csf";
 
-  import { document } from "@/test/fixtures/documents";
-
-  export const meta: Meta = {
+  const { Story } = defineMeta({
     title: "Toolbars / Redaction",
     component: RedactionToolbar,
     parameters: {
       layout: "fullscreen",
     },
-  };
-
-  let args = {
-    document,
-  };
+  });
 </script>
 
-<Template let:args>
-  <RedactionToolbar {...args} />
-</Template>
+<Story name="Default">
+  <RedactionToolbar />
+</Story>
 
-<Story name="Default" {args} />
-
-<Story name="Desktop" {args} />
+<Story name="Desktop">
+  <RedactionToolbar />
+</Story>
 
 <Story
-  {args}
   name="Tablet (H)"
   parameters={{
     viewport: { defaultOrientation: "landscape", defaultViewport: "tablet" },
   }}
-/>
+>
+  <RedactionToolbar />
+</Story>
 
 <Story
   name="Tablet (V)"
   parameters={{
     viewport: { defaultOrientation: "tablet", defaultViewport: "tablet" },
   }}
-  {args}
-/>
+>
+  <RedactionToolbar />
+</Story>
 
 <Story
   name="Mobile (L)"
   parameters={{
     viewport: { defaultOrientation: "portrait", defaultViewport: "mobile2" },
   }}
-  {args}
-/>
+>
+  <RedactionToolbar />
+</Story>
 
 <Story
   name="Mobile (S)"
   parameters={{
     viewport: { defaultOrientation: "portrait", defaultViewport: "mobile1" },
   }}
-  {args}
-/>
+>
+  <RedactionToolbar />
+</Story>

@@ -38,9 +38,9 @@ Assumes it's a child of a ViewerContext
     isEmbedded,
   } from "$lib/components/viewer/ViewerContext.svelte";
 
-  export let query = getQuery($page.url, "q");
+  let { query = getQuery($page.url, "q") } = $props();
 
-  let width: number;
+  let width: number = $state(800);
 
   const documentStore = getDocument();
   const mode = getCurrentMode();
@@ -76,21 +76,23 @@ Assumes it's a child of a ViewerContext
     search: Search16,
   };
 
-  $: document = $documentStore;
-  $: canWrite = !embed && document.edit_access;
-  $: BREAKPOINTS = {
+  let document = $derived($documentStore);
+  let canWrite = $derived(!embed && document.edit_access);
+  let BREAKPOINTS = $derived({
     READ_MENU: width > remToPx(52),
     WRITE_MENU: width < remToPx(37),
     SEARCH_MENU: width < remToPx(24),
-  };
+  });
 
-  $: current = Array.from(readModeDropdownItems ?? []).find(
-    ([value]) => value === $mode,
-  )?.[1];
+  let current = $derived(
+    Array.from(readModeDropdownItems ?? []).find(
+      ([value]) => value === $mode,
+    )?.[1],
+  );
 </script>
 
 <PageToolbar bind:width>
-  <svelte:fragment slot="left">
+  {#snippet left()}
     {#if BREAKPOINTS.READ_MENU}
       <div class="tabs" role="tablist">
         {#each readModeTabs.entries() as [value, name]}
@@ -98,7 +100,8 @@ Assumes it's a child of a ViewerContext
             active={$mode === value}
             href={getViewerHref({ document, mode: value, embed, query })}
           >
-            <svelte:component this={icons[value]} />
+            {@const SvelteComponent = icons[value]}
+            <SvelteComponent />
             {name}
           </Tab>
         {/each}
@@ -106,7 +109,8 @@ Assumes it's a child of a ViewerContext
     {:else}
       <Dropdown position="bottom-start">
         <NavItem slot="anchor">
-          <svelte:component this={icons[$mode]} slot="start" />
+          {@const SvelteComponent_1 = icons[$mode]}
+          <SvelteComponent_1 slot="start" />
           {current}
           <ChevronDown12 slot="end" />
         </NavItem>
@@ -118,7 +122,8 @@ Assumes it's a child of a ViewerContext
               preserveQS
               on:click={close}
             >
-              <svelte:component this={icons[value]} slot="icon" />
+              {@const SvelteComponent_2 = icons[value]}
+              <SvelteComponent_2 slot="icon" />
               {name}
             </MenuItem>
           {/each}
@@ -129,7 +134,8 @@ Assumes it's a child of a ViewerContext
                 href={getViewerHref({ document, mode: value, embed })}
                 on:click={close}
               >
-                <svelte:component this={icons[value]} slot="icon" />
+                {@const SvelteComponent_3 = icons[value]}
+                <SvelteComponent_3 slot="icon" />
                 {name}
               </MenuItem>
             {/each}
@@ -137,33 +143,36 @@ Assumes it's a child of a ViewerContext
         </Menu>
       </Dropdown>
     {/if}
-  </svelte:fragment>
-  <Flex justify="end" slot="right">
-    {#if !BREAKPOINTS.WRITE_MENU && canWrite}
-      {#each writeModes as [value, name]}
-        <Button
-          ghost
-          href={getViewerHref({ document, mode: value, embed, query })}
-        >
-          <span class="icon"><svelte:component this={icons[value]} /></span>
-          {name}
-        </Button>
-      {/each}
-    {/if}
-    {#if BREAKPOINTS.SEARCH_MENU}
-      <Dropdown position="bottom-end">
-        <Button minW={false} ghost slot="anchor">
-          <Search16 />
-          {$_("common.search")}
-        </Button>
-        <Menu slot="inner">
-          <Search name="q" {query} otherParams={{ mode: "search" }} />
-        </Menu>
-      </Dropdown>
-    {:else}
-      <Search name="q" {query} otherParams={{ mode: "search" }} />
-    {/if}
-  </Flex>
+  {/snippet}
+  {#snippet right()}
+    <Flex justify="end">
+      {#if !BREAKPOINTS.WRITE_MENU && canWrite}
+        {#each writeModes as [value, name]}
+          <Button
+            ghost
+            href={getViewerHref({ document, mode: value, embed, query })}
+          >
+            {@const SvelteComponent_4 = icons[value]}
+            <span class="icon"><SvelteComponent_4 /></span>
+            {name}
+          </Button>
+        {/each}
+      {/if}
+      {#if BREAKPOINTS.SEARCH_MENU}
+        <Dropdown position="bottom-end">
+          <Button minW={false} ghost slot="anchor">
+            <Search16 />
+            {$_("common.search")}
+          </Button>
+          <Menu slot="inner">
+            <Search name="q" {query} otherParams={{ mode: "search" }} />
+          </Menu>
+        </Dropdown>
+      {:else}
+        <Search name="q" {query} otherParams={{ mode: "search" }} />
+      {/if}
+    </Flex>
+  {/snippet}
 </PageToolbar>
 
 <style>

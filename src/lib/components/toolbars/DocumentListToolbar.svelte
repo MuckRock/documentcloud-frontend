@@ -11,35 +11,41 @@
 
   import { remToPx } from "$lib/utils/layout";
 
-  export let query: string = "";
+  interface Props {
+    query?: string;
+  }
 
-  let headerToolbarWidth: number;
+  let { query = "" }: Props = $props();
+
+  let headerToolbarWidth: number = $state(800);
 </script>
 
 <PageToolbar bind:width={headerToolbarWidth}>
-  <div class="items" slot="center">
-    <div style:flex="1 1 auto">
-      <Search name="q" {query} placeholder={$_("common.search")} />
-      <p class="help" class:hide={headerToolbarWidth < remToPx(38)}>
-        {@html $_("search.help")}
-        <a target="_blank" href="/help/search/">
-          {$_("search.more")}
-        </a>
-      </p>
+  {#snippet center()}
+    <div class="items">
+      <div style:flex="1 1 auto">
+        <Search name="q" {query} placeholder={$_("common.search")} />
+        <p class="help" class:hide={headerToolbarWidth < remToPx(38)}>
+          {@html $_("search.help")}
+          <a target="_blank" href="/help/search/">
+            {$_("search.more")}
+          </a>
+        </p>
+      </div>
+      <div class="margin-xs" class:hide={headerToolbarWidth < remToPx(38)}>
+        <Dropdown>
+          <NavItem slot="anchor">
+            <Eye16 slot="start" />
+            {$_("documentBrowser.fieldsAnchor")}
+            <ChevronDown12 slot="end" />
+          </NavItem>
+          <Menu slot="inner">
+            <VisibleFields />
+          </Menu>
+        </Dropdown>
+      </div>
     </div>
-    <div class="margin-xs" class:hide={headerToolbarWidth < remToPx(38)}>
-      <Dropdown>
-        <NavItem slot="anchor">
-          <Eye16 slot="start" />
-          {$_("documentBrowser.fieldsAnchor")}
-          <ChevronDown12 slot="end" />
-        </NavItem>
-        <Menu slot="inner">
-          <VisibleFields />
-        </Menu>
-      </Dropdown>
-    </div>
-  </div>
+  {/snippet}
 </PageToolbar>
 
 <style>

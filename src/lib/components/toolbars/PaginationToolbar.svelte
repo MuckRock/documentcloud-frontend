@@ -35,18 +35,20 @@
   const currentMode = getCurrentMode();
   const currentPage = getCurrentPage();
 
-  let sectionsOpen = false;
-  let width: number;
+  let sectionsOpen = $state(false);
+  let width: number = $state(800);
 
-  $: BREAKPOINTS = {
+  let BREAKPOINTS = $derived({
     TWO_ROWS: width <= remToPx(34),
-  };
+  });
 
-  $: document = $documentStore;
-  $: sections = document.sections ?? [];
-  $: totalPages = document.page_count;
-  $: showPDF = ["document", "annotating", "redacting"].includes($currentMode);
-  $: canEditSections = !embed && document.edit_access;
+  let document = $derived($documentStore);
+  let sections = $derived(document.sections ?? []);
+  let totalPages = $derived(document.page_count);
+  let showPDF = $derived(
+    ["document", "annotating", "redacting"].includes($currentMode),
+  );
+  let canEditSections = $derived(!embed && document.edit_access);
 
   // pagination
   function next() {
@@ -145,7 +147,9 @@
 {#if canEditSections && sectionsOpen}
   <Portal>
     <Modal on:close={() => (sectionsOpen = false)}>
-      <h1 slot="title">{$_("sections.edit")}</h1>
+      {#snippet title()}
+        <h1>{$_("sections.edit")}</h1>
+      {/snippet}
       <EditSections {document} on:close={() => (sectionsOpen = false)} />
     </Modal>
   </Portal>
