@@ -1,8 +1,8 @@
 <script module lang="ts">
+  import type { ComponentProps } from "svelte";
   import type { Document } from "$lib/api/types";
 
   import { defineMeta } from "@storybook/addon-svelte-csf";
-  import EditData from "../EditData.svelte";
   import EditDataMany from "../EditDataMany.svelte";
 
   import doc from "@/test/fixtures/documents/examples/the-santa-anas.json";
@@ -12,24 +12,37 @@
   const { Story } = defineMeta({
     title: "Forms / Edit data",
     parameters: { layout: "centered" },
+    component: EditDataMany,
   });
+
+  type Args = ComponentProps<typeof EditDataMany>;
 </script>
 
-<Story name="one document">
-  <EditData {document} />
-</Story>
-
-<Story name="many documents">
+{#snippet template(args: Args)}
   <div class="wrap">
-    <EditDataMany documents={[document]} />
+    <EditDataMany {...args} />
   </div>
-</Story>
+{/snippet}
 
-<Story name="too many documents">
-  <div class="wrap">
-    <EditDataMany documents={Array(100).fill(document)} />
-  </div>
-</Story>
+<Story name="one document" args={{ documents: [document] }} {template} />
+
+<Story
+  name="many documents"
+  args={{ documents: [document, document] }}
+  {template}
+/>
+
+<Story
+  name="too many documents"
+  args={{ documents: Array(100).fill(document) }}
+  {template}
+/>
+
+<Story
+  name="Empty data"
+  args={{ documents: [{ ...document, data: {} }] }}
+  {template}
+/>
 
 <style>
   .wrap {

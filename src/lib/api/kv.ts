@@ -125,7 +125,7 @@ export function keys(documents: Document[]): Set<string> {
 export function common(documents: Document[]): Data {
   return documents.reduce((m: Data, d: Document, index: number) => {
     // use the first document as our baseline
-    if (index === 0) return d.data;
+    if (index === 0) return { ...d.data };
 
     for (const [k, v] of Object.entries(m)) {
       const shared = new Set(d.data[k]).intersection(new Set(v));

@@ -11,7 +11,7 @@
   import NavItem from "$lib/components/common/NavItem.svelte";
 
   // editing UI
-  import EditData from "$lib/components/forms/EditData.svelte";
+  import EditData from "$lib/components/forms/EditDataMany.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
   import Portal from "$lib/components/layouts/Portal.svelte";
 
@@ -86,7 +86,7 @@
   <Portal>
     <Modal on:close={() => (edit = false)}>
       <h2 slot="title">{$_("data.title")}</h2>
-      <EditData {document} onclose={() => (edit = false)} />
+      <EditData documents={[document]} onclose={() => (edit = false)} />
     </Modal>
   </Portal>
 {/if}

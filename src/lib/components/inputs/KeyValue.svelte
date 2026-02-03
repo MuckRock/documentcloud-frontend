@@ -149,6 +149,7 @@ This uses `svelecte` to let users more easily choose existing keys.
 
     error = Boolean(result.error);
 
+    edited = false;
     disabled = false;
   }
 </script>

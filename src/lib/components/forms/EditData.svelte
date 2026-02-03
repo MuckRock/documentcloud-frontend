@@ -21,7 +21,6 @@
   } from "$lib/components/inputs/KeyValue.svelte";
   import Tip from "$lib/components/common/Tip.svelte";
 
-  import { canonicalUrl } from "$lib/api/documents";
   import * as kv from "$lib/api/kv";
   import { getCsrfToken } from "$lib/utils/api";
 

@@ -523,7 +523,9 @@
     "cancel": "Cancel",
     "addNew": "Add New Item:",
     "many": "Add tags and data to {n, plural, one {the selected document} other {all # selected documents}}. Only common entries are shown here. Removing items will remove them from all selected documents.",
-    "total_edited": "Unsaved changes: {n}"
+    "total_edited": "Unsaved changes: {n}",
+    "empty": "No tags or data have been set. Add new items below.",
+    "confirm": "You have {n} unsaved changes. Close and discard these updates?"
   },
   "bulk": {
     "title": "Actions",

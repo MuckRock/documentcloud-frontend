@@ -11,12 +11,15 @@ This will mostly merge with existing data.
     ValidationError,
   } from "$lib/api/types";
 
+  import { invalidate } from "$app/navigation";
+
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
   import { _ } from "svelte-i18n";
   import { Alert24 } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
+  import Empty from "$lib/components/common/Empty.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
   import KeyValue, {
     type Result,
@@ -36,15 +39,16 @@ This will mostly merge with existing data.
 
   let { documents, error = $bindable(undefined), onclose }: Props = $props();
 
-  const action = "/documents/?/data";
-
   let csrf_token: string = $state("");
   let edited: Record<string, boolean> = $state({});
+
+  let multiple: boolean = $derived(documents.length !== 1);
 
   // common, unique keys across documents
   let keys = $derived([...kv.keys(documents)]);
 
   let shared = $derived(kv.common(documents));
+  let empty = $derived(Object.keys(shared).length === 0);
 
   let pairs = $derived(Object.entries(shared).filter(([k, v]) => k !== "_tag"));
   let tags = $derived(shared["_tag"] ?? []);
@@ -88,6 +92,9 @@ This will mostly merge with existing data.
     });
 
     documents = await Promise.all(promises);
+
+    // invalidate
+    await Promise.all(documents.map((doc) => invalidate(`document:${doc.id}`)));
 
     return { clear: !error, error: Boolean(error) };
   }
@@ -149,7 +156,10 @@ This will mostly merge with existing data.
 
     documents = await Promise.all(promises);
 
-    return { error: Boolean(error) };
+    // invalidate
+    await Promise.all(documents.map((doc) => invalidate(`document:${doc.id}`)));
+
+    return { key, value, error: Boolean(error) };
   }
 
   async function remove({ key, value }): Promise<Result> {
@@ -180,26 +190,37 @@ This will mostly merge with existing data.
 
     documents = await Promise.all(promises);
 
+    // invalidate
+    await Promise.all(documents.map((doc) => invalidate(`document:${doc.id}`)));
+
     return { error: Boolean(error) };
   }
 
   function close() {
-    onclose?.();
+    if (!onclose) return;
+
+    if (total_edited === 0) return onclose();
+
+    if (confirm($_("data.confirm", { values: { n: total_edited } }))) {
+      onclose();
+    }
   }
 </script>
 
 <div class="card container">
-  <ShowSize size={documents.length}>
-    <p>{$_("data.many", { values: { n: documents.length } })}</p>
-    <Tip mode="error" slot="empty">
-      <Alert24 slot="icon" />
-      {$_("edit.nodocs")}
-    </Tip>
-    <Tip mode="danger" slot="oversize">
-      <Alert24 slot="icon" />
-      {$_("edit.toomany", { values: { n: MAX_EDIT_BATCH } })}
-    </Tip>
-  </ShowSize>
+  {#if multiple}
+    <ShowSize size={documents.length}>
+      <p>{$_("data.many", { values: { n: documents.length } })}</p>
+      <Tip mode="error" slot="empty">
+        <Alert24 slot="icon" />
+        {$_("edit.nodocs")}
+      </Tip>
+      <Tip mode="danger" slot="oversize">
+        <Alert24 slot="icon" />
+        {$_("edit.toomany", { values: { n: MAX_EDIT_BATCH } })}
+      </Tip>
+    </ShowSize>
+  {/if}
 
   {#if error}
     <Tip mode="error">
@@ -219,14 +240,24 @@ This will mostly merge with existing data.
 
   <table>
     <thead>
-      <tr>
-        <th>
-          {$_("data.key")}
-        </th>
-        <th>
-          {$_("data.value")}
-        </th>
-      </tr>
+      {#if empty}
+        <tr>
+          <th colspan="2" class="empty">
+            <Empty>
+              <p>{$_("data.empty")}</p>
+            </Empty>
+          </th>
+        </tr>
+      {:else}
+        <tr>
+          <th>
+            {$_("data.key")}
+          </th>
+          <th>
+            {$_("data.value")}
+          </th>
+        </tr>
+      {/if}
     </thead>
 
     <!-- kv -->
@@ -300,6 +331,12 @@ This will mostly merge with existing data.
 
   th {
     padding: 0.5rem 0.5rem 0.5rem 0;
+  }
+
+  th.empty {
+    --font-size: var(--font-md);
+    --padding: 0.5rem 0.5rem 0.5rem 0;
+    font-weight: var(--font-semibold);
   }
 
   .unsaved {
