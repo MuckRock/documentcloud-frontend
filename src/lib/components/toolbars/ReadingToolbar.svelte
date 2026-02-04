@@ -100,8 +100,8 @@ Assumes it's a child of a ViewerContext
             active={$mode === value}
             href={getViewerHref({ document, mode: value, embed, query })}
           >
-            {@const SvelteComponent = icons[value]}
-            <SvelteComponent />
+            {@const TabIcon = icons[value]}
+            <TabIcon />
             {name}
           </Tab>
         {/each}
@@ -109,8 +109,8 @@ Assumes it's a child of a ViewerContext
     {:else}
       <Dropdown position="bottom-start">
         <NavItem slot="anchor">
-          {@const SvelteComponent_1 = icons[$mode]}
-          <SvelteComponent_1 slot="start" />
+          {@const NavIcon = icons[$mode]}
+          {#if NavIcon}<NavIcon slot="start" />{/if}
           {current}
           <ChevronDown12 slot="end" />
         </NavItem>
@@ -122,8 +122,8 @@ Assumes it's a child of a ViewerContext
               preserveQS
               on:click={close}
             >
-              {@const SvelteComponent_2 = icons[value]}
-              <SvelteComponent_2 slot="icon" />
+              {@const MenuIcon = icons[value]}
+              {#if MenuIcon}<MenuIcon slot="icon" />{/if}
               {name}
             </MenuItem>
           {/each}
@@ -134,8 +134,8 @@ Assumes it's a child of a ViewerContext
                 href={getViewerHref({ document, mode: value, embed })}
                 on:click={close}
               >
-                {@const SvelteComponent_3 = icons[value]}
-                <SvelteComponent_3 slot="icon" />
+                {@const WriteMenuIcon = icons[value]}
+                <WriteMenuIcon slot="icon" />
                 {name}
               </MenuItem>
             {/each}
@@ -152,8 +152,8 @@ Assumes it's a child of a ViewerContext
             ghost
             href={getViewerHref({ document, mode: value, embed, query })}
           >
-            {@const SvelteComponent_4 = icons[value]}
-            <span class="icon"><SvelteComponent_4 /></span>
+            {@const ButtonIcon = icons[value]}
+            <span class="icon"><ButtonIcon /></span>
             {name}
           </Button>
         {/each}
