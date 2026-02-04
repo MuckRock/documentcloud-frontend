@@ -1,7 +1,10 @@
+<svelte:options runes />
+
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import PageToolbar from "../PageToolbar.svelte";
-  import Checkbox from "../../inputs/Checkbox.svelte";
+
+  import Checkbox from "$lib/components/inputs/Checkbox.svelte";
   import Paginator from "$lib/components/common/Paginator.svelte";
 
   const { Story } = defineMeta({
@@ -12,7 +15,7 @@
   });
 </script>
 
-<Story name="slots">
+<Story name="slots" asChild>
   <PageToolbar>
     {#snippet left()}
       <p>Left</p>
@@ -26,7 +29,7 @@
   </PageToolbar>
 </Story>
 
-<Story name="paginator">
+<Story name="paginator" asChild>
   <PageToolbar>
     {#snippet left()}
       <Checkbox label="Select all" />
