@@ -11,19 +11,20 @@
   });
 </script>
 
-<Story name="Default">
+<Story name="Default" asChild>
   <div class="vh justify-end">
     <PaginationToolbar />
   </div>
 </Story>
 
-<Story name="Desktop">
+<Story name="Desktop" asChild>
   <div class="vh justify-end">
     <PaginationToolbar />
   </div>
 </Story>
 
 <Story
+  asChild
   name="Tablet (H)"
   parameters={{
     viewport: { defaultOrientation: "landscape", defaultViewport: "tablet" },
@@ -35,6 +36,7 @@
 </Story>
 
 <Story
+  asChild
   name="Tablet (V)"
   parameters={{
     viewport: { defaultOrientation: "tablet", defaultViewport: "tablet" },
@@ -46,6 +48,7 @@
 </Story>
 
 <Story
+  asChild
   name="Mobile (L)"
   parameters={{
     viewport: { defaultOrientation: "portrait", defaultViewport: "mobile2" },
@@ -57,6 +60,7 @@
 </Story>
 
 <Story
+  asChild
   name="Mobile (S)"
   parameters={{
     viewport: { defaultOrientation: "portrait", defaultViewport: "mobile1" },

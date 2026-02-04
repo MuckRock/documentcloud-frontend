@@ -6,29 +6,29 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
   interface Props {
-    width?: undefined | number;
     left?: Snippet;
     center?: Snippet;
     right?: Snippet;
+    width?: undefined | number;
   }
 
-  let { width = $bindable(undefined), left, center, right }: Props = $props();
+  let { left, center, right, width = $bindable(undefined) }: Props = $props();
 </script>
 
 <div class="toolbar" bind:clientWidth={width}>
   {#if left}
     <div class="left">
-      {@render left?.()}
+      {@render left()}
     </div>
   {/if}
   {#if center}
     <div class="center">
-      {@render center?.()}
+      {@render center()}
     </div>
   {/if}
   {#if right}
     <div class="right">
-      {@render right?.()}
+      {@render right()}
     </div>
   {/if}
 </div>
