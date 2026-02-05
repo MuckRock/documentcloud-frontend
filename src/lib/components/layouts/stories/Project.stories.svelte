@@ -1,49 +1,42 @@
-<script lang="ts" context="module">
-  import type { Meta } from "@storybook/svelte";
-  import { Story, Template } from "@storybook/addon-svelte-csf";
-  import Project from "../Project.svelte";
+<script lang="ts" module>
+  import { defineMeta } from "@storybook/addon-svelte-csf";
 
+  import Project from "../Project.svelte";
   import { project, projectUsers } from "@/test/fixtures/projects";
   import { documentsList } from "@/test/fixtures/documents";
-  import { activeAddons } from "@/test/fixtures/addons";
 
-  export const meta: Meta = {
+  const { Story } = defineMeta({
     title: "Layout / Project",
     component: Project,
     parameters: {
       layout: "fullscreen",
     },
-  };
-
-  let args = {
-    project,
-    users: projectUsers.results,
-    documents: Promise.resolve(documentsList),
-    addons: Promise.resolve(activeAddons),
-  };
+  });
 </script>
 
-<Template let:args>
-  <div class="vh-100">
-    <Project {...args} />
-  </div>
-</Template>
-
-<Story name="Viewer" {args} />
 <Story
-  name="Editor"
-  args={{ ...args, project: { ...project, edit_access: true } }}
-/>
-<Story
-  name="Admin"
+  name="Viewer"
   args={{
-    ...args,
-    project: { ...project, edit_access: true, add_remove_access: true },
+    project: project,
+    users: projectUsers.results,
+    documents: Promise.resolve({ data: documentsList }),
   }}
 />
 
-<style>
-  .vh-100 {
-    height: 100vh;
-  }
-</style>
+<Story
+  name="Editor"
+  args={{
+    project: { ...project, edit_access: true },
+    users: projectUsers.results,
+    documents: Promise.resolve({ data: documentsList }),
+  }}
+/>
+
+<Story
+  name="Admin"
+  args={{
+    project: { ...project, edit_access: true, add_remove_access: true },
+    users: projectUsers.results,
+    documents: Promise.resolve({ data: documentsList }),
+  }}
+/>

@@ -23,13 +23,17 @@
   import RemoveCollaborator from "../forms/RemoveCollaborator.svelte";
   import Modal from "../layouts/Modal.svelte";
   import Portal from "../layouts/Portal.svelte";
+  import Tooltip from "../common/Tooltip.svelte";
 
   import { getUserName } from "$lib/api/accounts";
   import { getCurrentUser } from "$lib/utils/permissions";
-  import Tooltip from "../common/Tooltip.svelte";
 
-  export let project: Project;
-  export let users: ProjectUser[];
+  interface Props {
+    project: Project;
+    users: ProjectUser[];
+  }
+
+  let { project, users }: Props = $props();
 
   const me = getCurrentUser();
 
@@ -45,11 +49,11 @@
     remove: $_("collaborators.remove.label"),
   };
 
-  let show: Nullable<"invite" | "update" | "remove"> = null;
-  let user_to_update: Nullable<ProjectUser> = null;
+  let show: Nullable<"invite" | "update" | "remove"> = $state(null);
+  let user_to_update: Nullable<ProjectUser> = $state(null);
 
   // Do I belong to this project?
-  $: isProjectUser = users.some((u) => u.user.id === $me?.id);
+  let isProjectUser = $derived(users.some((u) => u.user.id === $me?.id));
 
   function isMe(user: ProjectUser, me: User | null): boolean {
     const id = typeof user.user === "object" ? user.user.id : user.user;
@@ -64,7 +68,7 @@
 
   function sort(users: ProjectUser[]) {
     if (!users) return [];
-    return users.sort(
+    return [...users].sort(
       (a, b) =>
         a.access.localeCompare(b.access) ||
         getUserName(a.user).localeCompare(getUserName(b.user)),
@@ -88,26 +92,29 @@
 
 {#if users.length > 0 || project.add_remove_access}
   <SidebarGroup name="collaborators">
-    <NavItem slot="title">
-      <People16 slot="start" />
-      {$_("projects.collaborators.title")}
-    </NavItem>
+    {#snippet title()}
+      <NavItem>
+        <People16 slot="start" />
+        {$_("projects.collaborators.title")}
+      </NavItem>
+    {/snippet}
 
-    <span slot="action">
-      {#if project.add_remove_access}
-        <Button
-          ghost
-          mode="primary"
-          size="small"
-          minW={false}
-          on:click={() => (show = "invite")}
-          slot="action"
-        >
-          <PlusCircle16 height={14} width={14} />
-          {$_("projects.collaborators.add")}
-        </Button>
-      {/if}
-    </span>
+    {#snippet action()}
+      <span>
+        {#if project.add_remove_access}
+          <Button
+            ghost
+            mode="primary"
+            size="small"
+            minW={false}
+            on:click={() => (show = "invite")}
+          >
+            <PlusCircle16 height={14} width={14} />
+            {$_("projects.collaborators.add")}
+          </Button>
+        {/if}
+      </span>
+    {/snippet}
 
     {#each Object.entries(group(sort(users))) as [key, members]}
       {#if members.length}

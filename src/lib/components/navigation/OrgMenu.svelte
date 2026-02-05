@@ -140,10 +140,12 @@
 
       {#if users.length}
         <SidebarGroup>
-          <NavItem slot="title">
-            <People16 slot="start" />
-            {$_("authSection.org.userCount", { values: { n: users.length } })}
-          </NavItem>
+          {#snippet title()}
+            <NavItem>
+              <People16 slot="start" />
+              {$_("authSection.org.userCount", { values: { n: users.length } })}
+            </NavItem>
+          {/snippet}
           <ul class="user-list">
             {#each users as user}
               {@const href = searchUrl(userDocs(user)).href}

@@ -1,8 +1,10 @@
 <script lang="ts">
   import type { Project } from "$lib/api/types";
 
+  // Storybook doesn't support page state yet
   import { page } from "$app/stores";
 
+  import { _ } from "svelte-i18n";
   import {
     FileDirectory16,
     Hourglass24,
@@ -11,20 +13,19 @@
     Pin16,
     Search16,
   } from "svelte-octicons";
-  import { _ } from "svelte-i18n";
 
-  import Pin from "$lib/components/common/Pin.svelte";
+  import Button from "../common/Button.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import SidebarGroup from "$lib/components/sidebar/SidebarGroup.svelte";
+  import SignedIn from "../common/SignedIn.svelte";
   import NavItem from "$lib/components/common/NavItem.svelte";
+  import Pin from "$lib/components/common/Pin.svelte";
 
   import { canonicalUrl } from "$lib/api/projects";
-  import Button from "../common/Button.svelte";
-  import SignedIn from "../common/SignedIn.svelte";
 
-  let pinned: Project[] | Promise<Project[]> = [];
-
-  $: pinned = $page.data.pinnedProjects || [];
+  let pinned: Project[] | Promise<Project[]> = $derived(
+    $page.data.pinnedProjects || [],
+  );
 
   function sort(projects: Project[]) {
     return projects.sort((a, b) => a.title.localeCompare(b.title));
@@ -33,20 +34,24 @@
 
 <SignedIn>
   <SidebarGroup name="projects">
-    <NavItem slot="title">
-      <FileDirectory16 slot="start" />{$_("sidebar.projects.title")}
-    </NavItem>
-    <Button
-      ghost
-      mode="primary"
-      size="small"
-      minW={false}
-      href="/projects?list=public"
-      slot="action"
-    >
-      <Search16 height={14} width={14} />
-      {$_("common.explore")}
-    </Button>
+    {#snippet title()}
+      <NavItem>
+        <FileDirectory16 slot="start" />
+        {$_("sidebar.projects.title")}
+      </NavItem>
+    {/snippet}
+    {#snippet action()}
+      <Button
+        ghost
+        mode="primary"
+        size="small"
+        minW={false}
+        href="/projects?list=public"
+      >
+        <Search16 height={14} width={14} />
+        {$_("common.explore")}
+      </Button>
+    {/snippet}
     <NavItem
       small
       active={$page.url.searchParams?.get("list") === "owned"}

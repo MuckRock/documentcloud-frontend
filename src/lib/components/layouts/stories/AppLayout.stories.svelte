@@ -1,24 +1,28 @@
-<script context="module" lang="ts">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
-  import AppLayout from "../AppLayout.svelte";
+<script module lang="ts">
+  import type { ComponentProps } from "svelte";
 
-  import { _ } from "svelte-i18n";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import { PlusCircle16 } from "svelte-octicons";
 
-  import DocumentBrowser from "../DocumentBrowser.svelte";
-  import SidebarLayout from "../SidebarLayout.svelte";
-  import Documents from "$lib/components/sidebar/Documents.svelte";
-  import Projects from "$lib/components/sidebar/Projects.svelte";
-  import Button from "../../common/Button.svelte";
-  import BulkActions from "$lib/components/sidebar/DocumentActions.svelte";
+  import AppLayout from "../AppLayout.svelte";
   import AddOns from "$lib/components/sidebar/AddOns.svelte";
+  import BulkActions from "$lib/components/sidebar/DocumentActions.svelte";
+  import Button from "../../common/Button.svelte";
+  import Documents from "$lib/components/sidebar/Documents.svelte";
+  import DocumentBrowser from "../DocumentBrowser.svelte";
+  import Projects from "$lib/components/sidebar/Projects.svelte";
+  import SidebarLayout from "../SidebarLayout.svelte";
 
   import { documentsList } from "@/test/fixtures/documents";
   import { addons } from "@/test/handlers/addons";
   import { organizations, users } from "@/test/handlers/accounts";
   import { activeAddons } from "@/test/fixtures/addons";
 
-  export const meta = {
+  const documents = Promise.resolve({ data: documentsList });
+
+  type Args = ComponentProps<typeof AppLayout>;
+
+  const { Story } = defineMeta({
     title: "Layout / App",
     component: AppLayout,
     parameters: {
@@ -37,12 +41,10 @@
         },
       },
     },
-  };
-
-  const documents = Promise.resolve({ data: documentsList });
+  });
 </script>
 
-<Template let:args>
+{#snippet template(args: Args)}
   <AppLayout {...args}>
     <SidebarLayout>
       <svelte:fragment slot="navigation">
@@ -55,21 +57,22 @@
 
       <svelte:fragment slot="action">
         <Button mode="primary" href="/upload/">
-          <PlusCircle16 />{$_("sidebar.upload")}
+          <PlusCircle16 />Upload Documents
         </Button>
         <BulkActions />
       </svelte:fragment>
     </SidebarLayout>
   </AppLayout>
-</Template>
+{/snippet}
 
-<Story name="Desktop" />
+<Story name="Desktop" {template} />
 
 <Story
   name="Tablet (H)"
   parameters={{
     viewport: { defaultOrientation: "landscape", defaultViewport: "tablet" },
   }}
+  {template}
 />
 
 <Story
@@ -77,6 +80,7 @@
   parameters={{
     viewport: { defaultOrientation: "tablet", defaultViewport: "tablet" },
   }}
+  {template}
 />
 
 <Story
@@ -84,6 +88,7 @@
   parameters={{
     viewport: { defaultOrientation: "portrait", defaultViewport: "mobile2" },
   }}
+  {template}
 />
 
 <Story
@@ -91,4 +96,5 @@
   parameters={{
     viewport: { defaultOrientation: "portrait", defaultViewport: "mobile1" },
   }}
+  {template}
 />

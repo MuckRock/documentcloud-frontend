@@ -7,20 +7,21 @@ import type {
 import projDocsPage1 from "../fixtures/projects/project-documents-expanded.json";
 import projDocsPage2 from "../fixtures/projects/project-documents-2.json";
 
-export let project: Project = {
+export const project: Project = {
   id: 215178,
   created_at: "2023-09-21T14:36:10.910337Z",
   description: "",
-  edit_access: false,
-  add_remove_access: false,
+  edit_access: null,
+  add_remove_access: null,
   private: false,
   slug: "ocr-reprise",
   title: "OCR Reprise",
-  updated_at: "2023-09-21T14:36:10.911299Z",
+  updated_at: "2026-01-23T22:23:04.607756Z",
   user: 102112,
+  pinned: false,
 };
 
-export let editableProject: Project = {
+export const editableProject: Project = {
   id: 29,
   created_at: "2020-10-23T15:59:33.779478Z",
   description: "",
@@ -33,7 +34,7 @@ export let editableProject: Project = {
   user: 1,
 };
 
-export let privateProject: Project = {
+export const privateProject: Project = {
   id: 29,
   created_at: "2020-10-23T15:59:33.779478Z",
   description: "",

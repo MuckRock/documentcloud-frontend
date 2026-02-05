@@ -1,5 +1,5 @@
 <!-- Assumes its a child of ViewerContext -->
-<script context="module" lang="ts">
+<script module lang="ts">
   type Action =
     | "share"
     | "edit"
@@ -46,8 +46,12 @@
   import { pdfUrl } from "$lib/api/documents";
   import { canChangeOwner } from "$lib/utils/permissions";
 
-  export let document: Document;
-  export let user: Nullable<User>;
+  interface Props {
+    document: Document;
+    user: Nullable<User>;
+  }
+
+  let { document, user }: Props = $props();
 
   const page = getCurrentPage();
   const pending = getPendingDocuments();
@@ -61,12 +65,15 @@
     change_owner: "bulk.actions.change_owner",
   };
 
-  let visible: Nullable<Action> = null;
+  let visible: Nullable<Action> = $state(null);
 
-  $: organization =
-    typeof user?.organization === "object" ? (user.organization as Org) : null;
-  $: plan = organization?.plan ?? "Free";
-  $: processing = $pending?.map((d) => d.doc_id).includes(+document.id);
+  let organization = $derived(
+    typeof user?.organization === "object" ? (user.organization as Org) : null,
+  );
+  let plan = $derived(organization?.plan ?? "Free");
+  let processing = $derived(
+    $pending?.map((d) => d.doc_id).includes(+document.id),
+  );
 
   function show(action: Action) {
     visible = action;

@@ -15,7 +15,11 @@
   } from "$lib/utils/permissions";
   import { uploadToProject } from "$lib/components/forms/Upload.svelte";
 
-  export let project: Maybe<Project> = undefined;
+  interface Props {
+    project?: Maybe<Project>;
+  }
+
+  let { project = undefined }: Props = $props();
   const me = getCurrentUser();
 
   function onUploadClick() {
@@ -34,11 +38,13 @@
       on:click={onUploadClick}
       disabled={!project.edit_access}
     >
-      <PlusCircle16 />{$_("sidebar.uploadToProject")}
+      <PlusCircle16 />
+      {$_("sidebar.uploadToProject")}
     </Button>
   {:else}
     <Button mode="primary" href="/upload/">
-      <PlusCircle16 />{$_("sidebar.upload")}
+      <PlusCircle16 />
+      {$_("sidebar.upload")}
     </Button>
   {/if}
 {/if}

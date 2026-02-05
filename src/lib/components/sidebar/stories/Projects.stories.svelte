@@ -1,23 +1,14 @@
 <script lang="ts" context="module">
   import { projectList } from "@/test/fixtures/projects";
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import Projects from "../Projects.svelte";
-  import type { Meta } from "@storybook/svelte";
 
-  export const meta: Meta = {
+  const { Story } = defineMeta({
     title: "Navigation / Projects",
     component: Projects,
     parameters: { layout: "centered" },
-  };
-
-  let args = {
-    pinned: projectList.results.slice(0, 4),
-  };
+  });
 </script>
-
-<Template let:args>
-  <Projects {...args} />
-</Template>
 
 <Story
   name="With Pinned Projects"
@@ -36,11 +27,12 @@
     },
   }}
 />
+
 <Story
   name="Without Pinned Projects"
   parameters={{
     sveltekit_experimental: {
-      stores: {
+      state: {
         page: {
           data: { pinnedProjects: [] },
         },

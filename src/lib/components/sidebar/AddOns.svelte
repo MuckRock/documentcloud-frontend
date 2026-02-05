@@ -1,7 +1,11 @@
 <script lang="ts">
+  import type { AddOnListItem } from "$lib/api/types";
+
+  // TODO: Switch to $app/state once Storybook properly supports sveltekit_experimental.state
+  // Currently using deprecated $app/stores because Storybook 8.6.15 doesn't populate
+  // the state.page.data object from sveltekit_experimental.state parameters.
   import { page } from "$app/stores";
   import { APP_URL } from "@/config/config";
-  import type { AddOnListItem } from "$lib/api/types";
 
   import {
     Hourglass24,
@@ -21,9 +25,13 @@
   import Button from "../common/Button.svelte";
   import SignedIn from "../common/SignedIn.svelte";
 
-  export let query: string = "";
+  interface Props {
+    query?: string;
+  }
 
-  let pinnedAddOns = $page.data.pinnedAddons ?? [];
+  let { query = "" }: Props = $props();
+
+  let pinnedAddOns = $derived($page.data.pinnedAddons ?? []);
 
   function getHref(query: string, addon?: AddOnListItem): string {
     let path = "/add-ons/";
@@ -40,20 +48,25 @@
 </script>
 
 <SidebarGroup name="addons">
-  <NavItem slot="title">
-    <Plug16 slot="start" />{$_("sidebar.addons.title")}
-  </NavItem>
-  <Button
-    ghost
-    mode="primary"
-    size="small"
-    minW={false}
-    href={getHref(query)}
-    slot="action"
-  >
-    <Search16 width={14} height={14} />
-    {$_("common.explore")}
-  </Button>
+  {#snippet title()}
+    <NavItem>
+      <Plug16 slot="start" />
+      {$_("sidebar.addons.title")}
+    </NavItem>
+  {/snippet}
+  {#snippet action()}
+    <Button
+      ghost
+      mode="primary"
+      size="small"
+      minW={false}
+      href={getHref(query)}
+    >
+      <Search16 width={14} height={14} />
+      {$_("common.explore")}
+    </Button>
+  {/snippet}
+
   <NavItem small href="/add-ons/?featured=true">
     <Star16 width={14} height={14} slot="start" />
     Featured

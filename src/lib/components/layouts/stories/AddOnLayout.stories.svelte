@@ -1,11 +1,17 @@
-<script lang="ts" context="module">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import AddOnLayout from "../AddOnLayout.svelte";
 
-  import { document, documentsList } from "@/test/fixtures/documents";
+  import { documentsList } from "@/test/fixtures/documents";
   import { addon, event } from "@/test/fixtures/addons";
 
-  export const meta = {
+  let args = {
+    addon,
+    query: "",
+    search: Promise.resolve(documentsList),
+  };
+
+  const { Story } = defineMeta({
     title: "Layout / Add-On Layout",
     component: AddOnLayout,
     parameters: {
@@ -18,13 +24,7 @@
         },
       },
     },
-  };
-
-  let args = {
-    addon,
-    query: "",
-    search: Promise.resolve(documentsList),
-  };
+  });
 </script>
 
 <script lang="ts">
@@ -40,13 +40,13 @@
   setVisibleFieldsContext(writable(defaultVisibleFields));
 </script>
 
-<Template let:args>
+{#snippet template(args)}
   <div class="vh">
     <AddOnLayout {...args} />
   </div>
-</Template>
+{/snippet}
 
-<Story name="With Documents" {args} />
+<Story name="With Documents" {args} {template} />
 
 <Story
   name="Without Documents"
@@ -60,9 +60,10 @@
       },
     },
   }}
+  {template}
 />
 
-<Story name="With Event" args={{ ...args, event }} />
+<Story name="With Event" args={{ ...args, event }} {template} />
 
 <Story
   name="Mobile Layout"
@@ -70,6 +71,7 @@
     viewport: { defaultOrientation: "portrait", defaultViewport: "mobile2" },
   }}
   {args}
+  {template}
 />
 
 <style>

@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import { Story } from "@storybook/addon-svelte-csf";
   import {
     Book16,
@@ -29,20 +29,27 @@
 
 <Story name="With Items">
   <SidebarGroup>
-    <NavItem slot="title">
-      <FileDirectory16 slot="start" />
-      Project
-    </NavItem>
-    <Action slot="action" icon={Book16}>Explore</Action>
+    {#snippet title()}
+      <NavItem>
+        <FileDirectory16 slot="start" />
+        Project
+      </NavItem>
+    {/snippet}
+    {#snippet action()}
+      <Action icon={Book16}>Explore</Action>
+    {/snippet}
     <Flex direction="column" gap={0}>
       <NavItem small href="/project/1">
-        <Pin active slot="start" /> Oldest Computer
+        <Pin active slot="start" />
+        Oldest Computer
       </NavItem>
       <NavItem small href="/project/2">
-        <Pin active slot="start" /> FBI Files
+        <Pin active slot="start" />
+        FBI Files
       </NavItem>
       <NavItem small href="/project/3">
-        <Pin active slot="start" /> 1033 Project
+        <Pin active slot="start" />
+        1033 Project
       </NavItem>
     </Flex>
   </SidebarGroup>
@@ -51,11 +58,15 @@
 <Story name="Empty">
   <div style="width: 18rem">
     <SidebarGroup>
-      <NavItem slot="title">
-        <ListOrdered16 slot="start" />
-        Sections
-      </NavItem>
-      <Action slot="action" icon={Pencil16}>Edit</Action>
+      {#snippet title()}
+        <NavItem>
+          <ListOrdered16 slot="start" />
+          Sections
+        </NavItem>
+      {/snippet}
+      {#snippet action()}
+        <Action icon={Pencil16}>Edit</Action>
+      {/snippet}
       <EmptyComponent icon={ListOrdered16}>
         Sections organize your document with a table of contents
       </EmptyComponent>
@@ -66,20 +77,27 @@
 <Story name="Remember collapsed state">
   <p>Refresh to check that <code>collapsed</code> state persists</p>
   <SidebarGroup name="storybook-files">
-    <NavItem slot="title">
-      <FileDirectory16 slot="start" />
-      Project
-    </NavItem>
-    <Action slot="action" icon={Book16}>Explore</Action>
+    {#snippet title()}
+      <NavItem>
+        <FileDirectory16 slot="start" />
+        Project
+      </NavItem>
+    {/snippet}
+    {#snippet action()}
+      <Action icon={Book16}>Explore</Action>
+    {/snippet}
     <Flex direction="column" gap={0}>
       <NavItem small href="/project/1">
-        <Pin active slot="start" /> Oldest Computer
+        <Pin active slot="start" />
+        Oldest Computer
       </NavItem>
       <NavItem small href="/project/2">
-        <Pin active slot="start" /> FBI Files
+        <Pin active slot="start" />
+        FBI Files
       </NavItem>
       <NavItem small href="/project/3">
-        <Pin active slot="start" /> 1033 Project
+        <Pin active slot="start" />
+        1033 Project
       </NavItem>
     </Flex>
   </SidebarGroup>
