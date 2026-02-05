@@ -14,64 +14,6 @@ export function load({ cookies }) {
 }
 
 export const actions = {
-  async data({ cookies, fetch, request }) {
-    const csrf_token = cookies.get(CSRF_COOKIE_NAME);
-    if (!csrf_token) {
-      return fail(403, { message: "Missing CSRF token" });
-    }
-
-    const form = await request.formData();
-    const keys = form.getAll("key") as string[];
-    const values = form.getAll("value") as string[];
-
-    const data: Data = keys.reduce((m, key, i) => {
-      const value = values[i];
-
-      // filter out blanks
-      if (key === "" || value === "") return m;
-
-      if (key in m) {
-        m[key].push(value);
-      } else {
-        m[key] = [value];
-      }
-      return m;
-    }, {});
-
-    const ids = String(form.get("documents")).split(",");
-    console.log(`BULK DATA: ${form.get("documents")}`);
-    // send a request for each key on each document
-    // this might be a bunch of requests all at once
-    const promises = Object.entries(data)
-      .map(([key, values]) =>
-        ids.map((id) => add_tags(id, key, values, csrf_token, fetch)),
-      )
-      .flat();
-
-    const results = await Promise.all(promises);
-    const errors = results.filter((r) => r.error);
-
-    if (errors.length) {
-      errors.forEach((r) => {
-        if (r.error) {
-          setFlash({ message: r.error.message, status: "error" }, cookies);
-        }
-      });
-      return fail(400, { errors });
-    }
-
-    setFlash(
-      {
-        message: `Data saved to ${results.filter((r) => !r.error).length} documents`,
-        status: "success",
-      },
-      cookies,
-    );
-    return {
-      success: true,
-    };
-  },
-
   async delete({ cookies, fetch, request }) {
     const csrf_token = cookies.get(CSRF_COOKIE_NAME);
     if (!csrf_token) {

@@ -1,18 +1,26 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import type { SvgComponent } from "svelte-octicons";
 
-  export let icon: null | typeof SvgComponent = null;
+  interface Props {
+    icon?: null | typeof SvgComponent;
+    children?: Snippet;
+  }
+
+  let { icon: Icon = null, children }: Props = $props();
 </script>
 
 <div class="container">
-  {#if icon}<svelte:component this={icon} height="32" width="32" />{/if}
-  <slot />
+  {#if Icon}
+    <Icon height="32" width="32" />
+  {/if}
+  {@render children?.()}
 </div>
 
 <style>
   .container {
     display: flex;
-    padding: 1.5rem;
+    padding: var(--padding, 1.5rem);
     flex: 1 0 0;
     flex-direction: column;
     align-items: center;

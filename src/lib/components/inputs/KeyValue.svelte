@@ -2,15 +2,24 @@
 Input for a single key/value pair or tag (where `key` is `_tag`).
 This uses `svelecte` to let users more easily choose existing keys.
 -->
-<script lang="ts">
-  import { createBubbler } from "svelte/legacy";
+<script module lang="ts">
+  export interface Result {
+    keys?: string[];
+    key?: string | null;
+    value?: string;
+    clear?: boolean;
+    error?: boolean;
+  }
+</script>
 
-  const bubble = createBubbler();
+<script lang="ts">
+  import { untrack } from "svelte";
   import { _ } from "svelte-i18n";
-  import { PlusCircle16, Trash16 } from "svelte-octicons";
+  import { CheckCircle24, PlusCircle24, Trash24 } from "svelte-octicons";
   import Svelecte from "svelecte";
 
   import Button from "../common/Button.svelte";
+  import Tooltip from "../common/Tooltip.svelte";
 
   interface Props {
     keys?: string[];
@@ -18,8 +27,11 @@ This uses `svelecte` to let users more easily choose existing keys.
     value?: string;
     add?: boolean;
     disabled?: boolean;
-    onadd?: ({ key, value }) => void;
-    ondelete?: ({ key, value }) => void;
+    error?: boolean;
+    edited?: boolean;
+    onadd?: ({ key, value }) => Promise<Result>;
+    ondelete?: ({ key, value }) => Promise<Result>;
+    onedit?: ({ key, value, previous }) => Promise<Result>;
   }
 
   const DEFAULT_KEYS = ["_tag"];
@@ -30,9 +42,17 @@ This uses `svelecte` to let users more easily choose existing keys.
     value = "",
     add = false,
     disabled = false,
+    error = false,
+    edited = $bindable(),
     onadd,
     ondelete,
+    onedit,
   }: Props = $props();
+
+  let previous: { key?: string | null; value?: string } = $state({
+    key: untrack(() => key),
+    value: untrack(() => value),
+  });
 
   let options = $derived.by(() =>
     new Set([...keys, ...DEFAULT_KEYS])
@@ -57,9 +77,91 @@ This uses `svelecte` to let users more easily choose existing keys.
     key = "";
     value = "";
   }
+
+  function setKey({ value }) {
+    if (value !== previous.key) {
+      previous.key = key;
+      key = value;
+      edited = true;
+    }
+  }
+
+  function oninput(e: InputEvent) {
+    const target = e.target as HTMLInputElement;
+    edited = target.value !== previous.value;
+  }
+
+  async function handleAdd() {
+    disabled = true;
+
+    if (!onadd) return;
+
+    const result = await onadd({ key, value });
+
+    if (result.keys) {
+      keys = result.keys;
+    }
+
+    if (result.key) {
+      key = result.key;
+    }
+
+    if (result.value) {
+      value = result.value;
+    }
+
+    error = Boolean(result.error);
+
+    if (result.clear) clear();
+
+    disabled = false;
+    edited = Boolean(error);
+  }
+
+  async function handleEdit() {
+    disabled = true;
+
+    if (!onedit) return;
+
+    const result = await onedit({ key, value, previous });
+
+    if (result.keys) {
+      keys = result.keys;
+    }
+
+    if (result.key) {
+      key = result.key;
+      previous.key = result.key;
+    }
+
+    if (result.value) {
+      value = result.value;
+      previous.value = value;
+    }
+
+    error = Boolean(result?.error);
+
+    if (result.clear) clear();
+
+    disabled = false;
+    edited = Boolean(error);
+  }
+
+  async function handleDelete() {
+    disabled = true;
+
+    if (!ondelete) return;
+
+    const result = await ondelete({ key, value });
+
+    error = Boolean(result.error);
+
+    edited = false;
+    disabled = false;
+  }
 </script>
 
-<tr class="kv">
+<tr class="kv" class:error>
   <td class="key">
     <Svelecte
       {options}
@@ -70,7 +172,7 @@ This uses `svelecte` to let users more easily choose existing keys.
       placeholder={$_("data.newkey")}
       class="elevated"
       creatable
-      onChange={({ value }) => (key = value)}
+      onChange={setKey}
       {disabled}
     />
   </td>
@@ -83,39 +185,56 @@ This uses `svelecte` to let users more easily choose existing keys.
         name="value"
         placeholder={$_("data.value")}
         bind:value
-        onchange={bubble("change")}
-        oninput={bubble("input")}
+        {oninput}
         {disabled}
       />
     </label>
   </td>
   <td class="action">
     {#if add}
-      <Button
-        ghost
-        mode="primary"
-        title={$_("data.update")}
-        minW={false}
-        value="add"
-        disabled={!key || !value || disabled}
-        on:click={() => onadd?.({ key, value })}
-      >
-        <PlusCircle16 />
-      </Button>
+      <Tooltip caption={$_("data.update")}>
+        <Button
+          ghost
+          mode="primary"
+          minW={false}
+          value="add"
+          disabled={!key || !value || !onadd || disabled}
+          on:click={handleAdd}
+          aria-label={$_("data.update")}
+        >
+          <PlusCircle24 />
+        </Button>
+      </Tooltip>
     {:else}
-      <Button
-        ghost
-        mode="danger"
-        title={$_("data.delete")}
-        minW={false}
-        value="delete"
-        {disabled}
-        on:click={() => ondelete?.({ key, value })}
-        --fill="var(--caution)"
-        --background="var(--orange-2)"
-      >
-        <Trash16 />
-      </Button>
+      <Tooltip caption={$_("dialog.update")}>
+        <Button
+          ghost
+          minW={false}
+          mode="primary"
+          disabled={!edited || !onedit || !value.trim() || disabled}
+          value="edit"
+          on:click={handleEdit}
+          aria-label={$_("dialog.update")}
+        >
+          <CheckCircle24 />
+        </Button>
+      </Tooltip>
+
+      <Tooltip caption={$_("data.delete")}>
+        <Button
+          ghost
+          mode="danger"
+          minW={false}
+          value="delete"
+          disabled={!ondelete || disabled}
+          on:click={handleDelete}
+          aria-label={$_("data.delete")}
+          --fill="var(--caution)"
+          --background="var(--orange-2)"
+        >
+          <Trash24 />
+        </Button>
+      </Tooltip>
     {/if}
   </td>
 </tr>
@@ -144,6 +263,10 @@ This uses `svelecte` to let users more easily choose existing keys.
   td {
     padding: 0 0.25rem 0.5rem 0;
     --font-size: var(--font-sm);
+  }
+
+  td.action {
+    --display: "inline-block";
   }
 
   input.value {
@@ -175,5 +298,13 @@ This uses `svelecte` to let users more easily choose existing keys.
 
   input.value:disabled {
     color: var(--gray-3);
+  }
+
+  .error input {
+    color: var(--error);
+  }
+
+  .error td.key {
+    --sv-color: var(--error);
   }
 </style>

@@ -195,7 +195,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
       {/if}
 
       {#if visible === "data"}
-        <EditDataMany documents={$selected} on:close={close} />
+        <EditDataMany documents={$selected} onclose={close} />
       {/if}
 
       {#if visible === "project"}

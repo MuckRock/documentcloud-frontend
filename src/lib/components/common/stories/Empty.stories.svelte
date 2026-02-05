@@ -1,13 +1,13 @@
 <script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import { Search24 } from "svelte-octicons";
   import Empty from "../Empty.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Common / Empty",
     component: Empty,
     parameters: { layout: "centered" },
-  };
+  });
 </script>
 
 <Story name="Text Only">

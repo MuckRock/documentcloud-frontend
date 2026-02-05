@@ -6,7 +6,6 @@ import KeyValue from "../KeyValue.svelte";
 
 describe("KeyValue", () => {
   beforeEach(() => {
-    // Clear all mocks before each test
     vi.clearAllMocks();
   });
 
@@ -54,7 +53,7 @@ describe("KeyValue", () => {
 
   it("dispatches add event with correct key and value when add button is clicked", async () => {
     const user = userEvent.setup();
-    const handleAdd = vi.fn();
+    const handleAdd = vi.fn(async () => ({}));
     render(KeyValue, {
       props: {
         keys: ["testKey"],
@@ -78,7 +77,7 @@ describe("KeyValue", () => {
 
   it("dispatches delete event with correct key and value when delete button is clicked", async () => {
     const user = userEvent.setup();
-    const handleDelete = vi.fn();
+    const handleDelete = vi.fn(async () => ({}));
     render(KeyValue, {
       props: {
         keys: ["testKey"],
@@ -121,6 +120,7 @@ describe("KeyValue", () => {
         key: "testKey",
         value: "testValue",
         add: true,
+        onadd: async ({ key, value }) => ({}),
       },
     });
 
