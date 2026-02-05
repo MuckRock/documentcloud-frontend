@@ -5,7 +5,7 @@ Assumes it's a child of a ViewerContext
 <script lang="ts">
   import type { ReadMode, WriteMode } from "$lib/api/types";
 
-  import { page } from "$app/state";
+  import { page } from "$app/stores";
 
   import { _ } from "svelte-i18n";
   import {
@@ -38,7 +38,7 @@ Assumes it's a child of a ViewerContext
     isEmbedded,
   } from "$lib/components/viewer/ViewerContext.svelte";
 
-  let { query = getQuery(page.url, "q") } = $props();
+  let { query = getQuery($page.url, "q") } = $props();
 
   let width: number = $state(800);
 
