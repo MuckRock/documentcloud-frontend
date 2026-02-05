@@ -1,21 +1,43 @@
 <script lang="ts">
+  import { createBubbler } from "svelte/legacy";
+
+  const bubble = createBubbler();
   import { CheckCircleFill16 } from "svelte-octicons";
   import { qs } from "$lib/utils/navigation";
 
-  export let danger = false;
-  export let selectable = true;
-  export let primary = false;
-  export let disabled = false;
-  export let indent = false;
-  export let special = false;
-  export let href: string | null | undefined = null;
-  export let target: string | null | undefined = null;
-  export let selected = false;
+  interface Props {
+    danger?: boolean;
+    selectable?: boolean;
+    primary?: boolean;
+    disabled?: boolean;
+    indent?: boolean;
+    special?: boolean;
+    href?: string | null | undefined;
+    target?: string | null | undefined;
+    selected?: boolean;
+    class?: string;
+    preserveQS?: boolean;
+    icon?: import("svelte").Snippet;
+    children?: import("svelte").Snippet;
+    onclick?: () => void;
+  }
 
-  let className = "";
-  export { className as class };
-
-  export let preserveQS = false;
+  let {
+    danger = false,
+    selectable = true,
+    primary = false,
+    disabled = false,
+    indent = false,
+    special = false,
+    href = null,
+    target = null,
+    selected = false,
+    class: className = "",
+    preserveQS = false,
+    icon,
+    children,
+    onclick,
+  }: Props = $props();
 </script>
 
 {#if href}
@@ -32,11 +54,13 @@
     class:disabled
     class:indent
     class:special
-    on:click
+    {onclick}
     use:qs={preserveQS}
   >
-    <slot name="icon" />
-    <span class="label"><slot>Define an item</slot></span>
+    {@render icon?.()}
+    <span class="label"
+      >{#if children}{@render children()}{:else}Define an item{/if}</span
+    >
     {#if selected}<CheckCircleFill16 />{/if}
   </a>
 {:else}
@@ -49,12 +73,14 @@
     class:disabled
     class:indent
     class:special
-    on:click
+    {onclick}
     role="menuitem"
     tabindex="0"
   >
-    <slot name="icon" />
-    <span class="label"><slot>Define an item</slot></span>
+    {@render icon?.()}
+    <span class="label">
+      {#if children}{@render children()}{:else}Define an item{/if}
+    </span>
     {#if selected}<CheckCircleFill16 />{/if}
   </button>
 {/if}

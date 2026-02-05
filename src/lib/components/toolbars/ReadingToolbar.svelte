@@ -5,7 +5,7 @@ Assumes it's a child of a ViewerContext
 <script lang="ts">
   import type { ReadMode, WriteMode } from "$lib/api/types";
 
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 
   import { _ } from "svelte-i18n";
   import {
@@ -38,7 +38,7 @@ Assumes it's a child of a ViewerContext
     isEmbedded,
   } from "$lib/components/viewer/ViewerContext.svelte";
 
-  let { query = getQuery($page.url, "q") } = $props();
+  let { query = getQuery(page.url, "q") } = $props();
 
   let width: number = $state(800);
 
@@ -101,46 +101,54 @@ Assumes it's a child of a ViewerContext
             href={getViewerHref({ document, mode: value, embed, query })}
           >
             {@const TabIcon = icons[value]}
-            <TabIcon />
+            {#if TabIcon}<TabIcon />{/if}
             {name}
           </Tab>
         {/each}
       </div>
     {:else}
       <Dropdown position="bottom-start">
-        <NavItem slot="anchor">
-          {@const NavIcon = icons[$mode]}
-          {#if NavIcon}<NavIcon slot="start" />{/if}
-          {current}
-          <ChevronDown12 slot="end" />
-        </NavItem>
-        <Menu slot="inner" let:close>
-          {#each readModeDropdownItems.entries() as [value, name]}
-            <MenuItem
-              selected={$mode === value}
-              href={getViewerHref({ document, mode: value, embed, query })}
-              preserveQS
-              on:click={close}
-            >
-              {@const MenuIcon = icons[value]}
-              {#if MenuIcon}<MenuIcon slot="icon" />{/if}
-              {name}
-            </MenuItem>
-          {/each}
-          {#if BREAKPOINTS.WRITE_MENU && canWrite}
-            {#each writeModes as [value, name]}
+        {#snippet anchor()}
+          <NavItem>
+            {@const NavIcon = icons[$mode]}
+            {#if NavIcon}<NavIcon slot="start" />{/if}
+            {current}
+            <ChevronDown12 slot="end" />
+          </NavItem>
+        {/snippet}
+        {#snippet inner({ close })}
+          <Menu>
+            {#each readModeDropdownItems.entries() as [value, name]}
               <MenuItem
                 selected={$mode === value}
-                href={getViewerHref({ document, mode: value, embed })}
-                on:click={close}
+                href={getViewerHref({ document, mode: value, embed, query })}
+                preserveQS
+                onclick={close}
               >
-                {@const WriteMenuIcon = icons[value]}
-                <WriteMenuIcon slot="icon" />
+                {#snippet icon()}
+                  {@const MenuIcon = icons[value]}
+                  {#if MenuIcon}<MenuIcon />{/if}
+                {/snippet}
                 {name}
               </MenuItem>
             {/each}
-          {/if}
-        </Menu>
+            {#if BREAKPOINTS.WRITE_MENU && canWrite}
+              {#each writeModes as [value, name]}
+                <MenuItem
+                  selected={$mode === value}
+                  href={getViewerHref({ document, mode: value, embed })}
+                  onclick={close}
+                >
+                  {#snippet icon()}
+                    {@const WriteMenuIcon = icons[value]}
+                    {#if WriteMenuIcon}<WriteMenuIcon />{/if}
+                  {/snippet}
+                  {name}
+                </MenuItem>
+              {/each}
+            {/if}
+          </Menu>
+        {/snippet}
       </Dropdown>
     {/if}
   {/snippet}
@@ -153,20 +161,24 @@ Assumes it's a child of a ViewerContext
             href={getViewerHref({ document, mode: value, embed, query })}
           >
             {@const ButtonIcon = icons[value]}
-            <span class="icon"><ButtonIcon /></span>
+            {#if ButtonIcon}<span class="icon"><ButtonIcon /></span>{/if}
             {name}
           </Button>
         {/each}
       {/if}
       {#if BREAKPOINTS.SEARCH_MENU}
         <Dropdown position="bottom-end">
-          <Button minW={false} ghost slot="anchor">
-            <Search16 />
-            {$_("common.search")}
-          </Button>
-          <Menu slot="inner">
-            <Search name="q" {query} otherParams={{ mode: "search" }} />
-          </Menu>
+          {#snippet anchor()}
+            <Button minW={false} ghost>
+              <Search16 />
+              {$_("common.search")}
+            </Button>
+          {/snippet}
+          {#snippet inner()}
+            <Menu>
+              <Search name="q" {query} otherParams={{ mode: "search" }} />
+            </Menu>
+          {/snippet}
         </Dropdown>
       {:else}
         <Search name="q" {query} otherParams={{ mode: "search" }} />

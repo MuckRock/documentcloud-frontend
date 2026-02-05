@@ -1,9 +1,14 @@
 <script lang="ts">
-  export let small = false;
+  interface Props {
+    small?: boolean;
+    children?: import("svelte").Snippet;
+  }
+
+  let { small = false, children }: Props = $props();
 </script>
 
 <div class="menu" class:small role="menu">
-  <slot>Define some menu items</slot>
+  {#if children}{@render children()}{:else}Define some menu items{/if}
 </div>
 
 <style>
