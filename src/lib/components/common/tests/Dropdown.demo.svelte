@@ -10,14 +10,18 @@
 </script>
 
 <Dropdown {position} {border} {overlay}>
-  <div slot="anchor">{anchorText}</div>
-  <div slot="inner" let:close>
-    {#each items as item}
-      <button class="item" on:click={close} type="button">
-        {item}
-      </button>
-    {/each}
-  </div>
+  {#snippet anchor()}
+    <div>{anchorText}</div>
+  {/snippet}
+  {#snippet inner({ close })}
+    <div>
+      {#each items as item}
+        <button class="item" on:click={close} type="button">
+          {item}
+        </button>
+      {/each}
+    </div>
+  {/snippet}
 </Dropdown>
 
 <style>

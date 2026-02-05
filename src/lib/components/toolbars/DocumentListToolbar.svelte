@@ -34,14 +34,18 @@
       </div>
       <div class="margin-xs" class:hide={headerToolbarWidth < remToPx(38)}>
         <Dropdown>
-          <NavItem slot="anchor">
-            <Eye16 slot="start" />
-            {$_("documentBrowser.fieldsAnchor")}
-            <ChevronDown12 slot="end" />
-          </NavItem>
-          <Menu slot="inner">
-            <VisibleFields />
-          </Menu>
+          {#snippet anchor()}
+            <NavItem>
+              <Eye16 slot="start" />
+              {$_("documentBrowser.fieldsAnchor")}
+              <ChevronDown12 slot="end" />
+            </NavItem>
+          {/snippet}
+          {#snippet inner()}
+            <Menu>
+              <VisibleFields />
+            </Menu>
+          {/snippet}
         </Dropdown>
       </div>
     </div>

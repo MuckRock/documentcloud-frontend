@@ -30,27 +30,39 @@
   import { getCsrfToken } from "$lib/utils/api";
   import { remToPx } from "$lib/utils/layout";
 
-  export let active_org: Org;
-  export let orgs: Org[] = [];
-  export let users: User[] = [];
-  export let position: Placement = "bottom-end";
+  interface Props {
+    active_org: Org;
+    orgs?: Org[];
+    users?: User[];
+    position?: Placement;
+  }
 
-  let width: number;
+  let {
+    active_org,
+    orgs = [],
+    users = [],
+    position = "bottom-end",
+  }: Props = $props();
 
-  $: isPremium = active_org.plan !== "Free";
-  $: isPro = isPremium && active_org.individual;
-  $: upgrade_url = getUpgradeUrl(active_org).href;
-  $: otherOrgs = orgs.filter((org) => org.id !== active_org.id);
+  let width: number = $state(800);
+
+  let isPremium = $derived(active_org.plan !== "Free");
+  let isPro = $derived(isPremium && active_org.individual);
+  let upgrade_url = $derived(getUpgradeUrl(active_org).href);
+  let otherOrgs = $derived(orgs.filter((org) => org.id !== active_org.id));
 
   // Only show credit meter if the org has any allowance
-  $: showCredits = (active_org.monthly_credit_allowance ?? 0) > 0;
+  let showCredits = $derived((active_org.monthly_credit_allowance ?? 0) > 0);
 
-  $: creditHelpText = active_org.credit_reset_date
-    ? $_("authSection.credits.refreshOn", {
-        values: { date: formatResetDate(active_org.credit_reset_date, $locale) },
-      })
-    : undefined;
-
+  let creditHelpText = $derived(
+    active_org.credit_reset_date
+      ? $_("authSection.credits.refreshOn", {
+          values: {
+            date: formatResetDate(active_org.credit_reset_date, $locale),
+          },
+        })
+      : undefined,
+  );
 
   // wrapping setOrg here
   async function switchOrg(org: Org) {
@@ -67,7 +79,7 @@
 <svelte:window bind:innerWidth={width} />
 
 <Dropdown {position}>
-  <svelte:fragment slot="anchor">
+  {#snippet anchor()}
     {#if active_org.individual}
       <NavItem --fill="var(--green-3)" --color="var(--green-5)">
         <PremiumIcon slot="start" />
@@ -104,109 +116,121 @@
         </div>
       </NavItem>
     {/if}
-  </svelte:fragment>
-  <Menu slot="inner" let:close>
-    <div class="menu-inner" class:sm={width <= remToPx(32)}>
-      {#if showCredits}
-        <MenuInsert>
-          <CreditMeter
-            id="org-credits"
-            label={isPro
-              ? $_("authSection.credits.monthlyPro")
-              : $_("authSection.credits.monthlyOrg")}
-            helpText={creditHelpText ?? ""}
-            value={active_org.monthly_credits ?? 0}
-            max={active_org.monthly_credit_allowance ?? 0}
-          />
-        </MenuInsert>
-      {:else}
-        <div class="min-width">
+  {/snippet}
+  {#snippet inner({ close })}
+    <Menu>
+      <div class="menu-inner" class:sm={width <= remToPx(32)}>
+        {#if showCredits}
           <MenuInsert>
-            <h3 class="heading">{$_("authSection.premiumUpgrade.heading")}</h3>
-            <p class="description">
-              {$_("authSection.premiumUpgrade.description")}
-            </p>
-            <Button mode="premium" href={upgrade_url}>
-              {$_("authSection.premiumUpgrade.cta")}
-            </Button>
-            <div class="learnMore">
-              <a href="/help/premium/">
-                {$_("authSection.premiumUpgrade.docs")}
-              </a>
-            </div>
+            <CreditMeter
+              id="org-credits"
+              label={isPro
+                ? $_("authSection.credits.monthlyPro")
+                : $_("authSection.credits.monthlyOrg")}
+              helpText={creditHelpText ?? ""}
+              value={active_org.monthly_credits ?? 0}
+              max={active_org.monthly_credit_allowance ?? 0}
+            />
           </MenuInsert>
-        </div>
-      {/if}
+        {:else}
+          <div class="min-width">
+            <MenuInsert>
+              <h3 class="heading">
+                {$_("authSection.premiumUpgrade.heading")}
+              </h3>
+              <p class="description">
+                {$_("authSection.premiumUpgrade.description")}
+              </p>
+              <Button mode="premium" href={upgrade_url}>
+                {$_("authSection.premiumUpgrade.cta")}
+              </Button>
+              <div class="learnMore">
+                <a href="/help/premium/">
+                  {$_("authSection.premiumUpgrade.docs")}
+                </a>
+              </div>
+            </MenuInsert>
+          </div>
+        {/if}
 
-      {#if users.length}
-        <SidebarGroup>
-          {#snippet title()}
-            <NavItem>
-              <People16 slot="start" />
-              {$_("authSection.org.userCount", { values: { n: users.length } })}
-            </NavItem>
-          {/snippet}
-          <ul class="user-list">
-            {#each users as user}
-              {@const href = searchUrl(userDocs(user)).href}
-              <li>
-                <NavItem {href} on:click={close}>
-                  <svelte:fragment slot="start">
-                    {#if user.avatar_url}
-                      <img src={user.avatar_url} class="avatar" alt="" />
-                    {:else}
-                      <span class="icon"><Person16 /></span>
-                    {/if}
-                  </svelte:fragment>
-                  <span class="username">{getUserName(user)}</span>
-                  {#if user.admin_organizations.includes(active_org.id)}
-                    <span class="badge">{$_("authSection.org.adminRole")}</span>
-                  {/if}
-                </NavItem>
-              </li>
-            {/each}
-          </ul>
-        </SidebarGroup>
-      {/if}
-      {#if otherOrgs.length}
-        <p class="switch">
-          {$_("authSection.org.changeOrg")}
-        </p>
-        <Dropdown>
-          <NavItem slot="anchor">
-            <div class="avatar" slot="start">
-              <img
-                alt={$_("authSection.org.avatar", {
-                  values: { name: active_org.name },
+        {#if users.length}
+          <SidebarGroup>
+            {#snippet title()}
+              <NavItem>
+                <People16 slot="start" />
+                {$_("authSection.org.userCount", {
+                  values: { n: users.length },
                 })}
-                src={active_org.avatar_url}
-              />
-            </div>
-            <p class="orgname">{active_org.name}</p>
-            <span class="arrow" slot="end"><ChevronDown12 /></span>
-          </NavItem>
-          <Menu slot="inner" --max-height="24rem">
-            {#each otherOrgs as otherOrg}
-              <NavItem
-                hover
-                on:click={(e) => {
-                  switchOrg(otherOrg);
-                  close();
-                }}
-              >
-                {otherOrg.name}
               </NavItem>
-            {/each}
-          </Menu>
-        </Dropdown>
-      {:else}
-        <Button ghost href="{SQUARELET_BASE}/organizations">
-          <Organization16 />
-          {$_("authSection.premiumUpgrade.orgs")}
-        </Button>
-      {/if}
-    </div>
-  </Menu>
+            {/snippet}
+            <ul class="user-list">
+              {#each users as user}
+                {@const href = searchUrl(userDocs(user)).href}
+                <li>
+                  <NavItem {href} on:click={close}>
+                    <svelte:fragment slot="start">
+                      {#if user.avatar_url}
+                        <img src={user.avatar_url} class="avatar" alt="" />
+                      {:else}
+                        <span class="icon"><Person16 /></span>
+                      {/if}
+                    </svelte:fragment>
+                    <span class="username">{getUserName(user)}</span>
+                    {#if user.admin_organizations.includes(active_org.id)}
+                      <span class="badge"
+                        >{$_("authSection.org.adminRole")}</span
+                      >
+                    {/if}
+                  </NavItem>
+                </li>
+              {/each}
+            </ul>
+          </SidebarGroup>
+        {/if}
+        {#if otherOrgs.length}
+          <p class="switch">
+            {$_("authSection.org.changeOrg")}
+          </p>
+          <Dropdown>
+            {#snippet anchor()}
+              <NavItem>
+                <div class="avatar" slot="start">
+                  <img
+                    alt={$_("authSection.org.avatar", {
+                      values: { name: active_org.name },
+                    })}
+                    src={active_org.avatar_url}
+                  />
+                </div>
+                <p class="orgname">{active_org.name}</p>
+                <span class="arrow" slot="end"><ChevronDown12 /></span>
+              </NavItem>
+            {/snippet}
+            {#snippet inner()}
+              <Menu --max-height="24rem">
+                {#each otherOrgs as otherOrg}
+                  <NavItem
+                    hover
+                    on:click={(e) => {
+                      switchOrg(otherOrg);
+                      close();
+                    }}
+                  >
+                    {otherOrg.name}
+                  </NavItem>
+                {/each}
+              </Menu>
+            {/snippet}
+          </Dropdown>
+        {:else}
+          <Button ghost href="{SQUARELET_BASE}/organizations">
+            <Organization16 />
+            {$_("authSection.premiumUpgrade.orgs")}
+          </Button>
+        {/if}
+      </div>
+    </Menu>
+  {/snippet}
 </Dropdown>
 
 <style>

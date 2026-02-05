@@ -79,6 +79,7 @@ exports[`UserMenu 1`] = `
     >
       <!---->
       <!---->
+      <!---->
       <a
         class="navItem container svelte-1qzwmj4"
         href="https://dev.squarelet.com"
@@ -178,6 +179,7 @@ exports[`UserMenu 1`] = `
       </a>
       
       <!---->
+      
       <!---->
     </div>
     <!---->

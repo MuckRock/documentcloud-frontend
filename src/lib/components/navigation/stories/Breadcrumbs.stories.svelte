@@ -58,6 +58,8 @@
       { href: "/documents/[id]/organize", title: "Organize" },
     ]}
   >
-    <p slot="root">DocumentCloud</p>
+    {#snippet root()}
+      <p>DocumentCloud</p>
+    {/snippet}
   </Breadcrumbs>
 </Story>

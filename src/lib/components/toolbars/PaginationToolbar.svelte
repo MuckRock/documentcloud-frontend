@@ -78,48 +78,52 @@
   <div class="sections">
     {#if showPDF && (sections.length > 0 || canEditSections)}
       <Dropdown position="top-start" --offset="5px">
-        <div class="toolbarItem" slot="anchor">
-          <NavItem>
-            <ListOrdered16 slot="start" />
-            Sections
-            <ChevronUp12 slot="end" />
-          </NavItem>
-        </div>
-        <Menu slot="inner" let:close>
-          {#each sections as section}
-            <MenuItem
-              on:click={() => {
-                gotoPage(section.page_number + 1);
-                close();
-              }}
-            >
-              {section.title}
-            </MenuItem>
-          {:else}
-            <Empty icon={ListOrdered24}>
-              <p>{$_("sidebar.toc.empty")}</p>
-            </Empty>
-          {/each}
-          {#if canEditSections}
-            {#if sections.length === 0}
-              <Button
-                ghost
-                mode="primary"
-                on:click={() => (sectionsOpen = true)}
+        {#snippet anchor()}
+          <div class="toolbarItem">
+            <NavItem>
+              <ListOrdered16 slot="start" />
+              Sections
+              <ChevronUp12 slot="end" />
+            </NavItem>
+          </div>
+        {/snippet}
+        {#snippet inner({ close })}
+          <Menu>
+            {#each sections as section}
+              <MenuItem
+                onclick={() => {
+                  gotoPage(section.page_number + 1);
+                  close();
+                }}
               >
-                {$_("sidebar.toc.cta")}
-              </Button>
+                {section.title}
+              </MenuItem>
             {:else}
-              <Button
-                ghost
-                mode="primary"
-                on:click={() => (sectionsOpen = true)}
-              >
-                {$_("sections.edit")}
-              </Button>
+              <Empty icon={ListOrdered24}>
+                <p>{$_("sidebar.toc.empty")}</p>
+              </Empty>
+            {/each}
+            {#if canEditSections}
+              {#if sections.length === 0}
+                <Button
+                  ghost
+                  mode="primary"
+                  on:click={() => (sectionsOpen = true)}
+                >
+                  {$_("sidebar.toc.cta")}
+                </Button>
+              {:else}
+                <Button
+                  ghost
+                  mode="primary"
+                  on:click={() => (sectionsOpen = true)}
+                >
+                  {$_("sections.edit")}
+                </Button>
+              {/if}
             {/if}
-          {/if}
-        </Menu>
+          </Menu>
+        {/snippet}
       </Dropdown>
     {/if}
   </div>
