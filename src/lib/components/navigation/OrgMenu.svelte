@@ -177,9 +177,9 @@
                     </svelte:fragment>
                     <span class="username">{getUserName(user)}</span>
                     {#if user.admin_organizations.includes(active_org.id)}
-                      <span class="badge"
-                        >{$_("authSection.org.adminRole")}</span
-                      >
+                      <span class="badge">
+                        {$_("authSection.org.adminRole")}
+                      </span>
                     {/if}
                   </NavItem>
                 </li>
