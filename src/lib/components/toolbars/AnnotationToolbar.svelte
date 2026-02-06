@@ -7,7 +7,7 @@
   import Tooltip from "$lib/components/common/Tooltip.svelte";
   import { getViewerHref } from "$lib/utils/viewer";
 
-  let width: number;
+  let width: number | undefined = $state();
 </script>
 
 <div class="toolbar" bind:clientWidth={width}>

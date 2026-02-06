@@ -75,12 +75,13 @@
         </div>
       {/if}
       <PageToolbar>
-        <Search
-          slot="center"
-          name="query"
-          placeholder={$_("projects.placeholder.projects")}
-          {query}
-        />
+        {#snippet center()}
+          <Search
+            name="query"
+            placeholder={$_("projects.placeholder.projects")}
+            {query}
+          />
+        {/snippet}
       </PageToolbar>
       {#if $sidebars["action"] === false}
         <div class="toolbar w-auto">
@@ -102,13 +103,14 @@
     {/each}
 
     <PageToolbar slot="footer">
-      <Paginator
-        slot="center"
-        has_next={Boolean(next)}
-        has_previous={Boolean(previous)}
-        on:next={() => paginate(next)}
-        on:previous={() => paginate(previous)}
-      />
+      {#snippet center()}
+        <Paginator
+          has_next={Boolean(next)}
+          has_previous={Boolean(previous)}
+          on:next={() => paginate(next)}
+          on:previous={() => paginate(previous)}
+        />
+      {/snippet}
     </PageToolbar>
   </ContentLayout>
 

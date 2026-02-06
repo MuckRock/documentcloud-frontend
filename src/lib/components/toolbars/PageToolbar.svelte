@@ -4,23 +4,32 @@
   It's slotted for composition based on the page it's on.
 -->
 <script lang="ts">
-  export let width: undefined | number = undefined;
+  import type { Snippet } from "svelte";
+
+  interface Props {
+    width?: undefined | number;
+    left?: Snippet;
+    center?: Snippet;
+    right?: Snippet;
+  }
+
+  let { width = $bindable(undefined), left, center, right }: Props = $props();
 </script>
 
 <div class="toolbar" bind:clientWidth={width}>
-  {#if $$slots.left}
+  {#if left}
     <div class="left">
-      <slot name="left" />
+      {@render left()}
     </div>
   {/if}
-  {#if $$slots.center}
+  {#if center}
     <div class="center">
-      <slot name="center" />
+      {@render center()}
     </div>
   {/if}
-  {#if $$slots.right}
+  {#if right}
     <div class="right">
-      <slot name="right" />
+      {@render right()}
     </div>
   {/if}
 </div>
