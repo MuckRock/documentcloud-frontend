@@ -71,6 +71,7 @@
     font-family: var(--font-sans, "Source Sans Pro");
     font-size: var(--font-size, inherit);
     font-weight: var(--font-semibold, 600);
+    line-height: 1;
     text-decoration: none;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -139,6 +140,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
   .label:empty {
     display: none;
