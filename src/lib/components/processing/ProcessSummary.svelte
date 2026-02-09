@@ -5,7 +5,7 @@
   import { icons } from "./Process.svelte";
 
   interface Props {
-    counts?: Record<RunStatus, number>;
+    counts?: Partial<Record<RunStatus, number>>;
   }
 
   let {

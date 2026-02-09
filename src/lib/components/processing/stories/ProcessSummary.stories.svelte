@@ -1,20 +1,15 @@
-<script lang="ts" context="module">
-  import { Template, Story } from "@storybook/addon-svelte-csf";
-  import type { Meta } from "@storybook/svelte";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import ProcessSummary from "../ProcessSummary.svelte";
 
-  export const meta: Meta = {
+  const { Story } = defineMeta({
     title: "Processing / Process Summary",
     component: ProcessSummary,
     parameters: {
       layout: "centered",
     },
-  };
+  });
 </script>
-
-<Template let:args>
-  <ProcessSummary {...args} />
-</Template>
 
 <Story name="With None" args={{ counts: {} }} />
 <Story

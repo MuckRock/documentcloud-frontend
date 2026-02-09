@@ -1,18 +1,18 @@
-<script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import Documents from "../Documents.svelte";
   import ProcessContext from "../ProcessContext.svelte";
 
   import * as mock from "@/test/handlers/documents";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Processing / Documents",
     component: Documents,
     parameters: {
       layout: "centered",
       chromatic: { delay: 5000 }, // https://www.chromatic.com/docs/delay/
     },
-  };
+  });
 </script>
 
 <Story
@@ -20,6 +20,7 @@
   parameters={{
     msw: { handlers: [mock.documents.list, mock.documents.pending] },
   }}
+  asChild
 >
   <ProcessContext>
     <Documents />
