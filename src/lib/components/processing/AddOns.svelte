@@ -3,6 +3,7 @@ Fetch and display status of all running add-ons.
 This component should update on a timer.
 -->
 <script lang="ts">
+  import { onMount, tick } from "svelte";
   import { flip } from "svelte/animate";
   import { _ } from "svelte-i18n";
   import { Plug16 } from "svelte-octicons";
@@ -19,18 +20,28 @@ This component should update on a timer.
   // derive a list of running add-ons that are not dismissed
   const running = getRunningAddons();
 
-  async function dismissAll() {
-    const csrftoken = getCsrfToken() ?? "";
+  let csrftoken: string = $state("");
 
+  let disabled: boolean = $derived(!csrftoken && ($running?.length ?? 0) !== 0);
+
+  onMount(() => {
+    csrftoken = getCsrfToken() ?? "";
+  });
+
+  async function dismissAll() {
     if (!$running || !csrftoken) return;
+
+    // optimistic update
+    $running = $running.map((run) => ({ ...run, dismissed: true }));
 
     const promises = $running.map(async (run) => {
       const { data, error } = await dismiss(run.uuid, csrftoken);
       if (data) {
         return data;
       } else {
+        // errors return to prior state
         console.warn(error);
-        return run;
+        return { ...run, dismissed: false };
       }
     });
 
@@ -38,7 +49,7 @@ This component should update on a timer.
   }
 </script>
 
-{#if $running?.length && $running.length > 0}
+{#if $running && $running.length > 0}
   <SidebarGroup name="processing.addons">
     {#snippet title()}
       <NavItem>
@@ -48,7 +59,9 @@ This component should update on a timer.
     {/snippet}
 
     {#snippet action()}
-      <Button ghost on:click={dismissAll}>{$_("dialog.dismissAll")}</Button>
+      <Button ghost on:click={dismissAll} {disabled}>
+        {$_("dialog.dismissAll")}
+      </Button>
     {/snippet}
 
     {#each $running as run (run.uuid)}
