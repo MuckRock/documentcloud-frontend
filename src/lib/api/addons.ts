@@ -1,7 +1,7 @@
 import type { Page } from "$lib/api/types";
 import type {
   AddOnParams,
-  AddOnListItem,
+  AddOn,
   Event,
   Run,
   AddOnPayload,
@@ -40,7 +40,7 @@ export const eventValues = {
 export async function getAddons(
   params: AddOnParams = {},
   fetch = globalThis.fetch,
-): Promise<APIResponse<Page<AddOnListItem>, unknown>> {
+): Promise<APIResponse<Page<AddOn>, unknown>> {
   const endpoint = new URL("addons/", BASE_API_URL);
   Object.entries(params).forEach(([key, value]) => {
     endpoint.searchParams.set(key, String(value));
@@ -49,7 +49,7 @@ export async function getAddons(
     console.warn,
   );
 
-  return getApiResponse<Page<AddOnListItem>>(resp);
+  return getApiResponse<Page<AddOn>>(resp);
 }
 
 /**
@@ -57,7 +57,7 @@ export async function getAddons(
  */
 export async function getPinnedAddons(
   fetch = globalThis.fetch,
-): Promise<APIResponse<Page<AddOnListItem>, unknown>> {
+): Promise<APIResponse<Page<AddOn>, unknown>> {
   return getAddons({ active: true }, fetch);
 }
 
@@ -65,7 +65,7 @@ export async function getAddon(
   owner: string,
   repo: string,
   fetch = globalThis.fetch,
-): Promise<AddOnListItem | null> {
+): Promise<AddOn | null> {
   const repository = [owner, repo].join("/");
   const { data: addons, error } = await getAddons({ repository }, fetch);
   // there should only be one result, if the addon exists
@@ -281,7 +281,7 @@ export async function rate(
  * Pass results to `validatePayload` to ensure correctness.
  */
 export function buildPayload(
-  addon: AddOnListItem,
+  addon: AddOn,
   formData: FormData,
   validate = false,
 ): AddOnPayload {
@@ -328,7 +328,7 @@ export function buildPayload(
   return payload;
 }
 
-function validatePayload(addon: AddOnListItem, payload: AddOnPayload) {
+function validatePayload(addon: AddOn, payload: AddOnPayload) {
   // todo: investigate whether there's any benefit to creating a global ajv instance
   const ajv = new Ajv({ coerceTypes: true, useDefaults: true });
   addFormats(ajv);

@@ -1,19 +1,15 @@
-<script lang="ts" context="module">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import { event } from "@/test/fixtures/addons";
   import Event from "../ScheduledEvent.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Add-Ons /Scheduled Event",
     component: Event,
     parameters: { layout: "centered" },
     tags: ["autodocs"],
-  };
+  });
 </script>
-
-<Template let:args>
-  <Event {...args} />
-</Template>
 
 <Story name="Disabled" args={{ event: { ...event, event: 0 } }} />
 <Story name="Hourly" args={{ event: { ...event, event: 1 } }} />

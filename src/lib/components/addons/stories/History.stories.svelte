@@ -1,5 +1,5 @@
-<script lang="ts" context="module">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import History from "../History.svelte";
   import { history } from "@/test/handlers/addons";
   import { runsList } from "@/test/fixtures/addons";
@@ -10,16 +10,12 @@
     previous: runsList.previous,
   };
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Add-Ons /History",
     component: History,
     parameters: { layout: "centered" },
-  };
+  });
 </script>
-
-<Template let:args>
-  <History {...args} />
-</Template>
 
 <Story
   name="Success"

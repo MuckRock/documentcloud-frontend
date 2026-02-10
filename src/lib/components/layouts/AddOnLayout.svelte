@@ -3,7 +3,7 @@
     DocumentResults,
     Maybe,
     Page,
-    AddOnListItem,
+    AddOn,
     Event,
     Run,
   } from "$lib/api/types";
@@ -51,7 +51,7 @@
     setVisibleFieldsContext,
   } from "$lib/components/documents/VisibleFields.svelte";
 
-  export let addon: AddOnListItem;
+  export let addon: AddOn;
   export let event: Event | null = null;
   export let scheduled: Promise<Maybe<Page<Event>>> | null = null;
   export let history: Promise<Maybe<Page<Run>>> | null = null;

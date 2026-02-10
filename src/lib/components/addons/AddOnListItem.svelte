@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { AddOnListItem } from "$lib/api/types";
+  import type { AddOn } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
 
@@ -7,7 +7,7 @@
   import PremiumBadge from "$lib/components/premium-credits/PremiumBadge.svelte";
   import { clean } from "$lib/utils/markup";
 
-  export let addon: AddOnListItem;
+  export let addon: AddOn;
 
   $: url = `/add-ons/${addon?.repository}/`;
   $: description = clean(addon?.parameters?.description ?? "");

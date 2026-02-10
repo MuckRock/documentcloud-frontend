@@ -1,0 +1,393 @@
+import type { Page, Event } from "$lib/api/types";
+
+export const event: Event = {
+  id: 6,
+  addon: {
+    id: 436,
+    user: 100000,
+    organization: 10001,
+    access: "public",
+    name: "Klaxon Site Monitor",
+    repository: "MuckRock/Klaxon",
+    parameters: {
+      type: "object",
+      title: "Klaxon Site Monitor",
+      required: ["site", "selector"],
+      categories: ["monitor"],
+      properties: {
+        site: {
+          type: "string",
+          title: "Site",
+          format: "uri",
+        },
+        selector: {
+          type: "string",
+          title: "Selector",
+          description: "CSS Selector on the page you would like to monitor.",
+        },
+        slack_webhook: {
+          type: "string",
+          title: "Slack Webhook",
+          format: "uri",
+          description: "Enter a slack webhook to enable Slack notifications",
+        },
+      },
+      description:
+        "<p>Klaxon enables reporters and editors to monitor scores of sites and files on the web for newsworthy changes. \nGet email notifications when something changes. Provide an optional CSS selector to only monitor \nportions of a page you are interested in. To get started, copy the bookmarklet <a href=\"javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://documentcloud-klaxon.s3.amazonaws.com/inject.js';})();\">Add to Klaxon</a> to your bookmarks, \nvisit a page you are looking to monitor, and then click on the bookmark to activate Klaxon. </p>",
+      eventOptions: {
+        name: "site",
+        events: ["hourly", "daily", "weekly"],
+      },
+    },
+    created_at: "2023-07-19T19:59:18.068046Z",
+    updated_at: "2023-07-20T13:23:04.664272Z",
+    active: false,
+    default: false,
+    featured: false,
+  },
+  user: 100000,
+  parameters: {
+    site: "https://github.com/muckrock/klaxon",
+    selector: "readme-toc",
+  },
+  event: 3,
+  scratch: {},
+  created_at: "2023-07-19T19:59:18.096986Z",
+  updated_at: "2023-07-19T19:59:18.097140Z",
+};
+
+export const eventsList: Page<Event> = {
+  count: 3,
+  next: null,
+  previous: null,
+  results: [
+    {
+      id: 8,
+      addon: {
+        id: 105,
+        user: 100000,
+        organization: 10001,
+        access: "public",
+        name: "Scraper",
+        repository: "MuckRock/documentcloud-scraper-addon",
+        parameters: {
+          type: "object",
+          title: "Scraper",
+          required: ["site", "project"],
+          categories: ["monitor"],
+          properties: {
+            site: {
+              type: "string",
+              title: "Site",
+              format: "uri",
+              description: "The URL of the site to start scraping",
+            },
+            project: {
+              type: "string",
+              title: "Project",
+              description:
+                "The DocumentCloud project title or ID of the project the documents should be uploaded to.  If the project title does not exist, it will be created.",
+            },
+            filecoin: {
+              type: "boolean",
+              title: "Push to IPFS/Filecoin",
+              description:
+                "WARNING: This will push all scraped files to IPFS and Filecoin.   There is no way to remove files from these storage systems.",
+            },
+            keywords: {
+              type: "string",
+              title: "Keywords",
+              description: "Keywords to search and notify on (comma separated)",
+            },
+            notify_all: {
+              type: "boolean",
+              title: "Notify on all new documents",
+            },
+            crawl_depth: {
+              type: "integer",
+              title: "Crawl Depth",
+              default: 0,
+              maximum: 2,
+              minimum: 0,
+              description:
+                "Recursively scrape same-domain links found on the page (Must be between 0 and 2)",
+            },
+            access_level: {
+              type: "string",
+              title: "Access Level",
+              default: "public",
+              description:
+                "Access level (public, private, or organization) of documents scraped.",
+            },
+            slack_webhook: {
+              type: "string",
+              title: "Slack Webhook",
+              format: "uri",
+              description:
+                "Enter a slack webhook to enable Slack notifications",
+            },
+          },
+          description:
+            "<p>This add-on will scrape and optionally crawl a given site for documents to upload to DocumentCloud.  It can also alert you of given keywords appearing in those documents.</p>",
+          eventOptions: {
+            name: "site",
+            events: ["hourly", "daily", "weekly"],
+          },
+        },
+        created_at: "2023-07-19T19:59:18.027007Z",
+        updated_at: "2023-07-24T20:28:25.669788Z",
+        active: true,
+        default: true,
+        featured: false,
+      },
+      user: 100000,
+      parameters: {
+        site: "https://www.supremecourt.gov/opinions/slipopinion/22",
+        project: "scotus",
+        crawl_depth: 1,
+        access_level: "public",
+      },
+      event: 3,
+      scratch: {},
+      created_at: "2023-07-26T16:54:48.150599Z",
+      updated_at: "2023-07-27T14:12:42.316590Z",
+    },
+    {
+      id: 7,
+      addon: {
+        id: 436,
+        user: 100000,
+        organization: 10001,
+        access: "public",
+        name: "Klaxon Site Monitor",
+        repository: "MuckRock/Klaxon",
+        parameters: {
+          type: "object",
+          title: "Klaxon Site Monitor",
+          required: ["site", "selector"],
+          categories: ["monitor"],
+          properties: {
+            site: {
+              type: "string",
+              title: "Site",
+              format: "uri",
+            },
+            selector: {
+              type: "string",
+              title: "Selector",
+              description:
+                "CSS Selector on the page you would like to monitor.",
+            },
+            slack_webhook: {
+              type: "string",
+              title: "Slack Webhook",
+              format: "uri",
+              description:
+                "Enter a slack webhook to enable Slack notifications",
+            },
+          },
+          description:
+            "<p>Klaxon enables reporters and editors to monitor scores of sites and files on the web for newsworthy changes. \nGet email notifications when something changes. Provide an optional CSS selector to only monitor \nportions of a page you are interested in. To get started, copy the bookmarklet <a href=\"javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://documentcloud-klaxon.s3.amazonaws.com/inject.js';})();\">Add to Klaxon</a> to your bookmarks, \nvisit a page you are looking to monitor, and then click on the bookmark to activate Klaxon. </p>",
+          eventOptions: {
+            name: "site",
+            events: ["hourly", "daily", "weekly"],
+          },
+        },
+        created_at: "2023-07-19T19:59:18.068046Z",
+        updated_at: "2023-07-27T14:06:29.899202Z",
+        active: true,
+        default: false,
+        featured: true,
+      },
+      user: 100000,
+      parameters: {
+        site: "https://bjjfanatics.com/products/unstoppable-standups-by-chris-paines-and-charles-harriott",
+        selector: "#ProductPrice-product",
+      },
+      event: 2,
+      scratch: {},
+      created_at: "2023-07-19T19:59:18.098265Z",
+      updated_at: "2023-07-26T16:52:28.302407Z",
+    },
+    {
+      id: 6,
+      addon: {
+        id: 436,
+        user: 100000,
+        organization: 10001,
+        access: "public",
+        name: "Klaxon Site Monitor",
+        repository: "MuckRock/Klaxon",
+        parameters: {
+          type: "object",
+          title: "Klaxon Site Monitor",
+          required: ["site", "selector"],
+          categories: ["monitor"],
+          properties: {
+            site: {
+              type: "string",
+              title: "Site",
+              format: "uri",
+            },
+            selector: {
+              type: "string",
+              title: "Selector",
+              description:
+                "CSS Selector on the page you would like to monitor.",
+            },
+            slack_webhook: {
+              type: "string",
+              title: "Slack Webhook",
+              format: "uri",
+              description:
+                "Enter a slack webhook to enable Slack notifications",
+            },
+          },
+          description:
+            "<p>Klaxon enables reporters and editors to monitor scores of sites and files on the web for newsworthy changes. \nGet email notifications when something changes. Provide an optional CSS selector to only monitor \nportions of a page you are interested in. To get started, copy the bookmarklet <a href=\"javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://documentcloud-klaxon.s3.amazonaws.com/inject.js';})();\">Add to Klaxon</a> to your bookmarks, \nvisit a page you are looking to monitor, and then click on the bookmark to activate Klaxon. </p>",
+          eventOptions: {
+            name: "site",
+            events: ["hourly", "daily", "weekly"],
+          },
+        },
+        created_at: "2023-07-19T19:59:18.068046Z",
+        updated_at: "2023-07-27T14:06:29.899202Z",
+        active: true,
+        default: false,
+        featured: true,
+      },
+      user: 100000,
+      parameters: {
+        site: "https://github.com/muckrock/klaxon",
+        selector: "readme-toc",
+      },
+      event: 3,
+      scratch: {},
+      created_at: "2023-07-19T19:59:18.096986Z",
+      updated_at: "2023-07-19T19:59:18.097140Z",
+    },
+  ],
+};
+
+export const scheduled: Page<Event> = {
+  next: null,
+  previous: null,
+  results: [
+    {
+      id: 533,
+      addon: {
+        id: 436,
+        user: 102112,
+        organization: 125,
+        access: "public",
+        name: "Klaxon Site Monitor",
+        repository: "MuckRock/Klaxon",
+        parameters: {
+          type: "object",
+          title: "Klaxon Site Monitor",
+          required: ["site", "selector"],
+          categories: ["monitor"],
+          properties: {
+            site: {
+              type: "string",
+              title: "Site",
+              format: "uri",
+            },
+            selector: {
+              type: "string",
+              title: "Selector",
+              description:
+                "CSS Selector on the page you would like to monitor.",
+            },
+            slack_webhook: {
+              type: "string",
+              title: "Slack Webhook",
+              format: "uri",
+              description:
+                "Enter a slack webhook to enable Slack notifications",
+            },
+          },
+          description:
+            "Klaxon enables reporters and editors to monitor scores of sites and files on the web for newsworthy changes.  Get email notifications when something changes. Provide an optional CSS selector to only monitor  portions of a page you are interested in. To get started, copy the bookmarklet [Add to Klaxon](javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://documentcloud-klaxon.s3.amazonaws.com/inject.js';})();) to your bookmarks,  visit a page you are looking to monitor, and then click on the bookmark to activate Klaxon. ",
+          eventOptions: {
+            name: "site",
+            events: ["hourly", "daily", "weekly"],
+          },
+        },
+        created_at: "2023-04-17T16:35:17.845041Z",
+        updated_at: "2023-07-16T19:54:29.948116Z",
+        active: true,
+        default: false,
+        featured: false,
+      },
+      user: 1020,
+      parameters: {
+        site: "https://github.com/muckrock/klaxon",
+        selector: "readme-toc",
+      },
+      event: 3,
+      scratch: {
+        timestamp: "20230725202608",
+      },
+      created_at: "2023-04-19T18:20:39.025963Z",
+      updated_at: "2023-07-25T20:56:14.837295Z",
+    },
+    {
+      id: 718,
+      addon: {
+        id: 436,
+        user: 102112,
+        organization: 125,
+        access: "public",
+        name: "Klaxon Site Monitor",
+        repository: "MuckRock/Klaxon",
+        parameters: {
+          type: "object",
+          title: "Klaxon Site Monitor",
+          required: ["site", "selector"],
+          categories: ["monitor"],
+          properties: {
+            site: {
+              type: "string",
+              title: "Site",
+              format: "uri",
+            },
+            selector: {
+              type: "string",
+              title: "Selector",
+              description:
+                "CSS Selector on the page you would like to monitor.",
+            },
+            slack_webhook: {
+              type: "string",
+              title: "Slack Webhook",
+              format: "uri",
+              description:
+                "Enter a slack webhook to enable Slack notifications",
+            },
+          },
+          description:
+            "Klaxon enables reporters and editors to monitor scores of sites and files on the web for newsworthy changes.  Get email notifications when something changes. Provide an optional CSS selector to only monitor  portions of a page you are interested in. To get started, copy the bookmarklet [Add to Klaxon](javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://documentcloud-klaxon.s3.amazonaws.com/inject.js';})();) to your bookmarks,  visit a page you are looking to monitor, and then click on the bookmark to activate Klaxon. ",
+          eventOptions: {
+            name: "site",
+            events: ["hourly", "daily", "weekly"],
+          },
+        },
+        created_at: "2023-04-17T16:35:17.845041Z",
+        updated_at: "2023-07-16T19:54:29.948116Z",
+        active: true,
+        default: false,
+        featured: false,
+      },
+      user: 1020,
+      parameters: {
+        site: "https://www.supremecourt.gov/opinions/slipopinion/22",
+        selector: "#list",
+      },
+      event: 3,
+      scratch: {},
+      created_at: "2023-07-31T20:04:28.303078Z",
+      updated_at: "2023-07-31T20:04:28.303507Z",
+    },
+  ],
+};

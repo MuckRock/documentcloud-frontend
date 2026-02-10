@@ -1,13 +1,12 @@
-<script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import AddOnMeta from "../AddOnMeta.svelte";
+  import { addon } from "@/test/fixtures/addons";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Add-Ons /Metadata",
     component: AddOnMeta,
-  };
-
-  import { addon } from "@/test/fixtures/addons";
+  });
 </script>
 
 <Story name="Metadata">

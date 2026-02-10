@@ -1,15 +1,14 @@
-<script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import ScheduledComponent from "../Scheduled.svelte";
-
   import { eventsList } from "@/test/fixtures/addons";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Add-Ons /Scheduled",
     parameters: {
       layout: "centered",
     },
-  };
+  });
 </script>
 
 <Story name="With Data">

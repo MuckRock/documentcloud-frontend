@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { AddOnListItem } from "$lib/api/types";
+  import type { AddOn } from "$lib/api/types";
 
   // TODO: Switch to $app/state once Storybook properly supports sveltekit_experimental.state
   // Currently using deprecated $app/stores because Storybook 8.6.15 doesn't populate
@@ -33,7 +33,7 @@
 
   let pinnedAddOns = $derived($page.data.pinnedAddons ?? []);
 
-  function getHref(query: string, addon?: AddOnListItem): string {
+  function getHref(query: string, addon?: AddOn): string {
     let path = "/add-ons/";
     if (addon) {
       path += `${addon.repository}/`;

@@ -33,6 +33,13 @@
 
   let ranAt = $derived(new Date(run.created_at));
   let isRunning = $derived(["in_progress", "queued"].includes(run.status));
+  let name = $derived.by(() => {
+    const options = run.addon.parameters.eventOptions;
+    const field = options?.name;
+
+    if (field) {
+    }
+  });
 
   const icons: Record<RunStatus, typeof SvgComponent> = {
     success: CheckCircle24,

@@ -359,7 +359,7 @@ interface AddOnParameters {
 }
 
 // API endpoint https://api.www.documentcloud.org/api/addons/
-export interface AddOnListItem {
+export interface AddOn {
   id: number;
   user: null | number;
   organization: null | number;
@@ -385,8 +385,9 @@ export type RunStatus =
 // https://api.www.documentcloud.org/api/addon_runs/?expand=addon
 export interface Run {
   uuid: string;
-  addon: AddOnListItem;
+  addon: AddOn;
   user: number;
+  event?: number | Event | null;
   status: RunStatus;
   progress: number;
   message: string;
@@ -403,7 +404,7 @@ export interface Run {
 // https://api.www.documentcloud.org/api/addon_events/?expand=addon
 export interface Event {
   id: number;
-  addon: AddOnListItem;
+  addon: AddOn;
   user: number;
   parameters: any;
   event: number;

@@ -1,8 +1,8 @@
 <script lang="ts" context="module">
   import { writable, type Writable } from "svelte/store";
-  import type { AddOnListItem } from "$lib/api/types";
+  import type { AddOn } from "$lib/api/types";
 
-  export const pinned: Writable<AddOnListItem[]> = writable([]);
+  export const pinned: Writable<AddOn[]> = writable([]);
 </script>
 
 <script lang="ts">
@@ -10,7 +10,7 @@
   import { BASE_API_URL } from "@/config/config";
   import Pin from "../common/Pin.svelte";
 
-  export let addon: AddOnListItem;
+  export let addon: AddOn;
   export let size = 1;
 
   $: endpoint = new URL(`/api/addons/${addon.id}/`, BASE_API_URL);

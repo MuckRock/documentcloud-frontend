@@ -1,5 +1,5 @@
 import type {
-  AddOnListItem,
+  AddOn,
   APIResponse,
   Nullable,
   Org,
@@ -22,7 +22,7 @@ export async function load({ fetch }) {
 
   let user_orgs: Promise<Org[]> = Promise.resolve([]);
   let org_users: Promise<User[]> = Promise.resolve([]);
-  let pinnedAddons: Promise<Nullable<APIResponse<Page<AddOnListItem>>>> =
+  let pinnedAddons: Promise<Nullable<APIResponse<Page<AddOn>>>> =
     Promise.resolve(null);
   let pinnedProjects: Promise<Project[]> = Promise.resolve([]);
 

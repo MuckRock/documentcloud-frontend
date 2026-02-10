@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { AddOnListItem } from "$lib/api/types";
+  import type { AddOn } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
   import { MarkGithub16 } from "svelte-octicons";
@@ -9,7 +9,7 @@
   import Metadata from "../common/Metadata.svelte";
   import { clean } from "$lib/utils/markup";
 
-  export let addon: AddOnListItem;
+  export let addon: AddOn;
 
   $: repo = new URL(addon.repository, "https://github.com/").href;
   $: github_org = addon.repository.split("/")[0];
