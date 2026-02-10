@@ -21,32 +21,30 @@
   });
 
   function sumCounts(counts: Record<RunStatus, number>) {
-    return Object.values(counts).reduce((acc, cur) => acc + cur, 0);
+    return Object.values(counts).reduce((m, count) => m + count, 0);
   }
 
   const running = getRunningAddons();
   const current = getPendingDocuments();
 
   let addons = $derived(
-    $running
-      ?.filter((r) => !r.dismissed)
-      .reduce(
-        (acc, cur) => {
-          const curCount = acc[cur.status] ?? 0;
-          acc[cur.status] = curCount + 1;
-          return acc;
-        },
-        {} as Record<RunStatus, number>,
-      ),
+    $running?.reduce(
+      (m, run) => {
+        const count = m[run.status] ?? 0;
+        m[run.status] = count + 1;
+        return m;
+      },
+      {} as Record<RunStatus, number>,
+    ),
   );
 
   let documents = $derived(
     $current?.reduce(
-      (acc, cur) => {
-        const status = getStatus(cur);
-        const curCount = acc[status] ?? 0;
-        acc[status] = curCount + 1;
-        return acc;
+      (m, doc) => {
+        const status = getStatus(doc);
+        const count = m[status] ?? 0;
+        m[status] = count + 1;
+        return m;
       },
       {} as Record<RunStatus, number>,
     ),

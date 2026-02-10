@@ -71,6 +71,7 @@
     "reset": "Reset",
     "update": "Update",
     "dismiss": "Dismiss",
+    "dismissAll": "Dismiss all",
     "dispatch": "Dispatch",
     "required": "This field is required"
   },

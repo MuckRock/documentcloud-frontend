@@ -10,7 +10,6 @@
     Alert24,
     Sync24,
     X24,
-    XCircle16,
     type SvgComponent,
   } from "svelte-octicons";
 
@@ -127,7 +126,18 @@
   </div>
 
   {#snippet actions()}
-    <Flex>
+    <Flex class="actions" justify="end">
+      {#if dismissable && !run.dismissed}
+        <Button
+          size="small"
+          minW={false}
+          ghost
+          disabled={!csrftoken}
+          on:click={() => dismissRun()}
+        >
+          {$_("dialog.dismiss")}
+        </Button>
+      {/if}
       {#if isRunning}
         <!-- Cancel -->
         <Button
@@ -138,21 +148,11 @@
           on:click={() => cancelRun()}
           title={$_("dialog.cancel")}
         >
-          <XCircle16 />
+          {$_("dialog.cancel")}
         </Button>
-      {:else if dismissable && !run.dismissed}
-        <Button
-          size="small"
-          minW={false}
-          ghost
-          disabled={!csrftoken}
-          on:click={() => dismissRun()}
-        >
-          {$_("dialog.dismiss")}
-        </Button>
-        <!-- todo: retry -->
       {/if}
     </Flex>
+    <!-- todo: retry -->
   {/snippet}
 </Process>
 

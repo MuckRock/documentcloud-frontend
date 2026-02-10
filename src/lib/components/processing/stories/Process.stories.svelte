@@ -1,16 +1,15 @@
-<script lang="ts" module>
-  import type { Meta } from "@storybook/svelte";
-  import { Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import { XCircle16, Thumbsup16, Thumbsdown16 } from "svelte-octicons";
 
   import Process from "../Process.svelte";
   import Button from "../../common/Button.svelte";
   import Flex from "../../common/Flex.svelte";
 
-  export const meta: Meta = {
+  const { Story } = defineMeta({
     title: "Processing / Process",
     component: Process,
-  };
+  });
 </script>
 
 <Story
@@ -18,6 +17,7 @@
   parameters={{
     chromatic: { disableSnapshot: true },
   }}
+  asChild
 >
   <Process status="in_progress">
     <span class="name">Example process</span>
@@ -36,6 +36,7 @@
   parameters={{
     chromatic: { disableSnapshot: true },
   }}
+  asChild
 >
   <Process status="in_progress" progress={0.7}>
     <span class="name">Example process</span>
@@ -54,6 +55,7 @@
   parameters={{
     chromatic: { disableSnapshot: true },
   }}
+  asChild
 >
   <Process status="queued">
     <span class="name">Example process</span>
@@ -72,6 +74,7 @@
   parameters={{
     chromatic: { disableSnapshot: true },
   }}
+  asChild
 >
   <Process status="success">
     <span class="name">Example process</span>
@@ -90,6 +93,7 @@
   parameters={{
     chromatic: { disableSnapshot: true },
   }}
+  asChild
 >
   <Process status="failure">
     <span class="name">Example process</span>
@@ -108,6 +112,7 @@
   parameters={{
     chromatic: { disableSnapshot: true },
   }}
+  asChild
 >
   <Process status="cancelled">
     <span class="name">Example process</span>
@@ -126,6 +131,7 @@
   parameters={{
     chromatic: { disableSnapshot: true },
   }}
+  asChild
 >
   <Process status="success">
     <span class="name">Completed event</span>
