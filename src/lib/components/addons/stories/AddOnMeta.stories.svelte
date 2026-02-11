@@ -4,12 +4,12 @@
   import { addon } from "@/test/fixtures/addons";
 
   const { Story } = defineMeta({
-    title: "Add-Ons /Metadata",
+    title: "Add-Ons / Metadata",
     component: AddOnMeta,
   });
 </script>
 
-<Story name="Metadata">
+<Story name="Metadata" asChild>
   <nav>
     <AddOnMeta {addon} />
   </nav>
