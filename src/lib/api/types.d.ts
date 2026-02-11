@@ -404,7 +404,7 @@ export interface Run {
 // https://api.www.documentcloud.org/api/addon_events/?expand=addon
 export interface Event {
   id: number;
-  addon: AddOn;
+  addon: AddOn | number;
   user: number;
   parameters: any;
   event: number;

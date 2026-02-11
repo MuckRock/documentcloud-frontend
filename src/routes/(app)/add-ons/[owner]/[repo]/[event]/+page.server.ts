@@ -3,7 +3,7 @@ import type { Actions } from "@sveltejs/kit";
 import { fail } from "@sveltejs/kit";
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
 
-import { getEvent, buildPayload, update } from "$lib/api/addons";
+import { getEvent, buildPayload, update, isAddon } from "$lib/api/addons";
 import { setFlash } from "sveltekit-flash-message/server";
 
 export const actions = {
@@ -17,7 +17,7 @@ export const actions = {
 
     // Check for addon
     const addon = event.data?.addon;
-    if (!addon) {
+    if (!isAddon(addon)) {
       return fail(404, { message: "Add-On not found" });
     }
 

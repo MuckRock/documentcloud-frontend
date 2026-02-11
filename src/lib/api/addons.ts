@@ -102,7 +102,7 @@ export async function history(
   } = {},
   fetch = globalThis.fetch,
 ): Promise<APIResponse<Page<Run>, unknown>> {
-  const endpoint = new URL("addon_runs/?expand=addon", BASE_API_URL);
+  const endpoint = new URL("addon_runs/?expand=addon,event", BASE_API_URL);
   for (const [k, v] of Object.entries(params)) {
     endpoint.searchParams.set(k, String(v));
   }
@@ -350,4 +350,17 @@ function noNulls<T extends Record<string, any>>(values: T): Partial<T> {
     }
     return m;
   }, {});
+}
+
+// type utils
+export function isAddon(
+  addon: AddOn | number | null | undefined,
+): addon is AddOn {
+  return Boolean(addon) && typeof addon === "object";
+}
+
+export function isEvent(
+  event: Event | number | null | undefined,
+): event is Event {
+  return Boolean(event) && typeof event === "object";
 }

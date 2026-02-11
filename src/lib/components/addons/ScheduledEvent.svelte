@@ -24,15 +24,18 @@
 
   import { _ } from "svelte-i18n";
 
+  import { isAddon } from "$lib/api/addons";
   import NavItem from "$lib/components/common/NavItem.svelte";
 
   export let event: Event;
 
+  $: addon = isAddon(event.addon) ? event.addon : undefined;
   $: disabled = event.event === 0;
-  $: key = event.addon?.parameters?.eventOptions?.name;
+  $: key = addon?.parameters?.eventOptions?.name;
   $: target = key ? event.parameters[key] : undefined;
 
   function url(event: Event) {
+    if (!isAddon(event.addon)) return "";
     return `/add-ons/${event.addon.repository}/${event.id}/`;
   }
 </script>
@@ -40,7 +43,7 @@
 <NavItem href={url(event)} on:click>
   <div class="info" class:disabled>
     <p class="name">
-      {event.addon.name}
+      {addon?.name}
     </p>
     {#if target}
       <p class="target">{target}</p>

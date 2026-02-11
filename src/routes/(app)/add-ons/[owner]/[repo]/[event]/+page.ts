@@ -17,10 +17,15 @@ export async function load({ params, fetch, parent, url }) {
   if (!event) {
     return error(404, "Event not found");
   }
+  if (!addons.isAddon(event.addon)) {
+    return error(404, "Add-On not found");
+  }
+
+  const addon = event.addon;
 
   // there's probably something better to use as a breadcrumb title
   const breadcrumbs = await breadcrumbTrail(parent, [
-    { href: `/add-ons/${event.addon.repository}/`, title: event.addon.name },
+    { href: `/add-ons/${addon.repository}/`, title: addon.name },
     { href: url.pathname, title: event.id.toString() },
   ]);
 
@@ -35,10 +40,10 @@ export async function load({ params, fetch, parent, url }) {
     query,
     searchResults,
     scheduled: addons
-      .scheduled({ addon: event.addon.id, per_page: 100 }, fetch)
+      .scheduled({ addon: addon.id, per_page: 100 }, fetch)
       .then((r) => r.data),
     history: addons
-      .history({ addon: event.addon.id }, fetch)
+      .history({ addon: addon.id }, fetch)
       .then((r) => r.data),
   };
 }
