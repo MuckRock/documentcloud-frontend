@@ -24,18 +24,28 @@
 
   interface Props {
     run: Run;
+    event?: Event;
     dismissable?: boolean;
   }
 
-  let { run = $bindable(), dismissable = false }: Props = $props();
+  let {
+    run = $bindable(),
+    dismissable = false,
+    event: _event, // rename here so we can consolidate below
+  }: Props = $props();
 
   let csrftoken: Maybe<string> = $state(undefined);
 
   let ranAt = $derived(new Date(run.created_at));
   let isRunning = $derived(["in_progress", "queued"].includes(run.status));
-  let event = $derived(addons.isEvent(run.event) ? run.event : undefined);
+
+  // use the event we passed in if available, or run.addon if it's there, or nothing
+  let event = $derived.by(() => {
+    if (_event) return _event;
+    if (addons.isEvent(run.event)) return run.event;
+  });
+
   let label = $derived.by(() => {
-    if (!run.event) return; // name is in event
     const options = run.addon.parameters.eventOptions;
     const field = options?.name;
 

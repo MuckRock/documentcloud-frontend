@@ -43,7 +43,7 @@ export async function load({ params, fetch, parent, url }) {
       .scheduled({ addon: addon.id, per_page: 100 }, fetch)
       .then((r) => r.data),
     history: addons
-      .history({ addon: addon.id }, fetch)
+      .history({ addon: addon.id, expand: "addon" }, fetch)
       .then((r) => r.data),
   };
 }

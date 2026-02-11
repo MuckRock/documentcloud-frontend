@@ -99,10 +99,15 @@ export async function history(
     event?: number;
     per_page?: number;
     addon?: number;
+    expand?: string;
   } = {},
   fetch = globalThis.fetch,
 ): Promise<APIResponse<Page<Run>, unknown>> {
-  const endpoint = new URL("addon_runs/?expand=addon,event", BASE_API_URL);
+  // in some cases, we don't need to expand both
+  if (!params.expand) {
+    params.expand = "addon,event";
+  }
+  const endpoint = new URL("addon_runs/", BASE_API_URL);
   for (const [k, v] of Object.entries(params)) {
     endpoint.searchParams.set(k, String(v));
   }

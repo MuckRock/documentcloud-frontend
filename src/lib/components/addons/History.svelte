@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Maybe, Nullable, Page, Run } from "$lib/api/types";
+  import type { Event, Maybe, Nullable, Page, Run } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
   import { Alert24, History16, History24, Hourglass24 } from "svelte-octicons";
@@ -14,6 +14,7 @@
   import { getApiResponse } from "$lib/utils/api";
 
   export let runs: Run[];
+  export let event: Maybe<Event> = undefined;
   export let previous: Maybe<Nullable<string>> = undefined;
   export let next: Maybe<Nullable<string>> = undefined;
 
@@ -75,7 +76,7 @@
     </Empty>
   {:else}
     {#each runs as run}
-      <HistoryEvent {run} />
+      <HistoryEvent {run} {event} />
     {:else}
       <Empty icon={History24}>{$_("addonDispatchDialog.noHistory")}</Empty>
     {/each}

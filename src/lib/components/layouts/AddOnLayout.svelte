@@ -52,7 +52,7 @@
   } from "$lib/components/documents/VisibleFields.svelte";
 
   export let addon: AddOn;
-  export let event: Event | null = null;
+  export let event: Maybe<Event> = undefined;
   export let scheduled: Promise<Maybe<Page<Event>>> | null = null;
   export let history: Promise<Maybe<Page<Run>>> | null = null;
   export let search: Promise<Maybe<DocumentResults>>;
@@ -179,6 +179,7 @@
                   runs={history.results}
                   next={history.next}
                   previous={history.previous}
+                  {event}
                 />
               {:else}
                 <Empty>{$_("addonDispatchDialog.noHistory")}</Empty>
