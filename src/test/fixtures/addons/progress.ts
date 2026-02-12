@@ -1,6 +1,6 @@
-import type { AddOnListItem, Run } from "$lib/api/types";
+import type { AddOn, Run } from "$lib/api/types";
 
-const addon: AddOnListItem = {
+const addon: AddOn = {
   id: 105,
   user: 20080,
   organization: 125,
@@ -85,6 +85,7 @@ export const progress: Run[] = [
   {
     uuid: "45306c6d-eece-43c2-9db5-77caa28da24d",
     addon,
+    event: null,
     user: 1020,
     status: "in_progress",
     progress: 0,
@@ -101,6 +102,7 @@ export const progress: Run[] = [
   {
     uuid: "45306c6d-eece-43c2-9db5-77caa28da24f",
     addon,
+    event: null,
     user: 1020,
     status: "in_progress",
     progress: 0,

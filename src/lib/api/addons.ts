@@ -1,7 +1,7 @@
 import type { Page } from "$lib/api/types";
 import type {
   AddOnParams,
-  AddOnListItem,
+  AddOn,
   Event,
   Run,
   AddOnPayload,
@@ -40,7 +40,7 @@ export const eventValues = {
 export async function getAddons(
   params: AddOnParams = {},
   fetch = globalThis.fetch,
-): Promise<APIResponse<Page<AddOnListItem>, unknown>> {
+): Promise<APIResponse<Page<AddOn>, unknown>> {
   const endpoint = new URL("addons/", BASE_API_URL);
   Object.entries(params).forEach(([key, value]) => {
     endpoint.searchParams.set(key, String(value));
@@ -49,7 +49,7 @@ export async function getAddons(
     console.warn,
   );
 
-  return getApiResponse<Page<AddOnListItem>>(resp);
+  return getApiResponse<Page<AddOn>>(resp);
 }
 
 /**
@@ -57,7 +57,7 @@ export async function getAddons(
  */
 export async function getPinnedAddons(
   fetch = globalThis.fetch,
-): Promise<APIResponse<Page<AddOnListItem>, unknown>> {
+): Promise<APIResponse<Page<AddOn>, unknown>> {
   return getAddons({ active: true }, fetch);
 }
 
@@ -65,7 +65,7 @@ export async function getAddon(
   owner: string,
   repo: string,
   fetch = globalThis.fetch,
-): Promise<AddOnListItem | null> {
+): Promise<AddOn | null> {
   const repository = [owner, repo].join("/");
   const { data: addons, error } = await getAddons({ repository }, fetch);
   // there should only be one result, if the addon exists
@@ -99,10 +99,15 @@ export async function history(
     event?: number;
     per_page?: number;
     addon?: number;
+    expand?: string;
   } = {},
   fetch = globalThis.fetch,
 ): Promise<APIResponse<Page<Run>, unknown>> {
-  const endpoint = new URL("addon_runs/?expand=addon", BASE_API_URL);
+  // in some cases, we don't need to expand both
+  if (!params.expand) {
+    params.expand = "addon,event";
+  }
+  const endpoint = new URL("addon_runs/", BASE_API_URL);
   for (const [k, v] of Object.entries(params)) {
     endpoint.searchParams.set(k, String(v));
   }
@@ -281,7 +286,7 @@ export async function rate(
  * Pass results to `validatePayload` to ensure correctness.
  */
 export function buildPayload(
-  addon: AddOnListItem,
+  addon: AddOn,
   formData: FormData,
   validate = false,
 ): AddOnPayload {
@@ -328,7 +333,7 @@ export function buildPayload(
   return payload;
 }
 
-function validatePayload(addon: AddOnListItem, payload: AddOnPayload) {
+function validatePayload(addon: AddOn, payload: AddOnPayload) {
   // todo: investigate whether there's any benefit to creating a global ajv instance
   const ajv = new Ajv({ coerceTypes: true, useDefaults: true });
   addFormats(ajv);
@@ -350,4 +355,17 @@ function noNulls<T extends Record<string, any>>(values: T): Partial<T> {
     }
     return m;
   }, {});
+}
+
+// type utils
+export function isAddon(
+  addon: AddOn | number | null | undefined,
+): addon is AddOn {
+  return Boolean(addon) && typeof addon === "object";
+}
+
+export function isEvent(
+  event: Event | number | null | undefined,
+): event is Event {
+  return Boolean(event) && typeof event === "object";
 }

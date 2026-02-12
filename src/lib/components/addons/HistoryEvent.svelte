@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Maybe, Run, RunStatus } from "$lib/api/types";
+  import type { Event, Maybe, Run, RunStatus } from "$lib/api/types";
   import { onMount } from "svelte";
 
   import { _ } from "svelte-i18n";
@@ -24,15 +24,35 @@
 
   interface Props {
     run: Run;
+    event?: Event;
     dismissable?: boolean;
   }
 
-  let { run = $bindable(), dismissable = false }: Props = $props();
+  let {
+    run = $bindable(),
+    dismissable = false,
+    event: _event, // rename here so we can consolidate below
+  }: Props = $props();
 
   let csrftoken: Maybe<string> = $state(undefined);
 
   let ranAt = $derived(new Date(run.created_at));
   let isRunning = $derived(["in_progress", "queued"].includes(run.status));
+
+  // use the event we passed in if available, or run.addon if it's there, or nothing
+  let event = $derived.by(() => {
+    if (_event) return _event;
+    if (addons.isEvent(run.event)) return run.event;
+  });
+
+  let label = $derived.by(() => {
+    const options = run.addon.parameters.eventOptions;
+    const field = options?.name;
+
+    if (field && event) {
+      return event.parameters[field];
+    }
+  });
 
   const icons: Record<RunStatus, typeof SvgComponent> = {
     success: CheckCircle24,
@@ -97,6 +117,9 @@
     <div class="row">
       <div class="primary-info">
         <p class="name">{run.addon.name}</p>
+        {#if label}
+          <p class="label">{label}</p>
+        {/if}
         {#if run.file_url}
           <a href={run.file_url} download>
             <Action>
@@ -179,13 +202,20 @@
   .primary-info {
     flex: 1 1 auto;
     display: flex;
-    align-items: center;
+    align-items: baseline;
     flex-wrap: wrap;
     gap: 0.5em;
   }
   .name {
     flex: 0 1 auto;
     font-weight: 600;
+  }
+  .label {
+    font-size: 0.8em;
+    font-style: italic;
+    max-width: 60ch;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
   }
   .date {
     flex: 0 1 auto;

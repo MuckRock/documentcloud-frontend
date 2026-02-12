@@ -6,6 +6,7 @@
 
   import { values } from "$lib/components/forms/AddOnDispatch.svelte";
   import { schedules } from "$lib/components/addons/ScheduledEvent.svelte";
+  import { isAddon } from "$lib/api/addons";
   import { isPremiumOrg, getCreditBalance } from "$lib/api/accounts";
   import { getCurrentUser } from "$lib/utils/permissions";
 
@@ -14,7 +15,7 @@
   const me = getCurrentUser();
 
   let event = $derived(data.event);
-  let addon = $derived(data.event.addon);
+  let addon = $derived(isAddon(data.event.addon) ? data.event.addon : undefined);
   let query = $derived(data.query);
   let search = $derived(data.searchResults);
   let scheduled = $derived(data.scheduled);
@@ -40,15 +41,17 @@
 </script>
 
 <svelte:head>
-  <title>{addon.name} | Add-Ons | DocumentCloud</title>
+  <title>{addon?.name ?? "Add-On"} | Add-Ons | DocumentCloud</title>
 </svelte:head>
 
-<AddOnLayout
-  {addon}
-  {event}
-  {search}
-  {query}
-  {disablePremium}
-  {scheduled}
-  {history}
-/>
+{#if addon}
+  <AddOnLayout
+    {addon}
+    {event}
+    {search}
+    {query}
+    {disablePremium}
+    {scheduled}
+    {history}
+  />
+{/if}

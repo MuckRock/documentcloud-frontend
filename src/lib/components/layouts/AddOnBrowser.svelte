@@ -1,11 +1,5 @@
 <script lang="ts">
-  import type {
-    Page,
-    APIResponse,
-    AddOnListItem,
-    Event,
-    Run,
-  } from "$lib/api/types";
+  import type { Page, APIResponse, AddOn, Event, Run } from "$lib/api/types";
 
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
@@ -31,7 +25,7 @@
   import AddOns from "$lib/components/sidebar/AddOns.svelte";
   import SidebarLayout from "./SidebarLayout.svelte";
 
-  export let addons: Promise<APIResponse<Page<AddOnListItem>>>;
+  export let addons: Promise<APIResponse<Page<AddOn>>>;
   export let events: Promise<APIResponse<Page<Event>>>;
   export let runs: Promise<APIResponse<Page<Run>>>;
   export let active: string = "all";
