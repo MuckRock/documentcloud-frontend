@@ -12,7 +12,6 @@ This makes the state of those processes available via context.
 
   import throttle from "lodash-es/throttle";
   import {
-    createContext,
     getContext,
     setContext,
     onMount,
@@ -37,9 +36,6 @@ This makes the state of those processes available via context.
     cancel: () => void;
     flush: () => void;
   }
-
-  const [getProcessContext, setProcessContext] =
-    createContext<ProcessContext>();
 
   export function getPendingDocuments(): Maybe<Writable<Pending[]>> {
     return getContext<ProcessContext>("processing")?.documents;
