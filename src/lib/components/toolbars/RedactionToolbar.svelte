@@ -28,17 +28,17 @@ Assumes it's a child of a ViewerContext
   import { getDocument } from "../viewer/ViewerContext.svelte";
 
   const documentStore = getDocument();
-  $: document = $documentStore;
+  let document = $derived($documentStore);
 
-  let width: number;
-  let confirmOpen = false;
+  let width: number = $state(800);
+  let confirmOpen = $state(false);
 
-  $: BREAKPOINTS = {
+  let BREAKPOINTS = $derived({
     SHOW_LABELS: width > remToPx(32),
     X_SMALL: width < remToPx(24),
-  };
+  });
 
-  $: hasRedactions = $redactions.length > 0;
+  let hasRedactions = $derived($redactions.length > 0);
 
   function onCancel() {
     const href = getViewerHref({ document });
@@ -105,7 +105,9 @@ Assumes it's a child of a ViewerContext
 {#if confirmOpen}
   <Portal>
     <Modal on:close={() => (confirmOpen = false)}>
-      <h1 slot="title">{$_("redact.confirmTitle")}</h1>
+      {#snippet title()}
+        <h1>{$_("redact.confirmTitle")}</h1>
+      {/snippet}
       <ConfirmRedaction {document} on:close={() => (confirmOpen = false)} />
     </Modal>
   </Portal>

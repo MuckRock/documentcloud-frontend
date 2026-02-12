@@ -2,18 +2,24 @@
   import type { Nullable } from "$lib/api/types";
   import PageToolbar from "./PageToolbar.svelte";
 
-  export let progress: Nullable<number> = null;
+  interface Props {
+    progress?: Nullable<number>;
+  }
+
+  let { progress = null }: Props = $props();
 </script>
 
 <PageToolbar>
-  <div class="container" slot="center">
-    <p>Loading PDF…</p>
-    {#if progress}
-      <progress value={progress} data-chromatic="ignore"></progress>
-    {:else}
-      <progress data-chromatic="ignore"></progress>
-    {/if}
-  </div>
+  {#snippet center()}
+    <div class="container">
+      <p>Loading PDF…</p>
+      {#if progress}
+        <progress value={progress} data-chromatic="ignore"></progress>
+      {:else}
+        <progress data-chromatic="ignore"></progress>
+      {/if}
+    </div>
+  {/snippet}
 </PageToolbar>
 
 <style>

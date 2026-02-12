@@ -57,7 +57,9 @@
     <main>
       <ContentLayout>
         <PageToolbar slot="header">
-          <Search name="query" {query} slot="center" />
+          {#snippet center()}
+            <Search name="query" {query} />
+          {/snippet}
         </PageToolbar>
         {#if showTip}
           <div class="tip">
@@ -104,7 +106,7 @@
         {/await}
 
         <PageToolbar slot="footer">
-          <svelte:fragment slot="center">
+          {#snippet center()}
             {#await addons}
               <Paginator />
             {:then { data: page }}
@@ -119,7 +121,7 @@
                 }}
               />
             {/await}
-          </svelte:fragment>
+          {/snippet}
         </PageToolbar>
       </ContentLayout>
     </main>

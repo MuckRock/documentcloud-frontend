@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Component } from "svelte";
+  import type { Component, Snippet } from "svelte";
   import type { Maybe } from "$lib/api/types";
 
   import { writable } from "svelte/store";
@@ -18,7 +18,7 @@
     placement?: Placement;
     offset?: number;
     arrow?: boolean;
-    children?: import("svelte").Snippet;
+    children?: Snippet;
   }
 
   let {

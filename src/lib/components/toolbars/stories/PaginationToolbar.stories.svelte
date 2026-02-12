@@ -1,35 +1,28 @@
-<script lang="ts" context="module">
-  import type { Meta } from "@storybook/svelte";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import PaginationToolbar from "../PaginationToolbar.svelte";
-  import { Template, Story } from "@storybook/addon-svelte-csf";
 
-  import { document } from "@/test/fixtures/documents";
-
-  export const meta: Meta = {
+  const { Story } = defineMeta({
     title: "Toolbars / Pagination",
     component: PaginationToolbar,
     parameters: {
       layout: "fullscreen",
     },
-  };
-
-  let args = {
-    document,
-  };
+    render: template,
+  });
 </script>
 
-<Template let:args>
+{#snippet template()}
   <div class="vh justify-end">
-    <PaginationToolbar {...args} />
+    <PaginationToolbar />
   </div>
-</Template>
+{/snippet}
 
-<Story name="Default" {args} />
+<Story name="Default" />
 
-<Story name="Desktop" {args} />
+<Story name="Desktop" />
 
 <Story
-  {args}
   name="Tablet (H)"
   parameters={{
     viewport: { defaultOrientation: "landscape", defaultViewport: "tablet" },
@@ -41,7 +34,6 @@
   parameters={{
     viewport: { defaultOrientation: "tablet", defaultViewport: "tablet" },
   }}
-  {args}
 />
 
 <Story
@@ -49,7 +41,6 @@
   parameters={{
     viewport: { defaultOrientation: "portrait", defaultViewport: "mobile2" },
   }}
-  {args}
 />
 
 <Story
@@ -57,7 +48,6 @@
   parameters={{
     viewport: { defaultOrientation: "portrait", defaultViewport: "mobile1" },
   }}
-  {args}
 />
 
 <style>

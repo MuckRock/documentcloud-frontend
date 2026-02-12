@@ -50,7 +50,9 @@
         </div>
       {/if}
       <PageToolbar>
-        <Search name="q" {query} slot="center" />
+        {#snippet center()}
+          <Search name="q" {query} />
+        {/snippet}
       </PageToolbar>
     </Flex>
     <svelte:fragment>
@@ -67,29 +69,30 @@
     </svelte:fragment>
 
     <PageToolbar slot="footer">
-      <label slot="left" class="select-all">
-        <input
-          type="checkbox"
-          name="select_all"
-          checked={$selected.length === $visible.size}
-          indeterminate={$selected.length > 0 &&
-            $selected.length < $visible.size}
-          on:change={selectAll}
-        />
-        {#if $selected.length > 0}
-          {$selected.length.toLocaleString()} {$_("inputs.selected")}
-        {:else}
-          {$_("inputs.selectAll")}
-        {/if}
-      </label>
-
-      <svelte:fragment slot="right">
+      {#snippet left()}
+        <label class="select-all">
+          <input
+            type="checkbox"
+            name="select_all"
+            checked={$selected.length === $visible.size}
+            indeterminate={$selected.length > 0 &&
+              $selected.length < $visible.size}
+            on:change={selectAll}
+          />
+          {#if $selected.length > 0}
+            {$selected.length.toLocaleString()} {$_("inputs.selected")}
+          {:else}
+            {$_("inputs.selectAll")}
+          {/if}
+        </label>
+      {/snippet}
+      {#snippet right()}
         {#if $visible && $total}
           {$_("inputs.resultsCount", {
             values: { n: $visible.size, total: $total },
           })}
         {/if}
-      </svelte:fragment>
+      {/snippet}
     </PageToolbar>
   </ContentLayout>
 </div>
