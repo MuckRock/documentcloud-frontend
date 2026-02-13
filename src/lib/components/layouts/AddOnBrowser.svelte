@@ -56,11 +56,14 @@
   <div class="container" slot="content">
     <main>
       <ContentLayout>
-        <PageToolbar slot="header">
-          {#snippet center()}
-            <Search name="query" {query} />
-          {/snippet}
-        </PageToolbar>
+        {#snippet header()}
+          <PageToolbar>
+            {#snippet center()}
+              <Search name="query" {query} />
+            {/snippet}
+          </PageToolbar>
+        {/snippet}
+
         {#if showTip}
           <div class="tip">
             {#if active === "active"}
@@ -105,24 +108,26 @@
           <Error>{String(error)}</Error>
         {/await}
 
-        <PageToolbar slot="footer">
-          {#snippet center()}
-            {#await addons}
-              <Paginator />
-            {:then { data: page }}
-              <Paginator
-                has_next={Boolean(page?.next)}
-                has_previous={Boolean(page?.previous)}
-                on:next={() => {
-                  if (page?.next) paginate(page.next);
-                }}
-                on:previous={() => {
-                  if (page?.previous) paginate(page.previous);
-                }}
-              />
-            {/await}
-          {/snippet}
-        </PageToolbar>
+        {#snippet footer()}
+          <PageToolbar>
+            {#snippet center()}
+              {#await addons}
+                <Paginator />
+              {:then { data: page }}
+                <Paginator
+                  has_next={Boolean(page?.next)}
+                  has_previous={Boolean(page?.previous)}
+                  on:next={() => {
+                    if (page?.next) paginate(page.next);
+                  }}
+                  on:previous={() => {
+                    if (page?.previous) paginate(page.previous);
+                  }}
+                />
+              {/await}
+            {/snippet}
+          </PageToolbar>
+        {/snippet}
       </ContentLayout>
     </main>
     <aside class="history">

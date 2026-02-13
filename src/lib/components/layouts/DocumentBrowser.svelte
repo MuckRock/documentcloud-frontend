@@ -229,7 +229,7 @@
         </Empty>
       </div>
       <ContentLayout>
-        <svelte:fragment slot="header">
+        {#snippet header()}
           {#if !embed}
             <Flex>
               {#if $sidebars["navigation"] === false}
@@ -259,7 +259,7 @@
               {/if}
             </Flex>
           {/if}
-        </svelte:fragment>
+        {/snippet}
         {#await searchResults}
           <Empty icon={Hourglass24}>{$_(uiText.loading)}</Empty>
         {:then documentsResults}
@@ -282,7 +282,7 @@
         {:catch}
           <Error>{$_(uiText.error)}</Error>
         {/await}
-        <svelte:fragment slot="footer">
+        {#snippet footer()}
           {#if !embed}
             <div class="toolbar" bind:clientWidth={footerToolbarWidth}>
               <Flex align="center">
@@ -328,7 +328,7 @@
               {/if}
             </div>
           {/if}
-        </svelte:fragment>
+        {/snippet}
       </ContentLayout>
     {/snippet}
   </Dropzone>

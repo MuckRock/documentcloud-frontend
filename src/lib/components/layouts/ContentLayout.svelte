@@ -1,20 +1,35 @@
 <script lang="ts">
-  export let noBgColor = false;
-  export let clientWidth: number | undefined = undefined;
+  import type { Snippet } from "svelte";
+
+  interface Props {
+    noBgColor?: boolean;
+    clientWidth?: number | undefined;
+    header?: Snippet;
+    children?: Snippet;
+    footer?: Snippet;
+  }
+
+  let {
+    noBgColor = false,
+    clientWidth = $bindable(undefined),
+    header,
+    children,
+    footer,
+  }: Props = $props();
 </script>
 
 <div class="container" class:noBgColor bind:clientWidth>
-  {#if $$slots.header}
+  {#if header}
     <header>
-      <slot name="header" />
+      {@render header()}
     </header>
   {/if}
   <main>
-    <slot />
+    {@render children?.()}
   </main>
-  {#if $$slots.footer}
+  {#if footer}
     <footer>
-      <slot name="footer" />
+      {@render footer()}
     </footer>
   {/if}
 </div>

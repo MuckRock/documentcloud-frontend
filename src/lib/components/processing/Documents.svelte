@@ -1,18 +1,9 @@
 <!-- @component
 Fetch and display the status of all pending documents.
-This component should update on a timer.
-
-This component keeps track of pending items it has seen,
-so we can invalidate documents as they finish processing.
+Invalidation of finished documents is handled by ProcessContext.
 -->
 <script module lang="ts">
-  import type {
-    Document,
-    Maybe,
-    Nullable,
-    Pending,
-    RunStatus,
-  } from "$lib/api/types";
+  import type { Document, Nullable, Pending, RunStatus } from "$lib/api/types";
 
   export function getProgress(process: Pending): number {
     const { texts, images, text_positions, pages } = process;
@@ -34,9 +25,6 @@ so we can invalidate documents as they finish processing.
 </script>
 
 <script lang="ts">
-  import { invalidate } from "$app/navigation";
-
-  import { onDestroy } from "svelte";
   import { flip } from "svelte/animate";
   import { _ } from "svelte-i18n";
   import { File16, IssueReopened16 } from "svelte-octicons";
@@ -56,58 +44,28 @@ so we can invalidate documents as they finish processing.
   import { getPendingDocuments } from "./ProcessContext.svelte";
 
   let documents: Map<number, Document> = $state(new Map());
-  let seen: Set<number> = new Set();
-  let finished: number[] = [];
-  let timeout: Nullable<string | number | NodeJS.Timeout>;
-  let reprocess: Nullable<Maybe<Document>> = $state(null);
+  let reprocess: Nullable<Document> = $state(null);
 
   const current = getPendingDocuments();
 
-  onDestroy(() => {
-    stop();
-  });
-
-  async function update(current: Maybe<Pending[]>) {
-    // track our initial set
-    current?.forEach((d) => seen.add(d.doc_id));
-
-    const ids = new Set(current?.map((d) => d.doc_id));
-    const to_fetch = current
+  // fetch document details for display whenever pending list changes
+  $effect(() => {
+    const to_fetch = $current
       ?.filter((d) => !documents.has(d.doc_id))
       .map((d) => d.doc_id);
 
-    if (to_fetch?.length && to_fetch.length > 0) {
-      const { data, error } = await list({ id__in: to_fetch.join(",") });
-      if (!error) {
-        data?.results.forEach((d) => documents.set(+d.id, d));
-        documents = documents;
-      }
+    if (to_fetch?.length) {
+      list({ id__in: to_fetch.join(",") }).then(({ data, error }) => {
+        if (data) {
+          data.results.forEach((d) => documents.set(+d.id, d));
+          documents = documents;
+        }
+
+        if (error) {
+          console.warn(error);
+        }
+      });
     }
-
-    // finished are seen IDs not in current
-    seen.forEach((id) => {
-      if (!ids.has(id)) {
-        finished.push(id);
-      }
-    });
-
-    // invalidate and empty our queue
-    while (finished.length > 1) {
-      const id = finished.pop();
-      invalidate(`documents:${id}`);
-    }
-  }
-
-  function stop() {
-    if (timeout) {
-      clearTimeout(timeout);
-      timeout = null;
-    }
-  }
-
-  // update whenever $current changes
-  $effect(() => {
-    update($current);
   });
 </script>
 
