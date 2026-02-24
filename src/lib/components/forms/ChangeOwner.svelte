@@ -168,7 +168,7 @@ Change owner of one or more documents.
       <Flex direction="column">
         <h2>{$_("change_owner.really", { values: { n: count } })}</h2>
         <Tip mode="danger">
-          <Alert24 slot="inon" />
+          <Alert24 slot="icon" />
           {$_("change_owner.continue", { values: { n: count } })}
         </Tip>
       </Flex>
