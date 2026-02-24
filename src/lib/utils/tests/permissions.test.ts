@@ -1,6 +1,7 @@
+import type { Document } from "$lib/api/types";
+
 import { render, screen } from "@testing-library/svelte";
 import { describe, it, test, expect } from "vitest";
-import type { Document } from "$lib/api/types";
 
 import { canChangeOwner, canUploadFiles, isSignedIn } from "../permissions";
 
@@ -41,15 +42,6 @@ describe("permission checks", () => {
 
     test("returns false when documents array is empty", () => {
       expect(canChangeOwner(me, [])).toBe(false);
-    });
-
-    test("returns false when document is public", () => {
-      const publicDoc: Document = {
-        ...document,
-        access: "public",
-        user: me.id,
-      };
-      expect(canChangeOwner(me, [publicDoc])).toBe(false);
     });
 
     test("returns true when user owns private document", () => {
@@ -111,22 +103,6 @@ describe("permission checks", () => {
       expect(canChangeOwner(me, [ownedDoc, otherDoc])).toBe(false);
     });
 
-    test("returns false when any document in array is public", () => {
-      const privateDoc: Document = {
-        ...document,
-        id: 1,
-        access: "private",
-        user: me.id,
-      };
-      const publicDoc: Document = {
-        ...document,
-        id: 2,
-        access: "public",
-        user: me.id,
-      };
-      expect(canChangeOwner(me, [privateDoc, publicDoc])).toBe(false);
-    });
-
     test("handles user as object with nested id", () => {
       const docWithUserObject: Document = {
         ...document,
@@ -149,6 +125,12 @@ describe("permission checks", () => {
         user: otherUser,
       };
       expect(canChangeOwner(me, [docWithUserObject])).toBe(false);
+    });
+
+    test("returns true if the document is public and the owner is in the org that owns the document", () => {
+      // set the owner
+      const doc: Document = { ...document, user: me };
+      expect(canChangeOwner(me, [doc])).toBe(true);
     });
   });
 });
