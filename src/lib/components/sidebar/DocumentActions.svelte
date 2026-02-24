@@ -207,7 +207,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
       {/if}
 
       {#if visible === "change_owner"}
-        <ChangeOwner documents={$selected} on:close={close} />
+        <ChangeOwner documents={$selected} onclose={close} />
       {/if}
     </Modal>
   </Portal>
