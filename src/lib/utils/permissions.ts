@@ -5,6 +5,8 @@ import type { Document, Maybe, Nullable, User } from "$lib/api/types";
 
 import { getContext } from "svelte";
 
+import { isOrg } from "$lib/api/accounts";
+
 /**
  * A helper that returns the signed-in user.
  * @returns the signed in user from context.
@@ -38,10 +40,20 @@ export function canChangeOwner(
   if (!documents?.length) return false;
 
   return documents.every((d) => {
-    if (d.access === "public") return false;
-
     const ownerId = typeof d.user === "number" ? d.user : d.user.id;
 
-    return ownerId === user.id;
+    const isOwner = ownerId === user.id;
+
+    if (!isOwner) return false;
+
+    // it's private and you own it
+    if (d.access !== "public") return true;
+
+    // it's public and you're in the owning org
+    const docOrg: number = isOrg(d.organization)
+      ? d.organization.id
+      : d.organization;
+
+    return user.organizations.includes(docOrg);
   });
 }
