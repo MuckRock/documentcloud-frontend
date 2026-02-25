@@ -197,7 +197,7 @@
       {/if}
 
       {#if visible === "change_owner"}
-        <ChangeOwner documents={[document]} on:close={close} />
+        <ChangeOwner documents={[document]} onclose={close} />
       {/if}
     </Modal>
   </Portal>

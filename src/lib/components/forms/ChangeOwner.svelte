@@ -26,7 +26,7 @@ Change owner of one or more documents.
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
 
-  import { createEventDispatcher, onMount } from "svelte";
+  import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
   import { Alert24 } from "svelte-octicons";
 
@@ -43,32 +43,23 @@ Change owner of one or more documents.
 
   const me = getCurrentUser();
 
-  // one document or a list of documents
-  export let documents: Document[] = [];
+  interface Props {
+    // one document or a list of documents
+    documents?: Document[];
+    onclose?: () => void;
+  }
 
-  const dispatch = createEventDispatcher();
+  let { documents = [], onclose }: Props = $props();
 
-  let error: Maybe<APIError<null>>;
-  let user: Nullable<UserOption> = null;
-  let org: Nullable<OrgOption> = null;
-  let orgOptions: OrgOption[] = [];
-  let loading = true;
+  let error: Maybe<APIError<null>> = $state();
+  let user: Nullable<UserOption> = $state(null);
+  let org: Nullable<OrgOption> = $state(null);
+  let orgOptions: OrgOption[] = $state([]);
+  let loading = $state(true);
 
-  let userOptions: Promise<UserOption[]> = Promise.resolve([]);
-
-  $: ids = documents.map((d) => d.id);
-  $: bulk = documents.length !== 1;
-  $: count = documents.length;
-  $: disabled =
-    count > MAX_EDIT_BATCH || count === 0 || !$me || (!user && !org);
-  $: action = bulk
-    ? "/documents/?/change_owner"
-    : documents[0]
-      ? canonicalUrl(documents[0]).href + "?/change_owner"
-      : "";
-
-  $: userOptions = getUserOptions(org?.org);
-  $: currentOrg = isOrg($me?.organization) ? $me.organization : null;
+  let userOptions: Promise<UserOption[]> = $derived.by(() =>
+    org ? getUserOptions(org.org) : Promise.resolve([]),
+  );
 
   onMount(async () => {
     if ($me) {
@@ -138,18 +129,37 @@ Change owner of one or more documents.
           break;
 
         case "success":
-          dispatch("close");
           invalidateAll();
           submitter.disabled = false;
+          onclose?.();
           break;
 
         case "redirect":
-          dispatch("close");
           invalidateAll();
+          onclose?.();
           break;
       }
     };
   }
+  let ids = $derived(documents.map((d) => d.id));
+  let bulk = $derived(documents.length !== 1);
+  let count = $derived(documents.length);
+  let disabled = $derived(
+    count > MAX_EDIT_BATCH || count === 0 || !$me || (!user && !org),
+  );
+  let action = $derived(
+    bulk
+      ? "/documents/?/change_owner"
+      : documents[0]
+        ? canonicalUrl(documents[0]).href + "?/change_owner"
+        : "",
+  );
+
+  // run(() => {
+  //   userOptions = getUserOptions(org?.org);
+  // });
+
+  let currentOrg = $derived(isOrg($me?.organization) ? $me.organization : null);
 </script>
 
 <form {action} method="post" use:enhance={onSubmit}>
@@ -215,7 +225,7 @@ Change owner of one or more documents.
       <Button type="submit" mode="primary" {disabled}>
         {$_("change_owner.confirm")}
       </Button>
-      <Button on:click={() => dispatch("close")}>
+      <Button on:click={() => onclose?.()}>
         {$_("change_owner.cancel")}
       </Button>
     </Flex>
