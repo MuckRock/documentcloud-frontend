@@ -72,6 +72,7 @@
     count?: Maybe<number>;
     next?: string | null;
     auto?: boolean;
+    loading?: boolean;
     preload?: "hover" | "tap";
     start?: Snippet;
     end?: Snippet;
@@ -82,6 +83,7 @@
     count = undefined,
     next = $bindable(null),
     auto = $bindable(false),
+    loading = $bindable(false),
     preload = "hover",
     start,
     end,
@@ -90,7 +92,6 @@
   let container: Maybe<HTMLElement> = $state();
   let endEl: Maybe<HTMLElement> = $state();
   let error: string = $state("");
-  let loading = $state(false);
   let observer: Maybe<IntersectionObserver>;
 
   const embed: boolean = getContext("embed");

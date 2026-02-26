@@ -13,7 +13,6 @@
   import { getContext, setContext } from "svelte";
   import { _ } from "svelte-i18n";
   import {
-    FileDirectory24,
     Hourglass24,
     Upload24,
     SidebarExpand16,
@@ -207,6 +206,7 @@
       goto("/upload/");
     }
   }
+
   let BREAKPOINTS = $derived({
     HIDE_COUNT: footerToolbarWidth < remToPx(26),
   });
@@ -263,22 +263,18 @@
         {#await searchResults}
           <Empty icon={Hourglass24}>{$_(uiText.loading)}</Empty>
         {:then documentsResults}
-          {#if !query && !documentsResults.results?.length}
-            <Empty icon={FileDirectory24}>{$_(uiText.empty)}</Empty>
-          {:else}
-            <ResultsList
-              results={documentsResults.results}
-              next={documentsResults.next}
-              count={documentsResults.count}
-              auto
-            >
-              {#snippet start()}
-                {#if $me && !canUploadFiles($me)}
-                  <Unverified user={$me} />
-                {/if}
-              {/snippet}
-            </ResultsList>
-          {/if}
+          <ResultsList
+            results={documentsResults.results}
+            next={documentsResults.next}
+            count={documentsResults.count}
+            auto
+          >
+            {#snippet start()}
+              {#if $me && !canUploadFiles($me)}
+                <Unverified user={$me} />
+              {/if}
+            {/snippet}
+          </ResultsList>
         {:catch}
           <Error>{$_(uiText.error)}</Error>
         {/await}

@@ -1,8 +1,9 @@
 <script lang="ts">
+  import type { DocumentResults, Maybe } from "$lib/api/types";
+
   import { _ } from "svelte-i18n";
   import { Hourglass24, SidebarExpand16 } from "svelte-octicons";
 
-  import type { DocumentResults, Maybe } from "$lib/api/types";
   import Flex from "../common/Flex.svelte";
   import Empty from "../common/Empty.svelte";
   import Button from "../common/Button.svelte";
