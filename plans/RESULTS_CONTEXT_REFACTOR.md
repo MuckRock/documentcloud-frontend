@@ -116,50 +116,46 @@ export const [getSearchResults, setSearchResults] =
 
 ## Pre-refactor tests
 
-Before touching any production code, add tests that pin the current behavior of the stores and the components that consume them. These tests serve as a safety net: if they pass before and after the refactor, we know the migration preserved behavior.
+Before touching any production code, add tests that pin the current **component behavior** — what users see and interact with. These tests serve as a safety net: if they pass before and after the refactor, we know the migration preserved behavior. Do **not** test stores directly; stores are implementation details that will change during the refactor.
 
 ### Current coverage
 
 Only one test file exists: `src/lib/components/documents/tests/ResultsList.test.ts` (89 lines). It covers:
+
 - Rendering results and headings
 - "No search results" fallback
 - Populating `$selectedIds` via checkbox clicks
 - Building `$selected` from `$selectedIds` and `$visible`
 
-**Not tested at all:** `editable`, `total`, `visible` (as a Map), select-all / deselect-all, `DocumentActions`, `Selection`.
+**Not tested at all:** `DocumentActions` button enable/disable states, `Selection` radio rendering.
 
 ### Tests to add
 
-#### 1. `src/lib/components/documents/tests/ResultsList.test.ts` — expand existing
+#### 1. `src/lib/components/sidebar/tests/DocumentActions.test.ts` — new file (done)
 
-- **`editable` store**: Import `editable` alongside `selected`/`selectedIds`. After selecting documents, verify `get(editable)` is `false` when fixture documents have `edit_access: false`. Then mutate a fixture document to have `edit_access: true`, re-select, and verify `editable` becomes `true`. (The search-highlight fixture has a mix of `edit_access` values, so we can select a subset.)
-- **`total` store**: Import `total`. After rendering with `count`, verify `get(total)` equals the count passed to the component.
-- **`visible` store**: Import `visible`. After rendering, verify `get(visible)` is a Map whose keys are string document IDs and values are the fixture documents.
-- **select-all / deselect-all**: Click the select-all checkbox (check all boxes), verify `$selectedIds` matches all visible keys. Then uncheck all, verify it's empty.
-- **partial selection**: Select a subset of checkboxes and verify `$selected` returns only the matching documents.
-
-#### 2. `src/lib/components/sidebar/tests/DocumentActions.test.ts` — new file
-
-`DocumentActions.svelte` reads `getContext("editable")` and `getContext("selected")` to enable/disable bulk-action buttons. Use `ContextDecorator.svelte` to set these contexts in the test.
+`DocumentActions.svelte` reads `getContext("editable")` and `getContext("selected")` to enable/disable bulk-action buttons. Pass context via `render()`'s `context` Map option.
 
 Tests:
-- **All buttons disabled when no documents selected**: Pass `selected = writable([])` and `editable = writable(false)`. Verify the Edit, Data, Reprocess, Delete buttons are disabled.
-- **Share enabled only for single selection**: Pass one document in `selected`. Verify Share button is enabled. Pass two documents, verify Share is disabled.
-- **Edit/Data/Reprocess/Delete enabled when editable**: Pass `editable = writable(true)` with documents selected. Verify those buttons are enabled.
-- **Change Owner button**: Depends on `canChangeOwner` — test that it's disabled when user doesn't own the documents.
 
-#### 3. `src/lib/components/inputs/tests/Selection.test.ts` — new file
+- All buttons disabled when no documents selected
+- Share enabled only for single selection; disabled for multiple
+- Edit/Data/Reprocess/Delete enabled when editable; disabled when not
+- Move to Project enabled when documents selected
+- Change Owner disabled when user doesn't own the documents
 
-`Selection.svelte` reads `getContext("selected")` to show selected document count and build the `value` output.
+#### 2. `src/lib/components/inputs/tests/Selection.test.ts` — new file (done)
+
+`Selection.svelte` reads `getContext("selected")` to show selected document count and build the `value` output. Pass context via `render()`'s `context` Map option.
 
 Tests:
-- **Renders radio options for "query" and "selected"**: Pass `documents = new Set(["query", "selected"])` with a `selected` store holding 3 documents. Verify both radio labels render with correct counts.
-- **Outputs correct value for "selected" choice**: Click the "selected" radio, verify `value` contains `{ documents: [id1, id2, id3] }`.
-- **Outputs correct value for "query" choice**: Click the "query" radio, verify `value` contains `{ query: "..." }`.
+
+- Renders radio options for "query" and "selected" with correct counts
+- Hidden inputs contain correct document IDs and query string
+- Renders only query option when selected is not in documents set
 
 ### Test infrastructure
 
-Use the existing `src/lib/components/storybook/ContextDecorator.svelte` to provide context in tests. It accepts arbitrary props and calls `setContext` for each one, then renders its children. No new `.demo.svelte` wrappers are needed for DocumentActions or Selection — just render `ContextDecorator` with the component nested inside it.
+`@testing-library/svelte`'s `render()` supports a `context` option (a `Map`) that gets passed through to Svelte's `mount()`. This eliminates the need for `.demo.svelte` wrappers when the only purpose is providing context. The existing `ResultsList.demo.svelte` remains because it also sets up `VisibleFields` context via a helper function.
 
 ### Running pre-refactor tests
 
