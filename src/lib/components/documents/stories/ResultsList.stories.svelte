@@ -37,10 +37,15 @@
     defaultVisibleFields,
     setVisibleFieldsContext,
   } from "../VisibleFields.svelte";
+  import {
+    SearchResultsState,
+    setSearchResults,
+  } from "$lib/state/search.svelte";
 
   // Set up contexts needed by ResultsList
   setContext("embed", false);
   setVisibleFieldsContext(writable(defaultVisibleFields));
+  setSearchResults(new SearchResultsState());
 </script>
 
 <Story name="With Results">

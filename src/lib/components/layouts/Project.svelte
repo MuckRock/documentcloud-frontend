@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { setContext } from "svelte";
   import { _ } from "svelte-i18n";
 
   import type {
@@ -20,12 +19,11 @@
   import UploadButton from "../sidebar/UploadButton.svelte";
 
   import {
-    editable,
-    selected,
-  } from "$lib/components/documents/ResultsList.svelte";
+    SearchResultsState,
+    setSearchResults,
+  } from "$lib/state/search.svelte";
 
-  setContext("editable", editable);
-  setContext("selected", selected);
+  setSearchResults(new SearchResultsState());
 
   interface Props {
     project: Project;

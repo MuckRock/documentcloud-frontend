@@ -1,16 +1,15 @@
 <script lang="ts">
-  import type { Readable } from "svelte/store";
   import type { Document } from "$lib/api/types";
 
-  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
+  import { getSearchResults } from "$lib/state/search.svelte";
 
   export let documents = new Set();
   export let value: null | Record<string, unknown> = null;
   export let query: undefined | string = undefined;
   export let resultsCount: undefined | number = undefined;
 
-  const selected: Readable<Document[]> = getContext("selected");
+  const search = getSearchResults();
 
   // default to the first option, for convenience
   let choice = [...documents][0];
@@ -20,7 +19,7 @@
       value = { query };
       break;
     case "selected":
-      value = { documents: $selected?.map((d) => d.id) ?? [] };
+      value = { documents: search.selected?.map((d) => d.id) ?? [] };
       break;
 
     default:
@@ -55,13 +54,13 @@
           bind:group={choice}
         />
         {$_("addonDispatchDialog.labelSelected", {
-          values: { n: $selected?.length },
+          values: { n: search.selected?.length },
         })}
       </label>
       <input
         type="hidden"
         name="documents"
-        value={$selected.map((d) => d.id).join(",")}
+        value={search.selected.map((d) => d.id).join(",")}
       />
     {/if}
   </fieldset>

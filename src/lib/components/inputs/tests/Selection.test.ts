@@ -1,9 +1,8 @@
 import type { Document } from "$lib/api/types";
 import { describe, it, expect } from "vitest";
-import { writable } from "svelte/store";
-import { render, screen, fireEvent } from "@testing-library/svelte";
+import { render, screen } from "@testing-library/svelte";
 
-import Selection from "../Selection.svelte";
+import SelectionDemo from "./Selection.demo.svelte";
 import { document as docFixture } from "@/test/fixtures/documents";
 
 function makeDocs(count: number): Document[] {
@@ -16,13 +15,13 @@ function makeDocs(count: number): Document[] {
 describe("Selection", () => {
   it("renders radio options for query and selected", () => {
     const docs = makeDocs(3);
-    render(Selection, {
+    render(SelectionDemo, {
       props: {
+        docs,
         documents: new Set(["query", "selected"]),
         query: "test query",
         resultsCount: 100,
       },
-      context: new Map([["selected", writable(docs)]]),
     });
 
     const radios = screen.getAllByRole("radio");
@@ -31,13 +30,13 @@ describe("Selection", () => {
 
   it("shows correct count in the query label", () => {
     const docs = makeDocs(3);
-    render(Selection, {
+    render(SelectionDemo, {
       props: {
+        docs,
         documents: new Set(["query", "selected"]),
         query: "test query",
         resultsCount: 100,
       },
-      context: new Map([["selected", writable(docs)]]),
     });
 
     expect(
@@ -47,13 +46,13 @@ describe("Selection", () => {
 
   it("shows correct count in the selected label", () => {
     const docs = makeDocs(3);
-    render(Selection, {
+    render(SelectionDemo, {
       props: {
+        docs,
         documents: new Set(["query", "selected"]),
         query: "test query",
         resultsCount: 100,
       },
-      context: new Map([["selected", writable(docs)]]),
     });
 
     expect(screen.getByText(/3 currently selected documents/i)).toBeTruthy();
@@ -61,13 +60,13 @@ describe("Selection", () => {
 
   it("populates the documents hidden input with selected IDs", () => {
     const docs = makeDocs(3);
-    const { container } = render(Selection, {
+    const { container } = render(SelectionDemo, {
       props: {
+        docs,
         documents: new Set(["query", "selected"]),
         query: "test query",
         resultsCount: 100,
       },
-      context: new Map([["selected", writable(docs)]]),
     });
 
     const hidden = container.querySelector(
@@ -79,13 +78,13 @@ describe("Selection", () => {
 
   it("populates the query hidden input with the query string", () => {
     const docs = makeDocs(3);
-    const { container } = render(Selection, {
+    const { container } = render(SelectionDemo, {
       props: {
+        docs,
         documents: new Set(["query", "selected"]),
         query: "test query",
         resultsCount: 100,
       },
-      context: new Map([["selected", writable(docs)]]),
     });
 
     const hidden = container.querySelector(
@@ -96,13 +95,13 @@ describe("Selection", () => {
   });
 
   it("renders only the query option when selected is not in documents", () => {
-    render(Selection, {
+    render(SelectionDemo, {
       props: {
+        docs: [],
         documents: new Set(["query"]),
         query: "test query",
         resultsCount: 50,
       },
-      context: new Map([["selected", writable([])]]),
     });
 
     const radios = screen.getAllByRole("radio");

@@ -8,17 +8,13 @@
   import Empty from "../common/Empty.svelte";
   import Button from "../common/Button.svelte";
   import PageToolbar from "../toolbars/PageToolbar.svelte";
-  import ResultsList, {
-    selected,
-    selectedIds,
-    total,
-    visible,
-  } from "../documents/ResultsList.svelte";
+  import ResultsList from "../documents/ResultsList.svelte";
   import Search from "../forms/Search.svelte";
   import ContentLayout from "../layouts/ContentLayout.svelte";
 
   import { sidebars } from "../layouts/Sidebar.svelte";
   import { remToPx } from "$lib/utils/layout";
+  import { getSearchResults } from "$lib/state/search.svelte";
 
   interface Props {
     search: Promise<Maybe<DocumentResults>>;
@@ -27,11 +23,13 @@
 
   let { search, query }: Props = $props();
 
+  const searchState = getSearchResults();
+
   function selectAll(e) {
     if (e.target.checked) {
-      $selectedIds = [...$visible.keys()];
+      searchState.selectAll();
     } else {
-      $selectedIds = [];
+      searchState.deselectAll();
     }
   }
 
@@ -81,22 +79,22 @@
             <input
               type="checkbox"
               name="select_all"
-              checked={$selected.length === $visible.size}
-              indeterminate={$selected.length > 0 &&
-                $selected.length < $visible.size}
+              checked={searchState.selected.length === searchState.visible.size}
+              indeterminate={searchState.selected.length > 0 &&
+                searchState.selected.length < searchState.visible.size}
               onchange={selectAll}
             />
-            {#if $selected.length > 0}
-              {$selected.length.toLocaleString()} {$_("inputs.selected")}
+            {#if searchState.selected.length > 0}
+              {searchState.selected.length.toLocaleString()} {$_("inputs.selected")}
             {:else}
               {$_("inputs.selectAll")}
             {/if}
           </label>
         {/snippet}
         {#snippet right()}
-          {#if $visible && $total}
+          {#if searchState.visible && searchState.total}
             {$_("inputs.resultsCount", {
-              values: { n: $visible.size, total: $total },
+              values: { n: searchState.visible.size, total: searchState.total },
             })}
           {/if}
         {/snippet}

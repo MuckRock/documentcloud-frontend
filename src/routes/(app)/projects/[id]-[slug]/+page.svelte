@@ -1,12 +1,14 @@
 <script lang="ts">
-  import { setContext } from "svelte";
   import { _ } from "svelte-i18n";
 
-  import { selected } from "$lib/components/documents/ResultsList.svelte";
   import Project from "$lib/components/layouts/Project.svelte";
 
   import * as projects from "$lib/api/projects";
   import { embedUrl } from "$lib/api/embed";
+  import {
+    SearchResultsState,
+    setSearchResults,
+  } from "$lib/state/search.svelte";
 
   let { data } = $props();
 
@@ -18,7 +20,7 @@
   let canonical_url = $derived(projects.canonicalUrl(project));
   let embed_url = $derived(embedUrl(canonical_url));
 
-  setContext("selected", selected);
+  setSearchResults(new SearchResultsState());
 </script>
 
 <svelte:head>

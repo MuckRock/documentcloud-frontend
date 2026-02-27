@@ -62,3 +62,6 @@ storybook-static/
 
 # Claude Code
 CLAUDE.md
+# plans/
+
+.claude/skills/migrate-storybook-csf

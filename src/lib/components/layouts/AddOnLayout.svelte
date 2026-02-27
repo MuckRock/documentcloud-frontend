@@ -12,7 +12,6 @@
   import { page } from "$app/stores";
 
   import { _ } from "svelte-i18n";
-  import { setContext } from "svelte";
   import { writable } from "svelte/store";
   import { fade, slide } from "svelte/transition";
   import {
@@ -43,13 +42,16 @@
   import { schedules } from "../addons/ScheduledEvent.svelte";
   import { getProcessLoader } from "../processing/ProcessContext.svelte";
   import { remToPx } from "$lib/utils/layout";
-  import { selected } from "../documents/ResultsList.svelte";
   import { sidebars } from "./Sidebar.svelte";
 
   import {
     defaultVisibleFields,
     setVisibleFieldsContext,
   } from "$lib/components/documents/VisibleFields.svelte";
+  import {
+    SearchResultsState,
+    setSearchResults,
+  } from "$lib/state/search.svelte";
 
   export let addon: AddOn;
   export let event: Maybe<Event> = undefined;
@@ -74,7 +76,7 @@
   let clientWidth: number;
   let docSelectModalOpen = false;
 
-  setContext("selected", selected);
+  setSearchResults(new SearchResultsState());
   setVisibleFieldsContext(writable(defaultVisibleFields));
 
   $: action = event

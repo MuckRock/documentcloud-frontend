@@ -10,7 +10,7 @@
 
   import { goto } from "$app/navigation";
 
-  import { getContext, setContext } from "svelte";
+  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
   import {
     Hourglass24,
@@ -26,16 +26,12 @@
   import Flex from "$lib/components/common/Flex.svelte";
   import NavItem from "$lib/components/common/NavItem.svelte";
 
-  // Document comopnents
+  // Document components
   import ResultsList, {
-    editable,
-    selected,
-    selectedIds,
-    total,
-    visible,
     visibleFields,
   } from "$lib/components/documents/ResultsList.svelte";
   import { setVisibleFieldsContext } from "$lib/components/documents/VisibleFields.svelte";
+  import { getSearchResults } from "$lib/state/search.svelte";
 
   // Form components
   import Dropzone from "$lib/components/inputs/Dropzone.svelte";
@@ -71,10 +67,8 @@
     search: string;
   }
 
-  // these just pass through
-  setContext("editable", editable);
-  setContext("selected", selected);
   setVisibleFieldsContext(visibleFields);
+  const search = getSearchResults();
 
   const embed: boolean = getContext("embed");
   const me = getCurrentUser();
@@ -193,9 +187,9 @@
   function selectAll(e: Event) {
     const target = e.target as HTMLInputElement;
     if (target.checked) {
-      $selectedIds = [...$visible.keys()];
+      search.selectAll();
     } else {
-      $selectedIds = [];
+      search.deselectAll();
     }
   }
 
@@ -287,14 +281,14 @@
                     <input
                       type="checkbox"
                       name="select_all"
-                      checked={$selected.length > 0 &&
-                        $selected.length === $visible.size}
-                      indeterminate={$selected.length > 0 &&
-                        $selected.length < $visible.size}
+                      checked={search.selected.length > 0 &&
+                        search.selected.length === search.visible.size}
+                      indeterminate={search.selected.length > 0 &&
+                        search.selected.length < search.visible.size}
                       onchange={selectAll}
                     />
-                    {#if $selected.length > 0}
-                      {$selected.length.toLocaleString()}
+                    {#if search.selected.length > 0}
+                      {search.selected.length.toLocaleString()}
                       {$_("inputs.selected")}
                     {:else}
                       {$_("inputs.selectAll")}
@@ -304,7 +298,7 @@
                 <Dropdown position="top-start">
                   <NavItem
                     slot="anchor"
-                    disabled={!$me || $selected?.length < 1 || !$editable}
+                    disabled={!$me || search.selected.length < 1 || !search.editable}
                   >
                     {$_("bulk.title")}
                     <ChevronUp12 slot="end" />
@@ -315,10 +309,10 @@
                   </Menu>
                 </Dropdown>
               </Flex>
-              {#if !BREAKPOINTS.HIDE_COUNT && $visible && $total}
+              {#if !BREAKPOINTS.HIDE_COUNT && search.visible && search.total}
                 <p class="resultsCount">
                   {$_("inputs.resultsCount", {
-                    values: { n: $visible.size, total: $total },
+                    values: { n: search.visible.size, total: search.total },
                   })}
                 </p>
               {/if}

@@ -1,38 +1,12 @@
 <script module lang="ts">
   import type { Document, DocumentResults, Maybe } from "$lib/api/types";
-  import {
-    derived,
-    writable,
-    type Readable,
-    type Writable,
-  } from "svelte/store";
+  import { writable, type Writable } from "svelte/store";
 
   import {
     defaultVisibleFields,
     getVisibleFieldsContext,
     type VisibleFields,
   } from "./VisibleFields.svelte";
-
-  // IDs might be strings or numbers, depending on the API endpoint
-  // enforce type consistency here to avoid comparison bugs later
-  export const visible: Writable<Map<string, Document>> = writable(new Map());
-  export const selectedIds: Writable<string[]> = writable([]);
-  export const selected: Readable<Document[]> = derived(
-    [visible, selectedIds],
-    ([$visible, $selectedIds]) =>
-      $selectedIds.map((d) => $visible.get(d)).filter(Boolean) as Document[],
-  );
-
-  // this selection is editable if every document in it is editable
-  export const editable: Readable<boolean> = derived(
-    [selected],
-    ([$selected]) =>
-      $selected &&
-      $selected?.length > 0 &&
-      $selected?.every((d) => d.edit_access),
-  );
-
-  export let total: Writable<number> = writable(0);
 
   // Allow users to customize the visible fields in document list items
   const storage = new StorageManager("document-browser");
@@ -66,6 +40,7 @@
 
   import { getApiResponse } from "$lib/utils/api";
   import { StorageManager } from "$lib/utils/storage";
+  import { getSearchResults } from "$lib/state/search.svelte";
 
   interface Props {
     results?: Document[];
@@ -96,6 +71,7 @@
 
   const embed: boolean = getContext("embed");
   const visibleFields = getVisibleFieldsContext();
+  const search = getSearchResults();
 
   setContext("highlightState", highlightState);
 
@@ -107,9 +83,9 @@
     highlightState.update((state) => ({ ...state, allOpen: true }));
   }
 
-  // track what's visible so we can compare to $selected
+  // track what's visible so we can compare to search.selected
   $effect(() => {
-    $visible = new Map(results.map((d) => [String(d.id), d]));
+    search.visible = new Map(results.map((d) => [String(d.id), d]));
   });
 
   // load the next set of results
@@ -141,7 +117,7 @@
 
     if (data) {
       results = [...results, ...data.results];
-      $total = data.count ?? $total;
+      search.total = data.count ?? search.total;
       next = data.next;
       error = "";
       if (auto && endEl) watch(endEl);
@@ -181,7 +157,7 @@
 
   onMount(() => {
     // set initial total, update later
-    $total = count ?? 0;
+    search.total = count ?? 0;
     if (auto && endEl) {
       observer = watch(endEl);
     }
@@ -204,14 +180,24 @@
     {#each results as document (document.id)}
       <div
         class="result-row"
-        class:selected={$selectedIds.includes(String(document.id))}
+        class:selected={search.selectedIds.includes(String(document.id))}
       >
         {#if !embed}
           <label>
             <span class="sr-only">{$_("documents.select")}</span>
             <input
               type="checkbox"
-              bind:group={$selectedIds}
+              checked={search.selectedIds.includes(String(document.id))}
+              onchange={(e) => {
+                const id = String(document.id);
+                if (e.currentTarget.checked) {
+                  search.selectedIds = [...search.selectedIds, id];
+                } else {
+                  search.selectedIds = search.selectedIds.filter(
+                    (s) => s !== id,
+                  );
+                }
+              }}
               value={document.id}
             />
           </label>

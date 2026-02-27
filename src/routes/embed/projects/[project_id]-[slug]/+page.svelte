@@ -6,8 +6,13 @@
   import EmbedLayout from "$lib/components/layouts/EmbedLayout.svelte";
 
   import { canonicalUrl } from "$lib/api/projects";
+  import {
+    SearchResultsState,
+    setSearchResults,
+  } from "$lib/state/search.svelte";
 
   setContext("embed", true);
+  setSearchResults(new SearchResultsState());
 
   let { data } = $props();
 

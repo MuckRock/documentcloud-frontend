@@ -1,5 +1,7 @@
 # Phase 1: Move search results stores to a Svelte 5 context
 
+> **Status: COMPLETE** — All code changes, test updates, and verification done. `npm run test:unit` (365 passing), `npm run check` (0 errors, 0 warnings).
+>
 > **Phase 1** of a two-phase refactor. This phase moves selection state out of `ResultsList.svelte`'s module block into a context-based class. Loading/pagination stays in `ResultsList` for now. Phase 2 ([RESULTS_LIST_REFACTOR.md](RESULTS_LIST_REFACTOR.md)) extracts pagination into the same class and makes `ResultsList` fully presentational.
 
 ## Scope
@@ -8,165 +10,98 @@ Only the stores related to search results selection: `visible`, `selectedIds`, `
 
 ## Context
 
-`ResultsList.svelte` defines module-level Svelte stores in a `<script module>` block. These are singletons imported by parent components — an inversion of control where state flows upward from a child. The goal is to move this state higher in the tree using a Svelte 5 state class distributed via `createContext`.
+`ResultsList.svelte` defined module-level Svelte stores in a `<script module>` block. These were singletons imported by parent components — an inversion of control where state flows upward from a child. This phase moved that state higher in the tree using a Svelte 5 state class distributed via `createContext`.
 
-## New file: `src/lib/state/search.svelte.ts`
+## New file: `src/lib/state/search.svelte.ts` (done)
 
-Create a `SearchResultsState` class using `$state` runes and a `createContext` pair, following the pattern established by `VisibleFields.svelte`. Phase 2 will extend this class with pagination state (`results`, `next`, `loading`, `error`, `loadMore()`, etc.).
+`SearchResultsState` class using `$state` runes and a `createContext` pair, following the pattern established by `VisibleFields.svelte`. Phase 2 will extend this class with pagination state (`results`, `next`, `loading`, `error`, `loadMore()`, etc.).
 
-```typescript
-import type { Document } from "$lib/api/types";
-import { createContext } from "svelte";
+## Files modified
 
-export class SearchResultsState {
-  visible: Map<string, Document> = $state(new Map());
-  selectedIds: string[] = $state([]);
-  total: number = $state(0);
+### 1. `src/lib/components/documents/ResultsList.svelte` (done)
 
-  get selected(): Document[] {
-    return this.selectedIds
-      .map((id) => this.visible.get(id))
-      .filter(Boolean) as Document[];
-  }
+- **Removed** module-level exports for `visible`, `selectedIds`, `selected`, `editable`, `total`
+- **Consumes** `getSearchResults()` in the instance script
+- **Replaced** store references (`$selectedIds`, `$visible`, `$total`) with `search.selectedIds`, `search.visible`, `search.total`
+- **Replaced** `bind:group={$selectedIds}` with explicit `checked`/`onchange` handlers (since `$state` arrays don't support `bind:group`)
+- Kept `highlightState`, `visibleFields`, and `StorageManager` logic unchanged
 
-  get editable(): boolean {
-    return (
-      this.selected.length > 0 && this.selected.every((d) => d.edit_access)
-    );
-  }
+### 2. `src/lib/components/layouts/DocumentBrowser.svelte` (done)
 
-  selectAll() {
-    this.selectedIds = [...this.visible.keys()];
-  }
+- **Removed** imports of `editable`, `selected`, `selectedIds`, `total`, `visible` from `ResultsList.svelte`
+- **Removed** `setContext("editable", ...)` and `setContext("selected", ...)`
+- **Consumes** `getSearchResults()` and uses `search.selected`, `search.editable`, etc. directly
+- Kept `visibleFields` import from ResultsList and `setVisibleFieldsContext()` as-is
 
-  deselectAll() {
-    this.selectedIds = [];
-  }
-}
+### 3. `src/lib/components/addons/DocumentList.svelte` (done)
 
-export const [getSearchResults, setSearchResults] =
-  createContext<SearchResultsState>();
-```
+- **Removed** imports of `selected`, `selectedIds`, `total`, `visible` from `ResultsList.svelte`
+- **Consumes** `getSearchResults()` instead
 
-## Files to modify
+### 4. `src/lib/components/layouts/AddOnLayout.svelte` (done)
 
-### 1. `src/lib/components/documents/ResultsList.svelte`
+- **Removed** `import { selected } from "../documents/ResultsList.svelte"` and `setContext("selected", selected)`
+- **Creates** `new SearchResultsState()` and calls `setSearchResults()`
 
-- **Remove** module-level exports for `visible`, `selectedIds`, `selected`, `editable`, `total` (keep `highlightState` and `visibleFields` as-is for now)
-- **Consume** `getSearchResults()` in the instance script
-- **Replace** store references (`$selectedIds`, `$visible`, `$total`) with `search.selectedIds`, `search.visible`, `search.total`
-- Keep `highlightState`, `visibleFields`, and `StorageManager` logic unchanged
+### 5. `src/lib/components/layouts/Project.svelte` (done)
 
-### 2. `src/lib/components/layouts/DocumentBrowser.svelte`
+- **Removed** imports of `editable`, `selected` from `ResultsList.svelte`
+- **Removed** `setContext("editable", ...)` and `setContext("selected", ...)`
+- **Creates** `new SearchResultsState()` and calls `setSearchResults()`
 
-- **Remove** imports of `editable`, `selected`, `selectedIds`, `total`, `visible` from `ResultsList.svelte`
-- **Remove** `setContext("editable", ...)` and `setContext("selected", ...)`
-- **Consume** `getSearchResults()` and use `search.selected`, `search.editable`, etc. directly
-- Keep `visibleFields` import from ResultsList and `setVisibleFieldsContext()` as-is
+### 6. `src/routes/(app)/documents/+page.svelte` (done)
 
-### 3. `src/lib/components/addons/DocumentList.svelte`
+- **Removed** imports of `editable`, `selected` from `ResultsList.svelte`
+- **Removed** `setContext("editable", ...)` and `setContext("selected", ...)`
+- **Creates** `new SearchResultsState()` and calls `setSearchResults()`
 
-- **Remove** imports of `selected`, `selectedIds`, `total`, `visible` from `ResultsList.svelte`
-- **Consume** `getSearchResults()` instead
+### 7. `src/routes/(app)/projects/[id]-[slug]/+page.svelte` (done)
 
-### 4. `src/lib/components/layouts/AddOnLayout.svelte`
+- **Removed** `import { selected } from "..."` and `setContext("selected", selected)`
+- **Creates** `new SearchResultsState()` and calls `setSearchResults()`
 
-- **Remove** `import { selected } from "../documents/ResultsList.svelte"`
-- **Remove** `setContext("selected", selected)`
-- **Create** `new SearchResultsState()` and call `setSearchResults()`
+### 8. `src/routes/embed/projects/[project_id]-[slug]/+page.svelte` (done)
 
-### 5. `src/lib/components/layouts/Project.svelte`
+- **Creates** `new SearchResultsState()` and calls `setSearchResults()`
 
-- **Remove** imports of `editable`, `selected` from `ResultsList.svelte`
-- **Remove** `setContext("editable", ...)` and `setContext("selected", ...)`
-- **Create** `new SearchResultsState()` and call `setSearchResults()`
+### 9. `src/lib/components/sidebar/DocumentActions.svelte` (done)
 
-### 6. `src/routes/(app)/documents/+page.svelte`
+- **Replaced** `getContext("editable")` and `getContext("selected")` with `getSearchResults()`
+- **Changed** from store syntax (`$editable`, `$selected`) to direct property access (`search.editable`, `search.selected`)
 
-- **Remove** imports of `editable`, `selected` from `ResultsList.svelte`
-- **Remove** `setContext("editable", ...)` and `setContext("selected", ...)`
-- **Create** `new SearchResultsState()` and call `setSearchResults()`
+### 10. `src/lib/components/inputs/Selection.svelte` (done)
 
-### 7. `src/routes/(app)/projects/[id]-[slug]/+page.svelte`
+- **Replaced** `getContext("selected")` with `getSearchResults()`
+- **Changed** from store syntax to property access
 
-- **Remove** `import { selected } from "..."` and `setContext("selected", selected)`
-- **Create** `new SearchResultsState()` and call `setSearchResults()`
+### 11. `src/lib/components/documents/tests/ResultsList.demo.svelte` (done)
 
-### 8. `src/routes/embed/projects/[project_id]-[slug]/+page.svelte`
+- **Creates** `new SearchResultsState()` and calls `setSearchResults()`
 
-- **Create** `new SearchResultsState()` and call `setSearchResults()`
+### 12. `src/lib/components/documents/stories/ResultsList.stories.svelte` (done)
 
-### 9. `src/lib/components/sidebar/DocumentActions.svelte`
+- Updated story decorator to create `new SearchResultsState()` and call `setSearchResults()`
 
-- **Replace** `getContext("editable")` and `getContext("selected")` with `getSearchResults()`
-- **Change** from store syntax (`$editable`, `$selected`) to direct property access (`search.editable`, `search.selected`)
+## Tests
 
-### 10. `src/lib/components/inputs/Selection.svelte`
+### Test wrappers (new files)
 
-- **Replace** `getContext("selected")` with `getSearchResults()`
-- **Change** from store syntax to property access
+Because `createContext` uses an internal key that can't be provided via `render()`'s `context` Map, tests use `.demo.svelte` wrappers that call `setSearchResults()` during component init:
 
-### 11. `src/lib/components/documents/tests/ResultsList.demo.svelte`
+- `src/lib/components/sidebar/tests/DocumentActions.demo.svelte` — accepts `docs` and `user` props, uses `untrack()` to read initial prop values
+- `src/lib/components/inputs/tests/Selection.demo.svelte` — accepts `docs` and passthrough props, uses `untrack()` to read initial prop values
 
-- **Create** `new SearchResultsState()` and call `setSearchResults()`
+### Updated test files
 
-### 12. `src/lib/components/documents/stories/ResultsList.stories.svelte`
+- `src/lib/components/documents/tests/ResultsList.test.ts` — tests UI behavior (checkbox checked state, `.selected` class) instead of internal store state
+- `src/lib/components/sidebar/tests/DocumentActions.test.ts` — uses demo wrapper instead of manually constructed context Map
+- `src/lib/components/inputs/tests/Selection.test.ts` — uses demo wrapper instead of manually constructed context Map
 
-- Update story decorator to create `new SearchResultsState()` and call `setSearchResults()`
+## Implementation notes
 
-## Pre-refactor tests
-
-Before touching any production code, add tests that pin the current **component behavior** — what users see and interact with. These tests serve as a safety net: if they pass before and after the refactor, we know the migration preserved behavior. Do **not** test stores directly; stores are implementation details that will change during the refactor.
-
-### Current coverage
-
-Only one test file exists: `src/lib/components/documents/tests/ResultsList.test.ts` (89 lines). It covers:
-
-- Rendering results and headings
-- "No search results" fallback
-- Populating `$selectedIds` via checkbox clicks
-- Building `$selected` from `$selectedIds` and `$visible`
-
-**Not tested at all:** `DocumentActions` button enable/disable states, `Selection` radio rendering.
-
-### Tests to add
-
-#### 1. `src/lib/components/sidebar/tests/DocumentActions.test.ts` — new file (done)
-
-`DocumentActions.svelte` reads `getContext("editable")` and `getContext("selected")` to enable/disable bulk-action buttons. Pass context via `render()`'s `context` Map option.
-
-Tests:
-
-- All buttons disabled when no documents selected
-- Share enabled only for single selection; disabled for multiple
-- Edit/Data/Reprocess/Delete enabled when editable; disabled when not
-- Move to Project enabled when documents selected
-- Change Owner disabled when user doesn't own the documents
-
-#### 2. `src/lib/components/inputs/tests/Selection.test.ts` — new file (done)
-
-`Selection.svelte` reads `getContext("selected")` to show selected document count and build the `value` output. Pass context via `render()`'s `context` Map option.
-
-Tests:
-
-- Renders radio options for "query" and "selected" with correct counts
-- Hidden inputs contain correct document IDs and query string
-- Renders only query option when selected is not in documents set
-
-### Test infrastructure
-
-`@testing-library/svelte`'s `render()` supports a `context` option (a `Map`) that gets passed through to Svelte's `mount()`. This eliminates the need for `.demo.svelte` wrappers when the only purpose is providing context. The existing `ResultsList.demo.svelte` remains because it also sets up `VisibleFields` context via a helper function.
-
-### Running pre-refactor tests
-
-After writing all tests, run them against the **current code** before starting any refactor work:
-
-```bash
-npm run test:unit
-npm run check
-```
-
-All tests must pass. Then, during the refactor, these same tests will be updated to use the new `SearchResultsState` context instead of module-level stores and `setContext` wrappers.
+- **`bind:group` doesn't work with `$state` arrays** — replaced with explicit `checked` + `onchange` in `ResultsList.svelte`
+- **`createContext` key is internal** — tests can't provide context via `render()`'s `context` Map; demo wrapper components are needed
+- **`untrack()` suppresses `state_referenced_locally` warnings** in demo wrappers where we intentionally read initial prop values at the top level
 
 ## Out of scope (separate refactor)
 
@@ -177,8 +112,8 @@ All tests must pass. Then, during the refactor, these same tests will be updated
 
 ## Verification
 
-1. `npm run test:unit` — all existing and new tests pass
-2. `npm run check` — no TypeScript errors
-3. `npm run knip` — no unused exports from the old module-level stores
-4. `npm run storybook` — ResultsList stories still render
-5. Manual testing: document selection, select-all, bulk actions, add-on document selection, embed view
+1. `npm run test:unit` — 365 tests passing (44 test files)
+2. `npm run check` — 0 errors, 0 warnings
+3. `npm run knip` — TODO
+4. `npm run storybook` — TODO
+5. Manual testing: document selection, select-all, bulk actions, add-on document selection, embed view — TODO

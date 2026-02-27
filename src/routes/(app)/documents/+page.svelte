@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { setContext } from "svelte";
   import { _ } from "svelte-i18n";
 
   import SidebarLayout from "$lib/components/layouts/SidebarLayout.svelte";
@@ -13,16 +12,14 @@
   import DocumentBrowser from "$lib/components/layouts/DocumentBrowser.svelte";
   import GuidedTour from "$lib/components/onboarding/GuidedTour.svelte";
 
-  // stores
   import {
-    editable,
-    selected,
-  } from "$lib/components/documents/ResultsList.svelte";
+    SearchResultsState,
+    setSearchResults,
+  } from "$lib/state/search.svelte";
 
   let { data } = $props();
 
-  setContext("editable", editable);
-  setContext("selected", selected);
+  setSearchResults(new SearchResultsState());
 
   let query = $derived(data.query);
 </script>
