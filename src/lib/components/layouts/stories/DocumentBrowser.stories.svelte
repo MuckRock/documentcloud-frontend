@@ -30,6 +30,17 @@
   };
 </script>
 
+<script lang="ts">
+  import { setContext } from "svelte";
+  import {
+    SearchResultsState,
+    setSearchResults,
+  } from "$lib/state/search.svelte";
+
+  setContext("embed", false);
+  setSearchResults(new SearchResultsState());
+</script>
+
 <Story name="With Data" {args} />
 
 <Story name="No documents" args={empty} />

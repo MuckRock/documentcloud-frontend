@@ -44,6 +44,17 @@
   });
 </script>
 
+<script lang="ts">
+  import { setContext } from "svelte";
+  import {
+    SearchResultsState,
+    setSearchResults,
+  } from "$lib/state/search.svelte";
+
+  setContext("embed", false);
+  setSearchResults(new SearchResultsState());
+</script>
+
 {#snippet template(args: Args)}
   <AppLayout {...args}>
     <SidebarLayout>

@@ -1,14 +1,11 @@
 <script context="module" lang="ts">
   import type { Document } from "$lib/api/types";
 
-  import { writable, type Writable } from "svelte/store";
   import { Story } from "@storybook/addon-svelte-csf";
   import DocumentActions from "../DocumentActions.svelte";
 
   import docs from "@/test/fixtures/documents/documents.json";
   const documents = docs.results as Document[];
-
-  const selected: Writable<Document[]> = writable(documents);
 
   export const meta = {
     title: "Navigation / Document Actions",
@@ -18,9 +15,15 @@
 </script>
 
 <script lang="ts">
-  import { setContext } from "svelte";
+  import {
+    SearchResultsState,
+    setSearchResults,
+  } from "$lib/state/search.svelte";
 
-  setContext("selected", selected);
+  const search = new SearchResultsState();
+  search.visible = new Map(documents.map((d) => [String(d.id), d]));
+  search.selectedIds = documents.map((d) => String(d.id));
+  setSearchResults(search);
 </script>
 
 <Story name="default">

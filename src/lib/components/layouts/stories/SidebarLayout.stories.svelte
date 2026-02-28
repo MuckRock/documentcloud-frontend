@@ -1,8 +1,6 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
 
-  import { _ } from "svelte-i18n";
-
   import SidebarLayout from "../SidebarLayout.svelte";
   import DocumentBrowser from "../DocumentBrowser.svelte";
   import UploadButton from "$lib/components/sidebar/UploadButton.svelte";
@@ -37,6 +35,17 @@
       },
     },
   });
+</script>
+
+<script lang="ts">
+  import { setContext } from "svelte";
+  import {
+    SearchResultsState,
+    setSearchResults,
+  } from "$lib/state/search.svelte";
+
+  setContext("embed", false);
+  setSearchResults(new SearchResultsState());
 </script>
 
 {#snippet template(args)}
