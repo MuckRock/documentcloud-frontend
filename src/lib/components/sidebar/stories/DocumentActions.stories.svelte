@@ -21,8 +21,10 @@
   } from "$lib/state/search.svelte";
 
   const search = new SearchResultsState();
-  search.visible = new Map(documents.map((d) => [String(d.id), d]));
-  search.selectedIds = documents.map((d) => String(d.id));
+  for (const d of documents) {
+    search.visible.set(String(d.id), d);
+    search.selectedIds.add(String(d.id));
+  }
   setSearchResults(search);
 </script>
 

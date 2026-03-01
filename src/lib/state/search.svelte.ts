@@ -4,15 +4,17 @@
  */
 
 import type { Document } from "$lib/api/types";
+
 import { createContext } from "svelte";
+import { SvelteMap, SvelteSet } from "svelte/reactivity";
 
 export class SearchResultsState {
-  visible: Map<string, Document> = $state(new Map());
-  selectedIds: string[] = $state([]);
+  visible: SvelteMap<string, Document> = new SvelteMap();
+  selectedIds: SvelteSet<string> = new SvelteSet();
   total: number = $state(0);
 
   get selected(): Document[] {
-    return this.selectedIds
+    return [...this.selectedIds]
       .map((id) => this.visible.get(id))
       .filter(Boolean) as Document[];
   }
@@ -24,11 +26,13 @@ export class SearchResultsState {
   }
 
   selectAll() {
-    this.selectedIds = [...this.visible.keys()];
+    for (const key of this.visible.keys()) {
+      this.selectedIds.add(key);
+    }
   }
 
   deselectAll() {
-    this.selectedIds = [];
+    this.selectedIds.clear();
   }
 }
 

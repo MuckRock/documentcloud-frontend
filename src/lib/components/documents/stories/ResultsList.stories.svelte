@@ -1,7 +1,7 @@
 <script module lang="ts">
   import type { Document } from "$lib/api/types";
 
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import ResultsList from "../ResultsList.svelte";
   import Pending from "../Pending.svelte";
   import Unverified from "../../accounts/Unverified.svelte";
@@ -22,10 +22,10 @@
 
   import pending from "@/test/fixtures/documents/pending.json";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Documents / Results list",
     component: ResultsList,
-  };
+  });
 
   const user = { ...me, verified_journalist: false };
 </script>
@@ -48,19 +48,17 @@
   setSearchResults(new SearchResultsState());
 </script>
 
-<Story name="With Results">
+<Story name="With Results" asChild>
   <ResultsList {results} {count} {next} />
 </Story>
 
-<Story name="Empty">
-  <ResultsList />
-</Story>
+<Story name="Empty" />
 
-<Story name="Infinite">
+<Story name="Infinite" asChild>
   <ResultsList {results} {count} {next} auto />
 </Story>
 
-<Story name="Pending documents">
+<Story name="Pending documents" asChild>
   <ResultsList {results} {count} {next}>
     {#snippet start()}
       <Pending {pending} />
@@ -68,13 +66,7 @@
   </ResultsList>
 </Story>
 
-<!-- too big to render
-  <Story name="Highlighted">
-    <ResultsList results={highlighted} {count} {next} />
-  </Story>
--->
-
-<Story name="Unverified user">
+<Story name="Unverified user" asChild>
   <ResultsList {results} {count} {next}>
     {#snippet start()}
       <Unverified {user} />
@@ -82,6 +74,10 @@
   </ResultsList>
 </Story>
 
-<Story name="Loading error" parameters={{ msw: { handlers: [mock.error] } }}>
+<Story
+  name="Loading error"
+  parameters={{ msw: { handlers: [mock.error] } }}
+  asChild
+>
   <ResultsList {results} {count} {next} auto />
 </Story>

@@ -1,6 +1,6 @@
 <script module lang="ts">
-  import type { Document, DocumentResults, Maybe } from "$lib/api/types";
   import { writable, type Writable } from "svelte/store";
+  import type { Document, DocumentResults, Maybe } from "$lib/api/types";
 
   import {
     defaultVisibleFields,
@@ -64,7 +64,6 @@
     end,
   }: Props = $props();
 
-  let container: Maybe<HTMLElement> = $state();
   let endEl: Maybe<HTMLElement> = $state();
   let error: string = $state("");
   let observer: Maybe<IntersectionObserver>;
@@ -85,7 +84,10 @@
 
   // track what's visible so we can compare to search.selected
   $effect(() => {
-    search.visible = new Map(results.map((d) => [String(d.id), d]));
+    search.visible.clear();
+    for (const d of results) {
+      search.visible.set(String(d.id), d);
+    }
   });
 
   // load the next set of results
@@ -170,32 +172,26 @@
   });
 </script>
 
-<div
-  class="container"
-  data-sveltekit-preload-data={preload}
-  bind:this={container}
->
+<div class="container" data-sveltekit-preload-data={preload}>
   <Flex direction="column" gap={1}>
     {@render start?.()}
     {#each results as document (document.id)}
       <div
         class="result-row"
-        class:selected={search.selectedIds.includes(String(document.id))}
+        class:selected={search.selectedIds.has(String(document.id))}
       >
         {#if !embed}
           <label>
             <span class="sr-only">{$_("documents.select")}</span>
             <input
               type="checkbox"
-              checked={search.selectedIds.includes(String(document.id))}
+              checked={search.selectedIds.has(String(document.id))}
               onchange={(e) => {
                 const id = String(document.id);
                 if (e.currentTarget.checked) {
-                  search.selectedIds = [...search.selectedIds, id];
+                  search.selectedIds.add(id);
                 } else {
-                  search.selectedIds = search.selectedIds.filter(
-                    (s) => s !== id,
-                  );
+                  search.selectedIds.delete(id);
                 }
               }}
               value={document.id}

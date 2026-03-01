@@ -1,20 +1,19 @@
-<script context="module" lang="ts">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import VisibleFieldsComponent, {
     defaultVisibleFields,
-    defaultViews,
   } from "../VisibleFields.svelte";
 
   import { documentExpanded, data } from "@/test/fixtures/documents";
-  import { get, writable } from "svelte/store";
+  import { writable } from "svelte/store";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Documents / Visible Fields",
     component: VisibleFieldsComponent,
     parameters: {
       layout: "centered",
     },
-  };
+  });
 </script>
 
 <script lang="ts">
@@ -26,7 +25,7 @@
   setVisibleFieldsContext(vF);
 </script>
 
-<Template let:args>
+{#snippet template(args)}
   <div class="wrapper">
     <Menu><VisibleFieldsComponent {...args} /></Menu>
     <div class="item">
@@ -36,10 +35,10 @@
       />
     </div>
   </div>
-</Template>
+{/snippet}
 
-<Story name="Simple" />
-<Story name="Advanced" args={{ showAdvanced: true }} />
+<Story name="Simple" {template} />
+<Story name="Advanced" args={{ showAdvanced: true }} {template} />
 
 <style>
   .wrapper {

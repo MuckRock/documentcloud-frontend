@@ -18,8 +18,10 @@
 
   const search = new SearchResultsState();
   untrack(() => {
-    search.visible = new Map(docs.map((d) => [String(d.id), d]));
-    search.selectedIds = docs.map((d) => String(d.id));
+    for (const d of docs) {
+      search.visible.set(String(d.id), d);
+      search.selectedIds.add(String(d.id));
+    }
   });
   setSearchResults(search);
 
