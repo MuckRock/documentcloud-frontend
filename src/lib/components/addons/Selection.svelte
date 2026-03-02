@@ -11,7 +11,7 @@
 
   let {
     documents = new Set(),
-    value = $bindable(null),
+    value = $bindable(),
     query = undefined,
     resultsCount = undefined,
   }: Props = $props();
@@ -75,9 +75,9 @@
   </fieldset>
   <p class="help">
     {$_("addonDispatchDialog.selectionHelp")}
-    <a data-sveltekit-preload-data="tap" href="/help/add-ons/"
-      >{$_("addonDispatchDialog.selectionLearnMore")}</a
-    >
+    <a data-sveltekit-preload-data="none" href="/help/add-ons/">
+      {$_("addonDispatchDialog.selectionLearnMore")}
+    </a>
   </p>
 {/if}
 

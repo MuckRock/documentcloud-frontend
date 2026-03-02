@@ -116,4 +116,4 @@ Because `createContext` uses an internal key that can't be provided via `render(
 2. `npm run check` — 0 errors, 0 warnings
 3. `npm run knip` — (done)
 4. `npm run storybook` — (done)
-5. Manual testing: document selection, select-all, bulk actions, add-on document selection, embed view — TODO
+5. Manual testing: document selection, select-all, bulk actions, add-on document selection, embed view — (done)
