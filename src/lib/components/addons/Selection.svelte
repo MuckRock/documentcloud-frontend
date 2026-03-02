@@ -1,30 +1,39 @@
 <script lang="ts">
-  import type { Document } from "$lib/api/types";
-
   import { _ } from "svelte-i18n";
   import { getSearchResults } from "$lib/state/search.svelte";
 
-  export let documents = new Set();
-  export let value: null | Record<string, unknown> = null;
-  export let query: undefined | string = undefined;
-  export let resultsCount: undefined | number = undefined;
+  interface Props {
+    documents?: any;
+    value?: null | Record<string, unknown>;
+    query?: undefined | string;
+    resultsCount?: undefined | number;
+  }
+
+  let {
+    documents = new Set(),
+    value = $bindable(null),
+    query = undefined,
+    resultsCount = undefined,
+  }: Props = $props();
 
   const search = getSearchResults();
 
   // default to the first option, for convenience
-  let choice = [...documents][0];
+  let choice = $derived([...documents][0]);
 
-  $: switch (choice) {
-    case "query":
-      value = { query };
-      break;
-    case "selected":
-      value = { documents: search.selected?.map((d) => d.id) ?? [] };
-      break;
+  $effect(() => {
+    switch (choice) {
+      case "query":
+        value = { query };
+        break;
+      case "selected":
+        value = { documents: search.selected?.map((d) => d.id) ?? [] };
+        break;
 
-    default:
-      value = null;
-  }
+      default:
+        value = null;
+    }
+  });
 </script>
 
 {#if documents.size > 0}

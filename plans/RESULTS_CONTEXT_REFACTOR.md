@@ -114,6 +114,6 @@ Because `createContext` uses an internal key that can't be provided via `render(
 
 1. `npm run test:unit` — 365 tests passing (44 test files)
 2. `npm run check` — 0 errors, 0 warnings
-3. `npm run knip` — TODO
-4. `npm run storybook` — TODO
+3. `npm run knip` — (done)
+4. `npm run storybook` — (done)
 5. Manual testing: document selection, select-all, bulk actions, add-on document selection, embed view — TODO

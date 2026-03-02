@@ -30,7 +30,7 @@
   import Button from "../common/Button.svelte";
   import Empty from "../common/Empty.svelte";
   import Flex from "../common/Flex.svelte";
-  import Selection from "../inputs/Selection.svelte";
+  import Selection from "../addons/Selection.svelte";
   import Tab from "../common/Tab.svelte";
 
   import AddOns from "../sidebar/AddOns.svelte";
