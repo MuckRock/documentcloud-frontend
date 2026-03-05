@@ -19,6 +19,12 @@ import { SvelteMap, SvelteSet } from "svelte/reactivity";
 import { search } from "$lib/api/documents";
 import { getApiResponse } from "$lib/utils/api";
 
+interface Args {
+  query?: Maybe<string>;
+  options?: Maybe<SearchOptions>;
+  loading?: boolean;
+}
+
 export class SearchResultsState {
   visible: SvelteMap<string, Document> = new SvelteMap();
   selectedIds: SvelteSet<string> = new SvelteSet();
@@ -28,9 +34,10 @@ export class SearchResultsState {
   loading: boolean = $state(false);
   next: Nullable<string> = $state(null);
 
-  constructor(query?: Maybe<string>, options?: Maybe<SearchOptions>) {
+  constructor({ query = "", options, loading = false }: Args = {}) {
     this.query = query;
     this.options = options;
+    this.loading = loading;
   }
 
   get selected(): Document[] {
@@ -82,7 +89,7 @@ export class SearchResultsState {
    */
   async setResults(getter: () => Promise<APIResponse<DocumentResults, any>>) {
     const { data: searchResults } = await getter();
-    if (!searchResults) return;
+    if (!searchResults) return this;
 
     this.visible.clear();
     for (const d of searchResults.results) {
@@ -90,6 +97,9 @@ export class SearchResultsState {
     }
     this.total = searchResults.count ?? searchResults.results.length;
     this.next = searchResults.next;
+    this.loading = false;
+
+    return this; // for chaining
   }
 
   /**

@@ -2,8 +2,12 @@
   import { _ } from "svelte-i18n";
 
   import AddOnLayout from "$lib/components/layouts/AddOnLayout.svelte";
-  import { isPremiumOrg, getCreditBalance } from "$lib/api/accounts";
+  import { getCreditBalance } from "$lib/api/accounts";
   import { getCurrentUser } from "$lib/utils/permissions";
+  import {
+    SearchResultsState,
+    setSearchResults,
+  } from "$lib/state/search.svelte";
 
   let { data } = $props();
 
@@ -11,7 +15,6 @@
 
   let addon = $derived(data.addon);
   let query = $derived(data.query);
-  let search = $derived(data.searchResults);
   let scheduled = $derived(data.scheduled);
   let organization = $derived(
     typeof $me?.organization === "object" ? $me.organization : null,
@@ -20,14 +23,16 @@
   let isPremiumAddon = $derived(
     addon?.parameters.categories?.includes("premium") ?? false,
   );
-  let disablePremium = $derived(
-    isPremiumAddon && creditBalance === 0,
-  );
+  let disablePremium = $derived(isPremiumAddon && creditBalance === 0);
   let history = $derived(data.history);
+
+  const searchResults = new SearchResultsState({ loading: true });
+  searchResults.setResults(() => data.searchResults);
+  setSearchResults(searchResults);
 </script>
 
 <svelte:head>
   <title>{addon.name} | Add-Ons | DocumentCloud</title>
 </svelte:head>
 
-<AddOnLayout {addon} {query} {search} {disablePremium} {scheduled} {history} />
+<AddOnLayout {addon} {query} {disablePremium} {scheduled} {history} />

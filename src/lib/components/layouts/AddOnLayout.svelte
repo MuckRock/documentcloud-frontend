@@ -1,6 +1,5 @@
 <script lang="ts">
   import type {
-    DocumentResults,
     Maybe,
     Page,
     AddOn,
@@ -48,17 +47,13 @@
     defaultVisibleFields,
     setVisibleFieldsContext,
   } from "$lib/components/documents/VisibleFields.svelte";
-  import {
-    SearchResultsState,
-    setSearchResults,
-  } from "$lib/state/search.svelte";
+  import { getSearchResults } from "$lib/state/search.svelte";
 
   interface Props {
     addon: AddOn;
     event?: Maybe<Event>;
     scheduled?: Promise<Maybe<Page<Event>>> | null;
     history?: Promise<Maybe<Page<Run>>> | null;
-    search: Promise<Maybe<DocumentResults>>;
     query: string;
     disablePremium?: boolean;
   }
@@ -68,10 +63,11 @@
     event = undefined,
     scheduled = null,
     history = null,
-    search,
     query,
     disablePremium = false,
   }: Props = $props();
+
+  const search = getSearchResults();
 
   type TabChoice = "dispatch" | "history" | "scheduled";
   const tabs: TabChoice[] = ["dispatch", "history", "scheduled"];
@@ -88,7 +84,6 @@
   let clientWidth: number = $state(800);
   let docSelectModalOpen = $state(false);
 
-  setSearchResults(new SearchResultsState());
   setVisibleFieldsContext(writable(defaultVisibleFields));
 
   let action = $derived(
@@ -228,14 +223,12 @@
                     </Button>
                   </Flex>
                 {/if}
-                {#await search then results}
-                  <Selection
-                    bind:value={$values["selection"]}
-                    documents={new Set(addon.parameters.documents)}
-                    resultsCount={results?.count}
-                    {query}
-                  />
-                {/await}
+                <Selection
+                  bind:value={$values["selection"]}
+                  documents={new Set(addon.parameters.documents)}
+                  resultsCount={search.total}
+                  {query}
+                />
               </svelte:fragment>
             </AddOnDispatch>
           {/if}
@@ -244,7 +237,7 @@
       {#if addon.parameters.documents}
         {#if clientWidth > SMALL_BREAKPOINT}
           <div class="docs">
-            <DocumentList {search} {query} />
+            <DocumentList {query} />
           </div>
         {:else if docSelectModalOpen}
           <div class="backdrop" transition:fade></div>
@@ -261,7 +254,7 @@
               </Button>
             </header>
             <main>
-              <DocumentList {search} {query} />
+              <DocumentList {query} />
             </main>
           </div>
         {/if}

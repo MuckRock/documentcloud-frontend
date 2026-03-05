@@ -1,6 +1,8 @@
 <script module lang="ts">
-  import { writable, type Writable } from "svelte/store";
   import type { Maybe } from "$lib/api/types";
+
+  import { writable, type Writable } from "svelte/store";
+  import { Hourglass24 } from "svelte-octicons";
 
   import {
     defaultVisibleFields,
@@ -127,6 +129,7 @@
 <div class="container" data-sveltekit-preload-data={preload}>
   <Flex direction="column" gap={1}>
     {@render start?.()}
+
     {#each search.visible.values() as document (document.id)}
       <div
         class="result-row"
@@ -169,10 +172,14 @@
         </div>
       </div>
     {:else}
-      <Empty icon={Search24}>
-        <h2>{$_("noDocuments.noSearchResults")}</h2>
-        <p>{$_("noDocuments.queryNoResults")}</p>
-      </Empty>
+      {#if search.loading}
+        <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
+      {:else}
+        <Empty icon={Search24}>
+          <h2>{$_("noDocuments.noSearchResults")}</h2>
+          <p>{$_("noDocuments.queryNoResults")}</p>
+        </Empty>
+      {/if}
     {/each}
   </Flex>
 

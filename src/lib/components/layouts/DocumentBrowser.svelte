@@ -12,17 +12,11 @@
 
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
-  import {
-    Hourglass24,
-    Upload24,
-    SidebarExpand16,
-    ChevronUp12,
-  } from "svelte-octicons";
+  import { Upload24, SidebarExpand16, ChevronUp12 } from "svelte-octicons";
 
   // Common components
   import Button from "$lib/components/common/Button.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
-  import Error from "$lib/components/common/Error.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
   import NavItem from "$lib/components/common/NavItem.svelte";
 
@@ -86,7 +80,6 @@
   }
 
   let {
-    documents,
     search: searchProp,
     query = "",
     project = null,
@@ -213,9 +206,6 @@
     HIDE_COUNT: footerToolbarWidth < remToPx(26),
   });
   let pending_ids = $derived(new Set($pending?.map((d) => String(d.doc_id))));
-  let searchResults = $derived(
-    fixResults(documents, $deleted, $edited, pending_ids, $finished),
-  );
 </script>
 
 <div class="container">
@@ -262,19 +252,13 @@
             </Flex>
           {/if}
         {/snippet}
-        {#await searchResults}
-          <Empty icon={Hourglass24}>{$_(uiText.loading)}</Empty>
-        {:then documentsResults}
-          <ResultsList {search} auto>
-            {#snippet start()}
-              {#if $me && !canUploadFiles($me)}
-                <Unverified user={$me} />
-              {/if}
-            {/snippet}
-          </ResultsList>
-        {:catch}
-          <Error>{$_(uiText.error)}</Error>
-        {/await}
+        <ResultsList {search} auto>
+          {#snippet start()}
+            {#if $me && !canUploadFiles($me)}
+              <Unverified user={$me} />
+            {/if}
+          {/snippet}
+        </ResultsList>
         {#snippet footer()}
           {#if !embed}
             <div class="toolbar" bind:clientWidth={footerToolbarWidth}>

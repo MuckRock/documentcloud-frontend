@@ -20,7 +20,9 @@
   let canonical_url = $derived(projects.canonicalUrl(project));
   let embed_url = $derived(embedUrl(canonical_url));
 
-  setSearchResults(new SearchResultsState());
+  const search = new SearchResultsState({ loading: true });
+  search.setResults(() => data.documents);
+  setSearchResults(search);
 </script>
 
 <svelte:head>

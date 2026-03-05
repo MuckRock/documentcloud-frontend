@@ -9,6 +9,10 @@
   import { isAddon } from "$lib/api/addons";
   import { isPremiumOrg, getCreditBalance } from "$lib/api/accounts";
   import { getCurrentUser } from "$lib/utils/permissions";
+  import {
+    SearchResultsState,
+    setSearchResults,
+  } from "$lib/state/search.svelte";
 
   let { data } = $props();
 
@@ -17,7 +21,6 @@
   let event = $derived(data.event);
   let addon = $derived(isAddon(data.event.addon) ? data.event.addon : undefined);
   let query = $derived(data.query);
-  let search = $derived(data.searchResults);
   let scheduled = $derived(data.scheduled);
   let organization = $derived(
     typeof $me?.organization === "object" ? $me.organization : null,
@@ -31,6 +34,10 @@
     isPremiumAddon && (!isPremiumUser || creditBalance === 0),
   );
   let history = $derived(data.history);
+
+  const searchState = new SearchResultsState({ loading: true });
+  searchState.setResults(async () => ({ data: await data.searchResults }));
+  setSearchResults(searchState);
 
   // set initial form values when route changes
   afterNavigate(() => {
@@ -48,7 +55,6 @@
   <AddOnLayout
     {addon}
     {event}
-    {search}
     {query}
     {disablePremium}
     {scheduled}

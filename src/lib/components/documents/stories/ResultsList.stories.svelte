@@ -38,23 +38,22 @@
 
 <script lang="ts">
   import { writable } from "svelte/store";
-  import { setContext } from "svelte";
   import {
     defaultVisibleFields,
     setVisibleFieldsContext,
   } from "../VisibleFields.svelte";
 
-  setContext("embed", false);
   setVisibleFieldsContext(writable(defaultVisibleFields));
 </script>
 
-<Story name="With Results" asChild>
-  <ResultsList {search} />
-</Story>
+<Story name="With Results" args={{ search }} />
 
-<Story name="Empty" asChild>
-  <ResultsList search={empty} />
-</Story>
+<Story name="Empty" args={{ search: empty }} />
+
+<Story
+  name="Loading"
+  args={{ search: new SearchResultsState({ loading: true }) }}
+/>
 
 <Story name="Infinite" asChild>
   <ResultsList {search} auto />

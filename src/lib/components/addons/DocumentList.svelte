@@ -1,6 +1,4 @@
 <script lang="ts">
-  import type { DocumentResults, Maybe } from "$lib/api/types";
-
   import { _ } from "svelte-i18n";
   import { Hourglass24, SidebarExpand16 } from "svelte-octicons";
 
@@ -17,11 +15,10 @@
   import { getSearchResults } from "$lib/state/search.svelte";
 
   interface Props {
-    search: Promise<Maybe<DocumentResults>>;
     query: string;
   }
 
-  let { search, query }: Props = $props();
+  let { query }: Props = $props();
 
   const searchState = getSearchResults();
 
@@ -61,11 +58,11 @@
       </Flex>
     {/snippet}
 
-    {#await search}
+    {#if searchState.loading && searchState.visible.size === 0}
       <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
-    {:then search}
+    {:else}
       <ResultsList search={searchState} auto />
-    {/await}
+    {/if}
 
     {#snippet footer()}
       <PageToolbar>
