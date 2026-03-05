@@ -55,13 +55,17 @@
     preload = "hover",
     start,
     end,
-    onNext,
+    onNext: onNextProp,
     search,
   }: Props = $props();
 
   let endEl: Maybe<HTMLElement> = $state();
   let error: Maybe<string> = $state();
   let observer: Maybe<IntersectionObserver>;
+
+  // we can pass in an onNext callback or ust use the SearchResultsState
+  // this is likely just for testing and storybook, and may go away if we don't need it
+  let onNext = $derived(onNextProp ?? search.loadNext);
 
   const embed: boolean = getContext("embed");
   const visibleFields = getVisibleFieldsContext();
@@ -82,12 +86,10 @@
       entries.forEach(async (entry) => {
         if (entry.isIntersecting && search.next) {
           observer?.unobserve(el);
-          if (onNext) {
-            error = await onNext();
-            if (error) {
-              // don't keep trying if something fails
-              auto = false;
-            }
+          error = await onNext();
+          if (error) {
+            // don't keep trying if something fails
+            auto = false;
           }
         }
       });
@@ -181,9 +183,7 @@
         mode="primary"
         disabled={search.loading}
         on:click={async () => {
-          if (onNext) {
-            error = await onNext();
-          }
+          error = await onNext();
         }}
       >
         {#if search.loading}

@@ -31,7 +31,10 @@
     visibleFields,
   } from "$lib/components/documents/ResultsList.svelte";
   import { setVisibleFieldsContext } from "$lib/components/documents/VisibleFields.svelte";
-  import { getSearchResults } from "$lib/state/search.svelte";
+  import {
+    getSearchResults,
+    SearchResultsState,
+  } from "$lib/state/search.svelte";
 
   // Form components
   import Dropzone from "$lib/components/inputs/Dropzone.svelte";
@@ -68,7 +71,6 @@
   }
 
   setVisibleFieldsContext(visibleFields);
-  const search = getSearchResults();
 
   const embed: boolean = getContext("embed");
   const me = getCurrentUser();
@@ -76,6 +78,7 @@
   const finished = getFinishedDocuments();
 
   interface Props {
+    search?: SearchResultsState;
     documents: Promise<APIResponse<DocumentResults, any>>;
     query?: string;
     project?: Nullable<Project>;
@@ -84,6 +87,7 @@
 
   let {
     documents,
+    search: searchProp,
     query = "",
     project = null,
     uiText = {
@@ -93,6 +97,10 @@
       search: "common.search",
     },
   }: Props = $props();
+
+  // this lets us pass in non-global search results, for testing
+  // will error if neither is present
+  const search = $derived(searchProp ?? getSearchResults());
 
   let footerToolbarWidth: number = $state(800);
 

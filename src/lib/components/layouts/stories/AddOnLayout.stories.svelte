@@ -42,11 +42,18 @@
     defaultVisibleFields,
     setVisibleFieldsContext,
   } from "$lib/components/documents/VisibleFields.svelte";
+  import {
+    SearchResultsState,
+    setSearchResults,
+  } from "$lib/state/search.svelte";
 
   // Set up contexts needed by ResultsList (used in AddOnLayout -> DocumentList)
   setContext("embed", false);
   setVisibleFieldsContext(writable(defaultVisibleFields));
-  // setSearchResults(new SearchResultsState());
+
+  const searchState = new SearchResultsState();
+  searchState.setResults(async () => ({ data: documentsList }));
+  setSearchResults(searchState);
 </script>
 
 {#snippet template(args: Args)}

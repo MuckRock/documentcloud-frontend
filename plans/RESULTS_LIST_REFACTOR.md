@@ -51,8 +51,8 @@ Context pair: `[getSearchResults, setSearchResults]` — still exported for side
 - Removed `results`, `next`, `count` props from `<ResultsList>` invocation
 
 Still TODO:
+
 - Wire up `search.setResults()` when the `{#await}` block resolves (currently `fixResults` returns a `Promise<DocumentResults>` that isn't fed into the state)
-- Pass `onNext={() => search.loadNext()}` to `ResultsList`
 - Integrate `fixResults` logic with the state — either as a transform or by populating the state after `fixResults` runs
 
 ### 4. `src/lib/components/addons/DocumentList.svelte` — DONE (prop wiring)
@@ -62,6 +62,7 @@ Still TODO:
 - Removed `results`, `next`, `count` props from `<ResultsList>` invocation
 
 Still TODO:
+
 - Wire up `searchState.setResults()` when the `{#await}` block resolves
 - Pass `onNext={() => searchState.loadNext()}` to `ResultsList`
 

@@ -52,7 +52,10 @@
   } from "$lib/state/search.svelte";
 
   setContext("embed", false);
-  setSearchResults(new SearchResultsState());
+
+  const search = new SearchResultsState();
+  search.setResults(async () => ({ data: documentsList }));
+  setSearchResults(search);
 </script>
 
 {#snippet template(args: Args)}

@@ -38,12 +38,17 @@
   } from "$lib/state/search.svelte";
 
   setContext("embed", false);
-  setSearchResults(new SearchResultsState());
+
+  const search = new SearchResultsState();
+  search.setResults(async () => ({ data: documentsList }));
+  setSearchResults(search);
+
+  const emptySearch = new SearchResultsState();
 </script>
 
 <Story name="With Data" {args} />
 
-<Story name="No documents" args={empty} />
+<Story name="No documents" args={{ ...empty, search: emptySearch }} />
 
 <Story name="Embedded" asChild>
   <ContextDecorator embed={true}>
