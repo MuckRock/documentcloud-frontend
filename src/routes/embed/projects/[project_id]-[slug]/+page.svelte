@@ -12,11 +12,14 @@
   } from "$lib/state/search.svelte";
 
   setContext("embed", true);
-  setSearchResults(new SearchResultsState());
 
   let { data } = $props();
 
   let documents = $derived(data.documents);
+
+  const search = new SearchResultsState();
+  search.setResults(() => data.documents);
+  setSearchResults(search);
   let project = $derived(data.project);
 </script>
 
