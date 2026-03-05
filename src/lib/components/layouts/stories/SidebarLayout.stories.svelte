@@ -44,8 +44,9 @@
     setSearchResults,
   } from "$lib/state/search.svelte";
 
-  setContext("embed", false);
-  setSearchResults(new SearchResultsState());
+  const search = new SearchResultsState();
+  search.setResults(() => documents);
+  setSearchResults(search);
 </script>
 
 {#snippet template(args)}

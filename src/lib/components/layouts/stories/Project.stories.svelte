@@ -2,6 +2,11 @@
   import { defineMeta } from "@storybook/addon-svelte-csf";
 
   import Project from "../Project.svelte";
+  import {
+    SearchResultsState,
+    setSearchResults,
+  } from "$lib/state/search.svelte";
+
   import { project, projectUsers } from "@/test/fixtures/projects";
   import { documentsList } from "@/test/fixtures/documents";
 
@@ -12,6 +17,13 @@
       layout: "fullscreen",
     },
   });
+</script>
+
+<script lang="ts">
+  const search = new SearchResultsState();
+  search.setResults(async () => ({ data: documentsList }));
+
+  setSearchResults(search);
 </script>
 
 <Story

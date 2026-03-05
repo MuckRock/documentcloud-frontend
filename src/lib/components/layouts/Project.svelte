@@ -18,13 +18,6 @@
   import DocumentActions from "../sidebar/DocumentActions.svelte";
   import UploadButton from "../sidebar/UploadButton.svelte";
 
-  import {
-    SearchResultsState,
-    setSearchResults,
-  } from "$lib/state/search.svelte";
-
-  setSearchResults(new SearchResultsState());
-
   interface Props {
     project: Project;
     users: ProjectUser[];
