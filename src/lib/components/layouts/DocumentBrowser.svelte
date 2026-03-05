@@ -257,12 +257,7 @@
         {#await searchResults}
           <Empty icon={Hourglass24}>{$_(uiText.loading)}</Empty>
         {:then documentsResults}
-          <ResultsList
-            results={documentsResults.results}
-            next={documentsResults.next}
-            count={documentsResults.count}
-            auto
-          >
+          <ResultsList auto>
             {#snippet start()}
               {#if $me && !canUploadFiles($me)}
                 <Unverified user={$me} />
@@ -298,7 +293,9 @@
                 <Dropdown position="top-start">
                   <NavItem
                     slot="anchor"
-                    disabled={!$me || search.selected.length < 1 || !search.editable}
+                    disabled={!$me ||
+                      search.selected.length < 1 ||
+                      !search.editable}
                   >
                     {$_("bulk.title")}
                     <ChevronUp12 slot="end" />

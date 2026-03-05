@@ -64,12 +64,7 @@
     {#await search}
       <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
     {:then search}
-      <ResultsList
-        results={search?.results}
-        next={search?.next}
-        count={search?.count}
-        auto
-      />
+      <ResultsList auto />
     {/await}
 
     {#snippet footer()}
@@ -85,7 +80,8 @@
               onchange={selectAll}
             />
             {#if searchState.selected.length > 0}
-              {searchState.selected.length.toLocaleString()} {$_("inputs.selected")}
+              {searchState.selected.length.toLocaleString()}
+              {$_("inputs.selected")}
             {:else}
               {$_("inputs.selectAll")}
             {/if}

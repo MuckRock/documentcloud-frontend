@@ -18,10 +18,13 @@
   } from "$lib/state/search.svelte";
 
   let { data } = $props();
-
-  setSearchResults(new SearchResultsState());
-
   let query = $derived(data.query);
+
+  // todo: set initial search results in this route
+  const search = new SearchResultsState();
+  setSearchResults(search);
+
+  search.setResults(() => data.searchResults);
 </script>
 
 <svelte:head>

@@ -1,6 +1,6 @@
 <script module lang="ts">
   import { writable, type Writable } from "svelte/store";
-  import type { Document, DocumentResults, Maybe } from "$lib/api/types";
+  import type { Maybe } from "$lib/api/types";
 
   import {
     defaultVisibleFields,
@@ -38,34 +38,27 @@
   import NoteHighlights from "./NoteHighlights.svelte";
   import PageHighlights from "./PageHighlights.svelte";
 
-  import { getApiResponse } from "$lib/utils/api";
   import { StorageManager } from "$lib/utils/storage";
   import { getSearchResults } from "$lib/state/search.svelte";
 
   interface Props {
-    results?: Document[];
-    count?: Maybe<number>;
-    next?: string | null;
     auto?: boolean;
-    loading?: boolean;
     preload?: "hover" | "tap";
     start?: Snippet;
     end?: Snippet;
+    onNext?: () => Promise<Maybe<string>>; // can return an error
   }
 
   let {
-    results = $bindable([]),
-    count = undefined,
-    next = $bindable(null),
     auto = $bindable(false),
-    loading = $bindable(false),
     preload = "hover",
     start,
     end,
+    onNext,
   }: Props = $props();
 
   let endEl: Maybe<HTMLElement> = $state();
-  let error: string = $state("");
+  let error: Maybe<string> = $state();
   let observer: Maybe<IntersectionObserver>;
 
   const embed: boolean = getContext("embed");
@@ -82,61 +75,19 @@
     highlightState.update((state) => ({ ...state, allOpen: true }));
   }
 
-  // track what's visible so we can compare to search.selected
-  $effect(() => {
-    search.visible.clear();
-    for (const d of results) {
-      search.visible.set(String(d.id), d);
-    }
-  });
-
-  // load the next set of results
-  async function load(url: string | URL) {
-    try {
-      url = new URL(url);
-    } catch (e) {
-      error = e.message;
-      loading = false;
-      return console.warn(e);
-    }
-
-    // only one at a time
-    if (loading) return;
-
-    loading = true;
-    const resp = await fetch(url, { credentials: "include" }).catch(
-      console.warn,
-    );
-
-    const { data, error: err } = await getApiResponse<DocumentResults>(resp);
-
-    if (err) {
-      // show an error message, but let the user try loading more
-      error = err.message;
-      auto = false;
-      loading = false;
-    }
-
-    if (data) {
-      results = [...results, ...data.results];
-      search.total = data.count ?? search.total;
-      next = data.next;
-      error = "";
-      if (auto && endEl) watch(endEl);
-    }
-    loading = false;
-  }
-
   function watch(el: HTMLElement): Maybe<IntersectionObserver> {
     if (!el) return;
     const io = new IntersectionObserver((entries, observer) => {
       entries.forEach(async (entry) => {
-        if (entry.isIntersecting && next) {
+        if (entry.isIntersecting && search.next) {
           observer?.unobserve(el);
-          await load(next).catch((e) => {
-            loading = false;
-            error = e.message;
-          });
+          if (onNext) {
+            error = await onNext();
+            if (error) {
+              // don't keep trying if something fails
+              auto = false;
+            }
+          }
         }
       });
     });
@@ -158,8 +109,6 @@
   }
 
   onMount(() => {
-    // set initial total, update later
-    search.total = count ?? 0;
     if (auto && endEl) {
       observer = watch(endEl);
     }
@@ -175,7 +124,7 @@
 <div class="container" data-sveltekit-preload-data={preload}>
   <Flex direction="column" gap={1}>
     {@render start?.()}
-    {#each results as document (document.id)}
+    {#each search.visible.values() as document (document.id)}
       <div
         class="result-row"
         class:selected={search.selectedIds.has(String(document.id))}
@@ -225,20 +174,18 @@
   </Flex>
 
   <div bind:this={endEl} class="end">
-    {#if next}
+    {#if search.next}
       <Button
         ghost
         mode="primary"
-        disabled={loading}
-        on:click={() => {
-          if (next)
-            load(next).catch((e) => {
-              error = e.message;
-              loading = false;
-            });
+        disabled={search.loading}
+        on:click={async () => {
+          if (onNext) {
+            error = await onNext();
+          }
         }}
       >
-        {#if loading}
+        {#if search.loading}
           {$_("common.loading")}
         {:else}
           {$_("documents.more")}

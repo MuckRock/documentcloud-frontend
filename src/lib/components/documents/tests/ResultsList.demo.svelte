@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { Document, Maybe } from "$lib/api/types";
+  import type { Document } from "$lib/api/types";
   import type { Snippet } from "svelte";
   import { writable } from "svelte/store";
-  import { setContext } from "svelte";
+  import { setContext, untrack } from "svelte";
 
   import ResultsList from "../ResultsList.svelte";
   import {
@@ -16,28 +16,38 @@
 
   interface Props {
     results?: Document[];
-    count?: Maybe<number>;
-    next?: string | null;
     auto?: boolean;
     preload?: "hover" | "tap";
     start?: Snippet;
     end?: Snippet;
+    children?: Snippet;
   }
 
   let {
     results = [],
-    count = undefined,
-    next = null,
     auto = false,
     preload = "hover",
     start,
     end,
+    children,
   }: Props = $props();
 
   // Set up contexts needed by ResultsList
   setContext("embed", false);
   setVisibleFieldsContext(writable(defaultVisibleFields));
-  setSearchResults(new SearchResultsState());
+
+  const search = new SearchResultsState();
+  untrack(() => {
+    for (const d of results) {
+      search.visible.set(String(d.id), d);
+    }
+    search.total = results.length;
+  });
+  setSearchResults(search);
 </script>
 
-<ResultsList {results} {count} {next} {auto} {preload} {start} {end} />
+{#if children}
+  {@render children()}
+{:else}
+  <ResultsList {auto} {preload} {start} {end} />
+{/if}

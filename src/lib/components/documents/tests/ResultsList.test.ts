@@ -7,20 +7,10 @@ import searchResults from "@/test/fixtures/documents/search-highlight.json";
 
 const results = searchResults as unknown as DocumentResults;
 
-const empty: DocumentResults = {
-  results: [],
-  count: 0,
-  next: null,
-  previous: null,
-  escaped: false,
-};
-
 describe("ResultsList", () => {
   it("shows results", () => {
     render(ResultsList, {
       results: results.results,
-      count: results.count,
-      next: results.next,
     });
 
     const headings = screen.getAllByRole("heading", { level: 3 });
@@ -35,7 +25,7 @@ describe("ResultsList", () => {
   });
 
   it("shows a fallback for no results", () => {
-    render(ResultsList, { results: empty.results });
+    render(ResultsList);
 
     const heading = screen.getByRole("heading");
 
@@ -45,8 +35,6 @@ describe("ResultsList", () => {
   it("selects documents via checkboxes", async () => {
     render(ResultsList, {
       results: results.results,
-      count: results.count,
-      next: results.next,
     });
 
     const checkboxes = screen.getAllByRole("checkbox");
@@ -70,8 +58,6 @@ describe("ResultsList", () => {
   it("marks selected rows with the selected class", async () => {
     const { container } = render(ResultsList, {
       results: results.results,
-      count: results.count,
-      next: results.next,
     });
 
     // no rows selected initially

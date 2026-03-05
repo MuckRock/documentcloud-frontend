@@ -6,57 +6,75 @@
 
 ## Context
 
-After Phase 1, `ResultsList.svelte` still owns loading/pagination (`load()`, `watch()`, `unwatch()`, `IntersectionObserver`) and receives `results`, `count`, `next` as props. This phase moves pagination state into the `SearchResultsState` class so `ResultsList` becomes stateless — it reads everything from context and delegates loading to an `onLoadMore` callback prop.
+After Phase 1, `ResultsList.svelte` still owns loading/pagination (`load()`, `watch()`, `unwatch()`, `IntersectionObserver`) and receives `results`, `count`, `next` as props. This phase moves pagination state into the `SearchResultsState` class so `ResultsList` becomes stateless — it reads everything from context and delegates loading to an `onNext` callback prop.
 
-## Extend: `src/lib/state/search.svelte.ts`
+## Current state: `src/lib/state/search.svelte.ts`
 
-Extend the `SearchResultsState` class created in Phase 1 with pagination state. The class will combine:
+The `SearchResultsState` class now combines:
 
-- **Selection**: `visible`, `selectedIds`, `selected` (getter), `editable` (getter), `total`
-- **Pagination**: `results`, `next`, `loading`, `error`, `auto`
-- **Methods**: `setInitialPage(page)`, `loadMore()`, `selectAll()`, `deselectAll()`
-- **Transform**: Optional `PageTransform` callback passed at construction, applied to every page (initial + subsequent). This lets `DocumentBrowser` pass its `fixResults` logic.
+- **Selection**: `visible` (SvelteMap), `selectedIds` (SvelteSet), `selected` (getter), `editable` (getter), `total`
+- **Pagination**: `next`, `loading`, `query`, `options`
+- **Methods**: `load(query, options?, fetch?)`, `setResults(getter)`, `loadNext()`, `selectAll()`, `deselectAll()`
 
-Context pair: `[getSearchResults, setSearchResults]` — already created in Phase 1.
+> Note: results live in the `visible` SvelteMap (keyed by document ID), not a separate `results` array. The original plan's `setInitialPage` is now `setResults`, and `loadMore` is now `loadNext`. There is no separate `PageTransform` — the class handles document indexing internally.
 
-## Files to modify (in order)
+Context pair: `[getSearchResults, setSearchResults]` — created in Phase 1.
 
-> Phase 1 already moved selection state to context and updated store references. The changes below are **incremental** — they cover only the pagination extraction, not the selection migration (which is done).
+## Progress
 
-### 1. `src/lib/state/search.svelte.ts`
+### 1. `src/lib/state/search.svelte.ts` — DONE
 
-- Add pagination fields: `results`, `next`, `loading`, `error`, `auto`
-- Add methods: `setInitialPage(page)`, `loadMore()`
-- Add optional `PageTransform` callback support
+- Added pagination fields: `next`, `loading`, `query`, `options`
+- Added `load(query, options?, fetch?)` — loads initial results via API, clears previous
+- Added `setResults(getter)` — accepts a promise-returning function, populates `visible` map, sets `total` and `next`
+- Added `loadNext()` — fetches next page URL, appends to `visible` map, returns error message on failure
+- No `PageTransform` callback — document indexing into the `visible` map handles deduplication naturally
 
-### 2. `src/lib/components/documents/ResultsList.svelte`
+### 2. `src/lib/components/documents/ResultsList.svelte` — IN PROGRESS
 
-- **Instance script** (module block already cleaned in Phase 1):
-  - Remove `load()`, `watch()`, `unwatch()` functions and the `getApiResponse` import
-  - Add `onLoadMore?: () => void` callback prop
-  - Keep IntersectionObserver but have it call `onLoadMore()` instead of `load()`
-  - Re-observe after loading via `$effect` watching `search.loading` and `search.next`
-  - Read `search.results`, `search.next`, `search.loading`, `search.error` instead of local state
-  - Remove `results`, `count`, `next` props (read from context instead)
-  - Keep `auto`, `preload`, `start`, `end` props
-- **Template**: Button calls `onLoadMore?.()`. Checkbox bindings already updated in Phase 1.
+What's done:
 
-### 3. `src/lib/components/layouts/DocumentBrowser.svelte`
+- Gets `search` from context via `getSearchResults()`
+- Selection uses `search.selectedIds` (checked + onchange pattern from Phase 1)
+- Has `onNext?: () => Promise<Maybe<string>>` callback prop (returns optional error)
+- Button calls `onNext?.()` and captures error
+- IntersectionObserver `watch()` calls `onNext()` instead of internal `load()`
 
-> Selection state already reads from context (Phase 1). These changes add pagination wiring.
+What still needs to happen:
 
-- Convert `fixResults` into a synchronous `PageTransform` and set it on the state: `search.setTransform(transformFn)` (or pass to `setInitialPage` — TBD based on reactivity needs)
-- When the `documents` promise resolves, call `search.setInitialPage(data)`
-- Pass `onLoadMore={() => search.loadMore()}` to `ResultsList`
+- Remove the internal `load()` function and `getApiResponse` import (currently unused dead code, but still present)
+- Remove `results`, `count`, `next` props — read from `search.visible`, `search.total`, `search.next` instead
+- Template should iterate `[...search.visible.values()]` instead of `results` prop
+- Read `search.loading` and `search.next` instead of local `loading`/`next` state
+- The `onMount` that sets `search.total = count` can be removed once count comes from context
+- Remove `auto` as a prop if it moves to state (TBD — may keep as prop since it's a UI concern)
 
-### 4. `src/lib/components/addons/DocumentList.svelte`
+### 3. `src/lib/components/layouts/DocumentBrowser.svelte` — IN PROGRESS
 
-> Selection state already reads from context (Phase 1). These changes add pagination wiring.
+What's done:
 
-- When the `search` promise resolves, call `search.setInitialPage(data)`
-- Pass `onLoadMore={() => search.loadMore()}` to `ResultsList`
+- Imports `getSearchResults` and reads search state from context
+- Selection state reads from context (selectAll, deselectAll, selected, visible, editable, total)
 
-### 5. Test/demo files
+What still needs to happen:
+
+- When the `documents` promise resolves in the `{#await}` block, call `search.setResults()` instead of passing props to `ResultsList`
+- Pass `onNext={() => search.loadNext()}` to `ResultsList`
+- Remove `results`, `next`, `count` props from `<ResultsList>` invocation
+- Integrate `fixResults` logic — either as a transform on `setResults`/`loadNext`, or by calling it separately after data loads
+
+### 4. `src/lib/components/addons/DocumentList.svelte` — NOT STARTED
+
+- When the `search` promise resolves, call `search.setResults()` instead of passing props
+- Pass `onNext={() => search.loadNext()}` to `ResultsList`
+- Remove `results`, `next`, `count` props from `<ResultsList>` invocation
+
+### 5. `src/routes/(app)/documents/+page.svelte` — DONE
+
+- Creates `SearchResultsState` and sets it in context via `setSearchResults(search)`
+- Calls `search.setResults(() => data.searchResults)` to initialize from page data
+
+### 6. Test/demo files — NOT STARTED
 
 - `src/lib/components/documents/tests/ResultsList.demo.svelte`: Initialize state with results/count/next via the `SearchResultsState` API instead of component props
 - `src/lib/components/documents/tests/ResultsList.test.ts`: Update tests that relied on `results`/`count`/`next` being passed as props — they now come from context state
@@ -64,23 +82,26 @@ Context pair: `[getSearchResults, setSearchResults]` — already created in Phas
 
 ## Key design decisions
 
-1. **`onLoadMore` is a prop, not from context** — ResultsList is presentational; behavior comes via props, state via context. This keeps it testable without a real fetch.
-2. **Transform applies to all pages** — Fixes existing gap where `fixResults()` only ran on the initial page. The transform closure reads current reactive values (`$deleted`, `$edited`, etc.) at call time.
-3. **IntersectionObserver stays in ResultsList** — Scroll detection is a UI concern. It just calls the callback.
-4. **State created at page level, configured in DocumentBrowser** — The `SearchResultsState` is instantiated high enough for sidebar siblings (e.g. `DocumentActions`) to access it. `DocumentBrowser` configures the transform and initializes data.
+1. **`onNext` is a prop, not from context** — ResultsList is presentational; behavior comes via props, state via context. This keeps it testable without a real fetch. Named `onNext` (not `onLoadMore`) to match the `next` cursor concept.
+2. **`visible` is a SvelteMap, not an array** — Documents are keyed by ID, which gives natural deduplication and O(1) lookup for selection checks. Iteration order is insertion order.
+3. **`setResults` accepts a promise-returning getter** — This lets the page route pass `() => data.searchResults` without awaiting it upfront. The class handles the async resolution.
+4. **`loadNext` returns an error message** — This lets ResultsList display errors without needing error state in the class (though `loading` state is tracked).
+5. **IntersectionObserver stays in ResultsList** — Scroll detection is a UI concern. It just calls the callback.
+6. **State created at page level** — The `SearchResultsState` is instantiated in the route (`+page.svelte`), high enough for sidebar siblings (e.g. `DocumentActions`) to access it. `DocumentBrowser` and `DocumentList` configure data loading.
 
 ## Potential issues to watch
 
-- **`bind:group` with `$state` arrays**: Addressed in Phase 1. If it needed a fallback (`checked` + `onchange`), that's already in place.
+- **`bind:group` with `$state` arrays**: Addressed in Phase 1. Uses `checked` + `onchange` pattern.
 - **Svelte 4 components** (`AddOnLayout`, `Selection`): Already addressed in Phase 1 — reading `$state` getters in `$:` blocks and templates.
-- **Reactive transform closures**: The transform in `DocumentBrowser` closes over `$deleted`, `$edited`, `pending_ids`, `$finished`. When called from `loadMore()`, these should read current values. Verify this.
+- **Reactive closures in DocumentBrowser**: The `fixResults` transform closes over `$deleted`, `$edited`, `pending_ids`, `$finished`. Need to decide how this integrates — either pass to `setResults`/`loadNext` or apply after.
+- **`visible` map iteration vs array**: Components that expect `Document[]` will need `[...search.visible.values()]`. Verify this works in `{#each}` blocks.
 
 ## Pre-refactor tests
 
 The pre-refactor tests written for Phase 1 (see [RESULTS_CONTEXT_REFACTOR.md](RESULTS_CONTEXT_REFACTOR.md#pre-refactor-tests)) should still pass after Phase 2. Additionally, consider adding:
 
-- **Pagination test for ResultsList**: Verify that clicking "load more" calls `onLoadMore`. Verify that `search.results` growing causes new items to render.
-- **IntersectionObserver behavior**: Verify that when `auto` is true and `search.next` is set, the observer triggers `onLoadMore`.
+- **Pagination test for ResultsList**: Verify that clicking "load more" calls `onNext`. Verify that new items in `search.visible` cause new items to render.
+- **IntersectionObserver behavior**: Verify that when `auto` is true and `search.next` is set, the observer triggers `onNext`.
 
 ## Verification
 

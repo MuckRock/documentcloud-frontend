@@ -1,8 +1,9 @@
 <script module lang="ts">
-  import type { Document } from "$lib/api/types";
+  import type { DocumentResults } from "$lib/api/types";
 
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import ResultsList from "../ResultsList.svelte";
+  import Demo from "../tests/ResultsList.demo.svelte";
   import Pending from "../Pending.svelte";
   import Unverified from "../../accounts/Unverified.svelte";
 
@@ -11,14 +12,13 @@
 
   // typescript complains without the type assertion
   import searchResults from "@/test/fixtures/documents/search-highlight.json";
-  const highlighted = searchResults.results as unknown as Document[];
-  const results = highlighted.map((d) => ({
+  const highlighted = searchResults as unknown as DocumentResults;
+
+  highlighted.results = highlighted.results.map((d) => ({
     ...d,
-    highlights: null,
-    note_highlights: null,
-  })) as unknown as Document[];
-  const count = searchResults.count;
-  const next = searchResults.next;
+    highlights: undefined,
+    note_highlights: undefined,
+  }));
 
   import pending from "@/test/fixtures/documents/pending.json";
 
@@ -30,48 +30,42 @@
   const user = { ...me, verified_journalist: false };
 </script>
 
-<script lang="ts">
-  import { writable } from "svelte/store";
-  import { setContext } from "svelte";
-  import {
-    defaultVisibleFields,
-    setVisibleFieldsContext,
-  } from "../VisibleFields.svelte";
-  import {
-    SearchResultsState,
-    setSearchResults,
-  } from "$lib/state/search.svelte";
-
-  // Set up contexts needed by ResultsList
-  setContext("embed", false);
-  setVisibleFieldsContext(writable(defaultVisibleFields));
-  setSearchResults(new SearchResultsState());
-</script>
-
 <Story name="With Results" asChild>
-  <ResultsList {results} {count} {next} />
+  <Demo results={highlighted.results}>
+    <ResultsList />
+  </Demo>
 </Story>
 
-<Story name="Empty" />
+<Story name="Empty" asChild>
+  <Demo>
+    <ResultsList />
+  </Demo>
+</Story>
 
 <Story name="Infinite" asChild>
-  <ResultsList {results} {count} {next} auto />
+  <Demo results={highlighted.results}>
+    <ResultsList auto />
+  </Demo>
 </Story>
 
 <Story name="Pending documents" asChild>
-  <ResultsList {results} {count} {next}>
-    {#snippet start()}
-      <Pending {pending} />
-    {/snippet}
-  </ResultsList>
+  <Demo results={highlighted.results}>
+    <ResultsList>
+      {#snippet start()}
+        <Pending {pending} />
+      {/snippet}
+    </ResultsList>
+  </Demo>
 </Story>
 
 <Story name="Unverified user" asChild>
-  <ResultsList {results} {count} {next}>
-    {#snippet start()}
-      <Unverified {user} />
-    {/snippet}
-  </ResultsList>
+  <Demo results={highlighted.results}>
+    <ResultsList>
+      {#snippet start()}
+        <Unverified {user} />
+      {/snippet}
+    </ResultsList>
+  </Demo>
 </Story>
 
 <Story
@@ -79,5 +73,7 @@
   parameters={{ msw: { handlers: [mock.error] } }}
   asChild
 >
-  <ResultsList {results} {count} {next} auto />
+  <Demo results={highlighted.results}>
+    <ResultsList auto />
+  </Demo>
 </Story>
