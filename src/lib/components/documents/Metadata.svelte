@@ -12,8 +12,9 @@
 
   import { _ } from "svelte-i18n";
 
-  import { LANGUAGE_MAP } from "@/config/config.js";
+  import { LANGUAGE_MAP, SQUARELET_BASE } from "@/config/config.js";
   import { userOrgString } from "$lib/api/documents";
+  import { getCurrentUser } from "$lib/utils/permissions";
   import Metadata from "../common/Metadata.svelte";
   import { LinkExternal16 } from "svelte-octicons";
 
@@ -23,6 +24,8 @@
   }
 
   let { document, text }: Props = $props();
+
+  const me = getCurrentUser();
 
   const ocrEngineMap = {
     tess4: "Tesseract",
@@ -61,7 +64,18 @@
     </Metadata>
   {/if}
   <Metadata key={$_("sidebar.contributed")}>
-    {userOrgString(document)}
+    {#if $me?.is_staff && typeof document.user == "object"}
+      <a
+        href="{SQUARELET_BASE}/users/${document.user.username}"
+        target="_blank"
+        class="publishedUrl"
+        title="View {document.user.username} on MuckRock Accounts">
+          {userOrgString(document)}
+          <LinkExternal16 height={12} width={12} />
+      </a>
+    {:else}
+      {userOrgString(document)}
+    {/if}
   </Metadata>
   <Metadata key={$_("sidebar.created")}>
     {dateFormat(document.created_at)}
