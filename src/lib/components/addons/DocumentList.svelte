@@ -64,7 +64,7 @@
     {#await search}
       <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
     {:then search}
-      <ResultsList auto />
+      <ResultsList search={searchState} auto />
     {/await}
 
     {#snippet footer()}

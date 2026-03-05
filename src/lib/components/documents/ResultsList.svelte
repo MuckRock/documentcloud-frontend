@@ -39,9 +39,10 @@
   import PageHighlights from "./PageHighlights.svelte";
 
   import { StorageManager } from "$lib/utils/storage";
-  import { getSearchResults } from "$lib/state/search.svelte";
+  import { SearchResultsState } from "$lib/state/search.svelte";
 
   interface Props {
+    search: SearchResultsState;
     auto?: boolean;
     preload?: "hover" | "tap";
     start?: Snippet;
@@ -55,6 +56,7 @@
     start,
     end,
     onNext,
+    search,
   }: Props = $props();
 
   let endEl: Maybe<HTMLElement> = $state();
@@ -63,7 +65,7 @@
 
   const embed: boolean = getContext("embed");
   const visibleFields = getVisibleFieldsContext();
-  const search = getSearchResults();
+  // const search = getSearchResults();
 
   setContext("highlightState", highlightState);
 

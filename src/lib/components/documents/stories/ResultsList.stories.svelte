@@ -2,10 +2,11 @@
   import type { DocumentResults } from "$lib/api/types";
 
   import { defineMeta } from "@storybook/addon-svelte-csf";
+
   import ResultsList from "../ResultsList.svelte";
-  import Demo from "../tests/ResultsList.demo.svelte";
   import Pending from "../Pending.svelte";
   import Unverified from "../../accounts/Unverified.svelte";
+  import { SearchResultsState } from "$lib/state/search.svelte";
 
   import { me } from "@/test/fixtures/accounts";
   import { documents as mock } from "@/test/handlers/documents";
@@ -28,44 +29,39 @@
   });
 
   const user = { ...me, verified_journalist: false };
+
+  const empty = new SearchResultsState();
+  const search = new SearchResultsState();
+
+  search.setResults(async () => ({ data: highlighted }));
 </script>
 
 <Story name="With Results" asChild>
-  <Demo results={highlighted.results}>
-    <ResultsList />
-  </Demo>
+  <ResultsList {search} />
 </Story>
 
 <Story name="Empty" asChild>
-  <Demo>
-    <ResultsList />
-  </Demo>
+  <ResultsList search={empty} />
 </Story>
 
 <Story name="Infinite" asChild>
-  <Demo results={highlighted.results}>
-    <ResultsList auto />
-  </Demo>
+  <ResultsList {search} auto />
 </Story>
 
 <Story name="Pending documents" asChild>
-  <Demo results={highlighted.results}>
-    <ResultsList>
-      {#snippet start()}
-        <Pending {pending} />
-      {/snippet}
-    </ResultsList>
-  </Demo>
+  <ResultsList {search}>
+    {#snippet start()}
+      <Pending {pending} />
+    {/snippet}
+  </ResultsList>
 </Story>
 
 <Story name="Unverified user" asChild>
-  <Demo results={highlighted.results}>
-    <ResultsList>
-      {#snippet start()}
-        <Unverified {user} />
-      {/snippet}
-    </ResultsList>
-  </Demo>
+  <ResultsList {search}>
+    {#snippet start()}
+      <Unverified {user} />
+    {/snippet}
+  </ResultsList>
 </Story>
 
 <Story
@@ -73,7 +69,5 @@
   parameters={{ msw: { handlers: [mock.error] } }}
   asChild
 >
-  <Demo results={highlighted.results}>
-    <ResultsList auto />
-  </Demo>
+  <ResultsList {search} auto />
 </Story>

@@ -257,7 +257,7 @@
         {#await searchResults}
           <Empty icon={Hourglass24}>{$_(uiText.loading)}</Empty>
         {:then documentsResults}
-          <ResultsList auto>
+          <ResultsList {search} auto>
             {#snippet start()}
               {#if $me && !canUploadFiles($me)}
                 <Unverified user={$me} />

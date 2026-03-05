@@ -9,10 +9,7 @@
     defaultVisibleFields,
     setVisibleFieldsContext,
   } from "../VisibleFields.svelte";
-  import {
-    SearchResultsState,
-    setSearchResults,
-  } from "$lib/state/search.svelte";
+  import { SearchResultsState } from "$lib/state/search.svelte";
 
   interface Props {
     results?: Document[];
@@ -20,7 +17,6 @@
     preload?: "hover" | "tap";
     start?: Snippet;
     end?: Snippet;
-    children?: Snippet;
   }
 
   let {
@@ -29,7 +25,6 @@
     preload = "hover",
     start,
     end,
-    children,
   }: Props = $props();
 
   // Set up contexts needed by ResultsList
@@ -43,11 +38,6 @@
     }
     search.total = results.length;
   });
-  setSearchResults(search);
 </script>
 
-{#if children}
-  {@render children()}
-{:else}
-  <ResultsList {auto} {preload} {start} {end} />
-{/if}
+<ResultsList {search} {auto} {preload} {start} {end} />
