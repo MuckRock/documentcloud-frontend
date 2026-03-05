@@ -66,7 +66,7 @@
   <Metadata key={$_("sidebar.contributed")}>
     {#if $me?.is_staff && typeof document.user == "object"}
       <a
-        href="{SQUARELET_BASE}/users/${document.user.username}"
+        href="{SQUARELET_BASE}/users/{document.user.username}"
         target="_blank"
         class="publishedUrl"
         title="View {document.user.username} on MuckRock Accounts">
