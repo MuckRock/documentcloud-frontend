@@ -65,7 +65,6 @@
 
   const embed: boolean = getContext("embed");
   const visibleFields = getVisibleFieldsContext();
-  // const search = getSearchResults();
 
   setContext("highlightState", highlightState);
 

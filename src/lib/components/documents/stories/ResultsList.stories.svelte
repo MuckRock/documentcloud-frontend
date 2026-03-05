@@ -36,6 +36,18 @@
   search.setResults(async () => ({ data: highlighted }));
 </script>
 
+<script lang="ts">
+  import { writable } from "svelte/store";
+  import { setContext } from "svelte";
+  import {
+    defaultVisibleFields,
+    setVisibleFieldsContext,
+  } from "../VisibleFields.svelte";
+
+  setContext("embed", false);
+  setVisibleFieldsContext(writable(defaultVisibleFields));
+</script>
+
 <Story name="With Results" asChild>
   <ResultsList {search} />
 </Story>
