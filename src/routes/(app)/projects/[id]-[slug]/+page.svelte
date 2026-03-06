@@ -19,7 +19,6 @@
   let { data } = $props();
 
   let project = $derived(data.project);
-  let documents = $derived(data.documents);
   let query = $derived(data.query);
   let users = $derived(data.users ?? []);
 
@@ -60,4 +59,4 @@
   {/if}
 </svelte:head>
 
-<Project {project} {users} {documents} {query} />
+<Project {project} {users} {query} />

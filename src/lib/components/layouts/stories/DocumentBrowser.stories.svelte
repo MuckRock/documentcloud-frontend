@@ -13,21 +13,6 @@
       layout: "fullscreen",
     },
   });
-
-  const args = {
-    documents: Promise.resolve({ data: documentsList }),
-  };
-
-  const empty = {
-    documents: Promise.resolve({
-      data: {
-        results: [],
-        next: null,
-        previous: null,
-        count: 0,
-      },
-    }),
-  };
 </script>
 
 <script lang="ts">
@@ -46,12 +31,12 @@
   const emptySearch = new SearchResultsState();
 </script>
 
-<Story name="With Data" {args} />
+<Story name="With Data" />
 
-<Story name="No documents" args={{ ...empty, search: emptySearch }} />
+<Story name="No documents" args={{ search: emptySearch }} />
 
 <Story name="Embedded" asChild>
   <ContextDecorator embed={true}>
-    <DocumentBrowser {...args} />
+    <DocumentBrowser />
   </ContextDecorator>
 </Story>

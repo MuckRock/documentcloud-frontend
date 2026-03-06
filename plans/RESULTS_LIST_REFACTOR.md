@@ -9,6 +9,8 @@ The `SearchResultsState` class combines:
 - **Selection**: `visible` (SvelteMap), `selectedIds` (SvelteSet), `selected` (getter), `editable` (getter), `total`
 - **Pagination**: `next`, `loading`, `query`, `options`
 - **Methods**: `load(query, options?, fetch?)`, `setResults(getter)`, `loadNext()`, `selectAll()`, `deselectAll()`
+- **Store watching**: `watch(stores)`, `unwatch()`, `applyWatched()` — subscribes to external stores (`deleted`, `edited`, `pending`, `finished`) and patches `visible` reactively
+- **Handlers**: `handleDeleted`, `handleEdited`, `handlePending`, `handleFinished` — called by store subscriptions and by `applyWatched()` after loading results
 - **Constructor**: accepts optional `{ loading }` to set initial loading state
 
 Results live in the `visible` SvelteMap (keyed by document ID). Context pair: `[getSearchResults, setSearchResults]`.
@@ -21,6 +23,9 @@ Results live in the `visible` SvelteMap (keyed by document ID). Context pair: `[
 - `load(query, options?, fetch?)` — loads via API, clears previous
 - `setResults(getter)` — accepts `() => Promise<APIResponse<DocumentResults>>`, populates state
 - `loadNext()` — fetches next page, appends to `visible`, returns error message on failure
+- `watch(stores)` — subscribes to `deleted`, `edited`, `pending`, `finished` stores; handlers patch `visible` in place
+- `applyWatched()` — re-reads current store values via `get()` and re-applies handlers; called after `setResults`, `load`, and `loadNext` to ensure freshly loaded results respect current store state
+- `unwatch()` — unsubscribes from all watched stores (wired to `onDestroy` in routes)
 
 ### 2. `src/lib/components/documents/ResultsList.svelte` — DONE
 
@@ -36,7 +41,8 @@ Results live in the `visible` SvelteMap (keyed by document ID). Context pair: `[
 - Gets `search` from context via `getSearchResults()`, or accepts as optional prop
 - Passes `search` prop to `<ResultsList {search} auto>`
 - Selection reads from search state (selectAll, deselectAll, selected, visible, editable, total)
-- `fixResults` still transforms data; results fed into state after resolution
+- `fixResults` and helpers (`excludeDeleted`, `patchEdited`, `setPendingStatus`) removed — logic moved to `SearchResultsState.watch()`
+- `documents` prop still declared in interface but unused (cleanup candidate)
 
 ### 4. `src/lib/components/addons/DocumentList.svelte` — DONE
 
@@ -55,10 +61,13 @@ Results live in the `visible` SvelteMap (keyed by document ID). Context pair: `[
 
 ### 6. Routes — DONE
 
-- **`/documents/+page.svelte`**: Creates `SearchResultsState`, calls `setResults(() => data.searchResults)`, sets context
-- **`/add-ons/[owner]/[repo]/+page.svelte`**: Creates `SearchResultsState({ loading: true })`, calls `setResults(() => data.searchResults)`, sets context. Removed `{search}` prop from `<AddOnLayout>`
-- **`/add-ons/[owner]/[repo]/[event]/+page.svelte`**: Creates `SearchResultsState({ loading: true })`, wraps `data.searchResults` (already unwrapped by `+page.ts`) back into `{ data }` for `setResults`. Sets context. Removed `{search}` from `<AddOnLayout>`
-- **`/projects/[id]-[slug]/+page.svelte`**: Sets up `SearchResultsState` in context
+All `(app)` routes create `SearchResultsState`, set context, call `search.watch()` with stores, and wire `onDestroy(search.unwatch)`:
+
+- **`/documents/+page.svelte`**: Creates state, calls `setResults(() => data.searchResults)`, watches `deleted`, `edited`, `pending`, `finished`
+- **`/add-ons/[owner]/[repo]/+page.svelte`**: Same pattern. Removed `{search}` prop from `<AddOnLayout>`
+- **`/add-ons/[owner]/[repo]/[event]/+page.svelte`**: Same pattern, wraps `data.searchResults` into `{ data }` for `setResults`. Removed `{search}` from `<AddOnLayout>`
+- **`/projects/[id]-[slug]/+page.svelte`**: Same pattern
+- **`/embed/projects/[project_id]-[slug]/+page.svelte`**: No `watch()` — outside `ProcessContext`, read-only embed
 
 ### 7. Test/demo files — DONE
 
@@ -84,24 +93,31 @@ Results live in the `visible` SvelteMap (keyed by document ID). Context pair: `[
 6. **IntersectionObserver stays in ResultsList** — scroll detection is a UI concern.
 7. **State created at page/route level** — high enough for sidebar siblings to access via context.
 8. **`AddOnLayout` and `DocumentList` dropped `search` promise prop** — they read from context instead. Loading state uses `searchState.loading` rather than `{#await}`.
+9. **Store watching uses `.subscribe()`, not `$effect`** — works outside component init context. Handlers mutate `visible` in place so selection, display, and pagination all reference the same data.
+10. **`applyWatched()` re-applies after loading** — prevents race where `invalidateAll` repopulates `visible` from stale API data after a store change (e.g. deleted doc reappearing).
+11. **`ConfirmDelete` uses `deleted.update()` instead of `$deleted.add()`** — ensures store subscribers are notified even inside `use:enhance` callbacks where Svelte 4's compiler may not instrument `$store` mutations.
 
 ## Remaining work
 
-### `onNext` wiring
+### Remove `documents` prop from DocumentBrowser
 
-DocumentBrowser and DocumentList can pass `onNext={() => search.loadNext()}` to `ResultsList` so the IntersectionObserver and "load more" button trigger pagination, or use `search.loadNext()` by default. (done)
+The `documents: Promise<APIResponse<DocumentResults, any>>` prop is declared in `Props` but never destructured or used. Callers still pass it (`/documents`, `/embed/projects`, stories). Remove the prop and update all callers. This also removes the `APIResponse` and `DocumentResults` type imports.
 
-### DocumentBrowser: `fixResults` integration
+### Audit other `$store.mutate()` patterns
 
-`fixResults` transforms API results (filtering deleted, patching edited, setting pending status). Currently returns `Promise<DocumentResults>` resolved in `{#await}`. Needs to feed transformed results into `SearchResultsState`. Options:
-
-1. Populate `search.visible` directly in the `{:then}` block after `fixResults` resolves
-2. Refactor `fixResults` into a transform applied within `setResults`
-3. Move initial load to the route and have DocumentBrowser focus on reactive transforms
+`ConfirmDelete` needed `deleted.update()` instead of `$deleted.add()` to ensure store subscribers fire inside `use:enhance` callbacks. Other Svelte 4 components that mutate stores inside returned callbacks may have the same issue — check `edited.update()` usage in edit forms.
 
 ## Verification
 
 1. `npm run test:unit` — 365 tests pass (44 test files)
 2. `npm run check` — 0 errors, 0 warnings
 3. `npm run storybook` — stories render with per-story state
-4. Manual testing needed: document search, infinite scroll, "load more" button, select-all, bulk actions, addon document list, embed view
+4. Manual testing:
+   - [x] Document deletion (optimistic removal from results)
+   - [ ] Document search
+   - [ ] Infinite scroll / "load more" button
+   - [ ] Select-all / bulk actions
+   - [ ] Addon document list
+   - [ ] Embed view
+   - [ ] Document editing (title, access, etc.) reflected in results
+   - [ ] Processing status updates (pending → success)

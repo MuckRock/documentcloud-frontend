@@ -1,10 +1,5 @@
 <script lang="ts">
-  import type {
-    APIResponse,
-    DocumentResults,
-    Nullable,
-    Project,
-  } from "$lib/api/types";
+  import type { Nullable, Project } from "$lib/api/types";
 
   import { goto } from "$app/navigation";
 
@@ -64,7 +59,6 @@
 
   interface Props {
     search?: SearchResultsState;
-    documents: Promise<APIResponse<DocumentResults, any>>;
     query?: string;
     project?: Nullable<Project>;
     uiText?: UITextProps;

@@ -13,8 +13,6 @@
   import { activeAddons } from "@/test/fixtures/addons";
   import { addons } from "@/test/handlers/addons";
 
-  const documents = Promise.resolve({ data: documentsList });
-
   const { Story } = defineMeta({
     title: "Layout / Sidebar",
     component: SidebarLayout,
@@ -45,7 +43,7 @@
   } from "$lib/state/search.svelte";
 
   const search = new SearchResultsState();
-  search.setResults(Promise.resolve(documents));
+  search.setResults(Promise.resolve({ data: documentsList }));
   setSearchResults(search);
 </script>
 
@@ -58,7 +56,7 @@
         <AddOnsNavigation />
       </svelte:fragment>
       <svelte:fragment slot="content">
-        <DocumentBrowser {documents} />
+        <DocumentBrowser />
       </svelte:fragment>
       <svelte:fragment slot="action">
         <UploadButton />

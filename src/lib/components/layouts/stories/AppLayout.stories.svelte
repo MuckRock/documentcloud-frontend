@@ -18,8 +18,6 @@
   import { organizations, users } from "@/test/handlers/accounts";
   import { activeAddons } from "@/test/fixtures/addons";
 
-  const documents = Promise.resolve({ data: documentsList });
-
   type Args = ComponentProps<typeof AppLayout>;
 
   const { Story } = defineMeta({
@@ -67,7 +65,7 @@
         <AddOns />
       </svelte:fragment>
 
-      <DocumentBrowser slot="content" {documents} />
+      <DocumentBrowser slot="content" />
 
       <svelte:fragment slot="action">
         <Button mode="primary" href="/upload/">

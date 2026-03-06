@@ -21,11 +21,10 @@
   interface Props {
     project: Project;
     users: ProjectUser[];
-    documents: Promise<APIResponse<DocumentResults>>;
     query?: string;
   }
 
-  let { project, users, documents, query = "" }: Props = $props();
+  let { project, users, query = "" }: Props = $props();
 
   let combinedQuery = $derived(
     `+project:${project.slug}-${project.id} ${query}`.trim(),
@@ -43,7 +42,6 @@
     <header><ProjectHeader {project} /></header>
     <main>
       <DocumentBrowser
-        {documents}
         {project}
         {query}
         uiText={{

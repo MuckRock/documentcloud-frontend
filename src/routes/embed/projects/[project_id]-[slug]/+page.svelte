@@ -15,8 +15,6 @@
 
   let { data } = $props();
 
-  let documents = $derived(data.documents);
-
   const search = new SearchResultsState();
   setSearchResults(search);
 
@@ -36,7 +34,7 @@
       <ProjectHeader {project} show={{ pin: false, access: false }} />
     </header>
     <main>
-      <DocumentBrowser {documents} />
+      <DocumentBrowser />
     </main>
   </article>
 </EmbedLayout>

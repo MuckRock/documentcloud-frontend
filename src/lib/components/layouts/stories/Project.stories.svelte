@@ -31,7 +31,6 @@
   args={{
     project: project,
     users: projectUsers.results,
-    documents: Promise.resolve({ data: documentsList }),
   }}
 />
 
@@ -40,7 +39,6 @@
   args={{
     project: { ...project, edit_access: true },
     users: projectUsers.results,
-    documents: Promise.resolve({ data: documentsList }),
   }}
 />
 
@@ -49,6 +47,5 @@
   args={{
     project: { ...project, edit_access: true, add_remove_access: true },
     users: projectUsers.results,
-    documents: Promise.resolve({ data: documentsList }),
   }}
 />

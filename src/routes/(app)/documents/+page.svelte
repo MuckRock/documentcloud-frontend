@@ -53,7 +53,7 @@
     <AddOnsNavigation {query} />
   </svelte:fragment>
 
-  <DocumentBrowser slot="content" documents={data.searchResults} {query} />
+  <DocumentBrowser slot="content" {query} />
 
   <svelte:fragment slot="action">
     <UploadButton />
