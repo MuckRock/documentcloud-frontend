@@ -47,6 +47,10 @@ export default defineConfig(({ mode }) => ({
   },
 
   resolve: {
+    // Add 'browser' condition in test mode so Svelte lifecycle hooks
+    // (onMount, etc.) work correctly instead of being SSR no-ops.
+    // See: https://github.com/testing-library/svelte-testing-library/issues/222
+    conditions: process.env.VITEST ? ["browser"] : [],
     alias: {
       "@": path.resolve(__dirname, "src"),
     },
