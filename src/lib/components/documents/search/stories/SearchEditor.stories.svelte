@@ -1,17 +1,12 @@
 <script lang="ts" context="module">
   import { Template, Story } from "@storybook/addon-svelte-csf";
   import SearchEditorComponent from "../../search/SearchEditor.svelte";
-  import { projects } from "@/test/handlers/projects";
-  import { organizations, users } from "@/test/handlers/accounts";
 
   export const meta = {
     title: "Components / Documents / Search Editor",
     component: SearchEditorComponent,
     parameters: {
       layout: "centered",
-      msw: {
-        handlers: [projects.info, users.data, organizations.data],
-      },
     },
   };
 
@@ -35,9 +30,20 @@
   args={{ ...args, initialQuery: 'iPhone "steve jobs" -iPad +mac^3' }}
 />
 <Story
-  name="Date Query"
+  name="Boolean Operators"
+  args={{ ...args, initialQuery: "mueller AND report OR memo" }}
+/>
+<Story
+  name="Field Queries"
   args={{
     ...args,
-    initialQuery: 'date:[2020-01-01 TO 2020-05-01] "steve jobs"',
+    initialQuery: "user:102112 access:public sort:-created_at",
+  }}
+/>
+<Story
+  name="Date Range"
+  args={{
+    ...args,
+    initialQuery: "created_at:[NOW-1MONTH TO *] report",
   }}
 />
