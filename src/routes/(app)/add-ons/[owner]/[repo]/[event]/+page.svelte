@@ -1,5 +1,6 @@
 <script lang="ts">
   import { afterNavigate } from "$app/navigation";
+  import { onDestroy } from "svelte";
   import { _ } from "svelte-i18n";
 
   import AddOnLayout from "$lib/components/layouts/AddOnLayout.svelte";
@@ -13,6 +14,11 @@
     SearchResultsState,
     setSearchResults,
   } from "$lib/state/search.svelte";
+  import { deleted, edited } from "$lib/api/documents";
+  import {
+    getPendingDocuments,
+    getFinishedDocuments,
+  } from "$lib/components/processing/ProcessContext.svelte";
 
   let { data } = $props();
 
@@ -37,6 +43,14 @@
 
   const searchState = new SearchResultsState({ loading: true });
   setSearchResults(searchState);
+
+  searchState.watch({
+    deleted,
+    edited,
+    pending: getPendingDocuments(),
+    finished: getFinishedDocuments(),
+  });
+  onDestroy(searchState.unwatch);
 
   $effect(() => {
     searchState.setResults(data.searchResults.then((data) => ({ data })));

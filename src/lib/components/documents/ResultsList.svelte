@@ -136,7 +136,7 @@
   <Flex direction="column" gap={1}>
     {@render start?.()}
 
-    {#each search.visible.values() as document (document.id)}
+    {#each search.results as document (document.id)}
       <div
         class="result-row"
         class:selected={search.selectedIds.has(String(document.id))}

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onDestroy } from "svelte";
   import { _ } from "svelte-i18n";
 
   import SidebarLayout from "$lib/components/layouts/SidebarLayout.svelte";
@@ -16,12 +17,25 @@
     SearchResultsState,
     setSearchResults,
   } from "$lib/state/search.svelte";
+  import { deleted, edited } from "$lib/api/documents";
+  import {
+    getPendingDocuments,
+    getFinishedDocuments,
+  } from "$lib/components/processing/ProcessContext.svelte";
 
   let { data } = $props();
   let query = $derived(data.query);
 
   const search = new SearchResultsState({ loading: true });
   setSearchResults(search);
+
+  search.watch({
+    deleted,
+    edited,
+    pending: getPendingDocuments(),
+    finished: getFinishedDocuments(),
+  });
+  onDestroy(search.unwatch);
 
   $effect(() => {
     search.setResults(data.searchResults);

@@ -89,7 +89,7 @@ Results live in the `visible` SvelteMap (keyed by document ID). Context pair: `[
 
 ### `onNext` wiring
 
-DocumentBrowser and DocumentList need to pass `onNext={() => search.loadNext()}` to `ResultsList` so the IntersectionObserver and "load more" button trigger pagination.
+DocumentBrowser and DocumentList can pass `onNext={() => search.loadNext()}` to `ResultsList` so the IntersectionObserver and "load more" button trigger pagination, or use `search.loadNext()` by default. (done)
 
 ### DocumentBrowser: `fixResults` integration
 

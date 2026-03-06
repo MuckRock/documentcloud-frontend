@@ -4,6 +4,7 @@
  *
  * This class manages visibility, selection and pagination.
  */
+import type { Writable } from "svelte/store";
 
 import type {
   APIResponse,
@@ -11,6 +12,7 @@ import type {
   DocumentResults,
   Maybe,
   Nullable,
+  Pending,
   SearchOptions,
 } from "$lib/api/types";
 
@@ -25,6 +27,16 @@ interface Args {
   loading?: boolean;
 }
 
+// these should match the stores $lib/api/documents.ts
+interface WatchStores {
+  deleted?: Writable<Set<string>>;
+  edited?: Writable<Map<string, Document>>;
+  pending?: Writable<Pending[]>;
+  finished?: Writable<Set<number>>;
+}
+
+const EXPANDABLE_FIELDS = new Set(["user", "organization", "projects", "id"]);
+
 export class SearchResultsState {
   visible: SvelteMap<string, Document> = new SvelteMap();
   selectedIds: SvelteSet<string> = new SvelteSet();
@@ -34,12 +46,20 @@ export class SearchResultsState {
   loading: boolean = $state(false);
   next: Nullable<string> = $state(null);
 
+  watching: Record<string, () => void> = {};
+
   constructor({ query = "", options, loading = false }: Args = {}) {
     this.query = query;
     this.options = options;
     this.loading = loading;
 
     this.loadNext = this.loadNext.bind(this);
+    this.watch = this.watch.bind(this);
+    this.unwatch = this.unwatch.bind(this);
+  }
+
+  get results() {
+    return this.visible.values();
   }
 
   get selected(): Document[] {
@@ -142,6 +162,100 @@ export class SearchResultsState {
     // would it be better to just return the whole APIError?
     if (error) {
       return error.message;
+    }
+  }
+
+  /**
+   * Watch the stores.
+   * Subscribe to stores to track deleted, edited and processing documents
+   * and patch search results accordingly. This helps with optimistic updates
+   * while our search API catches up to database changes.
+   */
+  watch({ deleted, edited, pending, finished }: WatchStores = {}) {
+    if (deleted) {
+      this.watching.deleted?.();
+      this.watching.deleted = deleted.subscribe((v) => this.handleDeleted(v));
+    }
+
+    if (edited) {
+      this.watching.edited?.();
+      this.watching.edited = edited.subscribe((v) => this.handleEdited(v));
+    }
+
+    if (pending || finished) {
+      this.watching.pending?.();
+      this.watching.finished?.();
+
+      if (pending) {
+        this.watching.pending = pending.subscribe((v) => this.handlePending(v));
+      }
+
+      if (finished) {
+        this.watching.finished = finished.subscribe((v) =>
+          this.handleFinished(v),
+        );
+      }
+    }
+  }
+
+  /**
+   * Unsubscribe from all stores
+   */
+  unwatch() {
+    for (const unsubscribe of Object.values(this.watching)) {
+      unsubscribe();
+    }
+  }
+
+  /**
+   * Remove documents from visible and decrement total as needed
+   */
+  handleDeleted(deleted: Set<string>) {
+    if (deleted.size > 0) console.debug(`handleDeleted: ${deleted.size} ids`);
+    for (const id of deleted) {
+      if (this.visible.delete(id)) {
+        this.total--;
+      }
+    }
+  }
+
+  handleEdited(edited: Map<string, Document>) {
+    if (edited.size > 0) console.debug(`handleEdited: ${edited.size} docs`);
+    for (const [id, edit] of edited) {
+      const doc = this.visible.get(id);
+      if (doc) {
+        for (const [k, v] of Object.entries(edit)) {
+          // ignore expandable fields
+          if (!EXPANDABLE_FIELDS.has(k)) {
+            doc[k] = v;
+          }
+        }
+        this.visible.set(id, { ...doc });
+      }
+    }
+  }
+
+  handlePending(pending: Pending[]) {
+    if (pending.length > 0)
+      console.debug(`handlePending: ${pending.length} docs`);
+    for (const p of pending) {
+      const id = String(p.doc_id);
+      const doc = this.visible.get(id);
+      if (doc && doc.status !== "pending") {
+        this.visible.set(id, { ...doc, status: "pending" });
+      }
+    }
+  }
+
+  handleFinished(finished: Set<number>) {
+    if (finished.size > 0)
+      console.debug(`handleFinished: ${finished.size} docs`);
+    for (const docId of finished) {
+      const id = String(docId);
+      const doc = this.visible.get(id);
+      if (doc && doc.status !== "success") {
+        this.visible.set(id, { ...doc, status: "success" });
+      }
     }
   }
 }
