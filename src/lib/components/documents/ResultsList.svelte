@@ -113,8 +113,14 @@
     }
   }
 
-  onMount(() => {
-    if (auto && endEl) {
+  // Re-observe the sentinel whenever results change (search.next updates)
+  // so auto-loading continues for subsequent pages
+  $effect(() => {
+    if (auto && endEl && search.next) {
+      // clean up previous observer
+      if (observer) {
+        unwatch(observer, endEl);
+      }
       observer = watch(endEl);
     }
 

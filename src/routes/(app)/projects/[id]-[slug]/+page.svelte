@@ -21,8 +21,11 @@
   let embed_url = $derived(embedUrl(canonical_url));
 
   const search = new SearchResultsState({ loading: true });
-  search.setResults(() => data.documents);
   setSearchResults(search);
+
+  $effect(() => {
+    search.setResults(() => data.documents);
+  });
 </script>
 
 <svelte:head>

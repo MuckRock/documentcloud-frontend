@@ -36,8 +36,11 @@
   let history = $derived(data.history);
 
   const searchState = new SearchResultsState({ loading: true });
-  searchState.setResults(async () => ({ data: await data.searchResults }));
   setSearchResults(searchState);
+
+  $effect(() => {
+    searchState.setResults(async () => ({ data: await data.searchResults }));
+  });
 
   // set initial form values when route changes
   afterNavigate(() => {

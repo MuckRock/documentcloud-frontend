@@ -20,11 +20,12 @@
   let { data } = $props();
   let query = $derived(data.query);
 
-  // todo: set initial search results in this route
   const search = new SearchResultsState({ loading: true });
   setSearchResults(search);
 
-  search.setResults(() => data.searchResults);
+  $effect(() => {
+    search.setResults(() => data.searchResults);
+  });
 </script>
 
 <svelte:head>

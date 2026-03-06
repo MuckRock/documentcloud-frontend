@@ -27,8 +27,11 @@
   let history = $derived(data.history);
 
   const searchResults = new SearchResultsState({ loading: true });
-  searchResults.setResults(() => data.searchResults);
   setSearchResults(searchResults);
+
+  $effect(() => {
+    searchResults.setResults(() => data.searchResults);
+  });
 </script>
 
 <svelte:head>

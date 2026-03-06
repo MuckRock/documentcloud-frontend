@@ -18,8 +18,11 @@
   let documents = $derived(data.documents);
 
   const search = new SearchResultsState();
-  search.setResults(() => data.documents);
   setSearchResults(search);
+
+  $effect(() => {
+    search.setResults(() => data.documents);
+  });
   let project = $derived(data.project);
 </script>
 

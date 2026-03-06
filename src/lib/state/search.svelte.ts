@@ -38,6 +38,8 @@ export class SearchResultsState {
     this.query = query;
     this.options = options;
     this.loading = loading;
+
+    this.loadNext = this.loadNext.bind(this);
   }
 
   get selected(): Document[] {
@@ -88,6 +90,7 @@ export class SearchResultsState {
    * This kicks off downstream updates.
    */
   async setResults(getter: () => Promise<APIResponse<DocumentResults, any>>) {
+    this.loading = true;
     const { data: searchResults } = await getter();
     if (!searchResults) return this;
 
