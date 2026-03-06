@@ -25,7 +25,7 @@
   });
 
   const search = new SearchResultsState();
-  search.setResults(async () => ({ data: results }));
+  search.setResults(Promise.resolve({ data: results }));
 </script>
 
 <script lang="ts">

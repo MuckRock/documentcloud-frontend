@@ -21,7 +21,7 @@
   setSearchResults(search);
 
   $effect(() => {
-    search.setResults(() => data.documents);
+    search.setResults(data.documents);
   });
   let project = $derived(data.project);
 </script>

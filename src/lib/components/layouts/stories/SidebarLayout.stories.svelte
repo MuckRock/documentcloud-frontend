@@ -45,7 +45,7 @@
   } from "$lib/state/search.svelte";
 
   const search = new SearchResultsState();
-  search.setResults(() => documents);
+  search.setResults(Promise.resolve(documents));
   setSearchResults(search);
 </script>
 

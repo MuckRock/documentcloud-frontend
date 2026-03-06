@@ -30,7 +30,7 @@
   setSearchResults(searchResults);
 
   $effect(() => {
-    searchResults.setResults(() => data.searchResults);
+    searchResults.setResults(data.searchResults);
   });
 </script>
 

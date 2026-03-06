@@ -40,7 +40,7 @@
   setContext("embed", false);
 
   const search = new SearchResultsState();
-  search.setResults(async () => ({ data: documentsList }));
+  search.setResults(Promise.resolve({ data: documentsList }));
   setSearchResults(search);
 
   const emptySearch = new SearchResultsState();

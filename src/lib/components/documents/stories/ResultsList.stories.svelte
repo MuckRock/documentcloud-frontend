@@ -33,7 +33,7 @@
   const empty = new SearchResultsState();
   const search = new SearchResultsState();
 
-  search.setResults(async () => ({ data: highlighted }));
+  search.setResults(Promise.resolve({ data: highlighted }));
 </script>
 
 <script lang="ts">

@@ -89,9 +89,9 @@ export class SearchResultsState {
    * Handle initial search results, synchronously.
    * This kicks off downstream updates.
    */
-  async setResults(getter: () => Promise<APIResponse<DocumentResults, any>>) {
+  async setResults(results: Promise<APIResponse<DocumentResults, any>>) {
     this.loading = true;
-    const { data: searchResults } = await getter();
+    const { data: searchResults } = await results;
     if (!searchResults) return this;
 
     this.visible.clear();

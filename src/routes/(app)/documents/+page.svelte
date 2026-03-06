@@ -24,7 +24,7 @@
   setSearchResults(search);
 
   $effect(() => {
-    search.setResults(() => data.searchResults);
+    search.setResults(data.searchResults);
   });
 </script>
 

@@ -52,7 +52,7 @@
   setVisibleFieldsContext(writable(defaultVisibleFields));
 
   const searchState = new SearchResultsState();
-  searchState.setResults(async () => ({ data: documentsList }));
+  searchState.setResults(Promise.resolve({ data: documentsList }));
   setSearchResults(searchState);
 </script>
 

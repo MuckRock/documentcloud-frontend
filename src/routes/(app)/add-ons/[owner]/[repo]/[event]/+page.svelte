@@ -39,7 +39,7 @@
   setSearchResults(searchState);
 
   $effect(() => {
-    searchState.setResults(async () => ({ data: await data.searchResults }));
+    searchState.setResults(data.searchResults.then((data) => ({ data })));
   });
 
   // set initial form values when route changes
