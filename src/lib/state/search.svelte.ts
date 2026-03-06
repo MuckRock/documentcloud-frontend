@@ -4,7 +4,7 @@
  *
  * This class manages visibility, selection and pagination.
  */
-import type { Writable } from "svelte/store";
+import { get, type Writable } from "svelte/store";
 
 import type {
   APIResponse,
@@ -47,6 +47,7 @@ export class SearchResultsState {
   next: Nullable<string> = $state(null);
 
   watching: Record<string, () => void> = {};
+  #stores: WatchStores = {};
 
   constructor({ query = "", options, loading = false }: Args = {}) {
     this.query = query;
@@ -100,6 +101,7 @@ export class SearchResultsState {
       }
       this.total = data.count ?? data.results.length;
       this.next = data.next;
+      this.applyWatched();
     }
 
     this.loading = false;
@@ -120,6 +122,7 @@ export class SearchResultsState {
     }
     this.total = searchResults.count ?? searchResults.results.length;
     this.next = searchResults.next;
+    this.applyWatched();
     this.loading = false;
 
     return this; // for chaining
@@ -155,6 +158,7 @@ export class SearchResultsState {
         this.total = data.count;
       }
       this.next = data.next;
+      this.applyWatched();
     }
 
     this.loading = false;
@@ -171,7 +175,10 @@ export class SearchResultsState {
    * and patch search results accordingly. This helps with optimistic updates
    * while our search API catches up to database changes.
    */
-  watch({ deleted, edited, pending, finished }: WatchStores = {}) {
+  watch(stores: WatchStores = {}) {
+    this.#stores = stores;
+    const { deleted, edited, pending, finished } = stores;
+
     if (deleted) {
       this.watching.deleted?.();
       this.watching.deleted = deleted.subscribe((v) => this.handleDeleted(v));
@@ -199,6 +206,18 @@ export class SearchResultsState {
   }
 
   /**
+   * Re-apply watched store values to visible results.
+   * Call after populating visible from API results.
+   */
+  applyWatched() {
+    const { deleted, edited, pending, finished } = this.#stores;
+    if (deleted) this.handleDeleted(get(deleted));
+    if (edited) this.handleEdited(get(edited));
+    if (pending) this.handlePending(get(pending));
+    if (finished) this.handleFinished(get(finished));
+  }
+
+  /**
    * Unsubscribe from all stores
    */
   unwatch() {
@@ -211,7 +230,7 @@ export class SearchResultsState {
    * Remove documents from visible and decrement total as needed
    */
   handleDeleted(deleted: Set<string>) {
-    if (deleted.size > 0) console.debug(`handleDeleted: ${deleted.size} ids`);
+
     for (const id of deleted) {
       if (this.visible.delete(id)) {
         this.total--;
@@ -220,7 +239,7 @@ export class SearchResultsState {
   }
 
   handleEdited(edited: Map<string, Document>) {
-    if (edited.size > 0) console.debug(`handleEdited: ${edited.size} docs`);
+
     for (const [id, edit] of edited) {
       const doc = this.visible.get(id);
       if (doc) {
@@ -236,8 +255,7 @@ export class SearchResultsState {
   }
 
   handlePending(pending: Pending[]) {
-    if (pending.length > 0)
-      console.debug(`handlePending: ${pending.length} docs`);
+
     for (const p of pending) {
       const id = String(p.doc_id);
       const doc = this.visible.get(id);
@@ -248,8 +266,7 @@ export class SearchResultsState {
   }
 
   handleFinished(finished: Set<number>) {
-    if (finished.size > 0)
-      console.debug(`handleFinished: ${finished.size} docs`);
+
     for (const docId of finished) {
       const id = String(docId);
       const doc = this.visible.get(id);

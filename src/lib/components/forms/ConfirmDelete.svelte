@@ -53,13 +53,13 @@ Confirm deletion or one or more documents.
           break;
 
         case "success":
-          ids.forEach((d) => $deleted.add(String(d)));
+          deleted.update((s) => { ids.forEach((d) => s.add(String(d))); return s; });
           dispatch("close");
           update(result);
           submitter.disabled = false;
 
         case "redirect":
-          ids.forEach((d) => $deleted.add(String(d)));
+          deleted.update((s) => { ids.forEach((d) => s.add(String(d))); return s; });
           if (count === 1) {
             // go back home for single deletes
             goto(searchUrl(userDocs($me)), { invalidateAll: true });

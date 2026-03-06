@@ -1,9 +1,7 @@
 <script lang="ts">
   import type {
     APIResponse,
-    Document,
     DocumentResults,
-    Maybe,
     Nullable,
     Project,
   } from "$lib/api/types";
@@ -46,13 +44,8 @@
   import Unverified from "../accounts/Unverified.svelte";
 
   import { sidebars } from "$lib/components/layouts/Sidebar.svelte";
-  import {
-    getPendingDocuments,
-    getFinishedDocuments,
-  } from "$lib/components/processing/ProcessContext.svelte";
 
   // Utilities
-  import { deleted, edited, DEFAULT_EXPAND } from "$lib/api/documents";
   import { isSupported } from "$lib/utils/files";
   import { canUploadFiles, getCurrentUser } from "$lib/utils/permissions";
   import { remToPx } from "$lib/utils/layout";
@@ -68,8 +61,6 @@
 
   const embed: boolean = getContext("embed");
   const me = getCurrentUser();
-  const pending = getPendingDocuments();
-  const finished = getFinishedDocuments();
 
   interface Props {
     search?: SearchResultsState;
@@ -97,94 +88,6 @@
 
   let footerToolbarWidth: number = $state(800);
 
-  function fixResults(
-    documents: Promise<APIResponse<DocumentResults, any>>,
-    deleted: Set<string>,
-    edited: Map<string, Document>,
-    pending_ids: Set<string>,
-    finished: Maybe<Set<number>>,
-  ): Promise<DocumentResults> {
-    return documents
-      .then((r) => excludeDeleted(deleted, r.data))
-      .then((r) => patchEdited(edited, r))
-      .then((r) => setPendingStatus(r, pending_ids, finished));
-  }
-
-  // filter out deleted documents that haven't been purged from search yet
-  function excludeDeleted(
-    deleted: Set<string>,
-    searchResults?: DocumentResults, // optional params must come second
-  ): DocumentResults {
-    if (!searchResults)
-      return { count: 0, results: [], next: null, previous: null };
-    if (deleted.size === 0) return searchResults;
-
-    const filtered =
-      searchResults.results.filter((d) => !deleted.has(String(d.id))) ?? [];
-
-    return {
-      ...searchResults,
-      results: filtered,
-      count: (searchResults.count ?? filtered.length) - deleted.size,
-    };
-  }
-
-  function patchEdited(
-    edited: Map<string, Document>,
-    searchResults?: DocumentResults,
-  ): DocumentResults {
-    if (!searchResults)
-      return { count: 0, results: [], next: null, previous: null };
-
-    if (edited.size === 0) return searchResults;
-
-    console.debug(`Patching ${edited.size} documents`);
-    const updated = searchResults.results.map((d) => {
-      const edit = edited.get(String(d.id));
-
-      if (edit && edit.updated_at > d.updated_at) {
-        console.debug(`Patching: ${edit.title}`);
-        for (const [k, v] of Object.entries(edit)) {
-          // ignore expandable fields and id
-          if (![...DEFAULT_EXPAND, "id"].includes(k)) {
-            d[k] = v;
-          }
-        }
-      }
-
-      return d;
-    });
-
-    return {
-      ...searchResults,
-      results: updated,
-    };
-  }
-
-  function setPendingStatus(
-    documents: DocumentResults,
-    pending_ids: Set<string>,
-    finished: Maybe<Set<number>>,
-  ): DocumentResults {
-    if (pending_ids.size === 0 && finished?.size === 0) return documents;
-
-    const updated = documents.results.map((d) => {
-      if (pending_ids.has(String(d.id))) {
-        d.status = "pending";
-      }
-
-      if (finished?.has(+d.id)) {
-        d.status = "success";
-      }
-      return d;
-    });
-
-    return {
-      ...documents,
-      results: updated,
-    };
-  }
-
   function selectAll(e: Event) {
     const target = e.target as HTMLInputElement;
     if (target.checked) {
@@ -205,7 +108,6 @@
   let BREAKPOINTS = $derived({
     HIDE_COUNT: footerToolbarWidth < remToPx(26),
   });
-  let pending_ids = $derived(new Set($pending?.map((d) => String(d.doc_id))));
 </script>
 
 <div class="container">

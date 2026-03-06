@@ -41,19 +41,19 @@
   );
   let history = $derived(data.history);
 
-  const searchState = new SearchResultsState({ loading: true });
-  setSearchResults(searchState);
+  const search = new SearchResultsState({ loading: true });
+  setSearchResults(search);
 
-  searchState.watch({
+  search.watch({
     deleted,
     edited,
     pending: getPendingDocuments(),
     finished: getFinishedDocuments(),
   });
-  onDestroy(searchState.unwatch);
+  onDestroy(search.unwatch);
 
   $effect(() => {
-    searchState.setResults(data.searchResults.then((data) => ({ data })));
+    search.setResults(data.searchResults.then((data) => ({ data })));
   });
 
   // set initial form values when route changes

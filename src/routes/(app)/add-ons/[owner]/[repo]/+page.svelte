@@ -32,19 +32,19 @@
   let disablePremium = $derived(isPremiumAddon && creditBalance === 0);
   let history = $derived(data.history);
 
-  const searchResults = new SearchResultsState({ loading: true });
-  setSearchResults(searchResults);
+  const search = new SearchResultsState({ loading: true });
+  setSearchResults(search);
 
-  searchResults.watch({
+  search.watch({
     deleted,
     edited,
     pending: getPendingDocuments(),
     finished: getFinishedDocuments(),
   });
-  onDestroy(searchResults.unwatch);
+  onDestroy(search.unwatch);
 
   $effect(() => {
-    searchResults.setResults(data.searchResults);
+    search.setResults(data.searchResults);
   });
 </script>
 
