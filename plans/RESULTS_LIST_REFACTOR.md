@@ -100,13 +100,20 @@ All `(app)` routes create `SearchResultsState`, set context, call `search.watch(
 
 ## Remaining work
 
-### Cleanup: `uiText` prop and `UITextProps` on `DocumentBrowser`
+### ~~Cleanup: `uiText` prop and `UITextProps` on `DocumentBrowser`~~ — DONE
 
-`uiText` is declared with defaults and destructured but never referenced in the template. The `UITextProps` interface is only used for this prop. Both can be removed.
+Removed in an earlier commit.
 
-### Audit other `$store.mutate()` patterns
+### ~~Audit other `$store.mutate()` patterns~~ — DONE
 
 `ConfirmDelete` needed `deleted.update()` instead of `$deleted.add()` to ensure store subscribers fire inside `use:enhance` callbacks. Edit forms (`Edit.svelte`, `EditMany.svelte`, `EditAccess.svelte`) already use `edited.update()` — no changes needed there.
+
+### Bug fixes during review
+
+- **`ConfirmDelete`: missing `break` before `case "redirect"`** — success case fell through into redirect, causing `deleted.update()` to run twice. Fixed.
+- **`setResults`: `loading` stays `true` on early return** — if the API returns no data, `loading` was never reset. Fixed.
+- **`handleDeleted`: `total` could go negative** — double-decrement possible if `applyWatched()` and subscription handler both process the same ID. Guarded with `Math.max(0, ...)`.
+- **`DocumentList`: select-all checkbox checked when empty** — `0 === 0` evaluated to `true`. Added `selected.length > 0` guard to match `DocumentBrowser`.
 
 ### Manual testing
 
@@ -117,8 +124,8 @@ Complete the verification checklist below.
 1. `npm run test:unit` — 365 tests pass (44 test files)
 2. `npm run check` — 0 errors, 0 warnings
 3. `npm run storybook` — stories render with per-story state
-4. Manual testing:
-   - [x] Document deletion (optimistic removal from results)
+4. Manual testing (in PR review):
+   - [ ] Document deletion (optimistic removal from results)
    - [ ] Document search
    - [ ] Infinite scroll / "load more" button
    - [ ] Select-all / bulk actions
