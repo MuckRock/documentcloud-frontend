@@ -61,3 +61,41 @@
     initialQuery: "created_at:[NOW-1MONTH TO *] report",
   }}
 />
+
+<!-- Phase 4: Deserialization produces chips automatically from initialQuery -->
+<Story
+  name="Chips / Field Values"
+  args={{
+    ...args,
+    initialQuery: "user:102112 access:private",
+  }}
+/>
+<Story
+  name="Chips / Range"
+  args={{
+    ...args,
+    initialQuery: "created_at:[NOW-1MONTH TO *] report",
+  }}
+/>
+<Story
+  name="Chips / Sort"
+  args={{
+    ...args,
+    initialQuery: "mueller sort:page_count",
+  }}
+/>
+<Story
+  name="Chips / Mixed Query"
+  args={{
+    ...args,
+    initialQuery:
+      "+user:102112 created_at:[NOW-11MONTH TO NOW-3MONTH] AND project:214246 sort:page_count",
+  }}
+/>
+<Story
+  name="Chips / Prefixes"
+  args={{
+    ...args,
+    initialQuery: "+user:102112 -access:private",
+  }}
+/>

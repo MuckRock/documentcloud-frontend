@@ -15,7 +15,10 @@
   import Button from "../../common/Button.svelte";
   import { searchSchema } from "./schema";
   import { serialize } from "./pm-serialize";
+  import { deserialize } from "./pm-deserialize";
   import { decorationPlugin } from "./decoration-plugin";
+  import { clipboardPlugin } from "./clipboard-plugin";
+  import { nodeViews } from "./nodeviews";
 
   const dispatch = createEventDispatcher();
 
@@ -24,19 +27,12 @@
   let editorRef: HTMLDivElement;
   let view: EditorView;
 
-  /** Create a PM document from a plain text query string.
-   *  For Phase 1, all content is plain text. Deserialization into
-   *  structured nodes (field-value, range, sort) comes in Phase 4.
+  /** Create a PM document from a Lucene query string.
+   *  Deserializes structured syntax (field:value, ranges, sort) into
+   *  atom nodes rendered as chips. Plain text passes through unchanged.
    */
   function createDoc(query: string) {
-    if (!query || !query.trim()) {
-      return searchSchema.node("doc", null, [
-        searchSchema.node("paragraph", null, []),
-      ]);
-    }
-    return searchSchema.node("doc", null, [
-      searchSchema.node("paragraph", null, [searchSchema.text(query)]),
-    ]);
+    return deserialize(query);
   }
 
   /** Serialize the current PM document to a Lucene query string. */
@@ -64,10 +60,11 @@
         }),
         keymap(baseKeymap),
         decorationPlugin(),
+        clipboardPlugin(),
       ],
     });
 
-    view = new EditorView(editorRef, { state });
+    view = new EditorView(editorRef, { state, nodeViews });
   });
 
   onDestroy(() => {
@@ -90,6 +87,11 @@
 
   /** Public: get the current serialized query. */
   export { getQuery };
+
+  /** Public: get the EditorView instance (for programmatic node insertion in tests). */
+  export function getView(): EditorView {
+    return view;
+  }
 </script>
 
 <form class="search-editor-container" on:submit={handleSubmit}>
@@ -111,6 +113,8 @@
     display: flex;
     align-items: center;
     padding: 0 0.25rem 0 1rem;
+
+    caret-color: var(--blue-3, #0969da);
   }
 
   .search-editor-status {
@@ -178,5 +182,12 @@
 
   :global(.search-sort) {
     background-color: #f0f5ff;
+  }
+
+  /* Selected chip — ProseMirror adds this class when an atom node is selected */
+  :global(.ProseMirror-selectednode .search-chip) {
+    outline: 1px solid var(--blue-3, #0969da);
+    outline-offset: 1px;
+    border-radius: 3px;
   }
 </style>
