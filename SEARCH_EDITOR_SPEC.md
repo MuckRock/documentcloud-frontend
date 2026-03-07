@@ -548,6 +548,10 @@ Load existing queries into the editor. This comes before autocomplete so that co
   - `title:Mueller*` → plain text (not chipped)
   - `data_Folder:"test"` → plain text (not chipped)
   - Invalid/malformed queries → fall back to plain text
+- `nodeviews.test.ts` — Entity enrichment through NodeViews:
+  - Insert a `field-value` node with no `displayValue` → chip shows raw value + loading indicator
+  - Dispatch a transaction updating the node's `displayValue` attr → chip re-renders with display name, loading indicator removed
+  - Multiple concurrent enrichment transactions (e.g., two user chips) → both chips update independently
 - `SearchEditor.test.ts` — Component tests for load, paste, and copy:
   - Render editor with initial query prop → editor populated with chips and text
   - Paste `+user:102112 AND access:private` → chips and decorated `AND` appear
