@@ -41,6 +41,20 @@
   }}
 />
 <Story
+  name="Grouped Operators"
+  args={{
+    ...args,
+    initialQuery: "(mueller OR watergate) AND NOT report",
+  }}
+/>
+<Story
+  name="Prefix Operators"
+  args={{
+    ...args,
+    initialQuery: '+mueller -report +"steve jobs"',
+  }}
+/>
+<Story
   name="Date Range"
   args={{
     ...args,
