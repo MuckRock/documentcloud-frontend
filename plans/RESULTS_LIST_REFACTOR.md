@@ -115,13 +115,19 @@ Removed in an earlier commit.
 - **`handleDeleted`: `total` could go negative** — double-decrement possible if `applyWatched()` and subscription handler both process the same ID. Guarded with `Math.max(0, ...)`.
 - **`DocumentList`: select-all checkbox checked when empty** — `0 === 0` evaluated to `true`. Added `selected.length > 0` guard to match `DocumentBrowser`.
 
+### New tests
+
+- **`src/lib/state/tests/search.test.ts`** — 28 unit tests for `SearchResultsState`: `setResults`, selection (selected/editable/selectAll/deselectAll), `handleDeleted`, `handleEdited`, `handlePending`, `handleFinished`, `watch`/`unwatch`/`applyWatched`, `loadNext` (append, error, guards)
+- **`src/lib/components/addons/tests/DocumentList.test.ts`** — 10 UI tests: rendering results, loading state, select-all checkbox (unchecked/checked/indeterminate/empty), results count, select/deselect all via click
+- **`src/lib/components/addons/tests/DocumentList.demo.svelte`** — test wrapper for `DocumentList`
+
 ### Manual testing
 
 Complete the verification checklist below.
 
 ## Verification
 
-1. `npm run test:unit` — 365 tests pass (44 test files)
+1. `npm run test:unit` — 403 tests pass (47 test files)
 2. `npm run check` — 0 errors, 0 warnings
 3. `npm run storybook` — stories render with per-story state
 4. Manual testing (in PR review):
