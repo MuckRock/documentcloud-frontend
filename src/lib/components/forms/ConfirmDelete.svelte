@@ -57,6 +57,7 @@ Confirm deletion or one or more documents.
           dispatch("close");
           update(result);
           submitter.disabled = false;
+          break;
 
         case "redirect":
           deleted.update((s) => { ids.forEach((d) => s.add(String(d))); return s; });

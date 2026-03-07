@@ -71,7 +71,8 @@
             <input
               type="checkbox"
               name="select_all"
-              checked={searchState.selected.length === searchState.visible.size}
+              checked={searchState.selected.length > 0 &&
+                searchState.selected.length === searchState.visible.size}
               indeterminate={searchState.selected.length > 0 &&
                 searchState.selected.length < searchState.visible.size}
               onchange={selectAll}

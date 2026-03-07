@@ -114,7 +114,10 @@ export class SearchResultsState {
   async setResults(results: Promise<APIResponse<DocumentResults, any>>) {
     this.loading = true;
     const { data: searchResults } = await results;
-    if (!searchResults) return this;
+    if (!searchResults) {
+      this.loading = false;
+      return this;
+    }
 
     this.visible.clear();
     for (const d of searchResults.results) {
@@ -224,22 +227,21 @@ export class SearchResultsState {
     for (const unsubscribe of Object.values(this.watching)) {
       unsubscribe();
     }
+    this.#stores = {};
   }
 
   /**
    * Remove documents from visible and decrement total as needed
    */
   handleDeleted(deleted: Set<string>) {
-
     for (const id of deleted) {
       if (this.visible.delete(id)) {
-        this.total--;
+        this.total = Math.max(0, this.total - 1);
       }
     }
   }
 
   handleEdited(edited: Map<string, Document>) {
-
     for (const [id, edit] of edited) {
       const doc = this.visible.get(id);
       if (doc) {
@@ -255,7 +257,6 @@ export class SearchResultsState {
   }
 
   handlePending(pending: Pending[]) {
-
     for (const p of pending) {
       const id = String(p.doc_id);
       const doc = this.visible.get(id);
@@ -266,7 +267,6 @@ export class SearchResultsState {
   }
 
   handleFinished(finished: Set<number>) {
-
     for (const docId of finished) {
       const id = String(docId);
       const doc = this.visible.get(id);
