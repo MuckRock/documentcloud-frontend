@@ -15,6 +15,7 @@
   import Button from "../../common/Button.svelte";
   import { searchSchema } from "./schema";
   import { serialize } from "./pm-serialize";
+  import { decorationPlugin } from "./decoration-plugin";
 
   const dispatch = createEventDispatcher();
 
@@ -62,6 +63,7 @@
           "Mod-Shift-z": redo,
         }),
         keymap(baseKeymap),
+        decorationPlugin(),
       ],
     });
 
@@ -129,6 +131,32 @@
 
   :global(.ProseMirror p) {
     margin: 0;
+  }
+
+  /* Decoration styles for operators, parens, and prefixes */
+  :global(.search-operator) {
+    font-family: var(--font-mono);
+    background-color: var(--purple-1);
+    border-radius: 3px;
+    padding: 0 2px;
+    font-weight: 600;
+  }
+
+  :global(.search-paren) {
+    background-color: var(--gray-1);
+    border-radius: 2px;
+    padding: 0 1px;
+    font-weight: 600;
+  }
+
+  :global(.search-prefix-required) {
+    color: var(--green-3);
+    font-weight: 600;
+  }
+
+  :global(.search-prefix-excluded) {
+    color: var(--orange-3);
+    font-weight: 600;
   }
 
   /* Chip styles (used by atom nodes in future phases) */
