@@ -42,7 +42,8 @@ Results live in the `visible` SvelteMap (keyed by document ID). Context pair: `[
 - Passes `search` prop to `<ResultsList {search} auto>`
 - Selection reads from search state (selectAll, deselectAll, selected, visible, editable, total)
 - `fixResults` and helpers (`excludeDeleted`, `patchEdited`, `setPendingStatus`) removed — logic moved to `SearchResultsState.watch()`
-- `documents` prop still declared in interface but unused (cleanup candidate)
+- `documents` prop removed from `Props` interface along with unused `APIResponse` and `DocumentResults` type imports
+- All callers updated to stop passing `documents` (`/documents`, `/embed/projects`, stories)
 
 ### 4. `src/lib/components/addons/DocumentList.svelte` — DONE
 
@@ -78,7 +79,7 @@ All `(app)` routes create `SearchResultsState`, set context, call `search.watch(
 ### 8. Layout stories — DONE
 
 - **`DocumentBrowser.stories.svelte`**: Creates populated + empty `SearchResultsState`, sets context
-- **`AppLayout.stories.svelte`**: Creates populated `SearchResultsState`, sets context, passes `{search}` to `DocumentBrowser`
+- **`AppLayout.stories.svelte`**: Creates populated `SearchResultsState`, sets context
 - **`AddOnLayout.stories.svelte`**: Creates populated `SearchResultsState`, sets context + `embed` + `visibleFields`
 - **`Project.stories.svelte`**: Creates populated `SearchResultsState`, sets context
 - **`DocumentList.stories.svelte`**: New file (untracked)
@@ -99,13 +100,17 @@ All `(app)` routes create `SearchResultsState`, set context, call `search.watch(
 
 ## Remaining work
 
-### Remove `documents` prop from DocumentBrowser
+### Cleanup: `uiText` prop and `UITextProps` on `DocumentBrowser`
 
-The `documents: Promise<APIResponse<DocumentResults, any>>` prop is declared in `Props` but never destructured or used. Callers still pass it (`/documents`, `/embed/projects`, stories). Remove the prop and update all callers. This also removes the `APIResponse` and `DocumentResults` type imports.
+`uiText` is declared with defaults and destructured but never referenced in the template. The `UITextProps` interface is only used for this prop. Both can be removed.
 
 ### Audit other `$store.mutate()` patterns
 
-`ConfirmDelete` needed `deleted.update()` instead of `$deleted.add()` to ensure store subscribers fire inside `use:enhance` callbacks. Other Svelte 4 components that mutate stores inside returned callbacks may have the same issue — check `edited.update()` usage in edit forms.
+`ConfirmDelete` needed `deleted.update()` instead of `$deleted.add()` to ensure store subscribers fire inside `use:enhance` callbacks. Edit forms (`Edit.svelte`, `EditMany.svelte`, `EditAccess.svelte`) already use `edited.update()` — no changes needed there.
+
+### Manual testing
+
+Complete the verification checklist below.
 
 ## Verification
 

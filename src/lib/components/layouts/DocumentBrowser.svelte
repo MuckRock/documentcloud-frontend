@@ -45,13 +45,6 @@
   import { canUploadFiles, getCurrentUser } from "$lib/utils/permissions";
   import { remToPx } from "$lib/utils/layout";
 
-  interface UITextProps {
-    loading: string;
-    error: string;
-    empty: string;
-    search: string;
-  }
-
   setVisibleFieldsContext(visibleFields);
 
   const embed: boolean = getContext("embed");
@@ -61,19 +54,12 @@
     search?: SearchResultsState;
     query?: string;
     project?: Nullable<Project>;
-    uiText?: UITextProps;
   }
 
   let {
     search: searchProp,
     query = "",
     project = null,
-    uiText = {
-      loading: "common.loading",
-      error: "common.error",
-      empty: "common.empty",
-      search: "common.search",
-    },
   }: Props = $props();
 
   // this lets us pass in non-global search results, for testing

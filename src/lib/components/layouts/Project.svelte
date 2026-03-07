@@ -41,16 +41,7 @@
   <article slot="content">
     <header><ProjectHeader {project} /></header>
     <main>
-      <DocumentBrowser
-        {project}
-        {query}
-        uiText={{
-          empty: $_("projects.empty"),
-          loading: $_("projects.loading"),
-          error: $_("projects.error"),
-          search: $_("projects.placeholder.documents"),
-        }}
-      />
+      <DocumentBrowser {project} {query} />
     </main>
   </article>
 
