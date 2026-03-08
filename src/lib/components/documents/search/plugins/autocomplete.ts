@@ -1,697 +1,777 @@
-import { EditorState, Plugin, PluginKey, TextSelection, Transaction } from "prosemirror-state";
-import { EditorView } from "prosemirror-view";
+import { Plugin, PluginKey, TextSelection } from "prosemirror-state";
+import type { EditorView } from "prosemirror-view";
 import { computePosition, flip, offset, shift } from "@floating-ui/dom";
+import {
+  getAllFieldSuggestions,
+  getFieldSuggestions,
+  getValueSuggestions,
+  detectTrigger,
+  resolveField,
+  isAsyncField,
+  fetchValueSuggestions,
+  type Suggestion,
+} from "../autocomplete-data";
+import { searchSchema } from "../schema";
 
-// Autocomplete plugin key for external access
 export const autocompletePluginKey = new PluginKey("autocomplete");
 
-// List of valid fields for autocomplete suggestions
-const validFieldSuggestions = [
-  "id",
-  "document",
-  "access",
-  "created_at",
-  "tag",
-  "description",
-  "language",
-  "organization",
-  "group",
-  "page_count",
-  "pages",
-  "project",
-  "projects",
-  "slug",
-  "source",
-  "status",
-  "title",
-  "updated_at",
-  "user",
-  "account",
-  "doctext",
-  "text",
-  "sort",
-  "order",
-];
+// ── State ──────────────────────────────────────────────────────
 
-// Special field format that needs dynamic handling
-const DATA_FIELD_REGEX = /^data_[a-zA-Z0-9_-]+$/;
-
-// Define the autocomplete state structure
 interface AutocompleteState {
   active: boolean;
-  stage: 'field' | 'value'; // Track whether we're suggesting fields or values
-  fieldType: string | null; // For value stage, which field are we completing
-  start: number | null;
-  end: number | null;
-  text: string;
+  /** Explicitly dismissed (Escape / click-away). Prevents re-activation
+   *  until the next doc change resets the flag. */
+  dismissed: boolean;
+  /** True while waiting for API results for an async field. */
+  loading: boolean;
+  stage: "field" | "value";
+  /** For value stage: the canonical field name. */
+  fieldName: string | null;
+  /** PM position: start of the text to replace on acceptance. */
+  from: number | null;
+  /** PM position: end of the text to replace. */
+  to: number | null;
+  /** Current filter text (what the user has typed). */
+  filterText: string;
   suggestions: Suggestion[];
   selectedIndex: number;
 }
 
-// Suggestion can be either a field name or a field value
-interface Suggestion {
-  type: 'field' | 'value';
-  display: string; // What to show in dropdown
-  value: string; // What to insert
-  field?: string; // For value suggestions, which field this is for
-  meta?: any; // Additional metadata (for future rich display)
-}
+const INACTIVE: AutocompleteState = {
+  active: false,
+  dismissed: false,
+  loading: false,
+  stage: "field",
+  fieldName: null,
+  from: null,
+  to: null,
+  filterText: "",
+  suggestions: [],
+  selectedIndex: 0,
+};
 
-// Get field name suggestions
-function getFieldSuggestions(text: string): Suggestion[] {
-  if (!text) return [];
+const DISMISSED: AutocompleteState = {
+  ...INACTIVE,
+  dismissed: true,
+};
 
-  return validFieldSuggestions
-    .filter((field) => field.toLowerCase().startsWith(text.toLowerCase()))
-    .map((field) => ({
-      type: 'field' as const,
-      display: field,
-      value: field,
-    }));
-}
+// ── Trigger detection (from PM state) ──────────────────────────
 
-// Get value suggestions for a specific field
-function getValueSuggestions(fieldType: string, text: string): Suggestion[] {
-  // Static value suggestions for known fields
-  const staticValues: Record<string, string[]> = {
-    access: ['public', 'private', 'organization'],
-    status: ['success', 'readable', 'pending', 'error', 'nofile'],
-    language: ['eng', 'spa', 'fra', 'deu', 'ita', 'por', 'rus', 'zho', 'jpn', 'ara'],
-  };
+/**
+ * Examine the text before the cursor and determine if autocomplete should
+ * be active. Returns a new AutocompleteState or null if inactive.
+ */
+function computeAutocompleteState(view: EditorView): AutocompleteState | null {
+  const { doc, selection } = view.state;
+  const { from, to } = selection;
 
-  const values = staticValues[fieldType];
-  if (values) {
-    return values
-      .filter((value) => value.toLowerCase().startsWith(text.toLowerCase()))
-      .map((value) => ({
-        type: 'value' as const,
-        display: value,
-        value: value,
-        field: fieldType,
-      }));
+  // Only for collapsed cursors in text
+  if (from !== to) return null;
+  if (from < 1 || from > doc.content.size) return null;
+
+  const $pos = doc.resolve(from);
+  if ($pos.parent.type.name !== "paragraph") return null;
+
+  // Get text from start of paragraph to cursor.
+  // Use space as the leaf-text separator so atom nodes (chips) produce a
+  // space boundary, keeping word detection correct.
+  const textBeforeCursor = doc.textBetween($pos.start(), from, " ", " ");
+
+  // Find the last space (or start) to get the current "word"
+  const lastSpace = textBeforeCursor.lastIndexOf(" ");
+  const wordStart = lastSpace + 1; // 0 if no space found
+  const wordStartPos = $pos.start() + wordStart;
+
+  const trigger = detectTrigger(textBeforeCursor);
+
+  if (trigger.stage === "field" && trigger.fieldFilter) {
+    const suggestions = getFieldSuggestions(trigger.fieldFilter);
+    if (suggestions.length === 0) return null;
+    return {
+      active: true,
+      dismissed: false,
+      loading: false,
+      stage: "field" as const,
+      fieldName: null,
+      from: wordStartPos,
+      to: from,
+      filterText: trigger.fieldFilter,
+      suggestions,
+      selectedIndex: 0,
+    };
   }
 
-  // For API-based fields (user, organization, project), return empty for now
-  // We'll implement API calls in the next step
-  if (['user', 'account', 'organization', 'group', 'project'].includes(fieldType)) {
-    // TODO: Fetch from API
-    return [];
+  if (trigger.stage === "value" && trigger.fieldName != null) {
+    // Async fields return a loading state — suggestions populated later
+    if (isAsyncField(trigger.fieldName)) {
+      return {
+        active: true,
+        dismissed: false,
+        loading: true,
+        stage: "value" as const,
+        fieldName: trigger.fieldName,
+        from: wordStartPos,
+        to: from,
+        filterText: trigger.valueFilter ?? "",
+        suggestions: [],
+        selectedIndex: 0,
+      };
+    }
+
+    const suggestions = getValueSuggestions(
+      trigger.fieldName,
+      trigger.valueFilter ?? "",
+    );
+    if (suggestions.length === 0) return null;
+    return {
+      active: true,
+      dismissed: false,
+      loading: false,
+      stage: "value" as const,
+      fieldName: trigger.fieldName,
+      from: wordStartPos,
+      to: from,
+      filterText: trigger.valueFilter ?? "",
+      suggestions,
+      selectedIndex: 0,
+    };
   }
 
-  return [];
+  return null;
 }
 
-// Helper to create the dropdown element
-function createDropdownElement(): HTMLElement {
+// ── Insertion logic ────────────────────────────────────────────
+
+function applyFieldSuggestion(view: EditorView, suggestion: Suggestion): void {
+  const state = autocompletePluginKey.getState(view.state) as AutocompleteState;
+  if (!state.active || state.from == null || state.to == null) return;
+
+  const fieldDef = resolveField(suggestion.value);
+  const tr = view.state.tr;
+
+  // All field selections insert "field:" as text first.
+  // If the field has value suggestions, the trigger detection will
+  // automatically show the value dropdown on the next update cycle.
+  const fieldText = `${suggestion.value}:`;
+  tr.replaceWith(state.from, state.to, searchSchema.text(fieldText));
+
+  const cursorPos = state.from + fieldText.length;
+  tr.setSelection(TextSelection.create(tr.doc, cursorPos));
+
+  // If the field has value suggestions, set the autocomplete state
+  // directly to avoid a flicker (deactivate → reactivate).
+  if (fieldDef?.hasValueSuggestions) {
+    if (isAsyncField(suggestion.value)) {
+      // Async field: show loading state, suggestions fetched by the view
+      tr.setMeta(autocompletePluginKey, {
+        active: true,
+        loading: true,
+        stage: "value",
+        fieldName: suggestion.value,
+        from: state.from,
+        to: cursorPos,
+        filterText: "",
+        suggestions: [],
+        selectedIndex: 0,
+      });
+    } else {
+      const valueSuggestions = getValueSuggestions(suggestion.value, "");
+      tr.setMeta(autocompletePluginKey, {
+        active: true,
+        loading: false,
+        stage: "value",
+        fieldName: suggestion.value,
+        from: state.from,
+        to: cursorPos,
+        filterText: "",
+        suggestions: valueSuggestions,
+        selectedIndex: 0,
+      });
+    }
+  } else {
+    tr.setMeta(autocompletePluginKey, INACTIVE);
+  }
+
+  view.dispatch(tr);
+}
+
+function applyValueSuggestion(
+  view: EditorView,
+  suggestion: Suggestion,
+): void {
+  const state = autocompletePluginKey.getState(view.state) as AutocompleteState;
+  if (
+    !state.active ||
+    state.from == null ||
+    state.to == null ||
+    !state.fieldName
+  )
+    return;
+
+  const fieldDef = resolveField(state.fieldName);
+  if (!fieldDef) return;
+
+  const tr = view.state.tr;
+
+  if (fieldDef.insertBehavior === "sort-chip") {
+    // Sort: parse direction from value (e.g., "-created_at" → desc)
+    let sortField = suggestion.value;
+    let direction = "asc";
+    if (sortField.startsWith("-")) {
+      sortField = sortField.substring(1);
+      direction = "desc";
+    }
+
+    const sortNode = searchSchema.nodes.sort.create({
+      field: sortField,
+      direction,
+    });
+
+    tr.replaceWith(state.from, state.to, sortNode);
+    // Add a space after the chip and place cursor there
+    const afterChip = state.from + sortNode.nodeSize;
+    tr.insertText(" ", afterChip);
+    tr.setSelection(TextSelection.create(tr.doc, afterChip + 1));
+  } else if (fieldDef.insertBehavior === "field-value-chip") {
+    // Extract prefix from the original text if present
+    const originalText = view.state.doc.textBetween(state.from, state.to);
+    let prefix: string | null = null;
+    if (originalText.startsWith("+") || originalText.startsWith("-")) {
+      prefix = originalText.charAt(0);
+    }
+
+    const chipNode = searchSchema.nodes["field-value"].create({
+      field: state.fieldName,
+      value: suggestion.value,
+      prefix,
+      quoted: false,
+      displayValue: isAsyncField(state.fieldName) ? suggestion.label : null,
+    });
+
+    tr.replaceWith(state.from, state.to, chipNode);
+    const afterChip = state.from + chipNode.nodeSize;
+    tr.insertText(" ", afterChip);
+    tr.setSelection(TextSelection.create(tr.doc, afterChip + 1));
+  }
+
+  tr.setMeta(autocompletePluginKey, INACTIVE);
+  view.dispatch(tr);
+}
+
+function applySuggestion(view: EditorView, suggestion: Suggestion): void {
+  const state = autocompletePluginKey.getState(view.state) as AutocompleteState;
+  if (state.stage === "field") {
+    applyFieldSuggestion(view, suggestion);
+  } else {
+    applyValueSuggestion(view, suggestion);
+  }
+}
+
+// ── Dropdown DOM ───────────────────────────────────────────────
+
+let idCounter = 0;
+
+function createDropdown(): HTMLElement {
   const dropdown = document.createElement("div");
   dropdown.className = "search-autocomplete";
+  dropdown.setAttribute("role", "listbox");
+  dropdown.id = `search-ac-${++idCounter}`;
   dropdown.style.position = "absolute";
-  dropdown.style.zIndex = "10";
-  dropdown.style.backgroundColor = "white";
-  dropdown.style.border = "1px solid #ddd";
-  dropdown.style.borderRadius = "4px";
-  dropdown.style.boxShadow = "0 2px 8px rgba(0,0,0,0.1)";
-  dropdown.style.overflow = "hidden";
   dropdown.style.display = "none";
   return dropdown;
 }
 
-// Detect if we should activate autocomplete based on current cursor position
-function shouldActivateAutocomplete(view: EditorView): {
-  active: boolean;
-  stage: 'field' | 'value';
-  fieldType: string | null;
-  start: number | null;
-  end: number | null;
-  text: string;
-} {
-  try {
-    const { doc, selection } = view.state;
-    const { from, to } = selection;
+function renderDropdown(
+  dropdown: HTMLElement,
+  suggestions: Suggestion[],
+  selectedIndex: number,
+  onSelect: (index: number) => void,
+  onHover: (index: number) => void,
+  loading = false,
+): void {
+  dropdown.innerHTML = "";
 
-    // Only activate when cursor is at a single position (not a selection range)
-    if (from !== to) {
-      return { active: false, stage: 'field', fieldType: null, start: null, end: null, text: "" };
+  if (suggestions.length === 0 && !loading) {
+    dropdown.style.display = "none";
+    return;
+  }
+
+  if (loading && suggestions.length === 0) {
+    const loadingEl = document.createElement("div");
+    loadingEl.className = "search-ac-loading";
+    loadingEl.textContent = "Loading\u2026";
+    dropdown.appendChild(loadingEl);
+    dropdown.style.display = "block";
+    if (suggestions.length === 0) return;
+  }
+
+  suggestions.forEach((suggestion, index) => {
+    const item = document.createElement("div");
+    item.className = "search-ac-option";
+    item.setAttribute("role", "option");
+    item.id = `${dropdown.id}-opt-${index}`;
+    item.setAttribute("aria-selected", String(index === selectedIndex));
+
+    const label = document.createElement("span");
+    label.className = "search-ac-label";
+    label.textContent = suggestion.label;
+    item.appendChild(label);
+
+    if (suggestion.description) {
+      const desc = document.createElement("span");
+      desc.className = "search-ac-description";
+      desc.textContent = suggestion.description;
+      item.appendChild(desc);
     }
 
-    // Bounds check
-    if (from < 0 || from > doc.content.size) {
-      return { active: false, stage: 'field', fieldType: null, start: null, end: null, text: "" };
+    if (index === selectedIndex) {
+      item.classList.add("selected");
     }
 
-    const $pos = doc.resolve(from);
+    item.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onSelect(index);
+    });
 
-    // Only activate in paragraphs (not inside term/range/operator nodes)
-    if ($pos.parent.type.name !== "paragraph") {
-      return { active: false, stage: 'field', fieldType: null, start: null, end: null, text: "" };
-    }
+    item.addEventListener("mouseenter", () => {
+      onHover(index);
+    });
 
-    // STAGE 2: Check if we're right after a term node (for value autocomplete)
-    // This happens when user selects a field and we insert "field:" - cursor is right after
-    const nodeBefore = $pos.nodeBefore;
-    if (nodeBefore && nodeBefore.type.name === 'term') {
-      const field = nodeBefore.attrs.field;
-      const value = nodeBefore.attrs.value;
+    dropdown.appendChild(item);
+  });
 
-      // If term has a field but value is empty or "VALUE", activate value autocomplete
-      if (field && (!value || value === "VALUE")) {
-        // We'll treat this as typing an empty value, positioned right after the term
-        return {
-          active: true,
-          stage: 'value',
-          fieldType: field,
-          start: from,
-          end: from,
-          text: "",
-        };
-      }
-    }
+  dropdown.style.display = "block";
 
-    // Don't activate if we're inside other structured nodes (range, operator)
-    if (nodeBefore && !nodeBefore.isText && nodeBefore.type.name !== 'term') {
-      return { active: false, stage: 'field', fieldType: null, start: null, end: null, text: "" };
-    }
-
-    // Extract text before cursor to find what the user is typing
-    let textBefore = "";
-    let wordStart = from;
-    const node = $pos.parent;
-
-    // Only look at text nodes in the current paragraph
-    if (node.type.name === "paragraph") {
-      // Get all text content from start of paragraph to cursor position
-      const textBeforeCursor = doc.textBetween($pos.start(), from, " ");
-
-      if (textBeforeCursor.length > 0) {
-        // Work backwards from end to find word start
-        let i = textBeforeCursor.length;
-        let wordStartOffset = i;
-
-        while (wordStartOffset > 0 && /[a-zA-Z0-9_-]/.test(textBeforeCursor.charAt(wordStartOffset - 1))) {
-          wordStartOffset--;
-        }
-
-        // Extract the current word being typed
-        textBefore = textBeforeCursor.slice(wordStartOffset);
-        wordStart = from - (i - wordStartOffset);
-
-        // Only activate if typing what looks like a field name
-        // Minimum 1 character to avoid activating on every keystroke
-        if (textBefore.length > 0 && /^[a-zA-Z0-9_-]+$/.test(textBefore)) {
-          return {
-            active: true,
-            stage: 'field',
-            fieldType: null,
-            start: wordStart,
-            end: from,
-            text: textBefore,
-          };
-        }
-      }
-    }
-
-    return { active: false, stage: 'field', fieldType: null, start: null, end: null, text: "" };
-  } catch (error) {
-    // If anything goes wrong, just deactivate autocomplete
-    console.error("Error in shouldActivateAutocomplete:", error);
-    return { active: false, stage: 'field', fieldType: null, start: null, end: null, text: "" };
+  // Keep the selected item visible within the scrollable dropdown
+  const selectedEl = dropdown.querySelector(".selected");
+  if (selectedEl && typeof selectedEl.scrollIntoView === "function") {
+    selectedEl.scrollIntoView({ block: "nearest" });
   }
 }
 
-export const autocompletePlugin = new Plugin<AutocompleteState>({
-  key: autocompletePluginKey,
-  state: {
-    init(): AutocompleteState {
-      return {
-        active: false,
-        stage: 'field',
-        fieldType: null,
-        start: null,
-        end: null,
-        text: "",
-        suggestions: [],
-        selectedIndex: 0,
-      };
-    },
-    apply(tr, state) {
-      // If there's a meta field for autocomplete, use that
-      const meta = tr.getMeta(autocompletePluginKey);
-      if (meta) {
-        return { ...state, ...meta };
-      }
+function positionDropdown(
+  dropdown: HTMLElement,
+  view: EditorView,
+  pos: number,
+): void {
+  let coords: { top: number; bottom: number; left: number; right: number };
+  try {
+    coords = view.coordsAtPos(pos);
+  } catch {
+    // coordsAtPos requires layout (getClientRects); unavailable in jsdom
+    return;
+  }
+  const virtualEl = {
+    getBoundingClientRect: () => ({
+      width: 0,
+      height: coords.bottom - coords.top,
+      x: coords.left,
+      y: coords.top,
+      top: coords.top,
+      right: coords.left,
+      bottom: coords.bottom,
+      left: coords.left,
+    }),
+  };
 
-      // CRITICAL: Preserve autocomplete state during queryTrackingPlugin rebuilds
-      // The "rebuild" meta flag indicates a document rebuild, not a user edit
-      if (tr.getMeta("rebuild")) {
-        // Adjust positions if they're set, since document structure changed
-        if (state.active && state.start !== null && state.end !== null) {
-          // Map positions through the transaction
-          const newStart = tr.mapping.map(state.start);
-          const newEnd = tr.mapping.map(state.end);
-          return {
-            ...state,
-            start: newStart,
-            end: newEnd,
-          };
-        }
+  computePosition(virtualEl, dropdown, {
+    placement: "bottom-start",
+    middleware: [offset(4), flip(), shift({ padding: 8 })],
+  }).then(({ x, y }) => {
+    dropdown.style.left = `${x}px`;
+    dropdown.style.top = `${y}px`;
+  });
+}
+
+// ── Live region for screen reader announcements ────────────────
+
+function createLiveRegion(): HTMLElement {
+  const region = document.createElement("div");
+  region.setAttribute("aria-live", "polite");
+  region.setAttribute("aria-atomic", "true");
+  region.className = "sr-only";
+  region.style.position = "absolute";
+  region.style.width = "1px";
+  region.style.height = "1px";
+  region.style.overflow = "hidden";
+  region.style.clip = "rect(0 0 0 0)";
+  region.style.whiteSpace = "nowrap";
+  return region;
+}
+
+function announceCount(region: HTMLElement, count: number): void {
+  if (count === 0) {
+    region.textContent = "";
+  } else {
+    region.textContent = `${count} suggestion${count === 1 ? "" : "s"} available. Use up and down arrows to navigate.`;
+  }
+}
+
+// ── Plugin ─────────────────────────────────────────────────────
+
+export function autocompletePlugin(): Plugin<AutocompleteState> {
+  return new Plugin<AutocompleteState>({
+    key: autocompletePluginKey,
+
+    state: {
+      init(): AutocompleteState {
+        return { ...INACTIVE };
+      },
+
+      apply(tr, state): AutocompleteState {
+        // Explicit meta overrides everything
+        const meta = tr.getMeta(autocompletePluginKey);
+        if (meta) return meta;
+
+        // Doc changes reset autocomplete (and clear dismissed flag so
+        // typing can re-activate suggestions)
+        if (tr.docChanged) return { ...INACTIVE };
+
         return state;
-      }
-
-      // If the document changed by user action, deactivate autocomplete
-      if (tr.docChanged) {
-        return {
-          active: false,
-          stage: 'field',
-          fieldType: null,
-          start: null,
-          end: null,
-          text: "",
-          suggestions: [],
-          selectedIndex: 0,
-        };
-      }
-
-      // If selection changed, deactivate (view plugin will recompute)
-      if (tr.selectionSet && !tr.getMeta("autocomplete-selection-update")) {
-        return {
-          active: false,
-          stage: 'field',
-          fieldType: null,
-          start: null,
-          end: null,
-          text: "",
-          suggestions: [],
-          selectedIndex: 0,
-        };
-      }
-
-      return state;
+      },
     },
-  },
-  props: {
-    // Handle key presses for navigation and selection
-    handleKeyDown(view, event) {
-      const state = this.getState(view.state);
 
-      // If not active, let other handlers take it
-      if (!state?.active || state.suggestions.length === 0) {
-        return false;
-      }
+    props: {
+      handleKeyDown(view, event) {
+        const state = this.getState(
+          view.state,
+        ) as AutocompleteState;
 
-      // Handle navigation keys
-      switch (event.key) {
-        case "ArrowDown":
-          // Move selection down
-          view.dispatch(
-            view.state.tr
-              .setMeta(autocompletePluginKey, {
-                ...state,
-                selectedIndex:
-                  (state.selectedIndex + 1) % state.suggestions.length,
-              })
-              .setMeta("autocomplete-selection-update", true),
-          );
-          return true;
-
-        case "ArrowUp":
-          // Move selection up
-          view.dispatch(
-            view.state.tr
-              .setMeta(autocompletePluginKey, {
-                ...state,
-                selectedIndex:
-                  (state.selectedIndex + state.suggestions.length - 1) %
-                  state.suggestions.length,
-              })
-              .setMeta("autocomplete-selection-update", true),
-          );
-          return true;
-
-        case "Enter":
-        case "Tab":
-          // Apply the selected suggestion
-          if (state.start !== null && state.end !== null && state.suggestions.length > 0) {
-            const tr = view.state.tr;
-            const selectedSuggestion = state.suggestions[state.selectedIndex];
-
-            if (selectedSuggestion.type === 'field') {
-              // FIELD SELECTION: Insert term node with empty value
-              tr.delete(state.start, state.end);
-
-              const termNode = view.state.schema.nodes.term?.create({
-                value: "",
-                field: selectedSuggestion.value,
-                quoted: false,
-              });
-              if (termNode) tr.insert(state.start, termNode);
-
-              // Mark this as an autocomplete intermediate step to prevent rebuild
-              tr.setMeta("autocomplete-intermediate", true);
-
-              // Don't close autocomplete - it will reactivate for value stage
-              view.dispatch(tr);
-            } else {
-              // VALUE SELECTION: Update the term node before cursor
-              const $pos = view.state.doc.resolve(state.start);
-              const nodeBefore = $pos.nodeBefore;
-
-              if (nodeBefore && nodeBefore.type.name === 'term') {
-                const nodeStart = state.start - nodeBefore.nodeSize;
-                tr.delete(nodeStart, state.start);
-
-                const updatedTermNode = view.state.schema.nodes.term?.create({
-                  value: selectedSuggestion.value,
-                  field: nodeBefore.attrs.field,
-                  quoted: false,
-                  boost: nodeBefore.attrs.boost,
-                  prefix: nodeBefore.attrs.prefix,
-                });
-                if (updatedTermNode) {
-                  tr.insert(nodeStart, updatedTermNode);
-                  // Add a space with implicitOperator mark after the term
-                  const afterTerm = nodeStart + updatedTermNode.nodeSize;
-                  const schema = view.state.schema;
-                  const spaceWithMark = schema.text(" ", [schema.marks.implicitOperator.create()]);
-                  tr.insert(afterTerm, spaceWithMark);
-                  // Position cursor after the space
-                  const afterSpace = afterTerm + spaceWithMark.nodeSize;
-                  tr.setSelection(TextSelection.create(tr.doc, afterSpace));
-                  // Remove any stored marks to prevent them from affecting the space
-                  tr.setStoredMarks([]);
-
-                  console.log('[Autocomplete] After value insertion - doc:', JSON.stringify(tr.doc.toJSON(), null, 2));
-                  console.log('[Autocomplete] Cursor position:', afterSpace);
-                  console.log('[Autocomplete] Stored marks:', tr.storedMarks);
-                }
-
-                // Close autocomplete after value selection
-                tr.setMeta(autocompletePluginKey, {
-                  active: false,
-                  stage: 'field',
-                  fieldType: null,
-                  start: null,
-                  end: null,
-                  text: "",
-                  suggestions: [],
-                  selectedIndex: 0,
-                });
-
-                // Skip rebuild to preserve document structure
-                tr.setMeta("autocomplete-intermediate", true);
-
-                view.dispatch(tr);
-              }
-            }
-          }
-
-          // Prevent default Enter behavior (newline insertion)
+        // Mod+/ opens the full field list when autocomplete is not active
+        if (event.key === "/" && (event.metaKey || event.ctrlKey) && !state?.active) {
           event.preventDefault();
-          event.stopPropagation();
-          return true;
-
-        case "Escape":
-          // Close the autocomplete
+          const { from } = view.state.selection;
+          const suggestions = getAllFieldSuggestions();
           view.dispatch(
             view.state.tr.setMeta(autocompletePluginKey, {
-              active: false,
-              stage: 'field',
-              fieldType: null,
-              start: null,
-              end: null,
-              text: "",
-              suggestions: [],
+              active: true,
+              dismissed: false,
+              loading: false,
+              stage: "field",
+              fieldName: null,
+              from,
+              to: from,
+              filterText: "",
+              suggestions,
               selectedIndex: 0,
             }),
           );
-          event.preventDefault();
           return true;
-      }
-
-      return false;
-    },
-  },
-  // View plugin to handle DOM manipulation
-  view(editorView) {
-    // Create the dropdown element
-    let dropdown: HTMLElement | null = createDropdownElement();
-    document.body.appendChild(dropdown);
-
-    // Function to update the dropdown position
-    function updateDropdownPosition() {
-      if (!dropdown) return;
-
-      const state = autocompletePluginKey.getState(editorView.state);
-      if (!state.active || state.end === null) {
-        dropdown.style.display = "none";
-        return;
-      }
-
-      // Get coordinates of cursor position
-      const coords = editorView.coordsAtPos(state.end);
-
-      // Create a virtual element at the cursor position
-      const virtualElement = {
-        getBoundingClientRect() {
-          return {
-            width: 0,
-            height: 0,
-            x: coords.left,
-            y: coords.bottom,
-            top: coords.bottom,
-            right: coords.left,
-            bottom: coords.bottom,
-            left: coords.left,
-          };
-        },
-      };
-
-      // Position the dropdown below the cursor using floating-ui
-      computePosition(virtualElement, dropdown, {
-        placement: "bottom-start",
-        middleware: [
-          offset(6), // Add some space
-          flip(), // Flip to top if no space below
-          shift(), // Shift horizontally if needed
-        ],
-      }).then(({ x, y }) => {
-        dropdown!.style.left = `${x}px`;
-        dropdown!.style.top = `${y}px`;
-      });
-    }
-
-    // Function to render suggestions
-    function renderSuggestions(suggestions: Suggestion[], selectedIndex: number) {
-      if (!dropdown) return;
-
-      // Clear existing content
-      dropdown.innerHTML = "";
-
-      if (suggestions.length === 0) {
-        dropdown.style.display = "none";
-        return;
-      }
-
-      // Create a list for suggestions
-      const list = document.createElement("ul");
-      list.style.margin = "0";
-      list.style.padding = "0";
-      list.style.listStyle = "none";
-
-      // Add each suggestion as a list item
-      suggestions.forEach((suggestion, index) => {
-        const item = document.createElement("li");
-        item.textContent = suggestion.display;
-        item.style.padding = "6px 12px";
-        item.style.cursor = "pointer";
-
-        // Highlight the selected item
-        if (index === selectedIndex) {
-          item.style.backgroundColor = "#e6f7ff";
         }
 
-        // Add event listeners
-        // Use mousedown instead of click to fire before editor blur event
-        item.addEventListener("mousedown", (event) => {
-          event.preventDefault();
-          event.stopPropagation();
+        if (!state?.active || state.suggestions.length === 0) return false;
 
-          // Apply this suggestion
-          const state = autocompletePluginKey.getState(editorView.state);
-          if (state.start !== null && state.end !== null) {
-            const tr = editorView.state.tr;
+        switch (event.key) {
+          case "ArrowDown": {
+            event.preventDefault();
+            const next =
+              (state.selectedIndex + 1) % state.suggestions.length;
+            view.dispatch(
+              view.state.tr.setMeta(autocompletePluginKey, {
+                ...state,
+                selectedIndex: next,
+              }),
+            );
+            return true;
+          }
 
-            if (suggestion.type === 'field') {
-              // FIELD SELECTION: Insert term node with empty value
-              // Delete the partial text
-              tr.delete(state.start, state.end);
+          case "ArrowUp": {
+            event.preventDefault();
+            const prev =
+              (state.selectedIndex + state.suggestions.length - 1) %
+              state.suggestions.length;
+            view.dispatch(
+              view.state.tr.setMeta(autocompletePluginKey, {
+                ...state,
+                selectedIndex: prev,
+              }),
+            );
+            return true;
+          }
 
-              // Insert the term node with the field and empty value
-              const termNode = editorView.state.schema.nodes.term?.create({
-                value: "",
-                field: suggestion.value,
-                quoted: false,
-              });
-              if (termNode) tr.insert(state.start, termNode);
+          case "Enter":
+          case "Tab": {
+            event.preventDefault();
+            const suggestion = state.suggestions[state.selectedIndex];
+            if (suggestion) {
+              applySuggestion(view, suggestion);
+            }
+            return true;
+          }
 
-              // Mark this as an autocomplete intermediate step to prevent rebuild
-              tr.setMeta("autocomplete-intermediate", true);
+          case "Escape": {
+            event.preventDefault();
+            view.dispatch(
+              view.state.tr.setMeta(autocompletePluginKey, DISMISSED),
+            );
+            return true;
+          }
+        }
 
-              // Don't close autocomplete - it will reactivate for value stage
-              editorView.dispatch(tr);
-              editorView.focus();
-            } else {
-              // VALUE SELECTION: Update the term node before cursor
-              const $pos = editorView.state.doc.resolve(state.start);
-              const nodeBefore = $pos.nodeBefore;
+        return false;
+      },
+    },
 
-              if (nodeBefore && nodeBefore.type.name === 'term') {
-                // Replace the term node with updated value
-                const nodeStart = state.start - nodeBefore.nodeSize;
-                tr.delete(nodeStart, state.start);
+    view(editorView) {
+      const dropdown = createDropdown();
+      const liveRegion = createLiveRegion();
+      document.body.appendChild(dropdown);
+      document.body.appendChild(liveRegion);
 
-                const updatedTermNode = editorView.state.schema.nodes.term?.create({
-                  value: suggestion.value,
-                  field: nodeBefore.attrs.field,
-                  quoted: false,
-                  boost: nodeBefore.attrs.boost,
-                  prefix: nodeBefore.attrs.prefix,
-                });
-                if (updatedTermNode) {
-                  tr.insert(nodeStart, updatedTermNode);
-                  // Add a space with implicitOperator mark after the term
-                  const afterTerm = nodeStart + updatedTermNode.nodeSize;
-                  const schema = view.state.schema;
-                  const spaceWithMark = schema.text(" ", [schema.marks.implicitOperator.create()]);
-                  tr.insert(afterTerm, spaceWithMark);
-                  // Set selection to position after the space, with implicitTerm mark active
-                  // This ensures the next text typed will have implicitTerm mark
-                  const afterSpace = afterTerm + spaceWithMark.nodeSize;
-                  tr.setSelection(TextSelection.create(tr.doc, afterSpace));
-                  tr.setStoredMarks([schema.marks.implicitTerm.create()]);
-                }
+      // Set ARIA attributes on the editor
+      const editorDom = editorView.dom;
+      editorDom.setAttribute("aria-autocomplete", "list");
+      editorDom.setAttribute("aria-expanded", "false");
+      editorDom.setAttribute("aria-owns", dropdown.id);
 
-                // Close autocomplete after value selection
-                tr.setMeta(autocompletePluginKey, {
-                  active: false,
-                  stage: 'field',
-                  fieldType: null,
-                  start: null,
-                  end: null,
-                  text: "",
-                  suggestions: [],
-                  selectedIndex: 0,
-                });
+      let prevSuggestionCount = 0;
 
-                // Skip rebuild to preserve document structure
-                tr.setMeta("autocomplete-intermediate", true);
+      // Async fetch state
+      let fetchTimer: ReturnType<typeof setTimeout> | null = null;
+      let abortController: AbortController | null = null;
+      let lastFetchKey = "";
 
-                editorView.dispatch(tr);
-                editorView.focus();
-              }
+      // Dismiss on click outside editor and dropdown
+      function onDocumentMousedown(e: MouseEvent) {
+        const target = e.target as Node;
+        if (
+          !editorDom.contains(target) &&
+          !dropdown.contains(target)
+        ) {
+          const state = autocompletePluginKey.getState(
+            editorView.state,
+          ) as AutocompleteState;
+          if (state.active) {
+            editorView.dispatch(
+              editorView.state.tr.setMeta(autocompletePluginKey, DISMISSED),
+            );
+          }
+        }
+      }
+      document.addEventListener("mousedown", onDocumentMousedown);
+
+      // Dismiss on editor blur (with delay so dropdown clicks aren't missed)
+      function onEditorBlur() {
+        setTimeout(() => {
+          // Only dismiss if the focus didn't move to the dropdown
+          if (!dropdown.contains(document.activeElement)) {
+            const state = autocompletePluginKey.getState(
+              editorView.state,
+            ) as AutocompleteState;
+            if (state.active) {
+              editorView.dispatch(
+                editorView.state.tr.setMeta(autocompletePluginKey, DISMISSED),
+              );
             }
           }
-        });
+        }, 100);
+      }
+      editorDom.addEventListener("blur", onEditorBlur);
 
-        item.addEventListener("mouseenter", () => {
-          // Update selected index on hover
-          const state = autocompletePluginKey.getState(editorView.state);
+      function onSelect(index: number) {
+        const state = autocompletePluginKey.getState(
+          editorView.state,
+        ) as AutocompleteState;
+        const suggestion = state.suggestions[index];
+        if (suggestion) {
+          applySuggestion(editorView, suggestion);
+        }
+        editorView.focus();
+      }
+
+      function onHover(index: number) {
+        const state = autocompletePluginKey.getState(
+          editorView.state,
+        ) as AutocompleteState;
+        if (state.selectedIndex !== index) {
           editorView.dispatch(
             editorView.state.tr.setMeta(autocompletePluginKey, {
               ...state,
               selectedIndex: index,
             }),
           );
-        });
+        }
+      }
 
-        list.appendChild(item);
-      });
+      /** Schedule an async fetch for value suggestions. */
+      function scheduleAsyncFetch(
+        view: EditorView,
+        fieldName: string,
+        filterText: string,
+      ) {
+        const fetchKey = `${fieldName}:${filterText}`;
+        if (fetchKey === lastFetchKey) return;
+        lastFetchKey = fetchKey;
 
-      dropdown.appendChild(list);
-      dropdown.style.display = "block";
-    }
+        // Cancel any pending fetch
+        if (fetchTimer) clearTimeout(fetchTimer);
+        if (abortController) abortController.abort();
 
-    return {
-      update(view, prevState) {
-        // Check if we should activate autocomplete based on current editor state
-        const { active, stage, fieldType, start, end, text } = shouldActivateAutocomplete(view);
+        abortController = new AbortController();
 
-        // Get the current plugin state
-        const currentState = autocompletePluginKey.getState(view.state);
-
-        // Flag to track if we dispatched a transaction
-        let dispatched = false;
-
-        // If we need to activate or update suggestions
-        if (active) {
-          // Get suggestions based on stage
-          const suggestions = stage === 'field'
-            ? getFieldSuggestions(text)
-            : getValueSuggestions(fieldType || '', text);
-
-          // Only dispatch a transaction if the computed state differs from stored state
-          if (
-            !currentState.active ||
-            currentState.stage !== stage ||
-            currentState.fieldType !== fieldType ||
-            currentState.text !== text ||
-            currentState.start !== start ||
-            currentState.end !== end
-          ) {
-            // Dispatch transaction to update plugin state
-            // Don't render here - let the next update cycle handle it
-            view.dispatch(
-              view.state.tr.setMeta(autocompletePluginKey, {
-                active,
-                stage,
-                fieldType,
-                start,
-                end,
-                text,
-                suggestions,
-                selectedIndex: 0,
-              }),
+        fetchTimer = setTimeout(async () => {
+          try {
+            const suggestions = await fetchValueSuggestions(
+              fieldName,
+              filterText,
             );
-            dispatched = true;
+            // Only apply if still relevant
+            const currentState = autocompletePluginKey.getState(
+              view.state,
+            ) as AutocompleteState;
+            if (
+              currentState.active &&
+              currentState.fieldName === fieldName &&
+              currentState.filterText === filterText
+            ) {
+              view.dispatch(
+                view.state.tr.setMeta(autocompletePluginKey, {
+                  ...currentState,
+                  loading: false,
+                  suggestions,
+                  selectedIndex: 0,
+                }),
+              );
+            }
+          } catch {
+            // On error (including abort), clear loading gracefully
+            const currentState = autocompletePluginKey.getState(
+              view.state,
+            ) as AutocompleteState;
+            if (currentState.active && currentState.loading) {
+              view.dispatch(
+                view.state.tr.setMeta(autocompletePluginKey, {
+                  ...currentState,
+                  loading: false,
+                }),
+              );
+            }
           }
-        }
-        // If should deactivate
-        else if (currentState.active && !active) {
-          // Deactivate if currently active
-          view.dispatch(
-            view.state.tr.setMeta(autocompletePluginKey, {
-              active: false,
-              stage: 'field',
-              fieldType: null,
-              start: null,
-              end: null,
-              text: "",
-              suggestions: [],
-              selectedIndex: 0,
-            }),
+        }, 300);
+      }
+
+      return {
+        update(view) {
+          const pluginState = autocompletePluginKey.getState(
+            view.state,
+          ) as AutocompleteState;
+
+          // If the plugin state is inactive, try to compute from text
+          // (but not if explicitly dismissed — wait for next doc change)
+          if (!pluginState.active) {
+            lastFetchKey = "";
+            const computed =
+              pluginState.dismissed ? null : computeAutocompleteState(view);
+            if (computed) {
+              // Activate autocomplete
+              view.dispatch(
+                view.state.tr.setMeta(autocompletePluginKey, computed),
+              );
+              return; // will re-enter update on the next cycle
+            }
+
+            // Truly inactive
+            dropdown.style.display = "none";
+            editorDom.setAttribute("aria-expanded", "false");
+            editorDom.removeAttribute("aria-activedescendant");
+            if (prevSuggestionCount !== 0) {
+              announceCount(liveRegion, 0);
+              prevSuggestionCount = 0;
+            }
+            return;
+          }
+
+          // Active: re-check trigger to update filter/suggestions.
+          // For async fields in loading state, skip the re-compute that would
+          // override the loading state with a fresh loading state (loop).
+          if (
+            !pluginState.loading ||
+            !pluginState.fieldName ||
+            !isAsyncField(pluginState.fieldName)
+          ) {
+            const computed = computeAutocompleteState(view);
+            if (computed) {
+              if (
+                computed.filterText !== pluginState.filterText ||
+                computed.stage !== pluginState.stage ||
+                computed.fieldName !== pluginState.fieldName
+              ) {
+                const clamped = Math.min(
+                  pluginState.selectedIndex,
+                  Math.max(0, computed.suggestions.length - 1),
+                );
+                view.dispatch(
+                  view.state.tr.setMeta(autocompletePluginKey, {
+                    ...computed,
+                    selectedIndex: Math.max(0, clamped),
+                  }),
+                );
+                return;
+              }
+            } else if (pluginState.filterText !== "") {
+              // Only deactivate if the user had been typing a filter that no
+              // longer matches. When filterText is "" (opened via "/"), we keep
+              // the dropdown open until an explicit dismiss (Escape, selection).
+              view.dispatch(
+                view.state.tr.setMeta(autocompletePluginKey, { ...INACTIVE }),
+              );
+              return;
+            }
+          }
+
+          // Trigger async fetch when in loading state
+          if (
+            pluginState.loading &&
+            pluginState.fieldName &&
+            isAsyncField(pluginState.fieldName)
+          ) {
+            scheduleAsyncFetch(
+              view,
+              pluginState.fieldName,
+              pluginState.filterText,
+            );
+          }
+
+          // Render the dropdown
+          renderDropdown(
+            dropdown,
+            pluginState.suggestions,
+            pluginState.selectedIndex,
+            onSelect,
+            onHover,
+            pluginState.loading,
           );
-          dispatched = true;
-        }
 
-        // Only render if we didn't dispatch (to avoid double-render)
-        // If we dispatched, the next update cycle will handle rendering
-        if (!dispatched) {
-          const pluginState = autocompletePluginKey.getState(view.state);
-          if (pluginState.active) {
-            renderSuggestions(pluginState.suggestions, pluginState.selectedIndex);
-            updateDropdownPosition();
-          } else {
-            dropdown!.style.display = "none";
+          if (pluginState.from != null) {
+            positionDropdown(dropdown, view, pluginState.to ?? pluginState.from);
           }
-        }
-      },
 
-      destroy() {
-        // Clean up the dropdown when editor is destroyed
-        if (dropdown && dropdown.parentNode) {
-          dropdown.parentNode.removeChild(dropdown);
-        }
-        dropdown = null;
-      },
-    };
-  },
-});
+          // Update ARIA
+          editorDom.setAttribute("aria-expanded", "true");
+          const activeId = `${dropdown.id}-opt-${pluginState.selectedIndex}`;
+          editorDom.setAttribute("aria-activedescendant", activeId);
+
+          // Announce changes
+          if (pluginState.suggestions.length !== prevSuggestionCount) {
+            announceCount(liveRegion, pluginState.suggestions.length);
+            prevSuggestionCount = pluginState.suggestions.length;
+          }
+        },
+
+        destroy() {
+          if (fetchTimer) clearTimeout(fetchTimer);
+          if (abortController) abortController.abort();
+          document.removeEventListener("mousedown", onDocumentMousedown);
+          editorDom.removeEventListener("blur", onEditorBlur);
+          dropdown.remove();
+          liveRegion.remove();
+          editorDom.removeAttribute("aria-autocomplete");
+          editorDom.removeAttribute("aria-expanded");
+          editorDom.removeAttribute("aria-owns");
+          editorDom.removeAttribute("aria-activedescendant");
+        },
+      };
+    },
+  });
+}
