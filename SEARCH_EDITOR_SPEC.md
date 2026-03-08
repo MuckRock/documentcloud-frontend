@@ -653,3 +653,20 @@ Field aliases (`account` → `user`, `group` → `organization`, `projects` → 
 ### Search Selected Documents
 
 A workflow enhancement where users can select documents from search results and then "search within these documents" — prefilling the search field with `document:` chips for each selected document ID. This depends on a multi-select UI in the document list.
+
+## Known Issues
+
+### Autocomplete doesn't activate when typing after a chip with one space
+
+When the cursor is positioned after `[chip] ` (one space) and the user types a field name prefix like `acc`, the autocomplete dropdown does not appear. It works correctly with two spaces after the chip, or when there are no chips before the cursor.
+
+**Root cause (suspected):** `doc.textBetween()` uses a `leafText` parameter to represent inline atom nodes (chips) as text. The interaction between the atom's leaf-text space and the typed space may be collapsing into a single space, causing the word boundary detection in `detectTrigger()` to fail.
+
+**Workaround:** Users can use `Cmd+/` to manually open the field list, or type two spaces after a chip.
+
+### Phase 5 autocomplete test coverage gaps
+
+The following autocomplete behaviors work end-to-end but lack dedicated integration tests:
+
+- Full insertion flow: type field prefix → select field → select value → verify chip appears in document with correct attributes
+- `Cmd+/` shortcut opening the full field list and keyboard selection from it
