@@ -115,7 +115,7 @@ describe("SearchEditor", () => {
 
     expect(submitSpy).toHaveBeenCalledTimes(1);
     expect(submitSpy.mock.calls[0][0].detail).toEqual({
-      query: "mueller report",
+      q: "mueller report",
     });
   });
 

@@ -27,8 +27,22 @@
 
   export let initialQuery = "";
 
+  /** Locked chips displayed before the editor as search context (e.g. project scope). */
+  export let contextChips: Array<{
+    field: string;
+    label: string;
+  }> = [];
+
   let editorRef: HTMLDivElement;
   let view: EditorView;
+
+  // When the initialQuery prop changes externally (e.g. route navigation),
+  // update the editor contents to match.
+  let lastInitialQuery = initialQuery;
+  $: if (view && initialQuery !== lastInitialQuery) {
+    lastInitialQuery = initialQuery;
+    updateQuery(initialQuery);
+  }
 
   /** Tiny plugin that toggles an `is-empty` class on the editor DOM. */
   function placeholderPlugin() {
@@ -66,7 +80,7 @@
   function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
     const query = getQuery();
-    dispatch("submit", { query });
+    dispatch("submit", { "q": query });
   }
 
   onMount(() => {
@@ -107,10 +121,6 @@
     }
   });
 
-  /**
-   * Walk the doc for entity field-value chips lacking displayValue,
-   * fetch display names from the API, then update the chips in-place.
-   */
   /**
    * Walk the doc for entity field-value chips lacking displayValue,
    * fetch display names from the API, then update the chips in-place.
@@ -159,9 +169,71 @@
     }
   }
 
+  /**
+   * Collect a map of "field:value" → displayValue from existing chips
+   * so we can carry forward resolved names when rebuilding the doc.
+   */
+  function collectDisplayValues(
+    doc: import("prosemirror-model").Node,
+  ): Map<string, string> {
+    const map = new Map<string, string>();
+    doc.descendants((node) => {
+      if (
+        node.type.name === "field-value" &&
+        node.attrs.displayValue &&
+        isAsyncField(node.attrs.field)
+      ) {
+        map.set(
+          `${node.attrs.field}:${node.attrs.value}`,
+          node.attrs.displayValue,
+        );
+      }
+    });
+    return map;
+  }
+
+  /**
+   * Apply carried-forward display values to a new doc's chips.
+   * Returns a transaction if any updates were made, or null.
+   */
+  function applyCarriedDisplayValues(
+    state: import("prosemirror-state").EditorState,
+    carried: Map<string, string>,
+  ): import("prosemirror-state").Transaction | null {
+    if (carried.size === 0) return null;
+    const tr = state.tr;
+    let changed = false;
+    state.doc.descendants((node, pos) => {
+      if (
+        node.type.name === "field-value" &&
+        !node.attrs.displayValue &&
+        isAsyncField(node.attrs.field)
+      ) {
+        const key = `${node.attrs.field}:${node.attrs.value}`;
+        const displayValue = carried.get(key);
+        if (displayValue) {
+          tr.setNodeMarkup(pos, undefined, {
+            ...node.attrs,
+            displayValue,
+          });
+          changed = true;
+        }
+      }
+    });
+    return changed ? tr : null;
+  }
+
   /** Public: update the editor with a new query string. */
   export function updateQuery(query: string) {
     if (!view) return;
+
+    // Skip if the editor already represents this query
+    const current = serialize(view.state.doc);
+    if (current === query) return;
+
+    // Carry forward display values from chips that still exist in the new query
+    const carried = collectDisplayValues(view.state.doc);
+
     const doc = createDoc(query);
     const tr = view.state.tr.replaceWith(
       0,
@@ -169,6 +241,14 @@
       doc.content,
     );
     view.dispatch(tr);
+
+    // Restore display values for chips that survived the update
+    const carryTr = applyCarriedDisplayValues(view.state, carried);
+    if (carryTr) {
+      view.dispatch(carryTr);
+    }
+
+    // Enrich any remaining chips that still need display names
     enrichChips(view);
   }
 
@@ -185,21 +265,27 @@
   <div class="search-editor-status">
     <Search16 />
   </div>
+  {#each contextChips as chip}
+    <span class="search-chip search-field-value context-chip">
+      <span class="chip-field">{chip.field}:</span>
+      <span class="chip-value">{chip.label}</span>
+    </span>
+  {/each}
   <div bind:this={editorRef} class="prosemirror-editor" role="textbox"></div>
   <Button type="submit" mode="primary" ghost minW={false}>Search</Button>
 </form>
 
 <style>
   .search-editor-container {
-    width: 100%;
-    min-width: 32rem;
+    flex: 1 1 auto;
+    min-width: 16rem;
     border: 1px solid #ddd;
     border-radius: 8px;
     background-color: white;
     position: relative;
     display: flex;
     align-items: center;
-    padding: 0 0.25rem 0 1rem;
+    padding: 0 0 0 0.75rem;
 
     caret-color: var(--blue-3, #0969da);
   }
@@ -210,10 +296,22 @@
     align-items: center;
   }
 
+  .context-chip {
+    flex: 0 0 auto;
+    opacity: 0.8;
+    cursor: default;
+    user-select: none;
+  }
+
+  .chip-field {
+    opacity: 0.7;
+    margin-right: 2px;
+  }
+
+
   .prosemirror-editor {
     flex: 1 1 auto;
-    padding: 10px;
-    min-height: 36px;
+    padding: 0.375rem 0.75rem;
   }
 
   :global(.ProseMirror) {

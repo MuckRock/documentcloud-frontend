@@ -2,43 +2,47 @@
   import { _ } from "svelte-i18n";
   import { ChevronDown12, Eye16 } from "svelte-octicons";
 
+  import { page } from "$app/stores";
+  import { goto } from "$app/navigation";
+
   import Dropdown from "../common/Dropdown.svelte";
   import Menu from "../common/Menu.svelte";
   import PageToolbar from "./PageToolbar.svelte";
   import NavItem from "../common/NavItem.svelte";
-  import DocumentSearch from "../documents/search/Search.svelte";
+  import SearchEditor from "../documents/search/SearchEditor.svelte";
   import VisibleFields from "../documents/VisibleFields.svelte";
-  import Sort, {
-    type SortDirection,
-    type SortField,
-  } from "../documents/Sort.svelte";
+  import type { Nullable, Project } from "$lib/api/types";
   import { remToPx } from "$lib/utils/layout";
-  import Filter, {
-    defaultFilters,
-    type FilterFields,
-  } from "../documents/Filter.svelte";
 
   interface Props {
     query?: string;
+    project?: Nullable<Project>;
   }
 
-  let { query = "" }: Props = $props();
+  let { query = "", project = null }: Props = $props();
 
   let headerToolbarWidth: number = $state(800);
+
+  let contextChips = $derived(project
+    ? [{ field: "project", label: project.title }]
+    : []
+  )
+
+  function handleSearchSubmit(e: CustomEvent<{ q: string }>) {
+    const url = new URL($page.url);
+    url.searchParams.set("q", e.detail.q);
+    goto(url);
+  }
 </script>
 
 <PageToolbar bind:width={headerToolbarWidth}>
-  {#snippet center()}
+  {#snippet left()}
     <div class="items">
-      <div style:flex="1 1 auto">
-        <Search name="q" {query} placeholder={$_("common.search")} />
-        <p class="help" class:hide={headerToolbarWidth < remToPx(38)}>
-          {@html $_("search.help")}
-          <a target="_blank" href="/help/search/">
-            {$_("search.more")}
-          </a>
-        </p>
-      </div>
+      <SearchEditor
+        initialQuery={query}
+        {contextChips}
+        on:submit={handleSearchSubmit}
+      />
       <div class="margin-xs" class:hide={headerToolbarWidth < remToPx(38)}>
         <Dropdown>
           <NavItem slot="anchor">
