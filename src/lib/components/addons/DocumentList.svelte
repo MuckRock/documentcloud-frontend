@@ -2,6 +2,9 @@
   import { _ } from "svelte-i18n";
   import { Hourglass24, SidebarExpand16 } from "svelte-octicons";
 
+  import { page } from "$app/stores";
+  import { goto } from "$app/navigation";
+
   import type { DocumentResults, Maybe } from "$lib/api/types";
   import Flex from "../common/Flex.svelte";
   import Empty from "../common/Empty.svelte";
@@ -13,7 +16,7 @@
     total,
     visible,
   } from "../documents/ResultsList.svelte";
-  import Search from "../forms/Search.svelte";
+  import SearchEditor from "../documents/search/SearchEditor.svelte";
   import ContentLayout from "../layouts/ContentLayout.svelte";
 
   import { sidebars } from "../layouts/Sidebar.svelte";
@@ -21,6 +24,12 @@
 
   export let search: Promise<Maybe<DocumentResults>>;
   export let query: string;
+
+  function handleSearchSubmit(e: CustomEvent<{ q: string }>) {
+    const url = new URL($page.url);
+    url.searchParams.set("q", e.detail.q);
+    goto(url);
+  }
 
   function selectAll(e) {
     if (e.target.checked) {
@@ -51,7 +60,7 @@
       {/if}
       <PageToolbar>
         {#snippet center()}
-          <Search name="q" {query} />
+          <SearchEditor initialQuery={query} on:submit={handleSearchSubmit} />
         {/snippet}
       </PageToolbar>
     </Flex>
