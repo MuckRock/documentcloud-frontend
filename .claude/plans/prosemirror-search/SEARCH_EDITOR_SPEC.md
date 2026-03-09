@@ -147,7 +147,9 @@ Represents a `field:value` pair for fields where the value is a selection from a
 
 **Plain text fields** (remain as typed text, not chipped):
 - `title`, `source`, `description`, `text`, `page_no_*` — free-text scoring fields
-- `data_*` — deferred until API support exists (see [Future Work](#future-work))
+
+**Data fields** (chipped, with preloaded suggestions):
+- `data_*` — arbitrary key/value metadata. Keys and values are populated from current search results. Two-stage autocomplete: first select a data key, then select a value.
 
 | Attribute | Type | Description |
 |-----------|------|-------------|
@@ -355,11 +357,11 @@ It does *not* run continuously during editing.
 ### Data key/value search
 
 **Query**: `+data_Folder:"From ARMY site - Environmental documents" AND +data_Subfolder:38`
-**Editor**: `data_*` fields remain as plain text (no chips) since we don't yet have API support for suggesting keys/values.
+**Editor**: `data_*` fields are rendered as chips. Keys and values are suggested from current search results.
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────────────────┐
-│ +data_Folder:"From ARMY site - Environmental documents" |AND| +data_Subfolder:38        │
+│ [+Folder: From ARMY site - Environmental documents] |AND| [+Subfolder: 38]               │
 └──────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -373,7 +375,7 @@ It does *not* run continuously during editing.
 └──────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-Note: `title:Mueller*` and `data_*` fields stay as plain text. Text-specific fields are scoring hints, and `data_*` fields lack API support for value suggestions. Both serialize correctly as-is.
+Note: `title:Mueller*` stays as plain text. Text-specific fields are scoring hints and serialize correctly as-is.
 
 ## Interaction Patterns
 
@@ -635,16 +637,6 @@ Polish the experience.
 ## Future Work
 
 Features that depend on backend changes or are otherwise deferred from the initial implementation.
-
-### `data_*` Field Suggestions
-
-Currently, `data_*` fields (arbitrary key/value metadata on documents) are handled as plain text. To chip these, we need:
-
-1. **API endpoint for data keys**: A new endpoint (or addition to an existing one) that returns the set of `data_*` keys present across a user's documents (or within a project/organization scope). This would power the autocomplete for key names after the user types `data_`.
-2. **API endpoint for data values**: Given a key, return known values for that key. This would power the value stage of autocomplete for `data_*` fields.
-3. **NodeView for data chips**: Once API support exists, `data_*` fields can be promoted to `field-value` nodes with display values derived from the key name (e.g., `data_Folder` → `Folder: Environmental docs`).
-
-Until these APIs exist, `data_*` fields are fully functional as plain text — they serialize correctly and the search works. The chip experience is additive.
 
 ### Field Alias Normalization
 
