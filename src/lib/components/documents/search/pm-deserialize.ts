@@ -193,8 +193,11 @@ function handleTerm(
     return;
   }
 
-  // Handle chippable field:value
-  if (field !== IMPLICIT && CHIPPABLE_FIELDS.has(field)) {
+  // Handle chippable field:value (including data_* fields)
+  if (
+    field !== IMPLICIT &&
+    (CHIPPABLE_FIELDS.has(field) || field.startsWith("data_"))
+  ) {
     const attrs: Record<string, unknown> = {
       field,
       value: node.term,

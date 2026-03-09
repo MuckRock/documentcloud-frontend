@@ -213,13 +213,28 @@ describe("deserialize", () => {
       expect(serialize(doc)).toBe("source:gema");
     });
 
-    it("deserializes data_Folder:test as plain text", () => {
+    it("deserializes data_Folder:test as a chip", () => {
       const doc = deserialize("data_Folder:test");
+      const nodes = describeDoc(doc);
+      const chip = nodes.find((n) => n.type === "field-value");
+      expect(chip).toBeDefined();
+      expect(chip!.attrs).toMatchObject({
+        field: "data_Folder",
+        value: "test",
+      });
       expect(serialize(doc)).toBe("data_Folder:test");
     });
 
-    it('deserializes data_Folder:"Environmental docs" as plain text', () => {
+    it('deserializes data_Folder:"Environmental docs" as a chip', () => {
       const doc = deserialize('data_Folder:"Environmental docs"');
+      const nodes = describeDoc(doc);
+      const chip = nodes.find((n) => n.type === "field-value");
+      expect(chip).toBeDefined();
+      expect(chip!.attrs).toMatchObject({
+        field: "data_Folder",
+        value: "Environmental docs",
+        quoted: true,
+      });
       expect(serialize(doc)).toBe('data_Folder:"Environmental docs"');
     });
 
@@ -403,10 +418,24 @@ describe("deserialize", () => {
       expect(texts.length).toBeGreaterThanOrEqual(2); // quoted phrase, AND, title:...
     });
 
-    it("keeps data_* fields as plain text in mixed queries", () => {
+    it("deserializes data_* fields as chips in mixed queries", () => {
       const doc = deserialize(
         '+data_Folder:"From ARMY site" AND +data_Subfolder:38',
       );
+      const nodes = describeDoc(doc);
+      const chips = nodes.filter((n) => n.type === "field-value");
+      expect(chips).toHaveLength(2);
+      expect(chips[0].attrs).toMatchObject({
+        field: "data_Folder",
+        value: "From ARMY site",
+        prefix: "+",
+        quoted: true,
+      });
+      expect(chips[1].attrs).toMatchObject({
+        field: "data_Subfolder",
+        value: "38",
+        prefix: "+",
+      });
       expect(serialize(doc)).toBe(
         '+data_Folder:"From ARMY site" AND +data_Subfolder:38',
       );

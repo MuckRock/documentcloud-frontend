@@ -61,7 +61,10 @@ const DISMISSED: AutocompleteState = {
  * Examine the text before the cursor and determine if autocomplete should
  * be active. Returns a new AutocompleteState or null if inactive.
  */
-function computeAutocompleteState(view: EditorView): AutocompleteState | null {
+function computeAutocompleteState(
+  view: EditorView,
+  preloadedFields?: Set<string>,
+): AutocompleteState | null {
   const { doc, selection } = view.state;
   const { from, to } = selection;
 
@@ -77,15 +80,17 @@ function computeAutocompleteState(view: EditorView): AutocompleteState | null {
   // space boundary, keeping word detection correct.
   const textBeforeCursor = doc.textBetween($pos.start(), from, " ", " ");
 
-  // Find the last space (or start) to get the current "word"
-  const lastSpace = textBeforeCursor.lastIndexOf(" ");
-  const wordStart = lastSpace + 1; // 0 if no space found
-  const wordStartPos = $pos.start() + wordStart;
+  const trigger = detectTrigger(textBeforeCursor, preloadedFields);
 
-  const trigger = detectTrigger(textBeforeCursor);
+  // Use triggerStart from detectTrigger for accurate positioning,
+  // especially for quoted values that contain spaces.
+  const wordStartPos =
+    trigger.triggerStart != null
+      ? $pos.start() + trigger.triggerStart
+      : from;
 
   if (trigger.stage === "field" && trigger.fieldFilter) {
-    const suggestions = getFieldSuggestions(trigger.fieldFilter);
+    const suggestions = getFieldSuggestions(trigger.fieldFilter, preloadedFields);
     if (suggestions.length === 0) return null;
     return {
       active: true,
@@ -118,23 +123,43 @@ function computeAutocompleteState(view: EditorView): AutocompleteState | null {
       };
     }
 
-    const suggestions = getValueSuggestions(
+    // Try static values first
+    const staticSuggestions = getValueSuggestions(
       trigger.fieldName,
       trigger.valueFilter ?? "",
     );
-    if (suggestions.length === 0) return null;
-    return {
-      active: true,
-      dismissed: false,
-      loading: false,
-      stage: "value" as const,
-      fieldName: trigger.fieldName,
-      from: wordStartPos,
-      to: from,
-      filterText: trigger.valueFilter ?? "",
-      suggestions,
-      selectedIndex: 0,
-    };
+    if (staticSuggestions.length > 0) {
+      return {
+        active: true,
+        dismissed: false,
+        loading: false,
+        stage: "value" as const,
+        fieldName: trigger.fieldName,
+        from: wordStartPos,
+        to: from,
+        filterText: trigger.valueFilter ?? "",
+        suggestions: staticSuggestions,
+        selectedIndex: 0,
+      };
+    }
+
+    // Preloaded-only fields (tag, data_*): populate synchronously
+    if (preloadedFields?.has(trigger.fieldName)) {
+      return {
+        active: true,
+        dismissed: false,
+        loading: false,
+        stage: "value" as const,
+        fieldName: trigger.fieldName,
+        from: wordStartPos,
+        to: from,
+        filterText: trigger.valueFilter ?? "",
+        suggestions: [], // populated by the view via preloaded data
+        selectedIndex: 0,
+      };
+    }
+
+    return null;
   }
 
   return null;
@@ -142,25 +167,42 @@ function computeAutocompleteState(view: EditorView): AutocompleteState | null {
 
 // ── Insertion logic ────────────────────────────────────────────
 
-function applyFieldSuggestion(view: EditorView, suggestion: Suggestion): void {
+function applyFieldSuggestion(
+  view: EditorView,
+  suggestion: Suggestion,
+  preloaded?: Record<string, Suggestion[]>,
+): void {
   const state = autocompletePluginKey.getState(view.state) as AutocompleteState;
   if (!state.active || state.from == null || state.to == null) return;
 
   const fieldDef = resolveField(suggestion.value);
   const tr = view.state.tr;
 
-  // All field selections insert "field:" as text first.
-  // If the field has value suggestions, the trigger detection will
-  // automatically show the value dropdown on the next update cycle.
-  const fieldText = `${suggestion.value}:`;
+  // Determine if we should transition to value stage
+  const hasStaticValues = fieldDef?.hasValueSuggestions ?? false;
+  const hasPreloadedValues = !!(preloaded?.[suggestion.value]?.length);
+  const willShowValues =
+    hasStaticValues || hasPreloadedValues || isAsyncField(suggestion.value);
+
+  // For fields that accept free-text value input (async or preloaded),
+  // insert quotes around the cursor so multi-word values work naturally.
+  // Static-value fields (enums like access, status) don't need quotes
+  // since the user picks from a fixed list of single-word values.
+  const hasStaticOnly = fieldDef?.hasValueSuggestions && !isAsyncField(suggestion.value);
+  const useQuotes = willShowValues && !hasStaticOnly;
+
+  const fieldText = useQuotes
+    ? `${suggestion.value}:""`
+    : `${suggestion.value}:`;
   tr.replaceWith(state.from, state.to, searchSchema.text(fieldText));
 
-  const cursorPos = state.from + fieldText.length;
+  // Place cursor between quotes, or after colon
+  const cursorPos = useQuotes
+    ? state.from + fieldText.length - 1
+    : state.from + fieldText.length;
   tr.setSelection(TextSelection.create(tr.doc, cursorPos));
 
-  // If the field has value suggestions, set the autocomplete state
-  // directly to avoid a flicker (deactivate → reactivate).
-  if (fieldDef?.hasValueSuggestions) {
+  if (hasStaticValues || hasPreloadedValues) {
     if (isAsyncField(suggestion.value)) {
       // Async field: show loading state, suggestions fetched by the view
       tr.setMeta(autocompletePluginKey, {
@@ -175,7 +217,10 @@ function applyFieldSuggestion(view: EditorView, suggestion: Suggestion): void {
         selectedIndex: 0,
       });
     } else {
-      const valueSuggestions = getValueSuggestions(suggestion.value, "");
+      // Static or preloaded-only: populate synchronously
+      const valueSuggestions = hasStaticValues
+        ? getValueSuggestions(suggestion.value, "")
+        : (preloaded?.[suggestion.value] ?? []);
       tr.setMeta(autocompletePluginKey, {
         active: true,
         loading: false,
@@ -213,6 +258,16 @@ function applyValueSuggestion(
 
   const tr = view.state.tr;
 
+  // Extend replacement range to consume a trailing quote if present
+  // (inserted by applyFieldSuggestion for quoted value input)
+  let replaceTo = state.to!;
+  try {
+    const afterChar = view.state.doc.textBetween(replaceTo, replaceTo + 1);
+    if (afterChar === '"') replaceTo += 1;
+  } catch {
+    // At end of doc — no trailing quote
+  }
+
   if (fieldDef.insertBehavior === "sort-chip") {
     // Sort: parse direction from value (e.g., "-created_at" → desc)
     let sortField = suggestion.value;
@@ -227,14 +282,14 @@ function applyValueSuggestion(
       direction,
     });
 
-    tr.replaceWith(state.from, state.to, sortNode);
+    tr.replaceWith(state.from, replaceTo, sortNode);
     // Add a space after the chip and place cursor there
     const afterChip = state.from + sortNode.nodeSize;
     tr.insertText(" ", afterChip);
     tr.setSelection(TextSelection.create(tr.doc, afterChip + 1));
   } else if (fieldDef.insertBehavior === "field-value-chip") {
     // Extract prefix from the original text if present
-    const originalText = view.state.doc.textBetween(state.from, state.to);
+    const originalText = view.state.doc.textBetween(state.from, replaceTo);
     let prefix: string | null = null;
     if (originalText.startsWith("+") || originalText.startsWith("-")) {
       prefix = originalText.charAt(0);
@@ -244,11 +299,11 @@ function applyValueSuggestion(
       field: state.fieldName,
       value: suggestion.value,
       prefix,
-      quoted: false,
+      quoted: /\s/.test(suggestion.value),
       displayValue: isAsyncField(state.fieldName) ? suggestion.label : null,
     });
 
-    tr.replaceWith(state.from, state.to, chipNode);
+    tr.replaceWith(state.from, replaceTo, chipNode);
     const afterChip = state.from + chipNode.nodeSize;
     tr.insertText(" ", afterChip);
     tr.setSelection(TextSelection.create(tr.doc, afterChip + 1));
@@ -258,10 +313,14 @@ function applyValueSuggestion(
   view.dispatch(tr);
 }
 
-function applySuggestion(view: EditorView, suggestion: Suggestion): void {
+function applySuggestion(
+  view: EditorView,
+  suggestion: Suggestion,
+  preloaded?: Record<string, Suggestion[]>,
+): void {
   const state = autocompletePluginKey.getState(view.state) as AutocompleteState;
   if (state.stage === "field") {
-    applyFieldSuggestion(view, suggestion);
+    applyFieldSuggestion(view, suggestion, preloaded);
   } else {
     applyValueSuggestion(view, suggestion);
   }
@@ -410,7 +469,14 @@ function announceCount(region: HTMLElement, count: number): void {
 
 // ── Plugin ─────────────────────────────────────────────────────
 
-export function autocompletePlugin(): Plugin<AutocompleteState> {
+export interface AutocompletePluginOptions {
+  /** Returns preloaded suggestions derived from current search results. */
+  getPreloadedSuggestions?: () => Record<string, Suggestion[]>;
+}
+
+export function autocompletePlugin(
+  options: AutocompletePluginOptions = {},
+): Plugin<AutocompleteState> {
   return new Plugin<AutocompleteState>({
     key: autocompletePluginKey,
 
@@ -442,7 +508,9 @@ export function autocompletePlugin(): Plugin<AutocompleteState> {
         if (event.key === "/" && (event.metaKey || event.ctrlKey) && !state?.active) {
           event.preventDefault();
           const { from } = view.state.selection;
-          const suggestions = getAllFieldSuggestions();
+          const preloaded = options.getPreloadedSuggestions?.();
+          const extraFields = preloaded ? new Set(Object.keys(preloaded)) : undefined;
+          const suggestions = getAllFieldSuggestions(extraFields);
           view.dispatch(
             view.state.tr.setMeta(autocompletePluginKey, {
               active: true,
@@ -495,7 +563,11 @@ export function autocompletePlugin(): Plugin<AutocompleteState> {
             event.preventDefault();
             const suggestion = state.suggestions[state.selectedIndex];
             if (suggestion) {
-              applySuggestion(view, suggestion);
+              applySuggestion(
+                view,
+                suggestion,
+                options.getPreloadedSuggestions?.(),
+              );
             }
             return true;
           }
@@ -575,7 +647,11 @@ export function autocompletePlugin(): Plugin<AutocompleteState> {
         ) as AutocompleteState;
         const suggestion = state.suggestions[index];
         if (suggestion) {
-          applySuggestion(editorView, suggestion);
+          applySuggestion(
+            editorView,
+            suggestion,
+            options.getPreloadedSuggestions?.(),
+          );
         }
         editorView.focus();
       }
@@ -612,9 +688,11 @@ export function autocompletePlugin(): Plugin<AutocompleteState> {
 
         fetchTimer = setTimeout(async () => {
           try {
+            const preloaded = options.getPreloadedSuggestions?.();
             const suggestions = await fetchValueSuggestions(
               fieldName,
               filterText,
+              preloaded,
             );
             // Only apply if still relevant
             const currentState = autocompletePluginKey.getState(
@@ -657,13 +735,46 @@ export function autocompletePlugin(): Plugin<AutocompleteState> {
             view.state,
           ) as AutocompleteState;
 
+          // Build the set of preloaded field names for trigger detection
+          const preloaded = options.getPreloadedSuggestions?.();
+          const preloadedFieldNames = preloaded
+            ? new Set(Object.keys(preloaded))
+            : undefined;
+
           // If the plugin state is inactive, try to compute from text
           // (but not if explicitly dismissed — wait for next doc change)
           if (!pluginState.active) {
             lastFetchKey = "";
-            const computed =
-              pluginState.dismissed ? null : computeAutocompleteState(view);
+            const computed = pluginState.dismissed
+              ? null
+              : computeAutocompleteState(view, preloadedFieldNames);
             if (computed) {
+              // For preloaded-only fields, populate suggestions synchronously
+              if (
+                computed.stage === "value" &&
+                computed.fieldName &&
+                !isAsyncField(computed.fieldName) &&
+                computed.suggestions.length === 0
+              ) {
+                const preloadedValues = preloaded?.[computed.fieldName];
+                if (preloadedValues?.length) {
+                  const filter = computed.filterText.toLowerCase();
+                  computed.suggestions = filter
+                    ? preloadedValues.filter(
+                        (s) =>
+                          s.value.toLowerCase().startsWith(filter) ||
+                          s.label.toLowerCase().startsWith(filter),
+                      )
+                    : preloadedValues;
+                  if (computed.suggestions.length === 0) {
+                    // No matches from preloaded data — don't show dropdown
+                    dropdown.style.display = "none";
+                    editorDom.setAttribute("aria-expanded", "false");
+                    editorDom.removeAttribute("aria-activedescendant");
+                    return;
+                  }
+                }
+              }
               // Activate autocomplete
               view.dispatch(
                 view.state.tr.setMeta(autocompletePluginKey, computed),
@@ -690,13 +801,32 @@ export function autocompletePlugin(): Plugin<AutocompleteState> {
             !pluginState.fieldName ||
             !isAsyncField(pluginState.fieldName)
           ) {
-            const computed = computeAutocompleteState(view);
+            const computed = computeAutocompleteState(view, preloadedFieldNames);
             if (computed) {
               if (
                 computed.filterText !== pluginState.filterText ||
                 computed.stage !== pluginState.stage ||
                 computed.fieldName !== pluginState.fieldName
               ) {
+                // For preloaded-only fields, populate suggestions synchronously
+                if (
+                  computed.stage === "value" &&
+                  computed.fieldName &&
+                  !isAsyncField(computed.fieldName) &&
+                  computed.suggestions.length === 0
+                ) {
+                  const preloadedValues = preloaded?.[computed.fieldName];
+                  if (preloadedValues?.length) {
+                    const filter = computed.filterText.toLowerCase();
+                    computed.suggestions = filter
+                      ? preloadedValues.filter(
+                          (s) =>
+                            s.value.toLowerCase().startsWith(filter) ||
+                            s.label.toLowerCase().startsWith(filter),
+                        )
+                      : preloadedValues;
+                  }
+                }
                 const clamped = Math.min(
                   pluginState.selectedIndex,
                   Math.max(0, computed.suggestions.length - 1),

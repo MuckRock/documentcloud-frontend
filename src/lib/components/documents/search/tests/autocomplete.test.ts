@@ -121,6 +121,45 @@ describe("autocomplete-data", () => {
     it("returns empty for unrecognized prefix", () => {
       expect(getFieldSuggestions("xyz")).toEqual([]);
     });
+
+    it("matches data_* keys by display name", () => {
+      const extra = new Set(["data_Folder", "data_Category", "tag"]);
+      const results = getFieldSuggestions("f", extra);
+      const values = results.map((r) => r.value);
+      expect(values).toContain("data_Folder");
+      // "Category" doesn't start with "f"
+      expect(values).not.toContain("data_Category");
+    });
+
+    it("matches data_* keys by full field name too", () => {
+      const extra = new Set(["data_Folder"]);
+      const results = getFieldSuggestions("data", extra);
+      const values = results.map((r) => r.value);
+      expect(values).toContain("data_Folder");
+    });
+
+    it("does not include data_* keys without extra fields", () => {
+      const results = getFieldSuggestions("Folder");
+      expect(results).toEqual([]);
+    });
+
+    it("shows data_* label without data_ prefix", () => {
+      const extra = new Set(["data_Folder"]);
+      const results = getFieldSuggestions("Fol", extra);
+      const folder = results.find((r) => r.value === "data_Folder");
+      expect(folder?.label).toBe("Folder");
+    });
+
+    it("getAllFieldSuggestions includes data_* keys when provided", () => {
+      const extra = new Set(["data_Folder", "data_Category"]);
+      const results = getAllFieldSuggestions(extra);
+      const values = results.map((r) => r.value);
+      expect(values).toContain("data_Folder");
+      expect(values).toContain("data_Category");
+      // display name, not prefixed
+      const folder = results.find((r) => r.value === "data_Folder");
+      expect(folder?.label).toBe("Folder");
+    });
   });
 
   // ── Value suggestions ───────────────────────────────────────
@@ -220,6 +259,14 @@ describe("autocomplete-data", () => {
     it("returns undefined for unknown fields", () => {
       expect(resolveField("nonexistent")).toBeUndefined();
     });
+
+    it("returns synthetic FieldDef for data_* fields", () => {
+      const field = resolveField("data_Folder");
+      expect(field).toBeDefined();
+      expect(field!.name).toBe("data_Folder");
+      expect(field!.label).toBe("Folder");
+      expect(field!.insertBehavior).toBe("field-value-chip");
+    });
   });
 
   // ── Trigger detection ───────────────────────────────────────
@@ -307,8 +354,36 @@ describe("autocomplete-data", () => {
       expect(detectTrigger("mueller ").stage).toBeNull();
     });
 
-    it("does not trigger for data_ prefix (no suggestions)", () => {
+    it("does not trigger for data_ prefix without preloaded data", () => {
       expect(detectTrigger("data_Folder:").stage).toBeNull();
+    });
+
+    it("triggers value stage for data_ prefix with preloaded data", () => {
+      const preloaded = new Set(["data_Folder"]);
+      const result = detectTrigger("data_Folder:", preloaded);
+      expect(result.stage).toBe("value");
+      expect(result.fieldName).toBe("data_Folder");
+      expect(result.valueFilter).toBe("");
+    });
+
+    it("triggers value stage for tag: with preloaded data", () => {
+      const preloaded = new Set(["tag"]);
+      const result = detectTrigger("tag:", preloaded);
+      expect(result.stage).toBe("value");
+      expect(result.fieldName).toBe("tag");
+      expect(result.valueFilter).toBe("");
+    });
+
+    it("passes filter text for preloaded tag field", () => {
+      const preloaded = new Set(["tag"]);
+      const result = detectTrigger("tag:imp", preloaded);
+      expect(result.stage).toBe("value");
+      expect(result.fieldName).toBe("tag");
+      expect(result.valueFilter).toBe("imp");
+    });
+
+    it("does not trigger for tag: without preloaded data", () => {
+      expect(detectTrigger("tag:").stage).toBeNull();
     });
 
     // Phase 6: async entity fields now trigger value stage
@@ -342,6 +417,54 @@ describe("autocomplete-data", () => {
       expect(result.stage).toBe("value");
       expect(result.fieldName).toBe("user");
       expect(result.valueFilter).toBe("ali");
+    });
+
+    // Quoted value input
+    it("detects quoted value pattern for user field", () => {
+      const result = detectTrigger('user:"Alice');
+      expect(result.stage).toBe("value");
+      expect(result.fieldName).toBe("user");
+      expect(result.valueFilter).toBe("Alice");
+    });
+
+    it("detects quoted value with spaces", () => {
+      const preloaded = new Set(["data_Book"]);
+      const result = detectTrigger('data_Book:"Infinite Jest', preloaded);
+      expect(result.stage).toBe("value");
+      expect(result.fieldName).toBe("data_Book");
+      expect(result.valueFilter).toBe("Infinite Jest");
+    });
+
+    it("detects empty quoted value", () => {
+      const result = detectTrigger('user:"');
+      expect(result.stage).toBe("value");
+      expect(result.fieldName).toBe("user");
+      expect(result.valueFilter).toBe("");
+    });
+
+    it("returns correct triggerStart for quoted value", () => {
+      const result = detectTrigger('some text user:"Alice');
+      expect(result.triggerStart).toBe(10); // "user:" starts at index 10
+    });
+
+    it("returns triggerStart for unquoted patterns", () => {
+      const result = detectTrigger("some text access:");
+      expect(result.triggerStart).toBe(10);
+    });
+
+    it("handles +/- prefix in quoted value", () => {
+      const result = detectTrigger('+user:"Alice');
+      expect(result.stage).toBe("value");
+      expect(result.fieldName).toBe("user");
+      expect(result.valueFilter).toBe("Alice");
+    });
+
+    it("detects quoted value for tag with preloaded data", () => {
+      const preloaded = new Set(["tag"]);
+      const result = detectTrigger('tag:"important stuff', preloaded);
+      expect(result.stage).toBe("value");
+      expect(result.fieldName).toBe("tag");
+      expect(result.valueFilter).toBe("important stuff");
     });
   });
 
@@ -403,9 +526,67 @@ describe("autocomplete-data", () => {
       expect(results).toHaveLength(2);
     });
 
-    it("returns empty for non-async fields", async () => {
+    it("returns empty for non-async fields without preloaded data", async () => {
       const results = await fetchValueSuggestions("access", "p");
       expect(results).toEqual([]);
+    });
+
+    it("returns preloaded suggestions for tag field", async () => {
+      const preloaded = {
+        tag: [
+          { label: "important", value: "important" },
+          { label: "review", value: "review" },
+        ],
+      };
+      const results = await fetchValueSuggestions("tag", "", preloaded);
+      expect(results).toHaveLength(2);
+      expect(results[0].value).toBe("important");
+    });
+
+    it("filters preloaded suggestions by prefix", async () => {
+      const preloaded = {
+        tag: [
+          { label: "important", value: "important" },
+          { label: "review", value: "review" },
+        ],
+      };
+      const results = await fetchValueSuggestions("tag", "imp", preloaded);
+      expect(results).toHaveLength(1);
+      expect(results[0].value).toBe("important");
+    });
+
+    it("returns preloaded suggestions for data_* fields", async () => {
+      const preloaded = {
+        data_Folder: [
+          { label: "Legal", value: "Legal" },
+          { label: "Finance", value: "Finance" },
+        ],
+      };
+      const results = await fetchValueSuggestions(
+        "data_Folder",
+        "",
+        preloaded,
+      );
+      expect(results).toHaveLength(2);
+    });
+
+    it("uses preloaded as default for async fields with empty filter", async () => {
+      const preloaded = {
+        user: [{ label: "Preloaded User", value: "999" }],
+      };
+      const results = await fetchValueSuggestions("user", "", preloaded);
+      expect(results).toHaveLength(1);
+      expect(results[0].label).toBe("Preloaded User");
+    });
+
+    it("falls back to API for async fields with filter text", async () => {
+      const preloaded = {
+        user: [{ label: "Preloaded User", value: "999" }],
+      };
+      const results = await fetchValueSuggestions("user", "Ali", preloaded);
+      // Should call API, not return preloaded
+      expect(results).toHaveLength(2);
+      expect(results[0].label).toBe("Alice Smith");
     });
   });
 

@@ -232,23 +232,59 @@ export function resolveFieldName(name: string): string {
   return FIELD_ALIASES[name] ?? name;
 }
 
-/** Look up a field definition by name (handles aliases). */
+/** Look up a field definition by name (handles aliases).
+ *  Returns a synthetic FieldDef for data_* fields. */
 export function resolveField(name: string): FieldDef | undefined {
   const canonical = resolveFieldName(name);
-  return FIELDS.find((f) => f.name === canonical);
+  const found = FIELDS.find((f) => f.name === canonical);
+  if (found) return found;
+
+  // Synthetic def for data_* fields
+  if (canonical.startsWith("data_")) {
+    return {
+      name: canonical,
+      label: canonical.replace(/^data_/, ""),
+      description: `Data field: ${canonical.replace(/^data_/, "")}`,
+      insertBehavior: "field-value-chip",
+      hasValueSuggestions: false, // suggestions come from preloaded data
+    };
+  }
+
+  return undefined;
 }
 
-/** Get all field suggestions (unfiltered). Used when opening via shortcut. */
-export function getAllFieldSuggestions(): Suggestion[] {
-  return FIELDS.map((f) => ({
+/** Get all field suggestions (unfiltered). Used when opening via shortcut.
+ *  When `extraFields` is provided, also includes data_* keys. */
+export function getAllFieldSuggestions(
+  extraFields?: Set<string>,
+): Suggestion[] {
+  const results = FIELDS.map((f) => ({
     label: f.label,
     value: f.name,
     description: f.description,
   }));
+
+  if (extraFields) {
+    for (const fieldName of extraFields) {
+      if (!fieldName.startsWith("data_")) continue;
+      const displayName = fieldName.replace(/^data_/, "");
+      results.push({
+        label: displayName,
+        value: fieldName,
+        description: "Data field",
+      });
+    }
+  }
+
+  return results;
 }
 
-/** Get field suggestions matching a partial input. */
-export function getFieldSuggestions(filter: string): Suggestion[] {
+/** Get field suggestions matching a partial input.
+ *  When `extraFields` is provided, also matches data_* keys from preloaded data. */
+export function getFieldSuggestions(
+  filter: string,
+  extraFields?: Set<string>,
+): Suggestion[] {
   if (!filter) return [];
 
   const lower = filter.toLowerCase();
@@ -281,6 +317,25 @@ export function getFieldSuggestions(filter: string): Suggestion[] {
     }
   }
 
+  // Match data_* keys from preloaded data by their display name
+  if (extraFields) {
+    for (const fieldName of extraFields) {
+      if (!fieldName.startsWith("data_")) continue;
+      if (results.some((r) => r.value === fieldName)) continue;
+      const displayName = fieldName.replace(/^data_/, "");
+      if (
+        displayName.toLowerCase().startsWith(lower) ||
+        fieldName.toLowerCase().startsWith(lower)
+      ) {
+        results.push({
+          label: displayName,
+          value: fieldName,
+          description: `Data field`,
+        });
+      }
+    }
+  }
+
   return results;
 }
 
@@ -307,7 +362,17 @@ export function getValueSuggestions(
  *
  * Returns the stage ('field', 'value', or null) and relevant metadata.
  */
-export function detectTrigger(textBeforeCursor: string): {
+/**
+ * Analyze text before the cursor to determine the autocomplete trigger state.
+ *
+ * @param preloadedFields - Set of field names that have preloaded suggestions
+ *   from search results. Fields in this set trigger value-stage autocomplete
+ *   even if they don't have static or API-backed suggestions (e.g. tag, data_*).
+ */
+export function detectTrigger(
+  textBeforeCursor: string,
+  preloadedFields?: Set<string>,
+): {
   stage: "field" | "value" | null;
   /** For field stage: the partial text the user has typed */
   fieldFilter?: string;
@@ -315,12 +380,45 @@ export function detectTrigger(textBeforeCursor: string): {
   fieldName?: string;
   /** For value stage: the partial value text after the colon */
   valueFilter?: string;
+  /** Character offset in textBeforeCursor where the trigger expression starts */
+  triggerStart?: number;
 } {
   if (!textBeforeCursor) return { stage: null };
+
+  // Check for quoted value pattern: field:"value text
+  // This allows spaces inside the value while maintaining autocomplete.
+  const quotedMatch = textBeforeCursor.match(
+    /([+-]?[a-zA-Z_][a-zA-Z0-9_]*):\"([^"]*)$/,
+  );
+  if (quotedMatch) {
+    const rawField = quotedMatch[1].replace(/^[+-]/, "");
+    const canonical = resolveFieldName(rawField);
+    const valueFilter = quotedMatch[2];
+    const triggerStart = quotedMatch.index!;
+    const field = FIELDS.find((f) => f.name === canonical);
+
+    if (field && field.hasValueSuggestions) {
+      return { stage: "value", fieldName: canonical, valueFilter, triggerStart };
+    }
+    if (field && preloadedFields?.has(canonical)) {
+      return { stage: "value", fieldName: canonical, valueFilter, triggerStart };
+    }
+    if (!field && preloadedFields?.has(rawField)) {
+      return {
+        stage: "value",
+        fieldName: rawField,
+        valueFilter,
+        triggerStart,
+      };
+    }
+    if (field) return { stage: null };
+    return { stage: null };
+  }
 
   // Find the current "word" — text from last whitespace (or start) to end
   const lastSpace = textBeforeCursor.lastIndexOf(" ");
   const word = textBeforeCursor.substring(lastSpace + 1);
+  const triggerStart = lastSpace + 1;
 
   if (!word) return { stage: null };
 
@@ -339,10 +437,31 @@ export function detectTrigger(textBeforeCursor: string): {
         stage: "value",
         fieldName: canonical,
         valueFilter: valueText,
+        triggerStart,
       };
     }
 
-    // Field exists but has no value suggestions → no autocomplete
+    // Field exists but no static/API suggestions — check preloaded data
+    if (field && preloadedFields?.has(canonical)) {
+      return {
+        stage: "value",
+        fieldName: canonical,
+        valueFilter: valueText,
+        triggerStart,
+      };
+    }
+
+    // Unknown field with preloaded data (data_* fields)
+    if (!field && preloadedFields?.has(fieldName)) {
+      return {
+        stage: "value",
+        fieldName: fieldName,
+        valueFilter: valueText,
+        triggerStart,
+      };
+    }
+
+    // Field exists but no suggestions at all → no autocomplete
     if (field) return { stage: null };
 
     // Unknown field — could be data_* or typo — no autocomplete
@@ -351,7 +470,7 @@ export function detectTrigger(textBeforeCursor: string): {
 
   // No colon — check if it looks like a field name (1+ alphanumeric chars)
   if (/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(word) && word.length >= 1) {
-    return { stage: "field", fieldFilter: word };
+    return { stage: "field", fieldFilter: word, triggerStart };
   }
 
   return { stage: null };
@@ -366,12 +485,38 @@ export function isAsyncField(fieldName: string): boolean {
   return ASYNC_FIELDS.has(resolveFieldName(fieldName));
 }
 
-/** Fetch value suggestions from the API for an async field. */
+/**
+ * Fetch value suggestions from the API for an async field.
+ *
+ * When `preloaded` is provided and `filter` is empty, returns the preloaded
+ * suggestions for the field (derived from current search results) without
+ * making an API call. Falls back to the API when the user types a filter
+ * or when no preloaded data exists for the field.
+ */
 export async function fetchValueSuggestions(
   fieldName: string,
   filter: string,
+  preloaded?: Record<string, Suggestion[]>,
 ): Promise<Suggestion[]> {
   const canonical = resolveFieldName(fieldName);
+
+  // Use preloaded suggestions when available and no API endpoint exists
+  // for this field (tag, data_* fields). For API-backed fields, use
+  // preloaded only when filter is empty (as a fast default).
+  if (preloaded?.[canonical]?.length) {
+    if (!ASYNC_FIELDS.has(canonical)) {
+      // Preloaded-only field: always use preloaded data, with filtering
+      if (!filter) return preloaded[canonical];
+      const lower = filter.toLowerCase();
+      return preloaded[canonical].filter(
+        (s) =>
+          s.value.toLowerCase().startsWith(lower) ||
+          s.label.toLowerCase().startsWith(lower),
+      );
+    }
+    // API-backed field with empty filter: use preloaded as fast default
+    if (!filter) return preloaded[canonical];
+  }
 
   switch (canonical) {
     case "user": {
