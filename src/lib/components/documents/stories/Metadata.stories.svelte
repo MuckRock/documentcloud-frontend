@@ -29,3 +29,4 @@
 </Template>
 
 <Story name="Metadata" {args} />
+<Story name="Signed out" {args} parameters={{ signedOut: true }} />
