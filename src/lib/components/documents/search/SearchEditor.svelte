@@ -48,12 +48,18 @@
   let editorRef: HTMLDivElement;
   let view: EditorView;
 
+  /** Last query emitted via the change event, to avoid redundant dispatches. */
+  let lastEmittedQuery = initialQuery;
+
   // When the initialQuery prop changes externally (e.g. route navigation),
-  // update the editor contents to match.
+  // update the editor contents to match — but NOT while the user is actively
+  // typing (editor has focus), to avoid disrupting their input.
   let lastInitialQuery = initialQuery;
   $: if (view && initialQuery !== lastInitialQuery) {
     lastInitialQuery = initialQuery;
-    updateQuery(initialQuery);
+    if (!view.hasFocus()) {
+      updateQuery(initialQuery);
+    }
   }
 
   /** Tiny plugin that toggles an `is-empty` class on the editor DOM. */
@@ -81,6 +87,21 @@
    */
   function createDoc(query: string) {
     return deserialize(query);
+  }
+
+  /** Collect a fingerprint of all atom nodes (chips) in a document.
+   *  Only includes attributes that affect the serialized query —
+   *  cosmetic attrs like displayValue are excluded. */
+  function atomFingerprint(doc: import("prosemirror-model").Node): string {
+    const parts: string[] = [];
+    doc.descendants((node) => {
+      if (node.isAtom && node.isInline) {
+        // Exclude displayValue — it's cosmetic and doesn't affect the query
+        const { displayValue, ...queryAttrs } = node.attrs;
+        parts.push(`${node.type.name}:${JSON.stringify(queryAttrs)}`);
+      }
+    });
+    return parts.join("|");
   }
 
   /** Serialize the current PM document to a Lucene query string. */
@@ -125,7 +146,26 @@
       ],
     });
 
-    view = new EditorView(editorRef, { state, nodeViews });
+    view = new EditorView(editorRef, {
+      state,
+      nodeViews,
+      dispatchTransaction(tr) {
+        const oldDoc = view.state.doc;
+        view.updateState(view.state.apply(tr));
+        if (tr.docChanged) {
+          const q = serialize(view.state.doc);
+          if (q !== lastEmittedQuery) {
+            lastEmittedQuery = q;
+            // Always emit change so pending debounce timers can be cancelled.
+            // The `structural` flag tells the consumer whether to reload results
+            // (chip insert/remove) or just cancel any pending reload (text typing).
+            const structural =
+              atomFingerprint(oldDoc) !== atomFingerprint(view.state.doc);
+            dispatch("change", { q, structural });
+          }
+        }
+      },
+    });
     enrichChips(view);
   });
 

@@ -286,12 +286,14 @@
     fixResults(documents, $deleted, $edited, pending_ids, $finished),
   );
   let preloadedSuggestions: Record<string, Suggestion[]> = $state({});
+  let lastResults: DocumentResults | null = $state(null);
   // Update preloaded suggestions when search results resolve
   $effect(() => {
     let stale = false;
     searchResults.then((r) => {
       if (!stale) {
         preloadedSuggestions = extractSuggestions(r.results ?? []);
+        lastResults = r;
       }
     });
     return () => { stale = true };
@@ -343,6 +345,20 @@
           {/if}
         </svelte:fragment>
         {#await searchResults}
+          {#if lastResults}
+            <ResultsList
+              results={lastResults.results}
+              next={lastResults.next}
+              count={lastResults.count}
+              auto
+            >
+              {#snippet start()}
+                {#if $me && !canUploadFiles($me)}
+                  <Unverified user={$me} />
+                {/if}
+              {/snippet}
+            </ResultsList>
+          {:else}
           <Empty icon={Hourglass24}>{$_(uiText.loading)}</Empty>
         {:then documentsResults}
           {#if !query && !documentsResults.results?.length}
