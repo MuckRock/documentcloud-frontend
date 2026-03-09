@@ -118,7 +118,7 @@ function computeAutocompleteState(
         from: wordStartPos,
         to: from,
         filterText: trigger.valueFilter ?? "",
-        suggestions: [],
+        suggestions: [], // may be populated with preloaded data by the view
         selectedIndex: 0,
       };
     }
@@ -361,7 +361,7 @@ function renderDropdown(
     loadingEl.textContent = "Loading\u2026";
     dropdown.appendChild(loadingEl);
     dropdown.style.display = "block";
-    if (suggestions.length === 0) return;
+    return;
   }
 
   suggestions.forEach((suggestion, index) => {
@@ -399,6 +399,13 @@ function renderDropdown(
 
     dropdown.appendChild(item);
   });
+
+  if (loading) {
+    const loadingEl = document.createElement("div");
+    loadingEl.className = "search-ac-loading";
+    loadingEl.textContent = "Loading\u2026";
+    dropdown.appendChild(loadingEl);
+  }
 
   dropdown.style.display = "block";
 
@@ -603,6 +610,9 @@ export function autocompletePlugin(
       let fetchTimer: ReturnType<typeof setTimeout> | null = null;
       let abortController: AbortController | null = null;
       let lastFetchKey = "";
+      /** Cache of last successfully fetched async suggestions, keyed by field. */
+      let lastAsyncResults: { field: string; suggestions: Suggestion[] } | null =
+        null;
 
       // Dismiss on click outside editor and dropdown
       function onDocumentMousedown(e: MouseEvent) {
@@ -698,6 +708,8 @@ export function autocompletePlugin(
             const currentState = autocompletePluginKey.getState(
               view.state,
             ) as AutocompleteState;
+            // Cache results for optimistic display during future loads
+            lastAsyncResults = { field: fieldName, suggestions };
             if (
               currentState.active &&
               currentState.fieldName === fieldName &&
@@ -749,25 +761,33 @@ export function autocompletePlugin(
               ? null
               : computeAutocompleteState(view, preloadedFieldNames);
             if (computed) {
-              // For preloaded-only fields, populate suggestions synchronously
+              // Populate interim suggestions synchronously when available,
+              // using cached async results (preferred) or preloaded data
               if (
                 computed.stage === "value" &&
                 computed.fieldName &&
-                !isAsyncField(computed.fieldName) &&
                 computed.suggestions.length === 0
               ) {
-                const preloadedValues = preloaded?.[computed.fieldName];
-                if (preloadedValues?.length) {
+                const cachedValues =
+                  lastAsyncResults?.field === computed.fieldName
+                    ? lastAsyncResults.suggestions
+                    : null;
+                const interimValues =
+                  cachedValues ?? preloaded?.[computed.fieldName];
+                if (interimValues?.length) {
                   const filter = computed.filterText.toLowerCase();
                   computed.suggestions = filter
-                    ? preloadedValues.filter(
+                    ? interimValues.filter(
                         (s) =>
                           s.value.toLowerCase().startsWith(filter) ||
                           s.label.toLowerCase().startsWith(filter),
                       )
-                    : preloadedValues;
-                  if (computed.suggestions.length === 0) {
-                    // No matches from preloaded data — don't show dropdown
+                    : interimValues;
+                  if (
+                    computed.suggestions.length === 0 &&
+                    !isAsyncField(computed.fieldName)
+                  ) {
+                    // No matches from interim data and no async fetch coming
                     dropdown.style.display = "none";
                     editorDom.setAttribute("aria-expanded", "false");
                     editorDom.removeAttribute("aria-activedescendant");
@@ -808,23 +828,27 @@ export function autocompletePlugin(
                 computed.stage !== pluginState.stage ||
                 computed.fieldName !== pluginState.fieldName
               ) {
-                // For preloaded-only fields, populate suggestions synchronously
+                // Populate interim suggestions using cached or preloaded data
                 if (
                   computed.stage === "value" &&
                   computed.fieldName &&
-                  !isAsyncField(computed.fieldName) &&
                   computed.suggestions.length === 0
                 ) {
-                  const preloadedValues = preloaded?.[computed.fieldName];
-                  if (preloadedValues?.length) {
+                  const cachedValues =
+                    lastAsyncResults?.field === computed.fieldName
+                      ? lastAsyncResults.suggestions
+                      : null;
+                  const interimValues =
+                    cachedValues ?? preloaded?.[computed.fieldName];
+                  if (interimValues?.length) {
                     const filter = computed.filterText.toLowerCase();
                     computed.suggestions = filter
-                      ? preloadedValues.filter(
+                      ? interimValues.filter(
                           (s) =>
                             s.value.toLowerCase().startsWith(filter) ||
                             s.label.toLowerCase().startsWith(filter),
                         )
-                      : preloadedValues;
+                      : interimValues;
                   }
                 }
                 const clamped = Math.min(

@@ -385,9 +385,13 @@ export function detectTrigger(
 } {
   if (!textBeforeCursor) return { stage: null };
 
+  // Normalize non-breaking spaces (\u00A0) to regular spaces — browsers
+  // insert &nbsp; in contenteditable to prevent whitespace collapsing.
+  const text = textBeforeCursor.replace(/\u00A0/g, " ");
+
   // Check for quoted value pattern: field:"value text
   // This allows spaces inside the value while maintaining autocomplete.
-  const quotedMatch = textBeforeCursor.match(
+  const quotedMatch = text.match(
     /([+-]?[a-zA-Z_][a-zA-Z0-9_]*):\"([^"]*)$/,
   );
   if (quotedMatch) {
@@ -416,8 +420,8 @@ export function detectTrigger(
   }
 
   // Find the current "word" — text from last whitespace (or start) to end
-  const lastSpace = textBeforeCursor.lastIndexOf(" ");
-  const word = textBeforeCursor.substring(lastSpace + 1);
+  const lastSpace = text.lastIndexOf(" ");
+  const word = text.substring(lastSpace + 1);
   const triggerStart = lastSpace + 1;
 
   if (!word) return { stage: null };
@@ -536,7 +540,9 @@ export async function fetchValueSuggestions(
       }));
     }
     case "project": {
-      const resp = await listProjects({ title__istartswith: filter });
+      const params: Record<string, string> = {};
+      if (filter) params.query = filter;
+      const resp = await listProjects(params);
       if (!resp.data) return [];
       return resp.data.results.map((p) => ({
         label: p.title,
