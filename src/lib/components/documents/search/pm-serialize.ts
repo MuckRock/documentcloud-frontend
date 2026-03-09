@@ -21,7 +21,12 @@ export function serialize(docOrFragment: ProseMirrorNode | Fragment): string {
     if (node.isText) {
       // Normalize non-breaking spaces (\u00A0) that ProseMirror inserts
       // in contenteditable to prevent browser space collapsing
-      result += (node.text ?? "").replace(/\u00A0/g, " ");
+      const text = (node.text ?? "").replace(/\u00A0/g, " ");
+      // Ensure a space between a preceding chip and text
+      if (lastWasAtom && text.length > 0 && !text.startsWith(" ")) {
+        result += " ";
+      }
+      result += text;
       lastWasAtom = false;
       return;
     }
@@ -31,8 +36,8 @@ export function serialize(docOrFragment: ProseMirrorNode | Fragment): string {
       node.type.name === "range" ||
       node.type.name === "sort";
 
-    // Ensure a space between adjacent atom nodes
-    if (isAtom && lastWasAtom) {
+    // Ensure a space between adjacent nodes and chips
+    if (isAtom && result.length > 0 && !result.endsWith(" ")) {
       result += " ";
     }
 
