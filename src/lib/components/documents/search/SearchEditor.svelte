@@ -21,7 +21,11 @@
   import { autocompletePlugin } from "./plugins/autocomplete";
   import "./plugins/autocomplete.css";
   import { nodeViews } from "./nodeviews";
-  import { isAsyncField, fetchDisplayNames } from "./autocomplete-data";
+  import {
+    isAsyncField,
+    fetchDisplayNames,
+    type Suggestion,
+  } from "./autocomplete-data";
 
   const dispatch = createEventDispatcher();
 
@@ -32,6 +36,14 @@
     field: string;
     label: string;
   }> = [];
+
+  /**
+   * Preloaded suggestions derived from current search results.
+   * Keyed by canonical field name (e.g. "user", "organization").
+   * Used as default suggestions when the autocomplete filter is empty,
+   * avoiding an API call and showing contextually relevant values.
+   */
+  export let preloadedSuggestions: Record<string, Suggestion[]> = {};
 
   let editorRef: HTMLDivElement;
   let view: EditorView;
@@ -89,7 +101,9 @@
       doc: createDoc(initialQuery),
       plugins: [
         history(),
-        autocompletePlugin(),
+        autocompletePlugin({
+          getPreloadedSuggestions: () => preloadedSuggestions,
+        }),
         keymap({
           "Mod-z": undo,
           "Mod-y": redo,

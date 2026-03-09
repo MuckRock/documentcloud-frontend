@@ -19,7 +19,9 @@ export function serialize(docOrFragment: ProseMirrorNode | Fragment): string {
 
   const processNode = (node: ProseMirrorNode) => {
     if (node.isText) {
-      result += node.text ?? "";
+      // Normalize non-breaking spaces (\u00A0) that ProseMirror inserts
+      // in contenteditable to prevent browser space collapsing
+      result += (node.text ?? "").replace(/\u00A0/g, " ");
       lastWasAtom = false;
       return;
     }

@@ -12,14 +12,20 @@
   import SearchEditor from "../documents/search/SearchEditor.svelte";
   import VisibleFields from "../documents/VisibleFields.svelte";
   import type { Nullable, Project } from "$lib/api/types";
+  import type { Suggestion } from "../documents/search/autocomplete-data";
   import { remToPx } from "$lib/utils/layout";
 
   interface Props {
     query?: string;
     project?: Nullable<Project>;
+    preloadedSuggestions?: Record<string, Suggestion[]>;
   }
 
-  let { query = "", project = null }: Props = $props();
+  let {
+    query = "",
+    project = null,
+    preloadedSuggestions = {}
+  }: Props = $props();
 
   let headerToolbarWidth: number = $state(800);
 
@@ -41,6 +47,7 @@
       <SearchEditor
         initialQuery={query}
         {contextChips}
+        {preloadedSuggestions}
         on:submit={handleSearchSubmit}
       />
       <div class="margin-xs" class:hide={headerToolbarWidth < remToPx(38)}>
