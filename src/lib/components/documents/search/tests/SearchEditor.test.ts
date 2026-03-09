@@ -248,6 +248,35 @@ describe("SearchEditor", () => {
       expect(editor.getAttribute("aria-expanded")).toBe("true");
     });
 
+    it("activates autocomplete after chip with one space", async () => {
+      const { component } = await renderEditor();
+      const view = component.getView();
+
+      // Insert a chip + trailing non-breaking space, matching real browser
+      // contenteditable behavior where &nbsp; prevents whitespace collapsing.
+      const chipNode = view.state.schema.nodes["field-value"].create({
+        field: "user",
+        value: "100",
+        prefix: null,
+        quoted: false,
+        displayValue: null,
+      });
+      let tr = view.state.tr;
+      tr.replaceWith(1, 1, chipNode);
+      const afterChip = 1 + chipNode.nodeSize;
+      tr.insertText("\u00A0", afterChip);
+      tr.setSelection(TextSelection.create(tr.doc, afterChip + 1));
+      view.dispatch(tr);
+
+      // Type a field prefix
+      await act(() => typeInEditor(view, "acc"));
+
+      const state = getACState(view);
+      expect(state.active).toBe(true);
+      expect(state.stage).toBe("field");
+      expect(state.suggestions.some((s) => s.value === "access")).toBe(true);
+    });
+
     it("sets aria-activedescendant to the selected option", async () => {
       const { component, editor } = await renderEditor();
       const view = component.getView();
