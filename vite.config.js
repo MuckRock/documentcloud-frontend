@@ -60,7 +60,7 @@ export default defineConfig(({ mode }) => ({
 
   test: {
     setupFiles: ["./vitest-setup.js"],
-    include: ["src/**/*.{test,spec}.{js,ts}"],
+    include: ["src/**/*.{test,spec}.{js,ts}", "src/**/*.{test,spec}.svelte.ts"],
     exclude: [
       ...configDefaults.exclude,
       "storybook-static",
