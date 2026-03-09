@@ -391,9 +391,9 @@ export function detectTrigger(
     /([+-]?[a-zA-Z_][a-zA-Z0-9_]*):\"([^"]*)$/,
   );
   if (quotedMatch) {
-    const rawField = quotedMatch[1].replace(/^[+-]/, "");
+    const rawField = quotedMatch[1]!.replace(/^[+-]/, "");
     const canonical = resolveFieldName(rawField);
-    const valueFilter = quotedMatch[2];
+    const valueFilter = quotedMatch[2]!;
     const triggerStart = quotedMatch.index!;
     const field = FIELDS.find((f) => f.name === canonical);
 
