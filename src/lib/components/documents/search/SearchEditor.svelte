@@ -11,7 +11,7 @@
   import { keymap } from "prosemirror-keymap";
   import { baseKeymap } from "prosemirror-commands";
   import { history, undo, redo } from "prosemirror-history";
-  import { Search16 } from "svelte-octicons";
+  import { Search16, Stop16 } from "svelte-octicons";
   import Button from "../../common/Button.svelte";
   import { searchSchema } from "./schema";
   import { serialize } from "./pm-serialize";
@@ -26,6 +26,7 @@
     fetchDisplayNames,
     type Suggestion,
   } from "./autocomplete-data";
+  import { validateQuery } from "./parse";
 
   const dispatch = createEventDispatcher();
 
@@ -47,6 +48,9 @@
 
   let editorRef: HTMLDivElement;
   let view: EditorView;
+
+  /** Whether the current query is valid Lucene syntax. */
+  let queryValid = true;
 
   /** Last query emitted via the change event, to avoid redundant dispatches. */
   let lastEmittedQuery = initialQuery;
@@ -114,6 +118,7 @@
 
   function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
+    if (!queryValid) return;
     const query = getQuery();
     dispatch("submit", { "q": query });
   }
@@ -156,6 +161,7 @@
         view.updateState(view.state.apply(tr));
         if (tr.docChanged) {
           const q = serialize(view.state.doc);
+          queryValid = validateQuery(q).isValid;
           if (q !== lastEmittedQuery) {
             lastEmittedQuery = q;
             // Only emit change for structural changes (chip insert/remove).
@@ -320,8 +326,12 @@
 </script>
 
 <form class="search-editor-container" on:submit={handleSubmit}>
-  <div class="search-editor-status">
-    <Search16 />
+  <div class="search-editor-status" class:invalid={!queryValid}>
+    {#if queryValid}
+      <Search16 />
+    {:else}
+      <Stop16 />
+    {/if}
   </div>
   {#each contextChips as chip}
     <span class="search-chip search-field-value context-chip">
@@ -330,7 +340,7 @@
     </span>
   {/each}
   <div bind:this={editorRef} class="prosemirror-editor" role="textbox"></div>
-  <Button type="submit" mode="primary" ghost minW={false}>Search</Button>
+  <Button type="submit" mode="primary" ghost minW={false} disabled={!queryValid}>Search</Button>
 </form>
 
 <style>
@@ -352,6 +362,10 @@
     flex: 0 0 auto;
     display: flex;
     align-items: center;
+  }
+
+  .search-editor-status.invalid {
+    fill: var(--red-3);
   }
 
   .context-chip {
@@ -434,6 +448,13 @@
 
   :global(.search-sort) {
     background-color: #f0f5ff;
+  }
+
+  /* Wavy underline for syntax errors */
+  :global(.search-syntax-error) {
+    text-decoration-line: underline;
+    text-decoration-style: wavy;
+    text-decoration-color: var(--red-3);
   }
 
   /* Selected chip — ProseMirror adds this class when an atom node is selected */
