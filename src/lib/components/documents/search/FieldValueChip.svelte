@@ -19,9 +19,20 @@
   export let boost: number | null = null;
   export let quoted: boolean = false;
 
+  /** Format a value for display. ISO dates become locale strings. */
+  function displayBound(v: string): string {
+    if (v.includes("-")) {
+      const date = new Date(v);
+      if (!isNaN(date.getTime())) {
+        return date.toLocaleDateString();
+      }
+    }
+    return v;
+  }
+
   $: isEntity = ENTITY_FIELDS.has(field);
   $: showLoading = isEntity && !displayValue;
-  $: label = displayValue ?? value;
+  $: label = displayValue ?? displayBound(value);
 </script>
 
 <span class="search-chip search-field-value">

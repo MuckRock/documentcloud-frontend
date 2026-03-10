@@ -99,6 +99,9 @@ The range builder replaces the standard suggestion list in the dropdown. Rough s
 
 Keyboard flow: arrow keys move through shortcuts. Tab moves to the input fields. Enter on a shortcut inserts it; Enter in the inputs (or clicking Insert) builds the range from the entered values.
 
+We should use the built-in browser datepicker for the State Date and End Date fields; this is provided on the `date` type input. See more in MDN docs:
+https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/date
+
 ## Files to Modify
 
 | File | Change |

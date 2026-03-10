@@ -422,6 +422,459 @@ describe("SearchEditor", () => {
     });
   });
 
+  describe("range autocomplete", () => {
+    it("selecting created_at from field suggestions enters range stage", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      // Type to get created_at suggestion
+      await act(() => typeInEditor(view, "created"));
+
+      let state = getACState(view);
+      expect(state.active).toBe(true);
+      expect(state.stage).toBe("field");
+      expect(state.suggestions.some((s) => s.value === "created_at")).toBe(true);
+
+      // Select created_at with Enter
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+
+      state = getACState(view);
+      expect(state.active).toBe(true);
+      expect(state.stage).toBe("range");
+      expect(state.fieldName).toBe("created_at");
+    });
+
+    it("replaces typed text with field name on range field selection", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => typeInEditor(view, "creat"));
+      // "creat" is in the editor
+      expect(view.state.doc.textContent).toContain("creat");
+
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+
+      // The partial text should be replaced with the full field name
+      expect(view.state.doc.textContent).toBe("created_at:");
+    });
+
+    it("range stage shows shortcuts as suggestions", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => typeInEditor(view, "created"));
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+
+      const state = getACState(view);
+      expect(state.stage).toBe("range");
+      expect(state.suggestions.length).toBeGreaterThan(0);
+      expect(state.suggestions.some((s) => s.label === "Last week")).toBe(true);
+      expect(state.suggestions.some((s) => s.label === "Last month")).toBe(true);
+    });
+
+    it("selecting a shortcut inserts a range chip", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => typeInEditor(view, "created"));
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+
+      // Select the first shortcut (Last week)
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+
+      // Should have a range chip in the doc
+      let rangeFound = false;
+      view.state.doc.descendants((node) => {
+        if (node.type.name === "range" && node.attrs.field === "created_at") {
+          expect(node.attrs.lower).toBe("NOW-7DAYS");
+          expect(node.attrs.upper).toBe("*");
+          rangeFound = true;
+        }
+      });
+      expect(rangeFound).toBe(true);
+    });
+
+    it("page_count field enters range stage with no shortcuts", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => typeInEditor(view, "page_c"));
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+
+      const state = getACState(view);
+      expect(state.stage).toBe("range");
+      expect(state.fieldName).toBe("page_count");
+      expect(state.suggestions).toHaveLength(0);
+    });
+
+    it("Escape dismisses range stage", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => typeInEditor(view, "created"));
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+      expect(getACState(view).stage).toBe("range");
+
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
+        );
+      });
+      expect(getACState(view).active).toBe(false);
+    });
+
+    it("arrow keys navigate range shortcuts", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => typeInEditor(view, "created"));
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+
+      expect(getACState(view).selectedIndex).toBe(0);
+
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }),
+        );
+      });
+
+      expect(getACState(view).selectedIndex).toBe(1);
+    });
+
+    it("custom date range appends Solr time suffixes", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => typeInEditor(view, "created"));
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+
+      expect(getACState(view).stage).toBe("range");
+
+      // Find the date inputs in the dropdown and fill them
+      const dropdown = document.querySelector(".search-autocomplete");
+      const inputs = dropdown?.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
+      expect(inputs.length).toBe(3); // 1 fixed + 2 range
+
+      // Set date values on the range inputs (skip fixed input at index 0)
+      inputs[1].value = "2022-04-20";
+      inputs[2].value = "2022-05-30";
+
+      // Click the range Insert button (second one; first is the fixed section)
+      const insertBtns = dropdown?.querySelectorAll(".search-ac-insert-btn") as NodeListOf<HTMLButtonElement>;
+      const insertBtn = insertBtns[1];
+      await act(() => {
+        insertBtn.dispatchEvent(
+          new MouseEvent("mousedown", { bubbles: true }),
+        );
+      });
+
+      // The range chip should have Solr-compatible dates
+      let rangeFound = false;
+      view.state.doc.descendants((node) => {
+        if (node.type.name === "range" && node.attrs.field === "created_at") {
+          expect(node.attrs.lower).toBe("2022-04-20T00:00:00Z");
+          expect(node.attrs.upper).toBe("2022-05-30T23:59:59Z");
+          rangeFound = true;
+        }
+      });
+      expect(rangeFound).toBe(true);
+    });
+
+    it("Enter in date input inserts the range chip", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => typeInEditor(view, "created"));
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+
+      expect(getACState(view).stage).toBe("range");
+
+      const dropdown = document.querySelector(".search-autocomplete");
+      const inputs = dropdown?.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
+      // Skip fixed input at index 0; range inputs are at 1 and 2
+      inputs[1].value = "2023-01-01";
+      inputs[2].value = "2023-06-30";
+
+      // Press Enter inside the start date input (range section)
+      await act(() => {
+        inputs[1].dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+
+      let rangeFound = false;
+      view.state.doc.descendants((node) => {
+        if (node.type.name === "range" && node.attrs.field === "created_at") {
+          expect(node.attrs.lower).toBe("2023-01-01T00:00:00Z");
+          expect(node.attrs.upper).toBe("2023-06-30T23:59:59Z");
+          rangeFound = true;
+        }
+      });
+      expect(rangeFound).toBe(true);
+    });
+
+    it("custom page_count range does not add time suffixes", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => typeInEditor(view, "page_c"));
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+
+      expect(getACState(view).stage).toBe("range");
+
+      const dropdown = document.querySelector(".search-autocomplete");
+      const inputs = dropdown?.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
+
+      // Skip fixed input at index 0; range inputs are at 1 and 2
+      inputs[1].value = "10";
+      inputs[2].value = "50";
+
+      // Use the range Insert button (second one)
+      const insertBtns = dropdown?.querySelectorAll(".search-ac-insert-btn") as NodeListOf<HTMLButtonElement>;
+      const insertBtn = insertBtns[1];
+      await act(() => {
+        insertBtn.dispatchEvent(
+          new MouseEvent("mousedown", { bubbles: true }),
+        );
+      });
+
+      let rangeFound = false;
+      view.state.doc.descendants((node) => {
+        if (node.type.name === "range" && node.attrs.field === "page_count") {
+          expect(node.attrs.lower).toBe("10");
+          expect(node.attrs.upper).toBe("50");
+          rangeFound = true;
+        }
+      });
+      expect(rangeFound).toBe(true);
+    });
+
+    it("range chip inserted by shortcut has null prefix by default", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => typeInEditor(view, "created"));
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+
+      // Select shortcut
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+
+      let prefixChecked = false;
+      view.state.doc.descendants((node) => {
+        if (node.type.name === "range" && node.attrs.field === "created_at") {
+          expect(node.attrs.prefix).toBeNull();
+          prefixChecked = true;
+        }
+      });
+      expect(prefixChecked).toBe(true);
+    });
+
+    it("fixed date value inserts a field-value chip", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => typeInEditor(view, "created"));
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+
+      expect(getACState(view).stage).toBe("range");
+
+      // Find the fixed value input (first input in the dropdown)
+      const dropdown = document.querySelector(".search-autocomplete");
+      const allInputs = dropdown?.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
+      // Fixed section has 1 input, range section has 2 → first is the fixed input
+      const fixedInput = allInputs[0];
+      fixedInput.value = "2024-01-15";
+
+      // Click the first Insert button (fixed section)
+      const insertBtns = dropdown?.querySelectorAll(".search-ac-insert-btn") as NodeListOf<HTMLButtonElement>;
+      await act(() => {
+        insertBtns[0].dispatchEvent(
+          new MouseEvent("mousedown", { bubbles: true }),
+        );
+      });
+
+      let chipFound = false;
+      view.state.doc.descendants((node) => {
+        if (node.type.name === "field-value" && node.attrs.field === "created_at") {
+          expect(node.attrs.value).toBe("2024-01-15T00:00:00Z");
+          chipFound = true;
+        }
+      });
+      expect(chipFound).toBe(true);
+    });
+
+    it("fixed numeric value inserts a field-value chip for page_count", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => typeInEditor(view, "page_c"));
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+
+      expect(getACState(view).stage).toBe("range");
+
+      const dropdown = document.querySelector(".search-autocomplete");
+      const allInputs = dropdown?.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
+      const fixedInput = allInputs[0];
+      fixedInput.value = "50";
+
+      const insertBtns = dropdown?.querySelectorAll(".search-ac-insert-btn") as NodeListOf<HTMLButtonElement>;
+      await act(() => {
+        insertBtns[0].dispatchEvent(
+          new MouseEvent("mousedown", { bubbles: true }),
+        );
+      });
+
+      let chipFound = false;
+      view.state.doc.descendants((node) => {
+        if (node.type.name === "field-value" && node.attrs.field === "page_count") {
+          expect(node.attrs.value).toBe("50");
+          chipFound = true;
+        }
+      });
+      expect(chipFound).toBe(true);
+    });
+
+    it("Enter in fixed input inserts a field-value chip", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => typeInEditor(view, "created"));
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+
+      expect(getACState(view).stage).toBe("range");
+
+      const dropdown = document.querySelector(".search-autocomplete");
+      const allInputs = dropdown?.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
+      const fixedInput = allInputs[0];
+      fixedInput.value = "2024-06-01";
+
+      // Press Enter in the fixed input
+      await act(() => {
+        fixedInput.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+
+      let chipFound = false;
+      view.state.doc.descendants((node) => {
+        if (node.type.name === "field-value" && node.attrs.field === "created_at") {
+          expect(node.attrs.value).toBe("2024-06-01T00:00:00Z");
+          chipFound = true;
+        }
+      });
+      expect(chipFound).toBe(true);
+    });
+  });
+
+  describe("change event", () => {
+    it("does not emit change for plain text typing", async () => {
+      const { component } = await renderEditor();
+      const view = component.getView();
+      const changeSpy = vi.fn();
+      component.$on("change", changeSpy);
+
+      await act(() => typeInEditor(view, "hello"));
+
+      expect(changeSpy).not.toHaveBeenCalled();
+    });
+
+    it("emits change when a range chip is inserted via shortcut", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      // Type and select created_at
+      await act(() => typeInEditor(view, "created"));
+
+      // Attach spy AFTER typing, so we only observe the chip insertion
+      const changeSpy = vi.fn();
+      component.$on("change", changeSpy);
+
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+
+      // Text replacement (creat → created_at:) is non-structural
+      expect(changeSpy).not.toHaveBeenCalled();
+
+      // Select the first shortcut
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+
+      // Now change should fire (range chip is structural)
+      expect(changeSpy).toHaveBeenCalledTimes(1);
+      expect(changeSpy.mock.calls[0][0].detail.q).toContain("created_at:");
+    });
+  });
+
   describe("deserialization on load (Phase 4)", () => {
     it("deserializes initialQuery with field-value into chips", async () => {
       const { editor, component } = await renderEditor({

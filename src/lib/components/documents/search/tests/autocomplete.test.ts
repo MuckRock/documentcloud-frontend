@@ -9,6 +9,7 @@ import {
   isAsyncField,
   fetchValueSuggestions,
   fetchDisplayNames,
+  getRangeConfig,
 } from "../autocomplete-data";
 
 // Mock the API modules
@@ -587,6 +588,90 @@ describe("autocomplete-data", () => {
       // Should call API, not return preloaded
       expect(results).toHaveLength(2);
       expect(results[0].label).toBe("Alice Smith");
+    });
+  });
+
+  // ── Range config ─────────────────────────────────────────
+
+  describe("getRangeConfig", () => {
+    it("returns config for created_at", () => {
+      const config = getRangeConfig("created_at");
+      expect(config).toBeDefined();
+      expect(config!.startLabel).toBe("Start Date");
+      expect(config!.endLabel).toBe("End Date");
+      expect(config!.shortcuts.length).toBeGreaterThan(0);
+    });
+
+    it("returns config for updated_at", () => {
+      const config = getRangeConfig("updated_at");
+      expect(config).toBeDefined();
+      expect(config!.startLabel).toBe("Start Date");
+      expect(config!.endLabel).toBe("End Date");
+    });
+
+    it("returns config for page_count with no shortcuts", () => {
+      const config = getRangeConfig("page_count");
+      expect(config).toBeDefined();
+      expect(config!.startLabel).toBe("Min. Pages");
+      expect(config!.endLabel).toBe("Max. Pages");
+      expect(config!.shortcuts).toHaveLength(0);
+    });
+
+    it("returns undefined for non-range fields", () => {
+      expect(getRangeConfig("access")).toBeUndefined();
+      expect(getRangeConfig("user")).toBeUndefined();
+      expect(getRangeConfig("title")).toBeUndefined();
+    });
+
+    it("resolves aliases to range configs", () => {
+      const config = getRangeConfig("pages");
+      expect(config).toBeDefined();
+      expect(config!.startLabel).toBe("Min. Pages");
+    });
+
+    it("date field shortcuts have expected structure", () => {
+      const config = getRangeConfig("created_at")!;
+      const lastWeek = config.shortcuts.find((s) => s.label === "Last week");
+      expect(lastWeek).toBeDefined();
+      expect(lastWeek!.lower).toBe("NOW-7DAYS");
+      expect(lastWeek!.upper).toBe("*");
+    });
+
+    it("date fields have shortcuts but page_count does not", () => {
+      expect(getRangeConfig("created_at")!.shortcuts.length).toBeGreaterThan(0);
+      expect(getRangeConfig("page_count")!.shortcuts).toHaveLength(0);
+    });
+
+    it("shortcuts default to inclusive bounds", () => {
+      const config = getRangeConfig("created_at")!;
+      for (const shortcut of config.shortcuts) {
+        expect(shortcut.inclusiveLower ?? true).toBe(true);
+        expect(shortcut.inclusiveUpper ?? true).toBe(true);
+      }
+    });
+  });
+
+  // ── Range field insertBehavior ─────────────────────────────
+
+  describe("range field insertBehavior", () => {
+    it("created_at has range-chip insertBehavior", () => {
+      const field = resolveField("created_at");
+      expect(field?.insertBehavior).toBe("range-chip");
+    });
+
+    it("updated_at has range-chip insertBehavior", () => {
+      const field = resolveField("updated_at");
+      expect(field?.insertBehavior).toBe("range-chip");
+    });
+
+    it("page_count has range-chip insertBehavior", () => {
+      const field = resolveField("page_count");
+      expect(field?.insertBehavior).toBe("range-chip");
+    });
+
+    it("pages alias resolves to range-chip", () => {
+      const field = resolveField("pages");
+      expect(field?.insertBehavior).toBe("range-chip");
     });
   });
 

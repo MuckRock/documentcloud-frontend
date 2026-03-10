@@ -51,6 +51,76 @@
   font-size: var(--font-sm, 14px);
 }
 
+/* Range builder — remove scroll constraint since content is fixed */
+.search-autocomplete.search-ac-range {
+  max-height: none;
+  overflow-y: visible;
+}
+
+/* Section labels (Fixed / Range) */
+.search-ac-section-label {
+  padding: 4px 12px 2px;
+  font-size: var(--font-xs, 12px);
+  font-weight: 600;
+  color: var(--gray-5, #6e7781);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Range builder */
+.search-ac-separator {
+  border: none;
+  border-top: 1px solid var(--gray-2, #d0d7de);
+  margin: 4px 0;
+}
+
+.search-ac-range-inputs {
+  padding: 6px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.search-ac-range-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.search-ac-range-field label {
+  font-size: var(--font-xs, 12px);
+  color: var(--gray-5, #6e7781);
+  font-weight: 500;
+}
+
+.search-ac-range-field input {
+  font-size: var(--font-sm, 14px);
+  padding: 4px 6px;
+  border: 1px solid var(--gray-2, #d0d7de);
+  border-radius: 4px;
+  outline: none;
+}
+
+.search-ac-range-field input:focus {
+  border-color: var(--blue-3, #0969da);
+  box-shadow: 0 0 0 2px rgba(9, 105, 218, 0.2);
+}
+
+.search-ac-insert-btn {
+  font-size: var(--font-sm, 14px);
+  padding: 4px 12px;
+  background: var(--blue-3, #0969da);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  align-self: flex-end;
+}
+
+.search-ac-insert-btn:hover {
+  background: var(--blue-4, #0550ae);
+}
+
 /* Visually hidden but accessible to screen readers */
 .sr-only {
   position: absolute;

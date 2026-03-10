@@ -9,6 +9,7 @@ import {
   resolveField,
   isAsyncField,
   fetchValueSuggestions,
+  getRangeConfig,
   type Suggestion,
 } from "../autocomplete-data";
 import { searchSchema } from "../schema";
@@ -24,7 +25,7 @@ interface AutocompleteState {
   dismissed: boolean;
   /** True while waiting for API results for an async field. */
   loading: boolean;
-  stage: "field" | "value";
+  stage: "field" | "value" | "range";
   /** For value stage: the canonical field name. */
   fieldName: string | null;
   /** PM position: start of the text to replace on acceptance. */
@@ -176,6 +177,38 @@ function applyFieldSuggestion(
   if (!state.active || state.from == null || state.to == null) return;
 
   const fieldDef = resolveField(suggestion.value);
+
+  // Range fields: replace typed text with "field:" and transition to range stage
+  if (fieldDef?.insertBehavior === "range-chip") {
+    const rangeConfig = getRangeConfig(suggestion.value);
+    if (rangeConfig) {
+      const fieldText = `${suggestion.value}:`;
+      const tr = view.state.tr;
+      tr.replaceWith(state.from, state.to, searchSchema.text(fieldText));
+      const newTo = state.from + fieldText.length;
+      tr.setSelection(TextSelection.create(tr.doc, newTo));
+
+      const shortcuts: Suggestion[] = rangeConfig.shortcuts.map((s) => ({
+        label: s.label,
+        value: s.label, // value not used for shortcuts; label identifies them
+      }));
+      tr.setMeta(autocompletePluginKey, {
+        active: true,
+        dismissed: false,
+        loading: false,
+        stage: "range",
+        fieldName: suggestion.value,
+        from: state.from,
+        to: newTo,
+        filterText: "",
+        suggestions: shortcuts,
+        selectedIndex: 0,
+      });
+      view.dispatch(tr);
+      return;
+    }
+  }
+
   const tr = view.state.tr;
 
   // Determine if we should transition to value stage
@@ -313,6 +346,158 @@ function applyValueSuggestion(
   view.dispatch(tr);
 }
 
+function applyRangeShortcut(
+  view: EditorView,
+  suggestion: Suggestion,
+): void {
+  const state = autocompletePluginKey.getState(view.state) as AutocompleteState;
+  if (
+    !state.active ||
+    state.from == null ||
+    state.to == null ||
+    !state.fieldName
+  )
+    return;
+
+  const rangeConfig = getRangeConfig(state.fieldName);
+  if (!rangeConfig) return;
+
+  const shortcut = rangeConfig.shortcuts.find(
+    (s) => s.label === suggestion.label,
+  );
+  if (!shortcut) return;
+
+  const tr = view.state.tr;
+
+  // Extract prefix from the original text if present
+  const originalText = view.state.doc.textBetween(state.from, state.to);
+  let prefix: string | null = null;
+  if (originalText.startsWith("+") || originalText.startsWith("-")) {
+    prefix = originalText.charAt(0);
+  }
+
+  const rangeNode = searchSchema.nodes.range.create({
+    field: state.fieldName,
+    lower: shortcut.lower,
+    upper: shortcut.upper,
+    inclusiveLower: shortcut.inclusiveLower ?? true,
+    inclusiveUpper: shortcut.inclusiveUpper ?? true,
+    prefix,
+  });
+
+  tr.replaceWith(state.from, state.to, rangeNode);
+  const afterChip = state.from + rangeNode.nodeSize;
+  tr.insertText(" ", afterChip);
+  tr.setSelection(TextSelection.create(tr.doc, afterChip + 1));
+
+  tr.setMeta(autocompletePluginKey, INACTIVE);
+  view.dispatch(tr);
+}
+
+const DATE_FIELDS = new Set(["created_at", "updated_at"]);
+
+/** Format a date value for Solr. Bare YYYY-MM-DD dates need time suffixes. */
+function formatDateBound(
+  value: string,
+  position: "lower" | "upper",
+): string {
+  if (value === "*" || !value) return value;
+  // Already has time component or is date math (NOW-...)
+  if (/T|NOW/.test(value)) return value;
+  // Bare date: append time
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return position === "lower"
+      ? `${value}T00:00:00Z`
+      : `${value}T23:59:59Z`;
+  }
+  return value;
+}
+
+function applyCustomRange(
+  view: EditorView,
+  lower: string,
+  upper: string,
+): void {
+  const state = autocompletePluginKey.getState(view.state) as AutocompleteState;
+  if (
+    !state.active ||
+    state.from == null ||
+    state.to == null ||
+    !state.fieldName
+  )
+    return;
+
+  const isDateField = DATE_FIELDS.has(state.fieldName);
+  const finalLower = isDateField ? formatDateBound(lower, "lower") : lower;
+  const finalUpper = isDateField ? formatDateBound(upper, "upper") : upper;
+
+  const tr = view.state.tr;
+
+  // Extract prefix from the original text if present
+  const originalText = view.state.doc.textBetween(state.from, state.to);
+  let prefix: string | null = null;
+  if (originalText.startsWith("+") || originalText.startsWith("-")) {
+    prefix = originalText.charAt(0);
+  }
+
+  const rangeNode = searchSchema.nodes.range.create({
+    field: state.fieldName,
+    lower: finalLower,
+    upper: finalUpper,
+    inclusiveLower: true,
+    inclusiveUpper: true,
+    prefix,
+  });
+
+  tr.replaceWith(state.from, state.to, rangeNode);
+  const afterChip = state.from + rangeNode.nodeSize;
+  tr.insertText(" ", afterChip);
+  tr.setSelection(TextSelection.create(tr.doc, afterChip + 1));
+
+  tr.setMeta(autocompletePluginKey, INACTIVE);
+  view.dispatch(tr);
+}
+
+function applyFixedValue(view: EditorView, value: string): void {
+  const state = autocompletePluginKey.getState(view.state) as AutocompleteState;
+  if (
+    !state.active ||
+    state.from == null ||
+    state.to == null ||
+    !state.fieldName
+  )
+    return;
+
+  if (!value) return;
+
+  const isDateField = DATE_FIELDS.has(state.fieldName);
+  const finalValue = isDateField ? formatDateBound(value, "lower") : value;
+
+  const tr = view.state.tr;
+
+  // Extract prefix from the original text if present
+  const originalText = view.state.doc.textBetween(state.from, state.to);
+  let prefix: string | null = null;
+  if (originalText.startsWith("+") || originalText.startsWith("-")) {
+    prefix = originalText.charAt(0);
+  }
+
+  const chipNode = searchSchema.nodes["field-value"].create({
+    field: state.fieldName,
+    value: finalValue,
+    prefix,
+    quoted: false,
+  });
+
+  tr.replaceWith(state.from, state.to, chipNode);
+  const afterChip = state.from + chipNode.nodeSize;
+  tr.insertText(" ", afterChip);
+  tr.setSelection(TextSelection.create(tr.doc, afterChip + 1));
+
+  tr.setMeta(autocompletePluginKey, INACTIVE);
+  view.dispatch(tr);
+}
+
 function applySuggestion(
   view: EditorView,
   suggestion: Suggestion,
@@ -321,6 +506,8 @@ function applySuggestion(
   const state = autocompletePluginKey.getState(view.state) as AutocompleteState;
   if (state.stage === "field") {
     applyFieldSuggestion(view, suggestion, preloaded);
+  } else if (state.stage === "range") {
+    applyRangeShortcut(view, suggestion);
   } else {
     applyValueSuggestion(view, suggestion);
   }
@@ -349,6 +536,7 @@ function renderDropdown(
   loading = false,
 ): void {
   dropdown.innerHTML = "";
+  dropdown.classList.remove("search-ac-range");
 
   if (suggestions.length === 0 && !loading) {
     dropdown.style.display = "none";
@@ -410,6 +598,215 @@ function renderDropdown(
   dropdown.style.display = "block";
 
   // Keep the selected item visible within the scrollable dropdown
+  const selectedEl = dropdown.querySelector(".selected");
+  if (selectedEl && typeof selectedEl.scrollIntoView === "function") {
+    selectedEl.scrollIntoView({ block: "nearest" });
+  }
+}
+
+function updateRangeSelection(
+  dropdown: HTMLElement,
+  selectedIndex: number,
+): boolean {
+  const options = dropdown.querySelectorAll(".search-ac-option");
+  if (options.length === 0) return false;
+  options.forEach((opt, i) => {
+    opt.classList.toggle("selected", i === selectedIndex);
+    opt.setAttribute("aria-selected", String(i === selectedIndex));
+  });
+  return true;
+}
+
+function renderRangeDropdown(
+  dropdown: HTMLElement,
+  fieldName: string,
+  suggestions: Suggestion[],
+  selectedIndex: number,
+  onSelect: (index: number) => void,
+  onHover: (index: number) => void,
+  onCustomRange: (lower: string, upper: string) => void,
+  onFixedValue: (value: string) => void,
+): void {
+  // If already showing the range dropdown for the same field with the same
+  // shortcuts, just update the selected highlight in-place to preserve
+  // user-entered input values.
+  if (
+    dropdown.classList.contains("search-ac-range") &&
+    dropdown.dataset.rangeField === fieldName &&
+    dropdown.style.display === "block"
+  ) {
+    updateRangeSelection(dropdown, selectedIndex);
+    return;
+  }
+
+  dropdown.innerHTML = "";
+  dropdown.classList.add("search-ac-range");
+  dropdown.dataset.rangeField = fieldName;
+
+  const rangeConfig = getRangeConfig(fieldName);
+  if (!rangeConfig) {
+    dropdown.style.display = "none";
+    return;
+  }
+
+  const isDateField =
+    fieldName === "created_at" || fieldName === "updated_at";
+
+  // ── Fixed (single-value) section ──────────────────────────────
+  const fixedLabel = document.createElement("div");
+  fixedLabel.className = "search-ac-section-label";
+  fixedLabel.textContent = "Fixed";
+  dropdown.appendChild(fixedLabel);
+
+  const fixedInputsDiv = document.createElement("div");
+  fixedInputsDiv.className = "search-ac-range-inputs";
+
+  const fixedField = document.createElement("div");
+  fixedField.className = "search-ac-range-field";
+  const fixedFieldLabel = document.createElement("label");
+  fixedFieldLabel.textContent = "Value";
+  const fixedInput = document.createElement("input");
+  fixedInput.type = isDateField ? "date" : "number";
+  fixedInput.placeholder = isDateField ? "YYYY-MM-DD" : "0";
+  fixedField.appendChild(fixedFieldLabel);
+  fixedField.appendChild(fixedInput);
+
+  const fixedInsertBtn = document.createElement("button");
+  fixedInsertBtn.className = "search-ac-insert-btn";
+  fixedInsertBtn.textContent = "Insert";
+  fixedInsertBtn.type = "button";
+
+  fixedInsertBtn.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (fixedInput.value) onFixedValue(fixedInput.value);
+  });
+
+  fixedInput.addEventListener("mousedown", (e) => {
+    e.stopPropagation();
+  });
+  fixedInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      e.stopPropagation();
+      if (fixedInput.value) onFixedValue(fixedInput.value);
+    }
+  });
+
+  fixedInputsDiv.appendChild(fixedField);
+  fixedInputsDiv.appendChild(fixedInsertBtn);
+  dropdown.appendChild(fixedInputsDiv);
+
+  // Separator between Fixed and Range
+  const fixedSep = document.createElement("hr");
+  fixedSep.className = "search-ac-separator";
+  dropdown.appendChild(fixedSep);
+
+  // ── Range section ─────────────────────────────────────────────
+  const rangeLabel = document.createElement("div");
+  rangeLabel.className = "search-ac-section-label";
+  rangeLabel.textContent = "Range";
+  dropdown.appendChild(rangeLabel);
+
+  // Render shortcuts
+  suggestions.forEach((suggestion, index) => {
+    const item = document.createElement("div");
+    item.className = "search-ac-option";
+    item.setAttribute("role", "option");
+    item.id = `${dropdown.id}-opt-${index}`;
+    item.setAttribute("aria-selected", String(index === selectedIndex));
+
+    const label = document.createElement("span");
+    label.className = "search-ac-label";
+    label.textContent = suggestion.label;
+    item.appendChild(label);
+
+    if (index === selectedIndex) {
+      item.classList.add("selected");
+    }
+
+    item.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onSelect(index);
+    });
+
+    item.addEventListener("mouseenter", () => {
+      onHover(index);
+    });
+
+    dropdown.appendChild(item);
+  });
+
+  // Separator
+  if (suggestions.length > 0) {
+    const sep = document.createElement("hr");
+    sep.className = "search-ac-separator";
+    dropdown.appendChild(sep);
+  }
+
+  // Custom range inputs
+  const inputsDiv = document.createElement("div");
+  inputsDiv.className = "search-ac-range-inputs";
+
+  const startField = document.createElement("div");
+  startField.className = "search-ac-range-field";
+  const startLabel = document.createElement("label");
+  startLabel.textContent = rangeConfig.startLabel;
+  const startInput = document.createElement("input");
+  startInput.type = isDateField ? "date" : "number";
+  startInput.placeholder = isDateField ? "YYYY-MM-DD" : "0";
+  startField.appendChild(startLabel);
+  startField.appendChild(startInput);
+
+  const endField = document.createElement("div");
+  endField.className = "search-ac-range-field";
+  const endLabel = document.createElement("label");
+  endLabel.textContent = rangeConfig.endLabel;
+  const endInput = document.createElement("input");
+  endInput.type = isDateField ? "date" : "number";
+  endInput.placeholder = isDateField ? "YYYY-MM-DD" : "∞";
+  endField.appendChild(endLabel);
+  endField.appendChild(endInput);
+
+  const insertBtn = document.createElement("button");
+  insertBtn.className = "search-ac-insert-btn";
+  insertBtn.textContent = "Insert";
+  insertBtn.type = "button";
+
+  insertBtn.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const lower = startInput.value || "*";
+    const upper = endInput.value || "*";
+    onCustomRange(lower, upper);
+  });
+
+  // Prevent input clicks from dismissing the dropdown, and
+  // submit the range on Enter key
+  for (const input of [startInput, endInput]) {
+    input.addEventListener("mousedown", (e) => {
+      e.stopPropagation();
+    });
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        e.stopPropagation();
+        const lower = startInput.value || "*";
+        const upper = endInput.value || "*";
+        onCustomRange(lower, upper);
+      }
+    });
+  }
+
+  inputsDiv.appendChild(startField);
+  inputsDiv.appendChild(endField);
+  inputsDiv.appendChild(insertBtn);
+  dropdown.appendChild(inputsDiv);
+
+  dropdown.style.display = "block";
+
+  // Keep the selected item visible
   const selectedEl = dropdown.querySelector(".selected");
   if (selectedEl && typeof selectedEl.scrollIntoView === "function") {
     selectedEl.scrollIntoView({ block: "nearest" });
@@ -809,6 +1206,38 @@ export function autocompletePlugin(
             if (prevSuggestionCount !== 0) {
               announceCount(liveRegion, 0);
               prevSuggestionCount = 0;
+            }
+            return;
+          }
+
+          // Range stage is modal: don't re-compute from text.
+          // It persists until the user selects a shortcut or dismisses.
+          if (pluginState.stage === "range" && pluginState.fieldName) {
+            renderRangeDropdown(
+              dropdown,
+              pluginState.fieldName,
+              pluginState.suggestions,
+              pluginState.selectedIndex,
+              onSelect,
+              onHover,
+              (lower, upper) => {
+                applyCustomRange(view, lower, upper);
+                editorView.focus();
+              },
+              (value) => {
+                applyFixedValue(view, value);
+                editorView.focus();
+              },
+            );
+            if (pluginState.from != null) {
+              positionDropdown(dropdown, view, pluginState.to ?? pluginState.from);
+            }
+            editorDom.setAttribute("aria-expanded", "true");
+            const activeId = `${dropdown.id}-opt-${pluginState.selectedIndex}`;
+            editorDom.setAttribute("aria-activedescendant", activeId);
+            if (pluginState.suggestions.length !== prevSuggestionCount) {
+              announceCount(liveRegion, pluginState.suggestions.length);
+              prevSuggestionCount = pluginState.suggestions.length;
             }
             return;
           }
