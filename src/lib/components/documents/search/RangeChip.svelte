@@ -12,6 +12,23 @@
 
   $: lb = inclusiveLower ? "[" : "{";
   $: rb = inclusiveUpper ? "]" : "}";
+
+  /** Format a bound value for display. ISO dates become locale strings. */
+  function displayBound(value: string): string {
+    // Only attempt date parsing for values that look like actual dates
+    // (contain a hyphen, e.g. "2024-01-15" or "2024-01-15T00:00:00Z").
+    // Bare numbers like "1" or "50" should not be treated as dates.
+    if (value.includes("-")) {
+      const date = new Date(value);
+      if (!isNaN(date.getTime())) {
+        return date.toLocaleDateString();
+      }
+    }
+    return value;
+  }
+
+  $: displayLower = displayBound(lower);
+  $: displayUpper = displayBound(upper);
 </script>
 
 <span class="search-chip search-range">
@@ -23,7 +40,7 @@
     >
   {/if}
   <span class="chip-field">{field}:</span>
-  <span class="chip-bounds">{lb}{lower} TO {upper}{rb}</span>
+  <span class="chip-bounds">{lb}{displayLower} TO {displayUpper}{rb}</span>
 </span>
 
 <style>

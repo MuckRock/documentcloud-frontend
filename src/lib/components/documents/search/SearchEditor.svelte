@@ -89,13 +89,15 @@
     return deserialize(query);
   }
 
-  /** Collect a fingerprint of all atom nodes (chips) in a document.
+  const CHIP_TYPES = new Set(["field-value", "range", "sort"]);
+
+  /** Collect a fingerprint of all chip nodes in a document.
    *  Only includes attributes that affect the serialized query —
    *  cosmetic attrs like displayValue are excluded. */
   function atomFingerprint(doc: import("prosemirror-model").Node): string {
     const parts: string[] = [];
     doc.descendants((node) => {
-      if (node.isAtom && node.isInline) {
+      if (CHIP_TYPES.has(node.type.name)) {
         // Exclude displayValue — it's cosmetic and doesn't affect the query
         const { displayValue, ...queryAttrs } = node.attrs;
         parts.push(`${node.type.name}:${JSON.stringify(queryAttrs)}`);
@@ -156,12 +158,14 @@
           const q = serialize(view.state.doc);
           if (q !== lastEmittedQuery) {
             lastEmittedQuery = q;
-            // Always emit change so pending debounce timers can be cancelled.
-            // The `structural` flag tells the consumer whether to reload results
-            // (chip insert/remove) or just cancel any pending reload (text typing).
+            // Only emit change for structural changes (chip insert/remove).
+            // Plain text typing should not trigger searches — the user must
+            // explicitly submit the form for text-only queries.
             const structural =
               atomFingerprint(oldDoc) !== atomFingerprint(view.state.doc);
-            dispatch("change", { q, structural });
+            if (structural) {
+              dispatch("change", { q, structural });
+            }
           }
         }
       },

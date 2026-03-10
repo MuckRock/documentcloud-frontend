@@ -10,7 +10,7 @@ import { list as listProjects } from "$lib/api/projects";
 import { search as searchDocuments } from "$lib/api/documents";
 
 /** How a field selection is inserted into the editor. */
-export type InsertBehavior = "field-value-chip" | "sort-chip" | "text";
+export type InsertBehavior = "field-value-chip" | "sort-chip" | "range-chip" | "text";
 
 export interface FieldDef {
   name: string;
@@ -129,21 +129,21 @@ const FIELDS: FieldDef[] = [
     name: "created_at",
     label: "Created At",
     description: "Filter by creation date",
-    insertBehavior: "text",
+    insertBehavior: "range-chip",
     hasValueSuggestions: false,
   },
   {
     name: "updated_at",
     label: "Updated At",
     description: "Filter by update date",
-    insertBehavior: "text",
+    insertBehavior: "range-chip",
     hasValueSuggestions: false,
   },
   {
     name: "page_count",
     label: "Page Count",
     description: "Filter by page count",
-    insertBehavior: "text",
+    insertBehavior: "range-chip",
     hasValueSuggestions: false,
   },
   {
@@ -224,6 +224,48 @@ const STATIC_VALUES: Record<string, Suggestion[]> = {
     },
   ],
 };
+
+// ── Range field configuration ─────────────────────────────────
+
+export interface RangeFieldConfig {
+  startLabel: string;
+  endLabel: string;
+  shortcuts: Array<{
+    label: string;
+    lower: string;
+    upper: string;
+    inclusiveLower?: boolean; // default true
+    inclusiveUpper?: boolean; // default true
+  }>;
+}
+
+const DATE_RANGE_CONFIG: RangeFieldConfig = {
+  startLabel: "Start Date",
+  endLabel: "End Date",
+  shortcuts: [
+    { label: "Last week", lower: "NOW-7DAYS", upper: "*" },
+    { label: "Last month", lower: "NOW-1MONTH", upper: "*" },
+    { label: "Last 3 months", lower: "NOW-3MONTHS", upper: "*" },
+    { label: "Last year", lower: "NOW-1YEAR", upper: "*" },
+    { label: "Today", lower: "NOW/DAY", upper: "*" },
+  ],
+};
+
+const RANGE_CONFIGS: Record<string, RangeFieldConfig> = {
+  created_at: DATE_RANGE_CONFIG,
+  updated_at: DATE_RANGE_CONFIG,
+  page_count: {
+    startLabel: "Min. Pages",
+    endLabel: "Max. Pages",
+    shortcuts: [],
+  },
+};
+
+/** Get range configuration for a field, or undefined if it's not a range field. */
+export function getRangeConfig(fieldName: string): RangeFieldConfig | undefined {
+  const canonical = resolveFieldName(fieldName);
+  return RANGE_CONFIGS[canonical];
+}
 
 // ── Public API ─────────────────────────────────────────────────
 
