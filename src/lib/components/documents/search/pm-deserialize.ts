@@ -1,9 +1,8 @@
-import type { Node as ProseMirrorNode } from "prosemirror-model";
 import lucene from "lucene";
+import type { Node as ProseMirrorNode } from "prosemirror-model";
 import type {
   AST,
   BinaryAST,
-  LeftOnlyAST,
   Node,
   NodeTerm,
   NodeRangedTerm,
@@ -30,6 +29,19 @@ const CHIPPABLE_FIELDS = new Set([
 ]);
 
 const IMPLICIT = "<implicit>";
+
+// Type guard helpers
+function isNodeTerm(n: unknown): n is NodeTerm {
+  return typeof n === "object" && n !== null && "term" in n;
+}
+
+function isNodeRangedTerm(n: unknown): n is NodeRangedTerm {
+  return typeof n === "object" && n !== null && "term_max" in n;
+}
+
+function isBinaryAST(ast: unknown): ast is BinaryAST {
+  return typeof ast === "object" && ast !== null && "right" in ast;
+}
 
 /**
  * Deserialize a Lucene query string into a ProseMirror document.
@@ -335,10 +347,6 @@ function getTermFullSpan(
     length += `~${node.similarity}`.length;
   }
 
-  if (node.proximity !== null && node.proximity !== undefined) {
-    length += `~${node.proximity}`.length;
-  }
-
   return { start, end: start + length };
 }
 
@@ -376,17 +384,4 @@ function getRangeFullSpan(
   }
 
   return { start, end };
-}
-
-// Type guard helpers
-function isNodeTerm(n: unknown): n is NodeTerm {
-  return typeof n === "object" && n !== null && "term" in n;
-}
-
-function isNodeRangedTerm(n: unknown): n is NodeRangedTerm {
-  return typeof n === "object" && n !== null && "term_max" in n;
-}
-
-function isBinaryAST(ast: unknown): ast is BinaryAST {
-  return typeof ast === "object" && ast !== null && "right" in ast;
 }
