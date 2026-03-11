@@ -12,14 +12,14 @@ import type { NodeView, EditorView } from "prosemirror-view";
 import type { Node as ProseMirrorNode } from "prosemirror-model";
 import { NodeSelection } from "prosemirror-state";
 
-import FieldValueChip from "./FieldValueChip.svelte";
-import RangeChip from "./RangeChip.svelte";
-import SortChip from "./SortChip.svelte";
-import ChipEditor from "./ChipEditor.svelte";
+import FieldValueChip from "../FieldValueChip.svelte";
+import RangeChip from "../RangeChip.svelte";
+import SortChip from "../SortChip.svelte";
+import ChipEditor from "../ChipEditor.svelte";
 
 type ChipBehavior = "edit" | "toggle-sort";
 
-/** Generic Svelte NodeView that mounts a component with node attrs as props */
+/** Generic Svelte NodeView mounts a component with node attrs as props */
 class SvelteNodeView implements NodeView {
   dom: HTMLElement;
   private component: any;
@@ -33,7 +33,7 @@ class SvelteNodeView implements NodeView {
     ComponentClass: any,
     node: ProseMirrorNode,
     view: EditorView,
-    getPos: (() => number | undefined) | boolean,
+    getPos: boolean | (() => number | undefined),
     behavior: ChipBehavior,
   ) {
     this.view = view;
@@ -43,29 +43,20 @@ class SvelteNodeView implements NodeView {
     this.dom = document.createElement("span");
     this.dom.classList.add("search-nodeview");
     this.dom.contentEditable = "false";
+    this.dom.style.display = "inline-block";
     this.dom.style.cursor = "pointer";
     this.dom.style.userSelect = "none";
 
     this.component = new ComponentClass({
       target: this.dom,
-      props: this.extractProps(node),
+      props: { ...node.attrs },
     });
 
-    // Sort chips toggle on click; edit chips use selectNode/deselectNode
     if (this.behavior === "toggle-sort") {
-      this.dom.addEventListener("click", this.handleClick);
+      this.toggleSort = this.toggleSort.bind(this);
+      this.dom.addEventListener("click", this.toggleSort);
     }
   }
-
-  private handleClick = (e: MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    const pos = this.getPos();
-    if (pos === undefined) return;
-
-    this.toggleSort(pos);
-  };
 
   /**
    * Called by ProseMirror when this node receives a NodeSelection
@@ -92,35 +83,39 @@ class SvelteNodeView implements NodeView {
     }
   }
 
-  private toggleSort(pos: number) {
-    const node = this.view.state.doc.nodeAt(pos);
-    if (!node) return;
-    const newDirection = node.attrs.direction === "asc" ? "desc" : "asc";
-    const tr = this.view.state.tr.setNodeMarkup(pos, undefined, {
-      ...node.attrs,
-      direction: newDirection,
-    });
-    this.view.dispatch(tr);
-  }
-
   /**
    * Update the node's attributes and preserve the NodeSelection so
-   * the popover stays open across attribute changes.
+   * the editor's current selection is stable across attribute changes.
    */
-  private updateNodeAttrs(attrs: Record<string, unknown>) {
+  private updateNodeAttrs(
+    attrs:
+      | Record<string, unknown>
+      | ((current: Record<string, unknown>) => Record<string, unknown>),
+  ) {
     const currentPos = this.getPos();
     if (currentPos === undefined) return;
     const currentNode = this.view.state.doc.nodeAt(currentPos);
     if (!currentNode) return;
+    const newAttrs = typeof attrs === "function" ? attrs(currentNode.attrs) : attrs;
     const tr = this.view.state.tr.setNodeMarkup(currentPos, undefined, {
       ...currentNode.attrs,
-      ...attrs,
+      ...newAttrs,
     });
     // Preserve NodeSelection so deselectNode doesn't fire
     tr.setSelection(NodeSelection.create(tr.doc, currentPos));
     this.view.dispatch(tr);
   }
 
+  /**
+   * When a "sort" node is clicked, we want to toggle the sort direction.
+   */
+  private toggleSort() {
+    this.updateNodeAttrs((attrs) => ({
+      direction: attrs.direction === "asc" ? "desc" : "asc",
+    }));
+  }
+
+  /** When a FieldValue or Range node is selected, we open an editor to tailor its details. */
   private openChipEditor(pos: number) {
     // Already open
     if (this.chipEditor) return;
@@ -185,40 +180,24 @@ class SvelteNodeView implements NodeView {
 
   /** Update the component when the node's attributes change */
   update(node: ProseMirrorNode): boolean {
-    this.component.$set(this.extractProps(node));
+    this.component.$set({ ...node.attrs });
     return true;
   }
 
   /** Clean up the Svelte component on destroy */
   destroy() {
     this.closeChipEditor();
-    this.dom.removeEventListener("click", this.handleClick);
+    this.dom.removeEventListener("click", this.toggleSort);
     this.component.$destroy();
-  }
-
-  /**
-   * Intercept mouse events on sort chips so ProseMirror doesn't consume them.
-   * For edit chips, let ProseMirror handle clicks normally (creating a
-   * NodeSelection which triggers selectNode/deselectNode).
-   */
-  stopEvent(event: Event): boolean {
-    if (this.behavior === "toggle-sort") {
-      return event.type === "mousedown" || event.type === "click";
-    }
-    return false;
   }
 
   /** Atom nodes have no editable content */
   ignoreMutation(): boolean {
     return true;
   }
-
-  private extractProps(node: ProseMirrorNode): Record<string, unknown> {
-    return { ...node.attrs };
-  }
 }
 
-/** NodeView constructor for field-value nodes */
+/** NodeView constructors for field-value nodes */
 export function fieldValueNodeView(
   node: ProseMirrorNode,
   view: EditorView,

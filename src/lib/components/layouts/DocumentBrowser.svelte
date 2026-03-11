@@ -8,7 +8,7 @@
   } from "$lib/api/types";
 
   import { goto } from "$app/navigation";
-  import type { Suggestion } from "$lib/components/documents/search/autocomplete-data";
+  import type { Suggestion } from "$lib/components/documents/search/prosemirror/plugins/autocomplete-data";
 
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";

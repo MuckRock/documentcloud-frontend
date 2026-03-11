@@ -1,7 +1,6 @@
 import { Plugin } from "prosemirror-state";
-import { Slice } from "prosemirror-model";
-import { serialize } from "./pm-serialize";
-import { deserialize } from "./pm-deserialize";
+import { serialize } from "../../utils/serialize";
+import { deserialize } from "../../utils/deserialize";
 
 /**
  * Clipboard plugin for the search editor.

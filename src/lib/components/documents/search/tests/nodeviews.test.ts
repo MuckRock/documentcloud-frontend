@@ -1,8 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { render, act } from "@testing-library/svelte";
 import SearchEditor from "../SearchEditor.svelte";
-import { searchSchema } from "../schema";
-import { serialize } from "../pm-serialize";
+import { searchSchema } from "../prosemirror/schema";
 
 /** Render the editor and wait for ProseMirror to initialize */
 async function renderEditor(props: Record<string, unknown> = {}) {
@@ -19,7 +18,7 @@ function insertNode(
   attrs: Record<string, unknown>,
 ) {
   const view = component.getView();
-  const node = searchSchema.nodes[nodeType].create(attrs);
+  const node = searchSchema.nodes[nodeType]?.create(attrs);
   const tr = view.state.tr.replaceSelectionWith(node);
   view.dispatch(tr);
 }

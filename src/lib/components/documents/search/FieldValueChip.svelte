@@ -1,11 +1,11 @@
 <!--
-  FieldValueChip: Renders a field-value atom node as an interactive chip.
+  FieldValueChip renders a field-value atom node as an interactive chip.
   Shows field label, value (or displayValue), prefix indicator, boost badge,
   and a loading indicator for entity fields awaiting API enrichment.
 -->
 <script lang="ts">
-  /** Entity fields that may need async display name resolution */
-  const ENTITY_FIELDS = new Set([
+  /** Entity fields that may need async enrichment */
+  const RICH_FIELDS = new Set([
     "user",
     "organization",
     "project",
@@ -18,6 +18,7 @@
   export let prefix: string | null = null;
   export let boost: number | null = null;
   export let quoted: boolean = false;
+  export let locked: boolean = false;
 
   /** Format a value for display. ISO dates become locale strings. */
   function displayBound(v: string): string {
@@ -30,12 +31,12 @@
     return v;
   }
 
-  $: isEntity = ENTITY_FIELDS.has(field);
-  $: showLoading = isEntity && !displayValue;
+  $: isRich = RICH_FIELDS.has(field);
+  $: showLoading = isRich && !displayValue;
   $: label = displayValue ?? displayBound(value);
 </script>
 
-<span class="search-chip search-field-value">
+<span class="search-chip search-field-value" class:locked>
   {#if prefix}
     <span
       class="chip-prefix"
@@ -43,35 +44,52 @@
       class:chip-prefix-excluded={prefix === "-"}>{prefix}</span
     >
   {/if}
-  <span class="chip-field">{field}:</span>
+  <span class="chip-field">{field}</span>
   <span class="chip-value">{label}</span>
   {#if showLoading}
     <span class="chip-loading" aria-label="Loading display name"
       >&hellip;</span
     >
   {/if}
-  {#if boost}
+  {#if boost && boost > 1}
     <span class="chip-boost">^{boost}</span>
   {/if}
 </span>
 
 <style>
+  .search-field-value {
+    background-color: var(--blue-1);
+    border: 1px solid var(--blue-2);
+    color: var(--blue-5);
+  }
+  
+  .search-field-value.locked {
+    flex: 0 0 auto;
+    opacity: 0.7;
+    cursor: default;
+    user-select: none;
+  }
+
   .chip-field {
     opacity: 0.7;
-    margin-right: 2px;
+    margin: 0 0.125rem 0 0;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    font-weight: 600;
+    font-size: var(--font-xs, 12px);
   }
 
   .chip-prefix {
-    font-weight: 700;
+    font-weight: 600;
     margin-right: 1px;
   }
 
   .chip-prefix-required {
-    color: var(--green-3, #2da44e);
+    color: var(--green-3);
   }
 
   .chip-prefix-excluded {
-    color: var(--orange-3, #d1242f);
+    color: var(--orange-3);
   }
 
   .chip-loading {

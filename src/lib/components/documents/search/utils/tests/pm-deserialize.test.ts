@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { searchSchema } from "../schema";
-import { serialize } from "../pm-serialize";
-import { deserialize } from "../pm-deserialize";
+import { serialize } from "../serialize";
+import { deserialize } from "../deserialize";
 import type { Node as ProseMirrorNode } from "prosemirror-model";
 
 /** Helper to extract the inline content of the first paragraph as an array of node descriptions */
@@ -380,9 +379,9 @@ describe("deserialize", () => {
       const nodes = describeDoc(doc);
       // Should have: field-value, text(" AND "), field-value
       expect(nodes.length).toBe(3);
-      expect(nodes[0].type).toBe("field-value");
+      expect(nodes[0]?.type).toBe("field-value");
       expect(nodes[1]).toEqual({ type: "text", text: " AND " });
-      expect(nodes[2].type).toBe("field-value");
+      expect(nodes[2]?.type).toBe("field-value");
     });
   });
 
@@ -391,7 +390,7 @@ describe("deserialize", () => {
       const doc = deserialize("+user:102112 report");
       const nodes = describeDoc(doc);
       expect(nodes.length).toBe(2);
-      expect(nodes[0].type).toBe("field-value");
+      expect(nodes[0]?.type).toBe("field-value");
       expect(nodes[1]).toEqual({ type: "text", text: " report" });
     });
 
@@ -425,13 +424,13 @@ describe("deserialize", () => {
       const nodes = describeDoc(doc);
       const chips = nodes.filter((n) => n.type === "field-value");
       expect(chips).toHaveLength(2);
-      expect(chips[0].attrs).toMatchObject({
+      expect(chips[0]?.attrs).toMatchObject({
         field: "data_Folder",
         value: "From ARMY site",
         prefix: "+",
         quoted: true,
       });
-      expect(chips[1].attrs).toMatchObject({
+      expect(chips[1]?.attrs).toMatchObject({
         field: "data_Subfolder",
         value: "38",
         prefix: "+",

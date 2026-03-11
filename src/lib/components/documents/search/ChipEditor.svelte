@@ -5,6 +5,8 @@
 <script lang="ts">
   import { onMount, onDestroy, tick } from "svelte";
   import { computePosition, flip, offset, shift } from "@floating-ui/dom";
+  import { ArrowDown16, ArrowUp16 } from "svelte-octicons";
+  import Button from "$lib/components/common/Button.svelte";
 
   /** The chip's current prefix: "+", "-", or null */
   export let prefix: string | null = null;
@@ -127,22 +129,22 @@
 >
   <div class="chip-editor-row">
     <button
-      class="chip-editor-toggle"
+      class="chip-editor-toggle chip-editor-toggle--require"
       class:active={isRequired}
       aria-pressed={isRequired}
       on:click={toggleRequired}
-      title="Require (+)"
+      title="Require"
     >
-      + Require
+      Require
     </button>
     <button
-      class="chip-editor-toggle"
+      class="chip-editor-toggle chip-editor-toggle--exclude"
       class:active={isExcluded}
       aria-pressed={isExcluded}
       on:click={toggleExcluded}
-      title="Exclude (-)"
+      title="Exclude"
     >
-      - Exclude
+      Exclude
     </button>
   </div>
 
@@ -154,26 +156,32 @@
           class="chip-editor-step-btn"
           on:click={decrementBoost}
           aria-label="Decrease boost"
-        >-</button>
-        <span class="chip-editor-boost-value">{boost ?? "—"}</span>
+          disabled={boost === null || boost <= 1}
+        >
+          <ArrowDown16 />  
+        </button>
+        <span class="chip-editor-boost-value">{boost ?? "1"}</span>
         <button
           class="chip-editor-step-btn"
           on:click={incrementBoost}
           aria-label="Increase boost"
-        >+</button>
+        >
+          <ArrowUp16 />
+        </button>
       </div>
     </div>
   {/if}
 
   <hr class="chip-editor-separator" />
 
-  <button class="chip-editor-delete" on:click={handleDelete}>
-    Delete
-  </button>
+  <Button mode="danger" size="small" ghost full on:click={handleDelete}>
+    Remove
+  </Button>
 </div>
 
 <style>
   .chip-editor {
+    font-family: var(--font-sans);
     position: fixed;
     background-color: white;
     border: 1px solid var(--gray-2, #d0d7de);
@@ -201,7 +209,9 @@
   .chip-editor-toggle {
     flex: 1;
     padding: 4px 8px;
+    font-family: var(--font-sans);
     font-size: var(--font-sm, 14px);
+    font-weight: 400;
     border: 1px solid var(--gray-2, #d0d7de);
     border-radius: 4px;
     background: white;
@@ -209,14 +219,10 @@
     text-align: center;
   }
 
-  .chip-editor-toggle:hover {
-    background: var(--gray-0, #f6f8fa);
-  }
-
   .chip-editor-toggle.active {
-    background: var(--blue-0, #ddf4ff);
-    border-color: var(--blue-3, #0969da);
-    color: var(--blue-3, #0969da);
+    background: var(--blue-1);
+    border-color: var(--blue-2);
+    color: var(--blue-4);
     font-weight: 500;
   }
 
@@ -258,7 +264,7 @@
     min-width: 20px;
     text-align: center;
     font-size: var(--font-sm, 14px);
-    font-weight: 500;
+    font-weight: 600;
   }
 
   .chip-editor-separator {
