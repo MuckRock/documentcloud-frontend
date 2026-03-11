@@ -1,6 +1,6 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { render, screen, waitFor, act } from "@testing-library/svelte";
-import { TextSelection } from "prosemirror-state";
+import { NodeSelection, TextSelection } from "prosemirror-state";
 import SearchEditor from "../SearchEditor.svelte";
 import { autocompletePluginKey } from "../plugins/autocomplete";
 
@@ -872,6 +872,289 @@ describe("SearchEditor", () => {
       // Now change should fire (range chip is structural)
       expect(changeSpy).toHaveBeenCalledTimes(1);
       expect(changeSpy.mock.calls[0][0].detail.q).toContain("created_at:");
+    });
+  });
+
+  describe("chip editing (subissue 2)", () => {
+    /** Find the position of the first node of a given type and select it. */
+    function selectChipNode(
+      view: import("prosemirror-view").EditorView,
+      typeName: string,
+    ) {
+      let chipPos: number | null = null;
+      view.state.doc.descendants((node, pos) => {
+        if (chipPos === null && node.type.name === typeName) {
+          chipPos = pos;
+        }
+      });
+      if (chipPos === null) throw new Error(`No ${typeName} node found`);
+      const tr = view.state.tr.setSelection(
+        NodeSelection.create(view.state.doc, chipPos),
+      );
+      view.dispatch(tr);
+    }
+
+    it("clicking a sort chip toggles its direction", async () => {
+      const { editor, component } = await renderEditor({
+        initialQuery: "sort:created_at",
+      });
+      const view = component.getView();
+
+      // Verify initial direction is asc
+      let sortNode: import("prosemirror-model").Node | null = null;
+      view.state.doc.descendants((node) => {
+        if (node.type.name === "sort") sortNode = node;
+      });
+      expect(sortNode!.attrs.direction).toBe("asc");
+
+      // Click the sort chip
+      const sortChip = editor.querySelector(".search-sort") as HTMLElement;
+      expect(sortChip).toBeInTheDocument();
+      await act(() => {
+        sortChip.closest(".search-nodeview")!.dispatchEvent(
+          new MouseEvent("click", { bubbles: true }),
+        );
+      });
+
+      // Direction should now be desc
+      sortNode = null;
+      view.state.doc.descendants((node) => {
+        if (node.type.name === "sort") sortNode = node;
+      });
+      expect(sortNode!.attrs.direction).toBe("desc");
+
+      // Serialization reflects the change
+      expect(component.getQuery()).toBe("sort:-created_at");
+    });
+
+    it("clicking a sort chip twice toggles back to asc", async () => {
+      const { editor, component } = await renderEditor({
+        initialQuery: "sort:-created_at",
+      });
+      const view = component.getView();
+      const nodeview = editor.querySelector(".search-sort")!.closest(".search-nodeview")!;
+
+      await act(() => {
+        nodeview.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      });
+
+      let sortNode: import("prosemirror-model").Node | null = null;
+      view.state.doc.descendants((node) => {
+        if (node.type.name === "sort") sortNode = node;
+      });
+      expect(sortNode!.attrs.direction).toBe("asc");
+      expect(component.getQuery()).toBe("sort:created_at");
+    });
+
+    it("selecting a field-value chip opens the chip editor popover", async () => {
+      const { component } = await renderEditor({
+        initialQuery: "access:public",
+      });
+      const view = component.getView();
+
+      await act(() => selectChipNode(view, "field-value"));
+
+      const popover = document.querySelector(".chip-editor");
+      expect(popover).not.toBeNull();
+      expect(popover!.getAttribute("role")).toBe("dialog");
+    });
+
+    it("selecting a range chip opens the chip editor popover", async () => {
+      const { component } = await renderEditor({
+        initialQuery: "created_at:[NOW-1MONTH TO *]",
+      });
+      const view = component.getView();
+
+      await act(() => selectChipNode(view, "range"));
+
+      const popover = document.querySelector(".chip-editor");
+      expect(popover).not.toBeNull();
+    });
+
+    it("deselecting a chip closes the popover", async () => {
+      const { component } = await renderEditor({
+        initialQuery: "access:public report",
+      });
+      const view = component.getView();
+
+      // Select chip → popover opens
+      await act(() => selectChipNode(view, "field-value"));
+      expect(document.querySelector(".chip-editor")).not.toBeNull();
+
+      // Move cursor to text → chip deselected → popover closes
+      await act(() => {
+        const tr = view.state.tr.setSelection(
+          TextSelection.create(view.state.doc, view.state.doc.content.size - 1),
+        );
+        view.dispatch(tr);
+      });
+      expect(document.querySelector(".chip-editor")).toBeNull();
+    });
+
+    it("toggling Require in the popover updates the chip prefix", async () => {
+      const { component } = await renderEditor({
+        initialQuery: "access:public",
+      });
+      const view = component.getView();
+
+      await act(() => selectChipNode(view, "field-value"));
+
+      // Click Require toggle
+      const requiredBtn = document.querySelector(
+        ".chip-editor-toggle[title='Require (+)']",
+      ) as HTMLElement;
+      expect(requiredBtn).not.toBeNull();
+      await act(() => {
+        requiredBtn.click();
+      });
+
+      // Chip should now have prefix "+"
+      let chipNode: import("prosemirror-model").Node | null = null;
+      view.state.doc.descendants((node) => {
+        if (node.type.name === "field-value") chipNode = node;
+      });
+      expect(chipNode!.attrs.prefix).toBe("+");
+      expect(component.getQuery()).toBe("+access:public");
+    });
+
+    it("toggling Exclude in the popover updates the chip prefix", async () => {
+      const { component } = await renderEditor({
+        initialQuery: "access:public",
+      });
+      const view = component.getView();
+
+      await act(() => selectChipNode(view, "field-value"));
+
+      const excludedBtn = document.querySelector(
+        ".chip-editor-toggle[title='Exclude (-)']",
+      ) as HTMLElement;
+      await act(() => {
+        excludedBtn.click();
+      });
+
+      expect(component.getQuery()).toBe("-access:public");
+    });
+
+    it("toggling Require when already required removes the prefix", async () => {
+      const { component } = await renderEditor({
+        initialQuery: "+access:public",
+      });
+      const view = component.getView();
+
+      await act(() => selectChipNode(view, "field-value"));
+
+      const requiredBtn = document.querySelector(
+        ".chip-editor-toggle[title='Require (+)']",
+      ) as HTMLElement;
+      await act(() => {
+        requiredBtn.click();
+      });
+
+      expect(component.getQuery()).toBe("access:public");
+    });
+
+    it("deleting a chip via the popover removes it from the document", async () => {
+      const { editor, component } = await renderEditor({
+        initialQuery: "access:public report",
+      });
+      const view = component.getView();
+
+      await act(() => selectChipNode(view, "field-value"));
+
+      const deleteBtn = document.querySelector(".chip-editor-delete") as HTMLElement;
+      expect(deleteBtn).not.toBeNull();
+      await act(() => {
+        deleteBtn.click();
+      });
+
+      // Chip should be gone, popover should be closed
+      expect(document.querySelector(".chip-editor")).toBeNull();
+      expect(editor.querySelectorAll(".search-field-value").length).toBe(0);
+      expect(component.getQuery()).toContain("report");
+    });
+
+    it("Escape closes the chip editor popover", async () => {
+      const { component } = await renderEditor({
+        initialQuery: "access:public",
+      });
+      const view = component.getView();
+
+      await act(() => selectChipNode(view, "field-value"));
+      expect(document.querySelector(".chip-editor")).not.toBeNull();
+
+      // Press Escape on the popover
+      const popover = document.querySelector(".chip-editor") as HTMLElement;
+      await act(() => {
+        popover.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
+        );
+      });
+
+      expect(document.querySelector(".chip-editor")).toBeNull();
+    });
+
+    it("boost stepper increments and decrements on field-value chips", async () => {
+      const { component } = await renderEditor({
+        initialQuery: "access:public",
+      });
+      const view = component.getView();
+
+      await act(() => selectChipNode(view, "field-value"));
+
+      // Increment boost
+      let incrementBtn = document.querySelector(
+        "[aria-label='Increase boost']",
+      ) as HTMLElement;
+      await act(() => {
+        incrementBtn.click();
+      });
+
+      let chipNode: import("prosemirror-model").Node | null = null;
+      view.state.doc.descendants((node) => {
+        if (node.type.name === "field-value") chipNode = node;
+      });
+      expect(chipNode!.attrs.boost).toBe(2);
+
+      // Increment again (re-query in case popover was recreated)
+      incrementBtn = document.querySelector(
+        "[aria-label='Increase boost']",
+      ) as HTMLElement;
+      await act(() => {
+        incrementBtn.click();
+      });
+
+      chipNode = null;
+      view.state.doc.descendants((node) => {
+        if (node.type.name === "field-value") chipNode = node;
+      });
+      expect(chipNode!.attrs.boost).toBe(3);
+
+      // Decrement (re-query)
+      const decrementBtn = document.querySelector(
+        "[aria-label='Decrease boost']",
+      ) as HTMLElement;
+      await act(() => {
+        decrementBtn.click();
+      });
+
+      chipNode = null;
+      view.state.doc.descendants((node) => {
+        if (node.type.name === "field-value") chipNode = node;
+      });
+      expect(chipNode!.attrs.boost).toBe(2);
+    });
+
+    it("range chip editor does not show boost controls", async () => {
+      const { component } = await renderEditor({
+        initialQuery: "created_at:[NOW-1MONTH TO *]",
+      });
+      const view = component.getView();
+
+      await act(() => selectChipNode(view, "range"));
+
+      // Should not have boost controls
+      expect(document.querySelector("[aria-label='Increase boost']")).toBeNull();
+      expect(document.querySelector("[aria-label='Decrease boost']")).toBeNull();
     });
   });
 
