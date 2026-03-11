@@ -586,8 +586,8 @@ describe("SearchEditor", () => {
 
       expect(getACState(view).stage).toBe("range");
 
-      // Find the date inputs in the dropdown and fill them
-      const dropdown = document.querySelector(".search-autocomplete");
+      // Find the date inputs in the range builder dropdown
+      const dropdown = document.querySelector(".search-ac-range");
       const inputs = dropdown?.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
       expect(inputs.length).toBe(3); // 1 fixed + 2 range
 
@@ -629,7 +629,7 @@ describe("SearchEditor", () => {
 
       expect(getACState(view).stage).toBe("range");
 
-      const dropdown = document.querySelector(".search-autocomplete");
+      const dropdown = document.querySelector(".search-ac-range");
       const inputs = dropdown?.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
       // Skip fixed input at index 0; range inputs are at 1 and 2
       inputs[1].value = "2023-01-01";
@@ -666,7 +666,7 @@ describe("SearchEditor", () => {
 
       expect(getACState(view).stage).toBe("range");
 
-      const dropdown = document.querySelector(".search-autocomplete");
+      const dropdown = document.querySelector(".search-ac-range");
       const inputs = dropdown?.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
 
       // Skip fixed input at index 0; range inputs are at 1 and 2
@@ -734,8 +734,8 @@ describe("SearchEditor", () => {
 
       expect(getACState(view).stage).toBe("range");
 
-      // Find the fixed value input (first input in the dropdown)
-      const dropdown = document.querySelector(".search-autocomplete");
+      // Find the fixed value input (first input in the range builder)
+      const dropdown = document.querySelector(".search-ac-range");
       const allInputs = dropdown?.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
       // Fixed section has 1 input, range section has 2 → first is the fixed input
       const fixedInput = allInputs[0];
@@ -772,7 +772,7 @@ describe("SearchEditor", () => {
 
       expect(getACState(view).stage).toBe("range");
 
-      const dropdown = document.querySelector(".search-autocomplete");
+      const dropdown = document.querySelector(".search-ac-range");
       const allInputs = dropdown?.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
       const fixedInput = allInputs[0];
       fixedInput.value = "50";
@@ -807,7 +807,7 @@ describe("SearchEditor", () => {
 
       expect(getACState(view).stage).toBe("range");
 
-      const dropdown = document.querySelector(".search-autocomplete");
+      const dropdown = document.querySelector(".search-ac-range");
       const allInputs = dropdown?.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
       const fixedInput = allInputs[0];
       fixedInput.value = "2024-06-01";

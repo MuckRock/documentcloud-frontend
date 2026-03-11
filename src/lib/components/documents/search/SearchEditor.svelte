@@ -25,7 +25,6 @@
   import { atomNavigationKeymap } from "./atom-navigation-plugin";
   import { nodeViews } from "./nodeviews";
   import { autocompletePlugin } from "./plugins/autocomplete";
-  import "./plugins/autocomplete.css";
   import {
     isAsyncField,
     fetchDisplayNames,

@@ -43,6 +43,7 @@ class SvelteNodeView implements NodeView {
     this.dom = document.createElement("span");
     this.dom.classList.add("search-nodeview");
     this.dom.contentEditable = "false";
+    this.dom.style.display = "inline-block";
     this.dom.style.cursor = "pointer";
     this.dom.style.userSelect = "none";
 

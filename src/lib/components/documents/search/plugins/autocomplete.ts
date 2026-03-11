@@ -13,6 +13,8 @@ import {
   type Suggestion,
 } from "../autocomplete-data";
 import { searchSchema } from "../schema";
+import AutocompleteDropdown from "../AutocompleteDropdown.svelte";
+import RangeBuilder from "../RangeBuilder.svelte";
 
 export const autocompletePluginKey = new PluginKey("autocomplete");
 
@@ -82,7 +84,6 @@ function computeAutocompleteState(
   const textBeforeCursor = doc.textBetween($pos.start(), from, " ", " ");
 
   const trigger = detectTrigger(textBeforeCursor, preloadedFields);
-
   // Use triggerStart from detectTrigger for accurate positioning,
   // especially for quoted values that contain spaces.
   const wordStartPos =
@@ -318,7 +319,7 @@ function applyValueSuggestion(
     tr.replaceWith(state.from, replaceTo, sortNode);
     // Add a space after the chip and place cursor there
     const afterChip = state.from + sortNode.nodeSize;
-    tr.insertText(" ", afterChip);
+    tr.insertText("\u00A0", afterChip);
     tr.setSelection(TextSelection.create(tr.doc, afterChip + 1));
   } else if (fieldDef.insertBehavior === "field-value-chip") {
     // Extract prefix from the original text if present
@@ -338,8 +339,9 @@ function applyValueSuggestion(
 
     tr.replaceWith(state.from, replaceTo, chipNode);
     const afterChip = state.from + chipNode.nodeSize;
-    tr.insertText(" ", afterChip);
+    tr.insertText("\u00A0", afterChip);
     tr.setSelection(TextSelection.create(tr.doc, afterChip + 1));
+
   }
 
   tr.setMeta(autocompletePluginKey, INACTIVE);
@@ -387,7 +389,7 @@ function applyRangeShortcut(
 
   tr.replaceWith(state.from, state.to, rangeNode);
   const afterChip = state.from + rangeNode.nodeSize;
-  tr.insertText(" ", afterChip);
+  tr.insertText("\u00A0", afterChip);
   tr.setSelection(TextSelection.create(tr.doc, afterChip + 1));
 
   tr.setMeta(autocompletePluginKey, INACTIVE);
@@ -451,7 +453,7 @@ function applyCustomRange(
 
   tr.replaceWith(state.from, state.to, rangeNode);
   const afterChip = state.from + rangeNode.nodeSize;
-  tr.insertText(" ", afterChip);
+  tr.insertText("\u00A0", afterChip);
   tr.setSelection(TextSelection.create(tr.doc, afterChip + 1));
 
   tr.setMeta(autocompletePluginKey, INACTIVE);
@@ -491,7 +493,7 @@ function applyFixedValue(view: EditorView, value: string): void {
 
   tr.replaceWith(state.from, state.to, chipNode);
   const afterChip = state.from + chipNode.nodeSize;
-  tr.insertText(" ", afterChip);
+  tr.insertText("\u00A0", afterChip);
   tr.setSelection(TextSelection.create(tr.doc, afterChip + 1));
 
   tr.setMeta(autocompletePluginKey, INACTIVE);
@@ -513,305 +515,7 @@ function applySuggestion(
   }
 }
 
-// ── Dropdown DOM ───────────────────────────────────────────────
-
-let idCounter = 0;
-
-function createDropdown(): HTMLElement {
-  const dropdown = document.createElement("div");
-  dropdown.className = "search-autocomplete";
-  dropdown.setAttribute("role", "listbox");
-  dropdown.id = `search-ac-${++idCounter}`;
-  dropdown.style.position = "absolute";
-  dropdown.style.display = "none";
-  return dropdown;
-}
-
-function renderDropdown(
-  dropdown: HTMLElement,
-  suggestions: Suggestion[],
-  selectedIndex: number,
-  onSelect: (index: number) => void,
-  onHover: (index: number) => void,
-  loading = false,
-): void {
-  dropdown.innerHTML = "";
-  dropdown.classList.remove("search-ac-range");
-
-  if (suggestions.length === 0 && !loading) {
-    dropdown.style.display = "none";
-    return;
-  }
-
-  if (loading && suggestions.length === 0) {
-    const loadingEl = document.createElement("div");
-    loadingEl.className = "search-ac-loading";
-    loadingEl.textContent = "Loading\u2026";
-    dropdown.appendChild(loadingEl);
-    dropdown.style.display = "block";
-    return;
-  }
-
-  suggestions.forEach((suggestion, index) => {
-    const item = document.createElement("div");
-    item.className = "search-ac-option";
-    item.setAttribute("role", "option");
-    item.id = `${dropdown.id}-opt-${index}`;
-    item.setAttribute("aria-selected", String(index === selectedIndex));
-
-    const label = document.createElement("span");
-    label.className = "search-ac-label";
-    label.textContent = suggestion.label;
-    item.appendChild(label);
-
-    if (suggestion.description) {
-      const desc = document.createElement("span");
-      desc.className = "search-ac-description";
-      desc.textContent = suggestion.description;
-      item.appendChild(desc);
-    }
-
-    if (index === selectedIndex) {
-      item.classList.add("selected");
-    }
-
-    item.addEventListener("mousedown", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      onSelect(index);
-    });
-
-    item.addEventListener("mouseenter", () => {
-      onHover(index);
-    });
-
-    dropdown.appendChild(item);
-  });
-
-  if (loading) {
-    const loadingEl = document.createElement("div");
-    loadingEl.className = "search-ac-loading";
-    loadingEl.textContent = "Loading\u2026";
-    dropdown.appendChild(loadingEl);
-  }
-
-  dropdown.style.display = "block";
-
-  // Keep the selected item visible within the scrollable dropdown
-  const selectedEl = dropdown.querySelector(".selected");
-  if (selectedEl && typeof selectedEl.scrollIntoView === "function") {
-    selectedEl.scrollIntoView({ block: "nearest" });
-  }
-}
-
-function updateRangeSelection(
-  dropdown: HTMLElement,
-  selectedIndex: number,
-): boolean {
-  const options = dropdown.querySelectorAll(".search-ac-option");
-  if (options.length === 0) return false;
-  options.forEach((opt, i) => {
-    opt.classList.toggle("selected", i === selectedIndex);
-    opt.setAttribute("aria-selected", String(i === selectedIndex));
-  });
-  return true;
-}
-
-function renderRangeDropdown(
-  dropdown: HTMLElement,
-  fieldName: string,
-  suggestions: Suggestion[],
-  selectedIndex: number,
-  onSelect: (index: number) => void,
-  onHover: (index: number) => void,
-  onCustomRange: (lower: string, upper: string) => void,
-  onFixedValue: (value: string) => void,
-): void {
-  // If already showing the range dropdown for the same field with the same
-  // shortcuts, just update the selected highlight in-place to preserve
-  // user-entered input values.
-  if (
-    dropdown.classList.contains("search-ac-range") &&
-    dropdown.dataset.rangeField === fieldName &&
-    dropdown.style.display === "block"
-  ) {
-    updateRangeSelection(dropdown, selectedIndex);
-    return;
-  }
-
-  dropdown.innerHTML = "";
-  dropdown.classList.add("search-ac-range");
-  dropdown.dataset.rangeField = fieldName;
-
-  const rangeConfig = getRangeConfig(fieldName);
-  if (!rangeConfig) {
-    dropdown.style.display = "none";
-    return;
-  }
-
-  const isDateField =
-    fieldName === "created_at" || fieldName === "updated_at";
-
-  // ── Fixed (single-value) section ──────────────────────────────
-  const fixedLabel = document.createElement("div");
-  fixedLabel.className = "search-ac-section-label";
-  fixedLabel.textContent = "Fixed";
-  dropdown.appendChild(fixedLabel);
-
-  const fixedInputsDiv = document.createElement("div");
-  fixedInputsDiv.className = "search-ac-range-inputs";
-
-  const fixedField = document.createElement("div");
-  fixedField.className = "search-ac-range-field";
-  const fixedFieldLabel = document.createElement("label");
-  fixedFieldLabel.textContent = "Value";
-  const fixedInput = document.createElement("input");
-  fixedInput.type = isDateField ? "date" : "number";
-  fixedInput.placeholder = isDateField ? "YYYY-MM-DD" : "0";
-  fixedField.appendChild(fixedFieldLabel);
-  fixedField.appendChild(fixedInput);
-
-  const fixedInsertBtn = document.createElement("button");
-  fixedInsertBtn.className = "search-ac-insert-btn";
-  fixedInsertBtn.textContent = "Insert";
-  fixedInsertBtn.type = "button";
-
-  fixedInsertBtn.addEventListener("mousedown", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (fixedInput.value) onFixedValue(fixedInput.value);
-  });
-
-  fixedInput.addEventListener("mousedown", (e) => {
-    e.stopPropagation();
-  });
-  fixedInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      e.stopPropagation();
-      if (fixedInput.value) onFixedValue(fixedInput.value);
-    }
-  });
-
-  fixedInputsDiv.appendChild(fixedField);
-  fixedInputsDiv.appendChild(fixedInsertBtn);
-  dropdown.appendChild(fixedInputsDiv);
-
-  // Separator between Fixed and Range
-  const fixedSep = document.createElement("hr");
-  fixedSep.className = "search-ac-separator";
-  dropdown.appendChild(fixedSep);
-
-  // ── Range section ─────────────────────────────────────────────
-  const rangeLabel = document.createElement("div");
-  rangeLabel.className = "search-ac-section-label";
-  rangeLabel.textContent = "Range";
-  dropdown.appendChild(rangeLabel);
-
-  // Render shortcuts
-  suggestions.forEach((suggestion, index) => {
-    const item = document.createElement("div");
-    item.className = "search-ac-option";
-    item.setAttribute("role", "option");
-    item.id = `${dropdown.id}-opt-${index}`;
-    item.setAttribute("aria-selected", String(index === selectedIndex));
-
-    const label = document.createElement("span");
-    label.className = "search-ac-label";
-    label.textContent = suggestion.label;
-    item.appendChild(label);
-
-    if (index === selectedIndex) {
-      item.classList.add("selected");
-    }
-
-    item.addEventListener("mousedown", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      onSelect(index);
-    });
-
-    item.addEventListener("mouseenter", () => {
-      onHover(index);
-    });
-
-    dropdown.appendChild(item);
-  });
-
-  // Separator
-  if (suggestions.length > 0) {
-    const sep = document.createElement("hr");
-    sep.className = "search-ac-separator";
-    dropdown.appendChild(sep);
-  }
-
-  // Custom range inputs
-  const inputsDiv = document.createElement("div");
-  inputsDiv.className = "search-ac-range-inputs";
-
-  const startField = document.createElement("div");
-  startField.className = "search-ac-range-field";
-  const startLabel = document.createElement("label");
-  startLabel.textContent = rangeConfig.startLabel;
-  const startInput = document.createElement("input");
-  startInput.type = isDateField ? "date" : "number";
-  startInput.placeholder = isDateField ? "YYYY-MM-DD" : "0";
-  startField.appendChild(startLabel);
-  startField.appendChild(startInput);
-
-  const endField = document.createElement("div");
-  endField.className = "search-ac-range-field";
-  const endLabel = document.createElement("label");
-  endLabel.textContent = rangeConfig.endLabel;
-  const endInput = document.createElement("input");
-  endInput.type = isDateField ? "date" : "number";
-  endInput.placeholder = isDateField ? "YYYY-MM-DD" : "∞";
-  endField.appendChild(endLabel);
-  endField.appendChild(endInput);
-
-  const insertBtn = document.createElement("button");
-  insertBtn.className = "search-ac-insert-btn";
-  insertBtn.textContent = "Insert";
-  insertBtn.type = "button";
-
-  insertBtn.addEventListener("mousedown", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const lower = startInput.value || "*";
-    const upper = endInput.value || "*";
-    onCustomRange(lower, upper);
-  });
-
-  // Prevent input clicks from dismissing the dropdown, and
-  // submit the range on Enter key
-  for (const input of [startInput, endInput]) {
-    input.addEventListener("mousedown", (e) => {
-      e.stopPropagation();
-    });
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        e.stopPropagation();
-        const lower = startInput.value || "*";
-        const upper = endInput.value || "*";
-        onCustomRange(lower, upper);
-      }
-    });
-  }
-
-  inputsDiv.appendChild(startField);
-  inputsDiv.appendChild(endField);
-  inputsDiv.appendChild(insertBtn);
-  dropdown.appendChild(inputsDiv);
-
-  dropdown.style.display = "block";
-
-  // Keep the selected item visible
-  const selectedEl = dropdown.querySelector(".selected");
-  if (selectedEl && typeof selectedEl.scrollIntoView === "function") {
-    selectedEl.scrollIntoView({ block: "nearest" });
-  }
-}
+// ── Positioning helper ──────────────────────────────────────────
 
 function positionDropdown(
   dropdown: HTMLElement,
@@ -825,6 +529,7 @@ function positionDropdown(
     // coordsAtPos requires layout (getClientRects); unavailable in jsdom
     return;
   }
+
   const virtualEl = {
     getBoundingClientRect: () => ({
       width: 0,
@@ -847,31 +552,9 @@ function positionDropdown(
   });
 }
 
-// ── Live region for screen reader announcements ────────────────
-
-function createLiveRegion(): HTMLElement {
-  const region = document.createElement("div");
-  region.setAttribute("aria-live", "polite");
-  region.setAttribute("aria-atomic", "true");
-  region.className = "sr-only";
-  region.style.position = "absolute";
-  region.style.width = "1px";
-  region.style.height = "1px";
-  region.style.overflow = "hidden";
-  region.style.clip = "rect(0 0 0 0)";
-  region.style.whiteSpace = "nowrap";
-  return region;
-}
-
-function announceCount(region: HTMLElement, count: number): void {
-  if (count === 0) {
-    region.textContent = "";
-  } else {
-    region.textContent = `${count} suggestion${count === 1 ? "" : "s"} available. Use up and down arrows to navigate.`;
-  }
-}
-
 // ── Plugin ─────────────────────────────────────────────────────
+
+let idCounter = 0;
 
 export interface AutocompletePluginOptions {
   /** Returns preloaded suggestions derived from current search results. */
@@ -990,16 +673,45 @@ export function autocompletePlugin(
     },
 
     view(editorView) {
-      const dropdown = createDropdown();
-      const liveRegion = createLiveRegion();
-      document.body.appendChild(dropdown);
+      const dropdownId = `search-ac-${++idCounter}`;
+
+      // Container elements for Svelte components, appended to document.body
+      const dropdownContainer = document.createElement("div");
+      const rangeContainer = document.createElement("div");
+      const liveRegion = document.createElement("div");
+      liveRegion.setAttribute("aria-live", "polite");
+      liveRegion.setAttribute("aria-atomic", "true");
+      liveRegion.className = "sr-only";
+      liveRegion.style.position = "absolute";
+      liveRegion.style.width = "1px";
+      liveRegion.style.height = "1px";
+      liveRegion.style.overflow = "hidden";
+      liveRegion.style.clip = "rect(0 0 0 0)";
+      liveRegion.style.whiteSpace = "nowrap";
+      document.body.appendChild(dropdownContainer);
+      document.body.appendChild(rangeContainer);
       document.body.appendChild(liveRegion);
+
+      // Mount Svelte components eagerly (kept alive for the editor's lifetime).
+      // The components' {#if visible} blocks handle show/hide internally.
+      const dropdownComponent = new AutocompleteDropdown({
+        target: dropdownContainer,
+        props: {
+          suggestions: [],
+          selectedIndex: 0,
+          loading: false,
+          dropdownId,
+          onSelect,
+          onHover,
+        },
+      });
+      let rangeComponent: RangeBuilder | null = null;
 
       // Set ARIA attributes on the editor
       const editorDom = editorView.dom;
       editorDom.setAttribute("aria-autocomplete", "list");
       editorDom.setAttribute("aria-expanded", "false");
-      editorDom.setAttribute("aria-owns", dropdown.id);
+      editorDom.setAttribute("aria-owns", dropdownId);
 
       let prevSuggestionCount = 0;
 
@@ -1010,43 +722,6 @@ export function autocompletePlugin(
       /** Cache of last successfully fetched async suggestions, keyed by field. */
       let lastAsyncResults: { field: string; suggestions: Suggestion[] } | null =
         null;
-
-      // Dismiss on click outside editor and dropdown
-      function onDocumentMousedown(e: MouseEvent) {
-        const target = e.target as Node;
-        if (
-          !editorDom.contains(target) &&
-          !dropdown.contains(target)
-        ) {
-          const state = autocompletePluginKey.getState(
-            editorView.state,
-          ) as AutocompleteState;
-          if (state.active) {
-            editorView.dispatch(
-              editorView.state.tr.setMeta(autocompletePluginKey, DISMISSED),
-            );
-          }
-        }
-      }
-      document.addEventListener("mousedown", onDocumentMousedown);
-
-      // Dismiss on editor blur (with delay so dropdown clicks aren't missed)
-      function onEditorBlur() {
-        setTimeout(() => {
-          // Only dismiss if the focus didn't move to the dropdown
-          if (!dropdown.contains(document.activeElement)) {
-            const state = autocompletePluginKey.getState(
-              editorView.state,
-            ) as AutocompleteState;
-            if (state.active) {
-              editorView.dispatch(
-                editorView.state.tr.setMeta(autocompletePluginKey, DISMISSED),
-              );
-            }
-          }
-        }, 100);
-      }
-      editorDom.addEventListener("blur", onEditorBlur);
 
       function onSelect(index: number) {
         const state = autocompletePluginKey.getState(
@@ -1076,6 +751,47 @@ export function autocompletePlugin(
           );
         }
       }
+
+      // Dismiss on click outside editor and dropdown
+      function onDocumentMousedown(e: MouseEvent) {
+        const target = e.target as Node;
+        if (
+          !editorDom.contains(target) &&
+          !dropdownContainer.contains(target) &&
+          !rangeContainer.contains(target)
+        ) {
+          const state = autocompletePluginKey.getState(
+            editorView.state,
+          ) as AutocompleteState;
+          if (state.active) {
+            editorView.dispatch(
+              editorView.state.tr.setMeta(autocompletePluginKey, DISMISSED),
+            );
+          }
+        }
+      }
+      document.addEventListener("mousedown", onDocumentMousedown);
+
+      // Dismiss on editor blur (with delay so dropdown clicks aren't missed)
+      function onEditorBlur() {
+        setTimeout(() => {
+          // Only dismiss if the focus didn't move to the dropdown
+          if (
+            !dropdownContainer.contains(document.activeElement) &&
+            !rangeContainer.contains(document.activeElement)
+          ) {
+            const state = autocompletePluginKey.getState(
+              editorView.state,
+            ) as AutocompleteState;
+            if (state.active) {
+              editorView.dispatch(
+                editorView.state.tr.setMeta(autocompletePluginKey, DISMISSED),
+              );
+            }
+          }
+        }, 100);
+      }
+      editorDom.addEventListener("blur", onEditorBlur);
 
       /** Schedule an async fetch for value suggestions. */
       function scheduleAsyncFetch(
@@ -1138,6 +854,88 @@ export function autocompletePlugin(
         }, 300);
       }
 
+      function announceCount(count: number) {
+        if (count === 0) {
+          liveRegion.textContent = "";
+        } else {
+          liveRegion.textContent = `${count} suggestion${count === 1 ? "" : "s"} available. Use up and down arrows to navigate.`;
+        }
+      }
+
+      /** Show the standard dropdown, hide range builder */
+      function showDropdown(
+        pluginState: AutocompleteState,
+        view: EditorView,
+      ) {
+        // Hide range builder
+        if (rangeComponent) {
+          rangeComponent.getElement().style.display = "none";
+        }
+
+        dropdownComponent.$set({
+          suggestions: pluginState.suggestions,
+          selectedIndex: pluginState.selectedIndex,
+          loading: pluginState.loading,
+        });
+
+        const el = dropdownComponent.getElement();
+        el.style.display = "block";
+        if (pluginState.from != null) {
+          positionDropdown(el, view, pluginState.to ?? pluginState.from);
+        }
+      }
+
+      /** Show the range builder, hide standard dropdown */
+      function showRangeBuilder(
+        pluginState: AutocompleteState,
+        view: EditorView,
+      ) {
+        // Hide the standard dropdown
+        dropdownComponent.getElement().style.display = "none";
+
+        if (!rangeComponent) {
+          rangeComponent = new RangeBuilder({
+            target: rangeContainer,
+            props: {
+              fieldName: pluginState.fieldName!,
+              suggestions: pluginState.suggestions,
+              selectedIndex: pluginState.selectedIndex,
+              dropdownId,
+              onSelect,
+              onHover,
+              onCustomRange: (lower: string, upper: string) => {
+                applyCustomRange(view, lower, upper);
+                editorView.focus();
+              },
+              onFixedValue: (value: string) => {
+                applyFixedValue(view, value);
+                editorView.focus();
+              },
+            },
+          });
+        } else {
+          rangeComponent.$set({
+            fieldName: pluginState.fieldName!,
+            suggestions: pluginState.suggestions,
+            selectedIndex: pluginState.selectedIndex,
+          });
+        }
+
+        const el = rangeComponent.getElement();
+        el.style.display = "block";
+        if (pluginState.from != null) {
+          positionDropdown(el, view, pluginState.to ?? pluginState.from);
+        }
+      }
+
+      /** Hide all dropdowns */
+      function hideAll() {
+        dropdownComponent.getElement().style.display = "none";
+        if (rangeComponent) {
+          rangeComponent.getElement().style.display = "none";
+        }
+      }
+
       return {
         update(view) {
           const pluginState = autocompletePluginKey.getState(
@@ -1185,7 +983,7 @@ export function autocompletePlugin(
                     !isAsyncField(computed.fieldName)
                   ) {
                     // No matches from interim data and no async fetch coming
-                    dropdown.style.display = "none";
+                    hideAll();
                     editorDom.setAttribute("aria-expanded", "false");
                     editorDom.removeAttribute("aria-activedescendant");
                     return;
@@ -1200,11 +998,11 @@ export function autocompletePlugin(
             }
 
             // Truly inactive
-            dropdown.style.display = "none";
+            hideAll();
             editorDom.setAttribute("aria-expanded", "false");
             editorDom.removeAttribute("aria-activedescendant");
             if (prevSuggestionCount !== 0) {
-              announceCount(liveRegion, 0);
+              announceCount(0);
               prevSuggestionCount = 0;
             }
             return;
@@ -1213,30 +1011,12 @@ export function autocompletePlugin(
           // Range stage is modal: don't re-compute from text.
           // It persists until the user selects a shortcut or dismisses.
           if (pluginState.stage === "range" && pluginState.fieldName) {
-            renderRangeDropdown(
-              dropdown,
-              pluginState.fieldName,
-              pluginState.suggestions,
-              pluginState.selectedIndex,
-              onSelect,
-              onHover,
-              (lower, upper) => {
-                applyCustomRange(view, lower, upper);
-                editorView.focus();
-              },
-              (value) => {
-                applyFixedValue(view, value);
-                editorView.focus();
-              },
-            );
-            if (pluginState.from != null) {
-              positionDropdown(dropdown, view, pluginState.to ?? pluginState.from);
-            }
+            showRangeBuilder(pluginState, view);
             editorDom.setAttribute("aria-expanded", "true");
-            const activeId = `${dropdown.id}-opt-${pluginState.selectedIndex}`;
+            const activeId = `${dropdownId}-opt-${pluginState.selectedIndex}`;
             editorDom.setAttribute("aria-activedescendant", activeId);
             if (pluginState.suggestions.length !== prevSuggestionCount) {
-              announceCount(liveRegion, pluginState.suggestions.length);
+              announceCount(pluginState.suggestions.length);
               prevSuggestionCount = pluginState.suggestions.length;
             }
             return;
@@ -1317,27 +1097,16 @@ export function autocompletePlugin(
           }
 
           // Render the dropdown
-          renderDropdown(
-            dropdown,
-            pluginState.suggestions,
-            pluginState.selectedIndex,
-            onSelect,
-            onHover,
-            pluginState.loading,
-          );
-
-          if (pluginState.from != null) {
-            positionDropdown(dropdown, view, pluginState.to ?? pluginState.from);
-          }
+          showDropdown(pluginState, view);
 
           // Update ARIA
           editorDom.setAttribute("aria-expanded", "true");
-          const activeId = `${dropdown.id}-opt-${pluginState.selectedIndex}`;
+          const activeId = `${dropdownId}-opt-${pluginState.selectedIndex}`;
           editorDom.setAttribute("aria-activedescendant", activeId);
 
           // Announce changes
           if (pluginState.suggestions.length !== prevSuggestionCount) {
-            announceCount(liveRegion, pluginState.suggestions.length);
+            announceCount(pluginState.suggestions.length);
             prevSuggestionCount = pluginState.suggestions.length;
           }
         },
@@ -1347,7 +1116,10 @@ export function autocompletePlugin(
           if (abortController) abortController.abort();
           document.removeEventListener("mousedown", onDocumentMousedown);
           editorDom.removeEventListener("blur", onEditorBlur);
-          dropdown.remove();
+          dropdownComponent.$destroy();
+          if (rangeComponent) rangeComponent.$destroy();
+          dropdownContainer.remove();
+          rangeContainer.remove();
           liveRegion.remove();
           editorDom.removeAttribute("aria-autocomplete");
           editorDom.removeAttribute("aria-expanded");
