@@ -75,7 +75,7 @@ describe("autocomplete-data", () => {
     it("matches field names by prefix", () => {
       const results = getFieldSuggestions("us");
       expect(results).toHaveLength(1);
-      expect(results[0].value).toBe("user");
+      expect(results[0]?.value).toBe("user");
     });
 
     it("matches field labels by prefix (case-insensitive)", () => {
@@ -93,7 +93,7 @@ describe("autocomplete-data", () => {
     it("typing 'titl' returns title", () => {
       const results = getFieldSuggestions("titl");
       expect(results).toHaveLength(1);
-      expect(results[0].value).toBe("title");
+      expect(results[0]?.value).toBe("title");
     });
 
     it("typing 'so' returns sort and source", () => {
@@ -202,7 +202,7 @@ describe("autocomplete-data", () => {
     it("filters language by label", () => {
       const results = getValueSuggestions("language", "Sp");
       expect(results).toHaveLength(1);
-      expect(results[0].value).toBe("spa");
+      expect(results[0]?.value).toBe("spa");
     });
 
     it("returns sort options", () => {
@@ -541,7 +541,7 @@ describe("autocomplete-data", () => {
       };
       const results = await fetchValueSuggestions("tag", "", preloaded);
       expect(results).toHaveLength(2);
-      expect(results[0].value).toBe("important");
+      expect(results[0]?.value).toBe("important");
     });
 
     it("filters preloaded suggestions by prefix", async () => {
@@ -553,7 +553,7 @@ describe("autocomplete-data", () => {
       };
       const results = await fetchValueSuggestions("tag", "imp", preloaded);
       expect(results).toHaveLength(1);
-      expect(results[0].value).toBe("important");
+      expect(results[0]?.value).toBe("important");
     });
 
     it("returns preloaded suggestions for data_* fields", async () => {
@@ -577,7 +577,7 @@ describe("autocomplete-data", () => {
       };
       const results = await fetchValueSuggestions("user", "", preloaded);
       expect(results).toHaveLength(1);
-      expect(results[0].label).toBe("Preloaded User");
+      expect(results[0]?.label).toBe("Preloaded User");
     });
 
     it("falls back to API for async fields with filter text", async () => {
@@ -587,7 +587,7 @@ describe("autocomplete-data", () => {
       const results = await fetchValueSuggestions("user", "Ali", preloaded);
       // Should call API, not return preloaded
       expect(results).toHaveLength(2);
-      expect(results[0].label).toBe("Alice Smith");
+      expect(results[0]?.label).toBe("Alice Smith");
     });
   });
 

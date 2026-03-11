@@ -2,7 +2,7 @@ import { vi, describe, it, expect, beforeEach } from "vitest";
 import { render, screen, waitFor, act } from "@testing-library/svelte";
 import { NodeSelection, TextSelection } from "prosemirror-state";
 import SearchEditor from "../SearchEditor.svelte";
-import { autocompletePluginKey } from "../plugins/autocomplete";
+import { autocompletePluginKey } from "../prosemirror/plugins/autocomplete";
 
 // Mock API modules for async autocomplete and enrichment
 vi.mock("$lib/api/accounts", () => ({
@@ -114,7 +114,7 @@ describe("SearchEditor", () => {
     });
 
     expect(submitSpy).toHaveBeenCalledTimes(1);
-    expect(submitSpy.mock.calls[0][0].detail).toEqual({
+    expect(submitSpy.mock.calls[0]?.[0].detail).toEqual({
       q: "mueller report",
     });
   });
@@ -254,7 +254,7 @@ describe("SearchEditor", () => {
 
       // Insert a chip + trailing non-breaking space, matching real browser
       // contenteditable behavior where &nbsp; prevents whitespace collapsing.
-      const chipNode = view.state.schema.nodes["field-value"].create({
+      const chipNode = view.state.schema.nodes["field-value"]!.create({
         field: "user",
         value: "100",
         prefix: null,
@@ -592,14 +592,14 @@ describe("SearchEditor", () => {
       expect(inputs.length).toBe(3); // 1 fixed + 2 range
 
       // Set date values on the range inputs (skip fixed input at index 0)
-      inputs[1].value = "2022-04-20";
-      inputs[2].value = "2022-05-30";
+      inputs[1]!.value = "2022-04-20";
+      inputs[2]!.value = "2022-05-30";
 
       // Click the range Insert button (second one; first is the fixed section)
       const insertBtns = dropdown?.querySelectorAll(".search-ac-insert-btn") as NodeListOf<HTMLButtonElement>;
       const insertBtn = insertBtns[1];
       await act(() => {
-        insertBtn.dispatchEvent(
+        insertBtn?.dispatchEvent(
           new MouseEvent("mousedown", { bubbles: true }),
         );
       });
@@ -632,12 +632,12 @@ describe("SearchEditor", () => {
       const dropdown = document.querySelector(".search-ac-range");
       const inputs = dropdown?.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
       // Skip fixed input at index 0; range inputs are at 1 and 2
-      inputs[1].value = "2023-01-01";
-      inputs[2].value = "2023-06-30";
+      inputs[1]!.value = "2023-01-01";
+      inputs[2]!.value = "2023-06-30";
 
       // Press Enter inside the start date input (range section)
       await act(() => {
-        inputs[1].dispatchEvent(
+        inputs[1]?.dispatchEvent(
           new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
         );
       });
@@ -670,14 +670,14 @@ describe("SearchEditor", () => {
       const inputs = dropdown?.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
 
       // Skip fixed input at index 0; range inputs are at 1 and 2
-      inputs[1].value = "10";
-      inputs[2].value = "50";
+      inputs[1]!.value = "10";
+      inputs[2]!.value = "50";
 
       // Use the range Insert button (second one)
       const insertBtns = dropdown?.querySelectorAll(".search-ac-insert-btn") as NodeListOf<HTMLButtonElement>;
       const insertBtn = insertBtns[1];
       await act(() => {
-        insertBtn.dispatchEvent(
+        insertBtn?.dispatchEvent(
           new MouseEvent("mousedown", { bubbles: true }),
         );
       });
@@ -739,12 +739,12 @@ describe("SearchEditor", () => {
       const allInputs = dropdown?.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
       // Fixed section has 1 input, range section has 2 → first is the fixed input
       const fixedInput = allInputs[0];
-      fixedInput.value = "2024-01-15";
+      fixedInput!.value = "2024-01-15";
 
       // Click the first Insert button (fixed section)
       const insertBtns = dropdown?.querySelectorAll(".search-ac-insert-btn") as NodeListOf<HTMLButtonElement>;
       await act(() => {
-        insertBtns[0].dispatchEvent(
+        insertBtns[0]?.dispatchEvent(
           new MouseEvent("mousedown", { bubbles: true }),
         );
       });
@@ -775,11 +775,11 @@ describe("SearchEditor", () => {
       const dropdown = document.querySelector(".search-ac-range");
       const allInputs = dropdown?.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
       const fixedInput = allInputs[0];
-      fixedInput.value = "50";
+      fixedInput!.value = "50";
 
       const insertBtns = dropdown?.querySelectorAll(".search-ac-insert-btn") as NodeListOf<HTMLButtonElement>;
       await act(() => {
-        insertBtns[0].dispatchEvent(
+        insertBtns[0]?.dispatchEvent(
           new MouseEvent("mousedown", { bubbles: true }),
         );
       });
@@ -810,11 +810,11 @@ describe("SearchEditor", () => {
       const dropdown = document.querySelector(".search-ac-range");
       const allInputs = dropdown?.querySelectorAll("input") as NodeListOf<HTMLInputElement>;
       const fixedInput = allInputs[0];
-      fixedInput.value = "2024-06-01";
+      fixedInput!.value = "2024-06-01";
 
       // Press Enter in the fixed input
       await act(() => {
-        fixedInput.dispatchEvent(
+        fixedInput?.dispatchEvent(
           new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
         );
       });
@@ -871,7 +871,7 @@ describe("SearchEditor", () => {
 
       // Now change should fire (range chip is structural)
       expect(changeSpy).toHaveBeenCalledTimes(1);
-      expect(changeSpy.mock.calls[0][0].detail.q).toContain("created_at:");
+      expect(changeSpy.mock.calls[0]?.[0].detail.q).toContain("created_at:");
     });
   });
 
@@ -1001,7 +1001,7 @@ describe("SearchEditor", () => {
 
       // Click Require toggle
       const requiredBtn = document.querySelector(
-        ".chip-editor-toggle[title='Require (+)']",
+        ".chip-editor-toggle[title='Require']",
       ) as HTMLElement;
       expect(requiredBtn).not.toBeNull();
       await act(() => {
@@ -1026,7 +1026,7 @@ describe("SearchEditor", () => {
       await act(() => selectChipNode(view, "field-value"));
 
       const excludedBtn = document.querySelector(
-        ".chip-editor-toggle[title='Exclude (-)']",
+        ".chip-editor-toggle[title='Exclude']",
       ) as HTMLElement;
       await act(() => {
         excludedBtn.click();
@@ -1044,7 +1044,7 @@ describe("SearchEditor", () => {
       await act(() => selectChipNode(view, "field-value"));
 
       const requiredBtn = document.querySelector(
-        ".chip-editor-toggle[title='Require (+)']",
+        ".chip-editor-toggle[title='Require']",
       ) as HTMLElement;
       await act(() => {
         requiredBtn.click();
@@ -1061,7 +1061,9 @@ describe("SearchEditor", () => {
 
       await act(() => selectChipNode(view, "field-value"));
 
-      const deleteBtn = document.querySelector(".chip-editor-delete") as HTMLElement;
+      // The delete button is a <Button> component rendered inside the popover
+      const popover = document.querySelector(".chip-editor") as HTMLElement;
+      const deleteBtn = popover?.querySelector("button.danger") as HTMLElement;
       expect(deleteBtn).not.toBeNull();
       await act(() => {
         deleteBtn.click();

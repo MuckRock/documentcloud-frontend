@@ -11,10 +11,10 @@ import {
   fetchValueSuggestions,
   getRangeConfig,
   type Suggestion,
-} from "../autocomplete-data";
+} from "./autocomplete-data";
 import { searchSchema } from "../schema";
-import AutocompleteDropdown from "../AutocompleteDropdown.svelte";
-import RangeBuilder from "../RangeBuilder.svelte";
+import AutocompleteDropdown from "../../AutocompleteDropdown.svelte";
+import RangeBuilder from "../../RangeBuilder.svelte";
 
 export const autocompletePluginKey = new PluginKey("autocomplete");
 

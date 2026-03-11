@@ -4,7 +4,7 @@
 -->
 <script lang="ts">
   import { afterUpdate } from "svelte";
-  import type { Suggestion } from "./autocomplete-data";
+  import type { Suggestion } from "./prosemirror/plugins/autocomplete-data";
 
   export let suggestions: Suggestion[] = [];
   export let selectedIndex: number = 0;

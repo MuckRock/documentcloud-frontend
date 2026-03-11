@@ -17,7 +17,7 @@
  * - ISO date strings with colons in ranges fail even when quoted — need pre-processing.
  */
 import { describe, it, expect } from "vitest";
-import { parse } from "lucene";
+import { parse, type NodeTerm, type BinaryAST } from "lucene";
 
 const IMPLICIT = "<implicit>";
 
@@ -84,7 +84,7 @@ describe("lucene parser evaluation", () => {
         left: { field: IMPLICIT, term: "mueller" },
       });
       // There is no `operator` property for unary NOT
-      expect(ast.operator).toBeUndefined();
+      expect((ast as BinaryAST).operator).toBeUndefined();
     });
 
     it("parses + prefix on bare terms", () => {
@@ -115,7 +115,7 @@ describe("lucene parser evaluation", () => {
         term: "102112",
       });
       // prefix is null, not "+"
-      expect(ast.left.prefix).toBeNull();
+      expect((ast.left as NodeTerm).prefix).toBeNull();
     });
 
     it("parses parenthesized groups", () => {

@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, act } from "@testing-library/svelte";
-import SearchEditor from "../SearchEditor.svelte";
-import { searchSchema } from "../schema";
-import { serialize } from "../pm-serialize";
+import SearchEditor from "../../../SearchEditor.svelte";
+import { searchSchema } from "../../schema";
+import { serialize } from "../../../utils/serialize";
 
 /** Mock DataTransfer for jsdom which doesn't have it */
 class MockDataTransfer {
@@ -60,7 +60,7 @@ describe("Clipboard plugin", () => {
       // when ProseMirror processes pasted text, it calls our parser.
       // In jsdom, paste events don't flow through PM's full pipeline,
       // so we test the parser function directly.
-      const { deserialize } = await import("../pm-deserialize");
+      const { deserialize } = await import("../../../utils/deserialize");
 
       // Verify the deserializer produces structured nodes from pasted text
       const doc = deserialize("user:102112 AND access:private");
@@ -76,7 +76,7 @@ describe("Clipboard plugin", () => {
     });
 
     it("clipboardTextParser handles sort directives", async () => {
-      const { deserialize } = await import("../pm-deserialize");
+      const { deserialize } = await import("../../../utils/deserialize");
       const doc = deserialize("sort:-page_count");
       const query = serialize(doc);
       expect(query).toBe("sort:-page_count");
@@ -89,14 +89,14 @@ describe("Clipboard plugin", () => {
     });
 
     it("clipboardTextParser passes through plain text", async () => {
-      const { deserialize } = await import("../pm-deserialize");
+      const { deserialize } = await import("../../../utils/deserialize");
       const doc = deserialize("just some plain text");
       const query = serialize(doc);
       expect(query).toBe("just some plain text");
     });
 
     it("pasted text with NOT gets operator decorations (truthful interpretation)", async () => {
-      const { deserialize } = await import("../pm-deserialize");
+      const { deserialize } = await import("../../../utils/deserialize");
       const doc = deserialize("mueller NOT report");
       const query = serialize(doc);
       // NOT should be preserved as text (decorations are render-only, not in the doc)

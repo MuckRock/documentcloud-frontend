@@ -1,8 +1,8 @@
 import { Plugin } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import type { Node as ProseMirrorNode } from "prosemirror-model";
-import { serialize } from "./pm-serialize";
-import { validateQuery } from "./parse";
+import { serialize } from "../../utils/serialize";
+import { validateQuery } from "../../utils/parse";
 
 /**
  * Decoration plugin for the search editor.
@@ -68,7 +68,7 @@ function findErrorRegion(
 
 /**
  * Compute the serialized length of an atom node.
- * Must match the logic in pm-serialize.ts exactly.
+ * Must match the logic in serialize.ts exactly.
  */
 function serializeAtomLength(node: ProseMirrorNode): number {
   switch (node.type.name) {

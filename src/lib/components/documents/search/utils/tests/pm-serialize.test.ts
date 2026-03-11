@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { searchSchema } from "../schema";
-import { serialize } from "../pm-serialize";
+import { searchSchema } from "../../prosemirror/schema";
+import { serialize } from "../serialize";
 import type { Node as ProseMirrorNode } from "prosemirror-model";
 
 /** Helper to create a PM doc with a single paragraph containing the given inline nodes */

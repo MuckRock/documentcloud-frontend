@@ -12,7 +12,7 @@
   import SearchEditor from "../documents/search/SearchEditor.svelte";
   import VisibleFields from "../documents/VisibleFields.svelte";
   import type { Nullable, Project } from "$lib/api/types";
-  import type { Suggestion } from "../documents/search/autocomplete-data";
+  import type { Suggestion } from "../documents/search/prosemirror/plugins/autocomplete-data";
   import { remToPx } from "$lib/utils/layout";
 
   interface Props {

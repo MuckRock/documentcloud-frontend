@@ -12,10 +12,10 @@ import type { NodeView, EditorView } from "prosemirror-view";
 import type { Node as ProseMirrorNode } from "prosemirror-model";
 import { NodeSelection } from "prosemirror-state";
 
-import FieldValueChip from "./FieldValueChip.svelte";
-import RangeChip from "./RangeChip.svelte";
-import SortChip from "./SortChip.svelte";
-import ChipEditor from "./ChipEditor.svelte";
+import FieldValueChip from "../FieldValueChip.svelte";
+import RangeChip from "../RangeChip.svelte";
+import SortChip from "../SortChip.svelte";
+import ChipEditor from "../ChipEditor.svelte";
 
 type ChipBehavior = "edit" | "toggle-sort";
 

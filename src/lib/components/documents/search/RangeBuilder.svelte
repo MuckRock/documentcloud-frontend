@@ -3,8 +3,8 @@
   Shows fixed value input, range shortcuts, and custom range inputs.
 -->
 <script lang="ts">
-  import type { Suggestion } from "./autocomplete-data";
-  import { getRangeConfig } from "./autocomplete-data";
+  import type { Suggestion } from "./prosemirror/plugins/autocomplete-data";
+  import { getRangeConfig } from "./prosemirror/plugins/autocomplete-data";
 
   export let fieldName: string;
   export let suggestions: Suggestion[] = [];

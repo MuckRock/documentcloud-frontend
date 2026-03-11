@@ -1,5 +1,6 @@
 import lucene from "lucene";
 import type { Node as ProseMirrorNode } from "prosemirror-model";
+import { searchSchema } from "../prosemirror/schema";
 import type {
   AST,
   BinaryAST,
@@ -7,7 +8,6 @@ import type {
   NodeTerm,
   NodeRangedTerm,
 } from "lucene";
-import { searchSchema } from "./schema";
 
 /**
  * Fields that should be rendered as field-value chips.

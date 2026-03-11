@@ -7,7 +7,7 @@ import {
 import { EditorView } from "prosemirror-view";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
-import { searchSchema } from "../schema";
+import { searchSchema } from "../../schema";
 import { atomNavigationKeymap } from "../atom-navigation-plugin";
 
 const { nodes } = searchSchema;
