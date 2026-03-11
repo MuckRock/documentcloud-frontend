@@ -102,6 +102,15 @@ describe("RangeChip", () => {
     expect(bounds?.textContent).toContain("100");
   });
 
+  it("preserves negative numbers as-is", () => {
+    const { container } = render(RangeChip, {
+      props: { field: "score", lower: "-5", upper: "10" },
+    });
+    const bounds = container.querySelector(".chip-bounds");
+    expect(bounds?.textContent).toContain("-5");
+    expect(bounds?.textContent).toContain("10");
+  });
+
   it("has the search-range class", () => {
     const { container } = render(RangeChip, {
       props: { field: "created_at", lower: "NOW-1MONTH", upper: "*" },

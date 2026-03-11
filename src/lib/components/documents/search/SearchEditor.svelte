@@ -1,8 +1,13 @@
 <!--
-  SearchEditor: A ProseMirror-based search field for constructing Lucene queries.
+  SearchEditor is ProseMirror-based search field for constructing Lucene queries.
 
-  The PM document is the source of truth for the query. Serialization to a Lucene
-  string happens only on submit. No continuous parse/rebuild loop.
+  It supports autofilling field names and values with static and dynamic suggestions.
+
+  The PM document is the source of truth for the query.
+  Serialization to a Lucene string happens only on submit.
+  Deserialization from a Lucene string happens when the initialQuery prop changes.
+
+  SearchEditor was written by Allan Lasser with assistance from Claude Opus 4.6.
 -->
 <script lang="ts">
   import { onMount, onDestroy, createEventDispatcher } from "svelte";
@@ -13,26 +18,29 @@
     TextSelection,
     type Command,
   } from "prosemirror-state";
+  import type { Node } from "prosemirror-model";
   import { EditorView } from "prosemirror-view";
   import { keymap } from "prosemirror-keymap";
   import { baseKeymap } from "prosemirror-commands";
   import { history, undo, redo } from "prosemirror-history";
-  import { Search16, Stop16 } from "svelte-octicons";
-  import Button from "../../common/Button.svelte";
   import { searchSchema } from "./schema";
   import { serialize } from "./pm-serialize";
   import { deserialize } from "./pm-deserialize";
   import { decorationPlugin } from "./decoration-plugin";
   import { clipboardPlugin } from "./clipboard-plugin";
+  import { nodeViews } from "./nodeviews";
   import { autocompletePlugin } from "./plugins/autocomplete";
   import "./plugins/autocomplete.css";
-  import { nodeViews } from "./nodeviews";
   import {
     isAsyncField,
     fetchDisplayNames,
     type Suggestion,
   } from "./autocomplete-data";
   import { validateQuery } from "./parse";
+
+  import { Search16, Stop16 } from "svelte-octicons";
+  import Button from "$lib/components/common/Button.svelte";
+  import FieldValueChip from "$lib/components/documents/search/FieldValueChip.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -91,20 +99,12 @@
     });
   }
 
-  /** Create a PM document from a Lucene query string.
-   *  Deserializes structured syntax (field:value, ranges, sort) into
-   *  atom nodes rendered as chips. Plain text passes through unchanged.
-   */
-  function createDoc(query: string) {
-    return deserialize(query);
-  }
-
   const CHIP_TYPES = new Set(["field-value", "range", "sort"]);
 
   /** Collect a fingerprint of all chip nodes in a document.
    *  Only includes attributes that affect the serialized query —
    *  cosmetic attrs like displayValue are excluded. */
-  function atomFingerprint(doc: import("prosemirror-model").Node): string {
+  function getFingerprint(doc: Node): string {
     const parts: string[] = [];
     doc.descendants((node) => {
       if (CHIP_TYPES.has(node.type.name)) {
@@ -116,16 +116,11 @@
     return parts.join("|");
   }
 
-  /** Serialize the current PM document to a Lucene query string. */
-  function getQuery(): string {
-    if (!view) return initialQuery;
-    return serialize(view.state.doc);
-  }
-
+  /** Upon submission, serialize the current PM document to a Lucene query string. */
   function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
     if (!queryValid) return;
-    const query = getQuery();
+    const query = view ? serialize(view.state.doc) : initialQuery;
     dispatch("submit", { "q": query });
   }
 
@@ -192,7 +187,7 @@
   onMount(() => {
     const state = EditorState.create({
       schema: searchSchema,
-      doc: createDoc(initialQuery),
+      doc: deserialize(initialQuery),
       plugins: [
         history(),
         autocompletePlugin({
@@ -227,6 +222,7 @@
     view = new EditorView(editorRef, {
       state,
       nodeViews,
+      attributes: {spellcheck: "false"},
       dispatchTransaction(tr) {
         const oldDoc = view.state.doc;
         view.updateState(view.state.apply(tr));
@@ -239,7 +235,7 @@
             // Plain text typing should not trigger searches — the user must
             // explicitly submit the form for text-only queries.
             const structural =
-              atomFingerprint(oldDoc) !== atomFingerprint(view.state.doc);
+              getFingerprint(oldDoc) !== getFingerprint(view.state.doc);
             if (structural) {
               dispatch("change", { q, structural });
             }
@@ -369,7 +365,7 @@
     // Carry forward display values from chips that still exist in the new query
     const carried = collectDisplayValues(view.state.doc);
 
-    const doc = createDoc(query);
+    const doc = deserialize(query);
     const tr = view.state.tr.replaceWith(
       0,
       view.state.doc.content.size,
@@ -387,10 +383,13 @@
     enrichChips(view);
   }
 
-  /** Public: get the current serialized query. */
-  export { getQuery };
+  /** Get the current serialized query. Used by tests. */
+  export function getQuery(): string {
+    if (!view) return initialQuery;
+    return serialize(view.state.doc);
+  }
 
-  /** Public: get the EditorView instance (for programmatic node insertion in tests). */
+  /** Get the EditorView instance for programmatic node insertion. Used by tests. */
   export function getView(): EditorView {
     return view;
   }
@@ -405,10 +404,7 @@
     {/if}
   </div>
   {#each contextChips as chip}
-    <span class="search-chip search-field-value context-chip">
-      <span class="chip-field">{chip.field}:</span>
-      <span class="chip-value">{chip.label}</span>
-    </span>
+    <FieldValueChip field={chip.field} value={chip.label} locked />
   {/each}
   <div bind:this={editorRef} class="prosemirror-editor" role="textbox"></div>
   <Button type="submit" mode="primary" ghost minW={false} disabled={!queryValid}>Search</Button>
@@ -438,19 +434,6 @@
   .search-editor-status.invalid {
     fill: var(--red-3);
   }
-
-  .context-chip {
-    flex: 0 0 auto;
-    opacity: 0.8;
-    cursor: default;
-    user-select: none;
-  }
-
-  .chip-field {
-    opacity: 0.7;
-    margin-right: 2px;
-  }
-
 
   .prosemirror-editor {
     flex: 1 1 auto;
@@ -500,25 +483,19 @@
     font-weight: 600;
   }
 
-  /* Chip styles (used by atom nodes in future phases) */
+  /* Chip styles (used by atom nodes) */
   :global(.search-chip) {
     display: inline;
-    border-radius: 3px;
-    padding: 2px 4px;
+    border-radius: .25rem;
+    padding: 0 4px;
     margin: 0 2px;
     white-space: nowrap;
   }
 
-  :global(.search-field-value) {
-    background-color: #e6f7ff;
-  }
-
-  :global(.search-range) {
-    background-color: #f0f7ff;
-  }
-
-  :global(.search-sort) {
-    background-color: #f0f5ff;
+  /* Selected chip — ProseMirror adds this class when an atom node is selected */
+  :global(.ProseMirror-selectednode .search-chip) {
+    outline: 1px solid var(--blue-3);
+    border-radius: .25rem;
   }
 
   /* Wavy underline for syntax errors */
@@ -526,12 +503,5 @@
     text-decoration-line: underline;
     text-decoration-style: wavy;
     text-decoration-color: var(--red-3);
-  }
-
-  /* Selected chip — ProseMirror adds this class when an atom node is selected */
-  :global(.ProseMirror-selectednode .search-chip) {
-    outline: 1px solid var(--blue-3, #0969da);
-    outline-offset: 1px;
-    border-radius: 3px;
   }
 </style>
