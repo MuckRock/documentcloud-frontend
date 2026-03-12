@@ -12,13 +12,25 @@
     "document",
   ]);
 
-  export let field: string = "";
-  export let value: string = "";
-  export let displayValue: string | null = null;
-  export let prefix: string | null = null;
-  export let boost: number | null = null;
-  export let quoted: boolean = false;
-  export let locked: boolean = false;
+  interface Props {
+    field?: string;
+    value?: string;
+    displayValue?: string | null;
+    prefix?: string | null;
+    boost?: number | null;
+    quoted?: boolean;
+    locked?: boolean;
+  }
+
+  let {
+    field = "",
+    value = "",
+    displayValue = null,
+    prefix = null,
+    boost = null,
+    quoted = false,
+    locked = false
+  }: Props = $props();
 
   /** Format a value for display. ISO dates become locale strings. */
   function displayBound(v: string): string {
@@ -31,9 +43,9 @@
     return v;
   }
 
-  $: isRich = RICH_FIELDS.has(field);
-  $: showLoading = isRich && !displayValue;
-  $: label = displayValue ?? displayBound(value);
+  let isRich = $derived(RICH_FIELDS.has(field));
+  let showLoading = $derived(isRich && !displayValue);
+  let label = $derived(displayValue ?? displayBound(value));
 </script>
 
 <span class="search-chip search-field-value" class:locked>

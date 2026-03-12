@@ -36,7 +36,7 @@
     "prosemirror-state": "^1.4.3",
     "prosemirror-view": "^1.38.1",
     "ts-node": "^9.1.1",
-    "typescript": "^5.0.3"
+    "typescript": "^5.5.0"
   },
   "devDependencies": {
     "@netlify/plugin-lighthouse": "^6.0.4",

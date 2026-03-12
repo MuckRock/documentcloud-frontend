@@ -1,9 +1,13 @@
 <!-- SortChip renders a "sort" atom node. -->
 <script lang="ts">
-  export let field: string = "";
-  export let direction: "asc" | "desc" = "asc";
+  interface Props {
+    field?: string;
+    direction?: "asc" | "desc";
+  }
 
-  $: arrow = direction === "desc" ? "\u2193" : "\u2191";
+  let { field = "", direction = "asc" }: Props = $props();
+
+  let arrow = $derived(direction === "desc" ? "\u2193" : "\u2191");
 </script>
 
 <span class="search-chip search-sort">

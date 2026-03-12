@@ -3,19 +3,29 @@
   Positioned via @floating-ui/dom using pre-computed anchor coordinates.
 -->
 <script lang="ts">
-  import { afterUpdate } from "svelte";
   import type { Suggestion } from "./prosemirror/plugins/autocomplete-data";
 
-  export let suggestions: Suggestion[] = [];
-  export let selectedIndex: number = 0;
-  export let loading: boolean = false;
-  export let dropdownId: string;
-  export let onSelect: (index: number) => void;
-  export let onHover: (index: number) => void;
+  interface Props {
+    suggestions?: Suggestion[];
+    selectedIndex?: number;
+    loading?: boolean;
+    dropdownId: string;
+    onSelect: (index: number) => void;
+    onHover: (index: number) => void;
+  }
 
-  let dropdown: HTMLElement;
+  let {
+    suggestions = [],
+    selectedIndex = 0,
+    loading = false,
+    dropdownId,
+    onSelect,
+    onHover,
+  }: Props = $props();
 
-  afterUpdate(() => {
+  let dropdown: HTMLElement = $state();
+
+  $effect(() => {
     if (!dropdown) return;
     const selected = dropdown.querySelector(".selected");
     if (selected && typeof selected.scrollIntoView === "function") {
@@ -46,8 +56,8 @@
         role="option"
         id="{dropdownId}-opt-{index}"
         aria-selected={index === selectedIndex}
-        on:mousedown|preventDefault|stopPropagation={() => onSelect(index)}
-        on:mouseenter={() => onHover(index)}
+        onmousedown={(e) => { e.preventDefault(); e.stopPropagation(); onSelect(index); }}
+        onmouseenter={() => onHover(index)}
       >
         <span class="search-ac-label">{suggestion.label}</span>
         {#if suggestion.description}

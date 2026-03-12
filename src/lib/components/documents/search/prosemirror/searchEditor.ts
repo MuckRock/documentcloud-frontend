@@ -14,11 +14,11 @@ import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
 import { history, undo, redo } from "prosemirror-history";
 import { searchSchema } from "./schema";
-import { nodeViews } from "./nodeviews";
+import { nodeViews } from "./nodeviews.svelte";
 import { decorationPlugin } from "./plugins/decoration-plugin";
 import { clipboardPlugin } from "./plugins/clipboard-plugin";
 import { atomNavigationKeymap } from "./plugins/atom-navigation-plugin";
-import { autocompletePlugin } from "./plugins/autocomplete";
+import { autocompletePlugin } from "./plugins/autocomplete.svelte";
 import {
   isAsyncField,
   fetchDisplayNames,

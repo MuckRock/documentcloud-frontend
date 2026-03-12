@@ -25,9 +25,9 @@
   export let search: Promise<Maybe<DocumentResults>>;
   export let query: string;
 
-  function handleSearchSubmit(e: CustomEvent<{ q: string }>) {
+  function handleSearchSubmit(detail: { q: string }) {
     const url = new URL($page.url);
-    url.searchParams.set("q", e.detail.q);
+    url.searchParams.set("q", detail.q);
     goto(url);
   }
 
@@ -60,7 +60,7 @@
       {/if}
       <PageToolbar>
         {#snippet center()}
-          <SearchEditor initialQuery={query} on:submit={handleSearchSubmit} />
+          <SearchEditor initialQuery={query} onsubmit={handleSearchSubmit} />
         {/snippet}
       </PageToolbar>
     </Flex>
