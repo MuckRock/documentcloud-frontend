@@ -15,6 +15,8 @@
     onHover: (index: number) => void;
     onCustomRange: (lower: string, upper: string) => void;
     onFixedValue: (value: string) => void;
+    onFocusEditor: () => void;
+    onDismiss: () => void;
   }
 
   let {
@@ -25,20 +27,27 @@
     onSelect,
     onHover,
     onCustomRange,
-    onFixedValue
+    onFixedValue,
+    onFocusEditor,
+    onDismiss,
   }: Props = $props();
 
-  let dropdown: HTMLElement = $state();
-  let fixedInput: HTMLInputElement = $state();
-  let startInput: HTMLInputElement = $state();
-  let endInput: HTMLInputElement = $state();
+  let dropdown: HTMLElement | undefined = $state();
+  let fixedInput: HTMLInputElement | undefined = $state();
+  let startInput: HTMLInputElement | undefined = $state();
+  let endInput: HTMLInputElement | undefined = $state();
 
   let rangeConfig = $derived(getRangeConfig(fieldName));
   let isDateField = $derived(fieldName === "created_at" || fieldName === "updated_at");
 
   /** Expose the dropdown element so the plugin can position it. */
-  export function getElement(): HTMLElement {
+  export function getElement(): HTMLElement | undefined {
     return dropdown;
+  }
+
+  /** Allow external code to move focus into this component. */
+  export function focus() {
+    dropdown?.focus();
   }
 
   function handleFixedInsert() {
@@ -66,24 +75,60 @@
       handleRangeInsert();
     }
   }
+
+  function handleKeydown(e: KeyboardEvent) {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      e.stopPropagation();
+      onDismiss();
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      e.stopPropagation();
+      onFocusEditor();
+    } else if (e.key === "Tab" && dropdown) {
+      const focusable = Array.from(
+        dropdown.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), input:not([disabled]), [tabindex="0"]',
+        ),
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0]!;
+      const last = focusable[focusable.length - 1]!;
+      if (e.shiftKey) {
+        if (document.activeElement === first || document.activeElement === dropdown) {
+          e.preventDefault();
+          onFocusEditor();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          onFocusEditor();
+        }
+      }
+    }
+  }
 </script>
 
 <div
   bind:this={dropdown}
   class="search-autocomplete search-ac-range"
-  role="listbox"
+  role="dialog"
+  aria-label="Range builder"
+  tabindex="0"
   id={dropdownId}
   style="position: absolute; display: none;"
+  onkeydown={handleKeydown}
 >
   {#if rangeConfig}
     <!-- Fixed (single-value) section -->
     <div class="search-ac-section-label">Fixed</div>
     <div class="search-ac-range-inputs">
       <div class="search-ac-range-field">
-        <label>Value</label>
+        <label for="{dropdownId}-fixed">Value</label>
         {#if isDateField}
           <input
             bind:this={fixedInput}
+            id="{dropdownId}-fixed"
             type="date"
             placeholder="YYYY-MM-DD"
             onmousedown={(e) => e.stopPropagation()}
@@ -92,6 +137,7 @@
         {:else}
           <input
             bind:this={fixedInput}
+            id="{dropdownId}-fixed"
             type="number"
             placeholder="0"
             onmousedown={(e) => e.stopPropagation()}
@@ -114,19 +160,23 @@
     <div class="search-ac-section-label">Range</div>
 
     <!-- Shortcuts -->
-    {#each suggestions as suggestion, index}
-      <div
-        class="search-ac-option"
-        class:selected={index === selectedIndex}
-        role="option"
-        id="{dropdownId}-opt-{index}"
-        aria-selected={index === selectedIndex}
-        onmousedown={(e) => { e.preventDefault(); e.stopPropagation(); onSelect(index); }}
-        onmouseenter={() => onHover(index)}
-      >
-        <span class="search-ac-label">{suggestion.label}</span>
-      </div>
-    {/each}
+    <div role="listbox" aria-label="Range shortcuts">
+      {#each suggestions as suggestion, index}
+        <div
+          class="search-ac-option"
+          class:selected={index === selectedIndex}
+          role="option"
+          tabindex="0"
+          id="{dropdownId}-opt-{index}"
+          aria-selected={index === selectedIndex}
+          onmousedown={(e) => { e.preventDefault(); e.stopPropagation(); onSelect(index); }}
+          onmouseenter={() => onHover(index)}
+          onkeydown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); onSelect(index); } }}
+        >
+          <span class="search-ac-label">{suggestion.label}</span>
+        </div>
+      {/each}
+    </div>
 
     {#if suggestions.length > 0}
       <hr class="search-ac-separator" />
@@ -135,10 +185,11 @@
     <!-- Custom range inputs -->
     <div class="search-ac-range-inputs">
       <div class="search-ac-range-field">
-        <label>{rangeConfig.startLabel}</label>
+        <label for="{dropdownId}-start">{rangeConfig.startLabel}</label>
         {#if isDateField}
           <input
             bind:this={startInput}
+            id="{dropdownId}-start"
             type="date"
             placeholder="YYYY-MM-DD"
             onmousedown={(e) => e.stopPropagation()}
@@ -147,6 +198,7 @@
         {:else}
           <input
             bind:this={startInput}
+            id="{dropdownId}-start"
             type="number"
             placeholder="0"
             onmousedown={(e) => e.stopPropagation()}
@@ -155,10 +207,11 @@
         {/if}
       </div>
       <div class="search-ac-range-field">
-        <label>{rangeConfig.endLabel}</label>
+        <label for="{dropdownId}-end">{rangeConfig.endLabel}</label>
         {#if isDateField}
           <input
             bind:this={endInput}
+            id="{dropdownId}-end"
             type="date"
             placeholder="YYYY-MM-DD"
             onmousedown={(e) => e.stopPropagation()}
@@ -167,6 +220,7 @@
         {:else}
           <input
             bind:this={endInput}
+            id="{dropdownId}-end"
             type="number"
             placeholder="∞"
             onmousedown={(e) => e.stopPropagation()}

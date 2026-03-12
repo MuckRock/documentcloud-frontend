@@ -81,7 +81,7 @@
   .items {
     display: flex;
     gap: 0.25rem;
-    align-items: start;
+    align-items: center;
   }
   .margin-xs {
     margin: 0.25rem;

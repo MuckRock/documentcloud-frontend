@@ -15,7 +15,7 @@ import {
 import { searchSchema } from "../schema";
 import AutocompleteDropdown from "../../AutocompleteDropdown.svelte";
 import RangeBuilder from "../../RangeBuilder.svelte";
-import { mount, unmount } from "svelte";
+import { flushSync, mount, unmount } from "svelte";
 
 export const autocompletePluginKey = new PluginKey("autocomplete");
 
@@ -646,8 +646,32 @@ export function autocompletePlugin(
             return true;
           }
 
-          case "Enter":
           case "Tab": {
+            if (state.stage === "range") {
+              // Move focus into the RangeBuilder dialog
+              const rangeEl = document.querySelector(
+                ".search-ac-range",
+              ) as HTMLElement | null;
+              if (rangeEl) {
+                event.preventDefault();
+                rangeEl.focus();
+                return true;
+              }
+            }
+            // Fall through to accept suggestion for field/value stages
+            event.preventDefault();
+            const tabSuggestion = state.suggestions[state.selectedIndex];
+            if (tabSuggestion) {
+              applySuggestion(
+                view,
+                tabSuggestion,
+                options.getPreloadedSuggestions?.(),
+              );
+            }
+            return true;
+          }
+
+          case "Enter": {
             event.preventDefault();
             const suggestion = state.suggestions[state.selectedIndex];
             if (suggestion) {
@@ -714,7 +738,15 @@ export function autocompletePlugin(
       const editorDom = editorView.dom;
       editorDom.setAttribute("aria-autocomplete", "list");
       editorDom.setAttribute("aria-expanded", "false");
-      editorDom.setAttribute("aria-owns", dropdownId);
+      editorDom.setAttribute("aria-controls", dropdownId);
+
+      /** Only clear aria-activedescendant if autocomplete set it (not chip selection). */
+      function clearActiveDescendant() {
+        const current = editorDom.getAttribute("aria-activedescendant");
+        if (current && current.startsWith(dropdownId)) {
+          editorDom.removeAttribute("aria-activedescendant");
+        }
+      }
 
       let prevSuggestionCount = 0;
 
@@ -857,11 +889,19 @@ export function autocompletePlugin(
         }, 300);
       }
 
-      function announceCount(count: number) {
+      let prevStage: string | null = null;
+
+      function announceCount(count: number, stage: string, fieldName: string | null) {
         if (count === 0) {
           liveRegion.textContent = "";
         } else {
-          liveRegion.textContent = `${count} suggestion${count === 1 ? "" : "s"} available. Use up and down arrows to navigate.`;
+          let context = "";
+          if (stage === "value" && fieldName) {
+            context = ` for ${fieldName}`;
+          } else if (stage === "range" && fieldName) {
+            context = ` for ${fieldName} range`;
+          }
+          liveRegion.textContent = `${count} suggestion${count === 1 ? "" : "s"}${context} available. Use up and down arrows to navigate.`;
         }
       }
 
@@ -912,10 +952,21 @@ export function autocompletePlugin(
               applyFixedValue(view, value);
               editorView.focus();
             },
+            onFocusEditor: () => {
+              editorView.focus();
+            },
+            onDismiss: () => {
+              editorView.focus();
+              editorView.dispatch(
+                editorView.state.tr.setMeta(autocompletePluginKey, DISMISSED),
+              );
+            },
           });
-          rangeComponent = mount(RangeBuilder, {
-            target: rangeContainer,
-            props: rangeProps,
+          flushSync(() => {
+            rangeComponent = mount(RangeBuilder, {
+              target: rangeContainer,
+              props: rangeProps,
+            });
           });
         } else {
           rangeProps.fieldName = pluginState.fieldName!;
@@ -989,7 +1040,7 @@ export function autocompletePlugin(
                     // No matches from interim data and no async fetch coming
                     hideAll();
                     editorDom.setAttribute("aria-expanded", "false");
-                    editorDom.removeAttribute("aria-activedescendant");
+                    clearActiveDescendant();
                     return;
                   }
                 }
@@ -1004,11 +1055,12 @@ export function autocompletePlugin(
             // Truly inactive
             hideAll();
             editorDom.setAttribute("aria-expanded", "false");
-            editorDom.removeAttribute("aria-activedescendant");
+            clearActiveDescendant();
             if (prevSuggestionCount !== 0) {
-              announceCount(0);
+              announceCount(0, "field", null);
               prevSuggestionCount = 0;
             }
+            prevStage = null;
             return;
           }
 
@@ -1019,8 +1071,11 @@ export function autocompletePlugin(
             editorDom.setAttribute("aria-expanded", "true");
             const activeId = `${dropdownId}-opt-${pluginState.selectedIndex}`;
             editorDom.setAttribute("aria-activedescendant", activeId);
+            if (pluginState.stage !== prevStage) {
+              prevStage = pluginState.stage;
+            }
             if (pluginState.suggestions.length !== prevSuggestionCount) {
-              announceCount(pluginState.suggestions.length);
+              announceCount(pluginState.suggestions.length, pluginState.stage, pluginState.fieldName);
               prevSuggestionCount = pluginState.suggestions.length;
             }
             return;
@@ -1108,9 +1163,14 @@ export function autocompletePlugin(
           const activeId = `${dropdownId}-opt-${pluginState.selectedIndex}`;
           editorDom.setAttribute("aria-activedescendant", activeId);
 
+          // Announce stage transitions
+          if (pluginState.stage !== prevStage) {
+            prevStage = pluginState.stage;
+          }
+
           // Announce changes
           if (pluginState.suggestions.length !== prevSuggestionCount) {
-            announceCount(pluginState.suggestions.length);
+            announceCount(pluginState.suggestions.length, pluginState.stage, pluginState.fieldName);
             prevSuggestionCount = pluginState.suggestions.length;
           }
         },
@@ -1127,7 +1187,7 @@ export function autocompletePlugin(
           liveRegion.remove();
           editorDom.removeAttribute("aria-autocomplete");
           editorDom.removeAttribute("aria-expanded");
-          editorDom.removeAttribute("aria-owns");
+          editorDom.removeAttribute("aria-controls");
           editorDom.removeAttribute("aria-activedescendant");
         },
       };

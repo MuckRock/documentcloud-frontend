@@ -1217,4 +1217,371 @@ describe("SearchEditor", () => {
       expect(editor.querySelector(".search-sort")).toBeInTheDocument();
     });
   });
+
+  describe("autocomplete insertion flow", () => {
+    it("full flow: type field prefix → select field → select value → chip inserted", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      // Type "acc" to trigger field suggestions
+      await act(() => typeInEditor(view, "acc"));
+      let state = getACState(view);
+      expect(state.active).toBe(true);
+      expect(state.stage).toBe("field");
+
+      // Select "access" with Enter
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+
+      // Should now be in value stage
+      state = getACState(view);
+      expect(state.active).toBe(true);
+      expect(state.stage).toBe("value");
+      expect(state.fieldName).toBe("access");
+
+      // Select first value ("public") with Enter
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+
+      // Chip should be inserted
+      let chipFound = false;
+      view.state.doc.descendants((node) => {
+        if (node.type.name === "field-value" && node.attrs.field === "access") {
+          expect(node.attrs.value).toBe("public");
+          chipFound = true;
+        }
+      });
+      expect(chipFound).toBe(true);
+    });
+
+    it("full flow: sort field → select sort option → sort chip inserted", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => typeInEditor(view, "sort:"));
+
+      let state = getACState(view);
+      expect(state.stage).toBe("value");
+      expect(state.fieldName).toBe("sort");
+
+      // Navigate to "Created (newest)" — sort:-created_at
+      // Find the index for created_at desc
+      const descIdx = state.suggestions.findIndex(
+        (s) => s.value === "-created_at",
+      );
+      // Navigate to it
+      for (let i = 0; i < descIdx; i++) {
+        await act(() => {
+          editor.dispatchEvent(
+            new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }),
+          );
+        });
+      }
+
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+
+      let sortFound = false;
+      view.state.doc.descendants((node) => {
+        if (node.type.name === "sort") {
+          expect(node.attrs.field).toBe("created_at");
+          expect(node.attrs.direction).toBe("desc");
+          sortFound = true;
+        }
+      });
+      expect(sortFound).toBe(true);
+    });
+  });
+
+  describe("keyboard navigation in autocomplete", () => {
+    it("ArrowDown cycles through suggestions and wraps", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => typeInEditor(view, "acc"));
+      const state = getACState(view);
+      const count = state.suggestions.length;
+      expect(state.selectedIndex).toBe(0);
+
+      // Navigate down through all suggestions
+      for (let i = 1; i <= count; i++) {
+        await act(() => {
+          editor.dispatchEvent(
+            new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }),
+          );
+        });
+        expect(getACState(view).selectedIndex).toBe(i % count);
+      }
+      // After wrapping, should be back at 0
+      expect(getACState(view).selectedIndex).toBe(0);
+    });
+
+    it("ArrowUp cycles in reverse and wraps", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => typeInEditor(view, "acc"));
+      const count = getACState(view).suggestions.length;
+      expect(getACState(view).selectedIndex).toBe(0);
+
+      // ArrowUp from 0 should wrap to last
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "ArrowUp", bubbles: true }),
+        );
+      });
+      expect(getACState(view).selectedIndex).toBe(count - 1);
+    });
+
+    it("Tab selects the highlighted suggestion", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => typeInEditor(view, "access:"));
+      expect(getACState(view).stage).toBe("value");
+
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Tab", bubbles: true }),
+        );
+      });
+
+      // Should have inserted a chip
+      let chipFound = false;
+      view.state.doc.descendants((node) => {
+        if (node.type.name === "field-value" && node.attrs.field === "access") {
+          chipFound = true;
+        }
+      });
+      expect(chipFound).toBe(true);
+    });
+
+    it("Escape dismisses dropdown and sets aria-expanded to false", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => typeInEditor(view, "acc"));
+      expect(editor.getAttribute("aria-expanded")).toBe("true");
+
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
+        );
+      });
+
+      expect(getACState(view).active).toBe(false);
+      expect(editor.getAttribute("aria-expanded")).toBe("false");
+    });
+  });
+
+  describe("Mod+/ shortcut", () => {
+    it("opens full field list in empty editor", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", {
+            key: "/",
+            metaKey: true,
+            bubbles: true,
+          }),
+        );
+      });
+
+      const state = getACState(view);
+      expect(state.active).toBe(true);
+      expect(state.stage).toBe("field");
+      // Should show all fields (not filtered)
+      expect(state.suggestions.length).toBeGreaterThan(5);
+    });
+
+    it("opens full field list with cursor after text", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => typeInEditor(view, "hello "));
+
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", {
+            key: "/",
+            metaKey: true,
+            bubbles: true,
+          }),
+        );
+      });
+
+      const state = getACState(view);
+      expect(state.active).toBe(true);
+      expect(state.stage).toBe("field");
+      expect(state.suggestions.length).toBeGreaterThan(5);
+    });
+
+    it("Escape after Mod+/ closes dropdown", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", {
+            key: "/",
+            metaKey: true,
+            bubbles: true,
+          }),
+        );
+      });
+      expect(getACState(view).active).toBe(true);
+
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
+        );
+      });
+      expect(getACState(view).active).toBe(false);
+    });
+  });
+
+  describe("chip keyboard interaction", () => {
+    it("Backspace deletes a selected chip", async () => {
+      const { component, editor } = await renderEditor({
+        initialQuery: "access:public report",
+      });
+      const view = component.getView();
+
+      // Select the chip via NodeSelection
+      let chipPos: number | null = null;
+      view.state.doc.descendants((node, pos) => {
+        if (chipPos === null && node.type.name === "field-value") {
+          chipPos = pos;
+        }
+      });
+      expect(chipPos).not.toBeNull();
+
+      await act(() => {
+        const tr = view.state.tr.setSelection(
+          NodeSelection.create(view.state.doc, chipPos!),
+        );
+        view.dispatch(tr);
+      });
+
+      // Verify it's selected
+      expect(view.state.selection instanceof NodeSelection).toBe(true);
+
+      // Press Backspace
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Backspace", bubbles: true }),
+        );
+      });
+
+      // Chip should be gone
+      let chipFound = false;
+      view.state.doc.descendants((node) => {
+        if (node.type.name === "field-value") chipFound = true;
+      });
+      expect(chipFound).toBe(false);
+      expect(component.getQuery()).toContain("report");
+    });
+
+    it("Delete key deletes a selected chip", async () => {
+      const { component, editor } = await renderEditor({
+        initialQuery: "access:public report",
+      });
+      const view = component.getView();
+
+      let chipPos: number | null = null;
+      view.state.doc.descendants((node, pos) => {
+        if (chipPos === null && node.type.name === "field-value") {
+          chipPos = pos;
+        }
+      });
+
+      await act(() => {
+        const tr = view.state.tr.setSelection(
+          NodeSelection.create(view.state.doc, chipPos!),
+        );
+        view.dispatch(tr);
+      });
+
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Delete", bubbles: true }),
+        );
+      });
+
+      let chipFound = false;
+      view.state.doc.descendants((node) => {
+        if (node.type.name === "field-value") chipFound = true;
+      });
+      expect(chipFound).toBe(false);
+    });
+  });
+
+  describe("live region announcements", () => {
+    it("announces suggestion count when autocomplete activates", async () => {
+      const { component } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => typeInEditor(view, "acc"));
+
+      const state = getACState(view);
+      const count = state.suggestions.length;
+
+      // Find the plugin's live region (appended to document.body)
+      const liveRegions = document.querySelectorAll("[aria-live='polite']");
+      const liveRegion = Array.from(liveRegions).find((el) =>
+        el.textContent?.includes("suggestion"),
+      );
+      expect(liveRegion).toBeTruthy();
+      expect(liveRegion!.textContent).toContain(
+        `${count} suggestion`,
+      );
+    });
+
+    it("clears live region when autocomplete dismisses", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => typeInEditor(view, "acc"));
+
+      // Find the live region
+      const liveRegions = document.querySelectorAll("[aria-live='polite']");
+      const liveRegion = Array.from(liveRegions).find((el) =>
+        el.textContent?.includes("suggestion"),
+      );
+      expect(liveRegion).toBeTruthy();
+
+      // Dismiss
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
+        );
+      });
+
+      expect(liveRegion!.textContent).toBe("");
+    });
+  });
+
+  describe("edge cases", () => {
+    it("exact field name match still shows suggestions", async () => {
+      const { component } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => typeInEditor(view, "access"));
+
+      const state = getACState(view);
+      expect(state.active).toBe(true);
+      expect(state.suggestions.some((s) => s.value === "access")).toBe(true);
+    });
+  });
 });

@@ -41,7 +41,7 @@
     onFocusEditor
   }: Props = $props();
 
-  let popover: HTMLElement = $state();
+  let popover: HTMLElement | undefined = $state();
 
   /** Focus the popover container (called externally via ArrowDown). */
   export function focus() {
@@ -87,6 +87,25 @@
       e.preventDefault();
       e.stopPropagation();
       onFocusEditor();
+    } else if (e.key === "Tab" && popover) {
+      // Return focus to the editor when tabbing past the boundaries
+      const focusable = Array.from(popover.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), [tabindex="0"], input:not([disabled])'
+      ));
+      if (focusable.length === 0) return;
+      const first = focusable[0]!;
+      const last = focusable[focusable.length - 1]!;
+      if (e.shiftKey) {
+        if (document.activeElement === first || document.activeElement === popover) {
+          e.preventDefault();
+          onFocusEditor();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          onFocusEditor();
+        }
+      }
     }
   }
 
@@ -279,19 +298,4 @@
     margin: 4px 0;
   }
 
-  .chip-editor-delete {
-    width: 100%;
-    padding: 4px 8px;
-    font-size: var(--font-sm, 14px);
-    border: none;
-    border-radius: 4px;
-    background: none;
-    cursor: pointer;
-    color: var(--red-3, #d1242f);
-    text-align: left;
-  }
-
-  .chip-editor-delete:hover {
-    background: var(--red-0, #ffebe9);
-  }
 </style>

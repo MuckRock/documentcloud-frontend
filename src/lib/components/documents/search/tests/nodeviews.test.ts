@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, act } from "@testing-library/svelte";
+import { NodeSelection, TextSelection } from "prosemirror-state";
 import SearchEditor from "../SearchEditor.svelte";
 import { searchSchema } from "../prosemirror/schema";
 
@@ -269,6 +270,211 @@ describe("NodeViews in SearchEditor", () => {
       expect(chips.length).toBe(2);
       expect(chips[0]?.textContent).toContain("Mitchell Kotler");
       expect(chips[1]?.textContent).toContain("Panama Papers");
+    });
+  });
+
+  describe("chip accessibility (aria-activedescendant)", () => {
+    it("chip wrapper has id, tabindex, and role", async () => {
+      const { component, editor } = await renderEditor();
+      await act(() => {
+        insertNode(component, "field-value", {
+          field: "user",
+          value: "102112",
+        });
+      });
+      const wrapper = editor.querySelector(".search-nodeview") as HTMLElement;
+      expect(wrapper.id).toMatch(/^search-chip-\d+$/);
+      expect(wrapper.getAttribute("tabindex")).toBe("-1");
+      expect(wrapper.getAttribute("role")).toBe("option");
+    });
+
+    it("sets aria-activedescendant on the editor when chip is selected", async () => {
+      const { component, editor } = await renderEditor();
+      await act(() => {
+        insertNode(component, "field-value", {
+          field: "user",
+          value: "102112",
+        });
+      });
+      const wrapper = editor.querySelector(".search-nodeview") as HTMLElement;
+      const view = component.getView();
+
+      // Select the chip via NodeSelection
+      await act(() => {
+        let nodePos: number | null = null;
+        view.state.doc.descendants((node: any, pos: number) => {
+          if (node.type.name === "field-value") {
+            nodePos = pos;
+            return false;
+          }
+        });
+        expect(nodePos).not.toBeNull();
+        const tr = view.state.tr.setSelection(
+          NodeSelection.create(view.state.doc, nodePos!),
+        );
+        view.dispatch(tr);
+      });
+
+      expect(view.dom.getAttribute("aria-activedescendant")).toBe(wrapper.id);
+    });
+
+    it("clears aria-activedescendant when chip is deselected", async () => {
+      const { component } = await renderEditor();
+      await act(() => {
+        insertNode(component, "field-value", {
+          field: "user",
+          value: "102112",
+        });
+      });
+      const view = component.getView();
+
+      // Select the chip
+      await act(() => {
+        let nodePos: number | null = null;
+        view.state.doc.descendants((node: any, pos: number) => {
+          if (node.type.name === "field-value") {
+            nodePos = pos;
+            return false;
+          }
+        });
+        const tr = view.state.tr.setSelection(
+          NodeSelection.create(view.state.doc, nodePos!),
+        );
+        view.dispatch(tr);
+      });
+
+      expect(view.dom.getAttribute("aria-activedescendant")).toBeTruthy();
+
+      // Move selection away (text cursor at end of doc)
+      await act(() => {
+        const endPos = view.state.doc.content.size - 1;
+        const tr = view.state.tr.setSelection(
+          TextSelection.create(view.state.doc, endPos),
+        );
+        view.dispatch(tr);
+      });
+
+      expect(view.dom.getAttribute("aria-activedescendant")).toBeNull();
+    });
+
+    it("field-value chip wrapper has aria-label describing the chip", async () => {
+      const { component, editor } = await renderEditor();
+      await act(() => {
+        insertNode(component, "field-value", {
+          field: "user",
+          value: "102112",
+          prefix: "+",
+        });
+      });
+      const wrapper = editor.querySelector(".search-nodeview") as HTMLElement;
+      expect(wrapper.getAttribute("aria-label")).toBe("required, user: 102112");
+    });
+
+    it("field-value chip wrapper aria-label uses displayValue when available", async () => {
+      const { component, editor } = await renderEditor();
+      await act(() => {
+        insertNode(component, "field-value", {
+          field: "user",
+          value: "102112",
+          displayValue: "Mitchell Kotler",
+        });
+      });
+      const wrapper = editor.querySelector(".search-nodeview") as HTMLElement;
+      expect(wrapper.getAttribute("aria-label")).toBe("user: Mitchell Kotler");
+    });
+
+    it("range chip wrapper has aria-label describing the range", async () => {
+      const { component, editor } = await renderEditor();
+      await act(() => {
+        insertNode(component, "range", {
+          field: "created_at",
+          lower: "NOW-1MONTH",
+          upper: "*",
+        });
+      });
+      const wrapper = editor.querySelector(".search-nodeview") as HTMLElement;
+      expect(wrapper.getAttribute("aria-label")).toBe(
+        "created_at: from NOW-1MONTH to *",
+      );
+    });
+
+    it("sort chip wrapper has aria-label describing sort direction", async () => {
+      const { component, editor } = await renderEditor();
+      await act(() => {
+        insertNode(component, "sort", {
+          field: "page_count",
+          direction: "desc",
+        });
+      });
+      const wrapper = editor.querySelector(".search-nodeview") as HTMLElement;
+      expect(wrapper.getAttribute("aria-label")).toBe(
+        "Sort by page_count, descending",
+      );
+    });
+
+    it("aria-label updates when node attributes change", async () => {
+      const { component, editor } = await renderEditor();
+      await act(() => {
+        insertNode(component, "field-value", {
+          field: "user",
+          value: "102112",
+        });
+      });
+      const wrapper = editor.querySelector(".search-nodeview") as HTMLElement;
+      expect(wrapper.getAttribute("aria-label")).toBe("user: 102112");
+
+      // Simulate enrichment updating displayValue
+      await act(() => {
+        const view = component.getView();
+        let nodePos: number | null = null;
+        view.state.doc.descendants((node: any, pos: number) => {
+          if (node.type.name === "field-value") {
+            nodePos = pos;
+            return false;
+          }
+        });
+        const tr = view.state.tr.setNodeMarkup(nodePos!, undefined, {
+          ...view.state.doc.nodeAt(nodePos!)!.attrs,
+          displayValue: "Mitchell Kotler",
+        });
+        view.dispatch(tr);
+      });
+
+      expect(wrapper.getAttribute("aria-label")).toBe("user: Mitchell Kotler");
+    });
+
+    it("each chip type has role='option'", async () => {
+      const { component, editor } = await renderEditor();
+      await act(() => {
+        const view = component.getView();
+        const nodes = [
+          searchSchema.nodes["field-value"].create({
+            field: "user",
+            value: "102112",
+          }),
+          searchSchema.text(" "),
+          searchSchema.nodes["range"].create({
+            field: "created_at",
+            lower: "NOW-1MONTH",
+            upper: "*",
+          }),
+          searchSchema.text(" "),
+          searchSchema.nodes["sort"].create({
+            field: "page_count",
+            direction: "desc",
+          }),
+        ];
+        const tr = view.state.tr.replaceWith(1, 1, nodes);
+        view.dispatch(tr);
+      });
+
+      const wrappers = editor.querySelectorAll(".search-nodeview");
+      expect(wrappers.length).toBe(3);
+      wrappers.forEach((wrapper) => {
+        expect(wrapper.getAttribute("role")).toBe("option");
+        expect(wrapper.id).toMatch(/^search-chip-\d+$/);
+        expect(wrapper.getAttribute("tabindex")).toBe("-1");
+      });
     });
   });
 });

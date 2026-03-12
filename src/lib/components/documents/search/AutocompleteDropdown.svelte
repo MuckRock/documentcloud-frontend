@@ -23,7 +23,7 @@
     onHover,
   }: Props = $props();
 
-  let dropdown: HTMLElement = $state();
+  let dropdown: HTMLElement | undefined = $state();
 
   $effect(() => {
     if (!dropdown) return;
@@ -34,7 +34,7 @@
   });
 
   /** Expose the dropdown element so the plugin can position it. */
-  export function getElement(): HTMLElement {
+  export function getElement(): HTMLElement | undefined {
     return dropdown;
   }
 </script>
@@ -43,6 +43,8 @@
   bind:this={dropdown}
   class="search-autocomplete"
   role="listbox"
+  aria-label="Search suggestions"
+  aria-busy={loading}
   id={dropdownId}
   style="position: absolute; display: none;"
 >
@@ -54,8 +56,10 @@
         class="search-ac-option"
         class:selected={index === selectedIndex}
         role="option"
+        tabindex="-1"
         id="{dropdownId}-opt-{index}"
         aria-selected={index === selectedIndex}
+        aria-label={suggestion.description ? `${suggestion.label}, ${suggestion.description}` : suggestion.label}
         onmousedown={(e) => { e.preventDefault(); e.stopPropagation(); onSelect(index); }}
         onmouseenter={() => onHover(index)}
       >

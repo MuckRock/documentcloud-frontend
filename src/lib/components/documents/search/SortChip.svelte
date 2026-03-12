@@ -8,9 +8,10 @@
   let { field = "", direction = "asc" }: Props = $props();
 
   let arrow = $derived(direction === "desc" ? "\u2193" : "\u2191");
+  let chipLabel = $derived(`Sort by ${field}, ${direction === "desc" ? "descending" : "ascending"}`);
 </script>
 
-<span class="search-chip search-sort">
+<span class="search-chip search-sort" aria-label={chipLabel}>
   <span class="chip-label">Sort</span>
   <span class="chip-field">{field}</span>
   <span class="chip-direction">{arrow}</span>

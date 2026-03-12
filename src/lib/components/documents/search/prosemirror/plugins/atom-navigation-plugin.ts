@@ -62,10 +62,26 @@ const arrowDownIntoPopover: Command = (state) => {
   return true;
 };
 
+/**
+ * Tab: if a chip with a popover is selected, move focus
+ * into the chip editor popover (same as ArrowDown).
+ */
+const tabIntoPopover: Command = (state) => {
+  if (!(state.selection instanceof NodeSelection)) return false;
+  const node = state.selection.node;
+  if (!ATOM_TYPES.has(node.type.name) || node.type.name === "sort")
+    return false;
+  const popover = document.querySelector(".chip-editor") as HTMLElement;
+  if (!popover) return false;
+  popover.focus();
+  return true;
+};
+
 export function atomNavigationKeymap() {
   return keymap({
     ArrowLeft: arrowLeftIntoAtom,
     ArrowRight: arrowRightIntoAtom,
     ArrowDown: arrowDownIntoPopover,
+    Tab: tabIntoPopover,
   });
 }

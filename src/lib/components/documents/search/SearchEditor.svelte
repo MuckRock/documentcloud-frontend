@@ -49,18 +49,20 @@
     onchange,
   }: Props = $props();
 
-  let editorRef: HTMLDivElement = $state();
-  let view: EditorView = $state();
+  let editorRef: HTMLDivElement | undefined = $state();
+  let view: EditorView | undefined = $state();
 
   /** Whether the current query is valid Lucene syntax. */
   let queryValid = $state(true);
 
   /** Last query emitted via the change event, to avoid redundant dispatches. */
-  let lastEmittedQuery = initialQuery;
+  // svelte-ignore state_referenced_locally
+  let lastEmittedQuery = $state(initialQuery);
 
   // When the initialQuery prop changes externally (e.g. route navigation),
   // update the editor contents to match — but NOT while the user is actively
   // typing (editor has focus), to avoid disrupting their input.
+  // svelte-ignore state_referenced_locally
   let lastInitialQuery = $state(initialQuery);
 
   /** Upon submission, serialize the current PM document to a Lucene query string. */
@@ -72,7 +74,7 @@
   }
 
   onMount(() => {
-    view = createSearchEditor(editorRef, {
+    view = createSearchEditor(editorRef!, {
       initialQuery,
       getPreloadedSuggestions: () => preloadedSuggestions,
       onDocChange(q, structural, valid) {
@@ -110,7 +112,7 @@
 
   /** Get the EditorView instance for programmatic node insertion. Used by tests. */
   export function getView(): EditorView {
-    return view;
+    return view!;
   }
 
   $effect(() => {
@@ -123,7 +125,7 @@
   });
 </script>
 
-<form class="search-editor-container" onsubmit={handleSubmit}>
+<form class="search-editor-container" aria-label="Search documents" onsubmit={handleSubmit}>
   <div class="search-editor-status" class:invalid={!queryValid}>
     {#if queryValid}
       <Search16 />
@@ -134,8 +136,17 @@
   {#each contextChips as chip}
     <FieldValueChip field={chip.field} value={chip.label} locked />
   {/each}
-  <div bind:this={editorRef} class="prosemirror-editor" role="textbox"></div>
-  <Button type="submit" mode="primary" ghost minW={false} disabled={!queryValid}>Search</Button>
+  <div
+    bind:this={editorRef}
+    class="prosemirror-editor"
+    role="textbox"
+    aria-label="Search documents"
+    aria-invalid={!queryValid ? true : undefined}
+  ></div>
+  <Button type="submit" mode="primary" ghost minW={false} disabled={!queryValid} aria-label="Search">Search</Button>
+  <div class="sr-only" aria-live="assertive" aria-atomic="true">
+    {#if !queryValid}Query syntax error{/if}
+  </div>
 </form>
 
 <style>
@@ -148,8 +159,8 @@
     position: relative;
     display: flex;
     align-items: center;
+    margin: 0.25rem 0;
     padding: 0 0 0 0.75rem;
-
     caret-color: var(--blue-3, #0969da);
   }
 
@@ -166,6 +177,15 @@
   .prosemirror-editor {
     flex: 1 1 auto;
     padding: 0.375rem 0.75rem;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
 
   :global(.ProseMirror) {
@@ -202,13 +222,23 @@
   }
 
   :global(.search-prefix-required) {
-    color: var(--green-3);
+    color: var(--green-4);
     font-weight: 600;
   }
 
   :global(.search-prefix-excluded) {
-    color: var(--orange-3);
+    color: var(--orange-4);
     font-weight: 600;
+  }
+
+  :global(.search-term-required) {
+    background-color: var(--green-1);
+    border-radius: 3px;
+  }
+
+  :global(.search-term-excluded) {
+    background-color: var(--red-1);
+    border-radius: 3px;
   }
 
   /* Chip styles (used by atom nodes) */

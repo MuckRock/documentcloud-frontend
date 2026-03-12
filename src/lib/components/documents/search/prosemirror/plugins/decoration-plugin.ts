@@ -23,6 +23,9 @@ const PAREN_RE = /[()]/g;
 // Must be at start of text or after whitespace, followed by a non-space character
 const PREFIX_RE = /(?:^|(?<=\s))[+\-](?=\S)/g;
 
+// Match a prefix operator and the full term that follows it (for background highlighting)
+const PREFIX_TERM_RE = /(?:^|(?<=\s))[+\-]\S+/g;
+
 /**
  * Given the validation error message, find the error region as
  * { from, to } offsets in the serialized query string.
@@ -147,6 +150,18 @@ function buildDecorations(doc: ProseMirrorNode): DecorationSet {
         match[0] === "+"
           ? "search-prefix-required"
           : "search-prefix-excluded";
+      decorations.push(Decoration.inline(from, to, { class: cls }));
+    }
+
+    // Background highlight for the full prefixed term (prefix + term)
+    PREFIX_TERM_RE.lastIndex = 0;
+    while ((match = PREFIX_TERM_RE.exec(text)) !== null) {
+      const from = pos + match.index;
+      const to = from + match[0].length;
+      const cls =
+        match[0].startsWith("+")
+          ? "search-term-required"
+          : "search-term-excluded";
       decorations.push(Decoration.inline(from, to, { class: cls }));
     }
   });
