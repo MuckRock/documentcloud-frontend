@@ -10,7 +10,7 @@
   SearchEditor was written by Allan Lasser with assistance from Claude Opus 4.6.
 -->
 <script lang="ts">
-  import { onMount, onDestroy, createEventDispatcher } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import type { EditorView } from "prosemirror-view";
   import type { Suggestion } from "./prosemirror/plugins/autocomplete-data";
   import {
@@ -23,28 +23,37 @@
   import Button from "$lib/components/common/Button.svelte";
   import FieldValueChip from "$lib/components/documents/search/FieldValueChip.svelte";
 
-  const dispatch = createEventDispatcher();
+  interface Props {
+    initialQuery?: string;
+    /** Locked chips displayed before the editor as search context (e.g. project scope). */
+    contextChips?: Array<{
+      field: string;
+      label: string;
+    }>;
+    /**
+     * Preloaded suggestions derived from current search results.
+     * Keyed by canonical field name (e.g. "user", "organization").
+     * Used as default suggestions when the autocomplete filter is empty,
+     * avoiding an API call and showing contextually relevant values.
+     */
+    preloadedSuggestions?: Record<string, Suggestion[]>;
+    onsubmit?: (detail: { q: string }) => void;
+    onchange?: (detail: { q: string; structural: boolean }) => void;
+  }
 
-  export let initialQuery = "";
-  /** Locked chips displayed before the editor as search context (e.g. project scope). */
-  export let contextChips: Array<{
-    field: string;
-    label: string;
-  }> = [];
+  let {
+    initialQuery = "",
+    contextChips = [],
+    preloadedSuggestions = {},
+    onsubmit,
+    onchange,
+  }: Props = $props();
 
-  /**
-   * Preloaded suggestions derived from current search results.
-   * Keyed by canonical field name (e.g. "user", "organization").
-   * Used as default suggestions when the autocomplete filter is empty,
-   * avoiding an API call and showing contextually relevant values.
-   */
-  export let preloadedSuggestions: Record<string, Suggestion[]> = {};
-
-  let editorRef: HTMLDivElement;
-  let view: EditorView;
+  let editorRef: HTMLDivElement = $state();
+  let view: EditorView = $state();
 
   /** Whether the current query is valid Lucene syntax. */
-  let queryValid = true;
+  let queryValid = $state(true);
 
   /** Last query emitted via the change event, to avoid redundant dispatches. */
   let lastEmittedQuery = initialQuery;
@@ -52,20 +61,14 @@
   // When the initialQuery prop changes externally (e.g. route navigation),
   // update the editor contents to match — but NOT while the user is actively
   // typing (editor has focus), to avoid disrupting their input.
-  let lastInitialQuery = initialQuery;
-  $: if (view && initialQuery !== lastInitialQuery) {
-    lastInitialQuery = initialQuery;
-    if (!view.hasFocus()) {
-      updateQuery(initialQuery);
-    }
-  }
+  let lastInitialQuery = $state(initialQuery);
 
   /** Upon submission, serialize the current PM document to a Lucene query string. */
   function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
     if (!queryValid) return;
     const query = view ? getEditorQuery(view) : initialQuery;
-    dispatch("submit", { "q": query });
+    onsubmit?.({ "q": query });
   }
 
   onMount(() => {
@@ -80,7 +83,7 @@
           // Plain text typing should not trigger searches — the user must
           // explicitly submit the form for text-only queries.
           if (structural) {
-            dispatch("change", { q, structural });
+            onchange?.({ q, structural });
           }
         }
       },
@@ -109,9 +112,18 @@
   export function getView(): EditorView {
     return view;
   }
+
+  $effect(() => {
+    if (view && initialQuery !== lastInitialQuery) {
+      lastInitialQuery = initialQuery;
+      if (!view.hasFocus()) {
+        updateQuery(initialQuery);
+      }
+    }
+  });
 </script>
 
-<form class="search-editor-container" on:submit={handleSubmit}>
+<form class="search-editor-container" onsubmit={handleSubmit}>
   <div class="search-editor-status" class:invalid={!queryValid}>
     {#if queryValid}
       <Search16 />

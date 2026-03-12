@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
   import { Template, Story } from "@storybook/addon-svelte-csf";
   import { http, HttpResponse } from "msw";
   import SearchEditorComponent from "../../search/SearchEditor.svelte";
@@ -118,8 +118,10 @@
   };
 </script>
 
-<Template let:args>
-  <SearchEditorComponent {...args} />
+<Template >
+  {#snippet children({ args })}
+    <SearchEditorComponent {...args} />
+  {/snippet}
 </Template>
 
 <Story name="Empty" args={{ ...args, initialQuery: "" }} />

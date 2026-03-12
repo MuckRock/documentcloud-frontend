@@ -8,42 +8,48 @@
   import { ArrowDown16, ArrowUp16 } from "svelte-octicons";
   import Button from "$lib/components/common/Button.svelte";
 
-  /** The chip's current prefix: "+", "-", or null */
-  export let prefix: string | null = null;
+  interface Props {
+    /** The chip's current prefix: "+", "-", or null */
+    prefix?: string | null;
+    /** The chip's current boost value (field-value only, null for range) */
+    boost?: number | null;
+    /** Whether to show the boost control */
+    showBoost?: boolean;
+    /** The DOM element to anchor the popover to */
+    anchor: HTMLElement;
+    /** Callback when prefix changes */
+    onPrefixChange: (prefix: string | null) => void;
+    /** Callback when boost changes */
+    onBoostChange?: ((boost: number | null) => void) | null;
+    /** Callback to delete the chip */
+    onDelete: () => void;
+    /** Callback when the popover should close */
+    onClose: () => void;
+    /** Callback to return focus to the editor */
+    onFocusEditor: () => void;
+  }
 
-  /** The chip's current boost value (field-value only, null for range) */
-  export let boost: number | null = null;
+  let {
+    prefix = null,
+    boost = null,
+    showBoost = true,
+    anchor,
+    onPrefixChange,
+    onBoostChange = null,
+    onDelete,
+    onClose,
+    onFocusEditor
+  }: Props = $props();
 
-  /** Whether to show the boost control */
-  export let showBoost: boolean = true;
-
-  /** The DOM element to anchor the popover to */
-  export let anchor: HTMLElement;
-
-  /** Callback when prefix changes */
-  export let onPrefixChange: (prefix: string | null) => void;
-
-  /** Callback when boost changes */
-  export let onBoostChange: ((boost: number | null) => void) | null = null;
-
-  /** Callback to delete the chip */
-  export let onDelete: () => void;
-
-  /** Callback when the popover should close */
-  export let onClose: () => void;
-
-  /** Callback to return focus to the editor */
-  export let onFocusEditor: () => void;
-
-  let popover: HTMLElement;
+  let popover: HTMLElement = $state();
 
   /** Focus the popover container (called externally via ArrowDown). */
   export function focus() {
     popover?.focus();
   }
 
-  $: isRequired = prefix === "+";
-  $: isExcluded = prefix === "-";
+  let isRequired = $derived(prefix === "+");
+  let isExcluded = $derived(prefix === "-");
 
   function toggleRequired() {
     onPrefixChange(isRequired ? null : "+");
@@ -118,21 +124,21 @@
   });
 </script>
 
-<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 <div
   bind:this={popover}
   class="chip-editor"
   role="dialog"
   aria-label="Edit chip"
   tabindex="0"
-  on:keydown={handleKeydown}
+  onkeydown={handleKeydown}
 >
   <div class="chip-editor-row">
     <button
       class="chip-editor-toggle chip-editor-toggle--require"
       class:active={isRequired}
       aria-pressed={isRequired}
-      on:click={toggleRequired}
+      onclick={toggleRequired}
       title="Require"
     >
       Require
@@ -141,7 +147,7 @@
       class="chip-editor-toggle chip-editor-toggle--exclude"
       class:active={isExcluded}
       aria-pressed={isExcluded}
-      on:click={toggleExcluded}
+      onclick={toggleExcluded}
       title="Exclude"
     >
       Exclude
@@ -154,7 +160,7 @@
       <div class="chip-editor-stepper">
         <button
           class="chip-editor-step-btn"
-          on:click={decrementBoost}
+          onclick={decrementBoost}
           aria-label="Decrease boost"
           disabled={boost === null || boost <= 1}
         >
@@ -163,7 +169,7 @@
         <span class="chip-editor-boost-value">{boost ?? "1"}</span>
         <button
           class="chip-editor-step-btn"
-          on:click={incrementBoost}
+          onclick={incrementBoost}
           aria-label="Increase boost"
         >
           <ArrowUp16 />

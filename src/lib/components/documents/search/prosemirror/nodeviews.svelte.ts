@@ -11,6 +11,7 @@
 import type { NodeView, EditorView } from "prosemirror-view";
 import type { Node as ProseMirrorNode } from "prosemirror-model";
 import { NodeSelection } from "prosemirror-state";
+import { mount, unmount } from "svelte";
 
 import FieldValueChip from "../FieldValueChip.svelte";
 import RangeChip from "../RangeChip.svelte";
@@ -22,8 +23,10 @@ type ChipBehavior = "edit" | "toggle-sort";
 /** Generic Svelte NodeView mounts a component with node attrs as props */
 class SvelteNodeView implements NodeView {
   dom: HTMLElement;
-  private component: any;
-  private chipEditor: any = null;
+  private component: Record<string, any>;
+  private componentProps: Record<string, any>;
+  private chipEditor: Record<string, any> | null = null;
+  private chipEditorProps: Record<string, any> = $state({});
   private chipEditorContainer: HTMLElement | null = null;
   private view: EditorView;
   private getPos: () => number | undefined;
@@ -47,9 +50,10 @@ class SvelteNodeView implements NodeView {
     this.dom.style.cursor = "pointer";
     this.dom.style.userSelect = "none";
 
-    this.component = new ComponentClass({
+    this.componentProps = $state({ ...node.attrs });
+    this.component = mount(ComponentClass, {
       target: this.dom,
-      props: { ...node.attrs },
+      props: this.componentProps,
     });
 
     if (this.behavior === "toggle-sort") {
@@ -128,48 +132,54 @@ class SvelteNodeView implements NodeView {
     this.chipEditorContainer = document.createElement("div");
     document.body.appendChild(this.chipEditorContainer);
 
-    this.chipEditor = new ChipEditor({
-      target: this.chipEditorContainer,
-      props: {
-        prefix: node.attrs.prefix ?? null,
-        boost: showBoost ? (node.attrs.boost ?? null) : null,
-        showBoost,
-        anchor: this.dom,
-        onPrefixChange: (newPrefix: string | null) => {
-          this.updateNodeAttrs({ prefix: newPrefix });
-          this.chipEditor?.$set({ prefix: newPrefix });
-        },
-        onBoostChange: showBoost
-          ? (newBoost: number | null) => {
-              this.updateNodeAttrs({ boost: newBoost });
-              this.chipEditor?.$set({ boost: newBoost });
-            }
-          : null,
-        onDelete: () => {
-          const currentPos = this.getPos();
-          if (currentPos === undefined) return;
-          const currentNode = this.view.state.doc.nodeAt(currentPos);
-          if (!currentNode) return;
-          const tr = this.view.state.tr.delete(
-            currentPos,
-            currentPos + currentNode.nodeSize,
-          );
-          this.view.dispatch(tr);
-        },
-        onFocusEditor: () => {
-          this.view.focus();
-        },
-        onClose: () => {
-          this.closeChipEditor();
-          this.view.focus();
-        },
+    Object.assign(this.chipEditorProps, {
+      prefix: node.attrs.prefix ?? null,
+      boost: showBoost ? (node.attrs.boost ?? null) : null,
+      showBoost,
+      anchor: this.dom,
+      onPrefixChange: (newPrefix: string | null) => {
+        this.updateNodeAttrs({ prefix: newPrefix });
+        if (this.chipEditorProps) {
+          this.chipEditorProps.prefix = newPrefix;
+        }
       },
+      onBoostChange: showBoost
+        ? (newBoost: number | null) => {
+            this.updateNodeAttrs({ boost: newBoost });
+            if (this.chipEditorProps) {
+              this.chipEditorProps.boost = newBoost;
+            }
+          }
+        : null,
+      onDelete: () => {
+        const currentPos = this.getPos();
+        if (currentPos === undefined) return;
+        const currentNode = this.view.state.doc.nodeAt(currentPos);
+        if (!currentNode) return;
+        const tr = this.view.state.tr.delete(
+          currentPos,
+          currentPos + currentNode.nodeSize,
+        );
+        this.view.dispatch(tr);
+      },
+      onFocusEditor: () => {
+        this.view.focus();
+      },
+      onClose: () => {
+        this.closeChipEditor();
+        this.view.focus();
+      },
+    });
+
+    this.chipEditor = mount(ChipEditor, {
+      target: this.chipEditorContainer,
+      props: this.chipEditorProps,
     });
   }
 
   private closeChipEditor() {
     if (this.chipEditor) {
-      this.chipEditor.$destroy();
+      unmount(this.chipEditor);
       this.chipEditor = null;
     }
     if (this.chipEditorContainer) {
@@ -180,7 +190,7 @@ class SvelteNodeView implements NodeView {
 
   /** Update the component when the node's attributes change */
   update(node: ProseMirrorNode): boolean {
-    this.component.$set({ ...node.attrs });
+    Object.assign(this.componentProps, node.attrs);
     return true;
   }
 
@@ -188,7 +198,7 @@ class SvelteNodeView implements NodeView {
   destroy() {
     this.closeChipEditor();
     this.dom.removeEventListener("click", this.toggleSort);
-    this.component.$destroy();
+    unmount(this.component);
   }
 
   /** Atom nodes have no editable content */

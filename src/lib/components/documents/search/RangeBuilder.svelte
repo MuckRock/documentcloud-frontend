@@ -6,22 +6,35 @@
   import type { Suggestion } from "./prosemirror/plugins/autocomplete-data";
   import { getRangeConfig } from "./prosemirror/plugins/autocomplete-data";
 
-  export let fieldName: string;
-  export let suggestions: Suggestion[] = [];
-  export let selectedIndex: number = 0;
-  export let dropdownId: string;
-  export let onSelect: (index: number) => void;
-  export let onHover: (index: number) => void;
-  export let onCustomRange: (lower: string, upper: string) => void;
-  export let onFixedValue: (value: string) => void;
+  interface Props {
+    fieldName: string;
+    suggestions?: Suggestion[];
+    selectedIndex?: number;
+    dropdownId: string;
+    onSelect: (index: number) => void;
+    onHover: (index: number) => void;
+    onCustomRange: (lower: string, upper: string) => void;
+    onFixedValue: (value: string) => void;
+  }
 
-  let dropdown: HTMLElement;
-  let fixedInput: HTMLInputElement;
-  let startInput: HTMLInputElement;
-  let endInput: HTMLInputElement;
+  let {
+    fieldName,
+    suggestions = [],
+    selectedIndex = 0,
+    dropdownId,
+    onSelect,
+    onHover,
+    onCustomRange,
+    onFixedValue
+  }: Props = $props();
 
-  $: rangeConfig = getRangeConfig(fieldName);
-  $: isDateField = fieldName === "created_at" || fieldName === "updated_at";
+  let dropdown: HTMLElement = $state();
+  let fixedInput: HTMLInputElement = $state();
+  let startInput: HTMLInputElement = $state();
+  let endInput: HTMLInputElement = $state();
+
+  let rangeConfig = $derived(getRangeConfig(fieldName));
+  let isDateField = $derived(fieldName === "created_at" || fieldName === "updated_at");
 
   /** Expose the dropdown element so the plugin can position it. */
   export function getElement(): HTMLElement {
@@ -73,23 +86,23 @@
             bind:this={fixedInput}
             type="date"
             placeholder="YYYY-MM-DD"
-            on:mousedown|stopPropagation
-            on:keydown={handleFixedKeydown}
+            onmousedown={(e) => e.stopPropagation()}
+            onkeydown={handleFixedKeydown}
           />
         {:else}
           <input
             bind:this={fixedInput}
             type="number"
             placeholder="0"
-            on:mousedown|stopPropagation
-            on:keydown={handleFixedKeydown}
+            onmousedown={(e) => e.stopPropagation()}
+            onkeydown={handleFixedKeydown}
           />
         {/if}
       </div>
       <button
         class="search-ac-insert-btn"
         type="button"
-        on:mousedown|preventDefault|stopPropagation={handleFixedInsert}
+        onmousedown={(e) => { e.preventDefault(); e.stopPropagation(); handleFixedInsert(); }}
       >
         Insert
       </button>
@@ -108,8 +121,8 @@
         role="option"
         id="{dropdownId}-opt-{index}"
         aria-selected={index === selectedIndex}
-        on:mousedown|preventDefault|stopPropagation={() => onSelect(index)}
-        on:mouseenter={() => onHover(index)}
+        onmousedown={(e) => { e.preventDefault(); e.stopPropagation(); onSelect(index); }}
+        onmouseenter={() => onHover(index)}
       >
         <span class="search-ac-label">{suggestion.label}</span>
       </div>
@@ -128,16 +141,16 @@
             bind:this={startInput}
             type="date"
             placeholder="YYYY-MM-DD"
-            on:mousedown|stopPropagation
-            on:keydown={handleRangeKeydown}
+            onmousedown={(e) => e.stopPropagation()}
+            onkeydown={handleRangeKeydown}
           />
         {:else}
           <input
             bind:this={startInput}
             type="number"
             placeholder="0"
-            on:mousedown|stopPropagation
-            on:keydown={handleRangeKeydown}
+            onmousedown={(e) => e.stopPropagation()}
+            onkeydown={handleRangeKeydown}
           />
         {/if}
       </div>
@@ -148,23 +161,23 @@
             bind:this={endInput}
             type="date"
             placeholder="YYYY-MM-DD"
-            on:mousedown|stopPropagation
-            on:keydown={handleRangeKeydown}
+            onmousedown={(e) => e.stopPropagation()}
+            onkeydown={handleRangeKeydown}
           />
         {:else}
           <input
             bind:this={endInput}
             type="number"
             placeholder="∞"
-            on:mousedown|stopPropagation
-            on:keydown={handleRangeKeydown}
+            onmousedown={(e) => e.stopPropagation()}
+            onkeydown={handleRangeKeydown}
           />
         {/if}
       </div>
       <button
         class="search-ac-insert-btn"
         type="button"
-        on:mousedown|preventDefault|stopPropagation={handleRangeInsert}
+        onmousedown={(e) => { e.preventDefault(); e.stopPropagation(); handleRangeInsert(); }}
       >
         Insert
       </button>

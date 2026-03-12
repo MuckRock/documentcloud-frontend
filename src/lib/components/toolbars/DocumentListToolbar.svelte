@@ -34,21 +34,19 @@
     : []
   )
 
-  function handleSearchChange(
-    e: CustomEvent<{ q: string; structural: boolean }>,
-  ) {
+  function handleSearchChange(detail: { q: string; structural: boolean }) {
     // Only reload for structural changes (chip insert/remove).
     // Plain text typing waits for explicit Enter/submit.
-    if (e.detail.structural) {
+    if (detail.structural) {
       const url = new URL($page.url);
-      url.searchParams.set("q", e.detail.q);
+      url.searchParams.set("q", detail.q);
       goto(url, { replaceState: true, noScroll: true, keepFocus: true });
     }
   }
 
-  function handleSearchSubmit(e: CustomEvent<{ q: string }>) {
+  function handleSearchSubmit(detail: { q: string }) {
     const url = new URL($page.url);
-    url.searchParams.set("q", e.detail.q);
+    url.searchParams.set("q", detail.q);
     goto(url, { noScroll: true, keepFocus: true });
   }
 </script>
@@ -60,8 +58,8 @@
         initialQuery={query}
         {contextChips}
         {preloadedSuggestions}
-        on:change={handleSearchChange}
-        on:submit={handleSearchSubmit}
+        onchange={handleSearchChange}
+        onsubmit={handleSearchSubmit}
       />
       <div class="margin-xs" class:hide={headerToolbarWidth < remToPx(38)}>
         <Dropdown>

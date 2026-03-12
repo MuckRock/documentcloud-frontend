@@ -2,7 +2,7 @@ import { vi, describe, it, expect, beforeEach } from "vitest";
 import { render, screen, waitFor, act } from "@testing-library/svelte";
 import { NodeSelection, TextSelection } from "prosemirror-state";
 import SearchEditor from "../SearchEditor.svelte";
-import { autocompletePluginKey } from "../prosemirror/plugins/autocomplete";
+import { autocompletePluginKey } from "../prosemirror/plugins/autocomplete.svelte";
 
 // Mock API modules for async autocomplete and enrichment
 vi.mock("$lib/api/accounts", () => ({
@@ -101,20 +101,19 @@ describe("SearchEditor", () => {
   });
 
   it("emits submit event with serialized query on form submission", async () => {
-    const { component } = await renderEditor({
+    const submitSpy = vi.fn();
+    await renderEditor({
       initialQuery: "mueller report",
+      onsubmit: submitSpy,
     });
 
-    const submitSpy = vi.fn();
-    component.$on("submit", submitSpy);
-
-    const button = screen.getByRole("button", { name: /search/i });
+    const button = screen.getByRole<HTMLButtonElement>("button", { name: /search/i });
     await act(() => {
       button.click();
     });
 
     expect(submitSpy).toHaveBeenCalledTimes(1);
-    expect(submitSpy.mock.calls[0]?.[0].detail).toEqual({
+    expect(submitSpy.mock.calls[0]?.[0]).toEqual({
       q: "mueller report",
     });
   });
@@ -832,10 +831,9 @@ describe("SearchEditor", () => {
 
   describe("change event", () => {
     it("does not emit change for plain text typing", async () => {
-      const { component } = await renderEditor();
-      const view = component.getView();
       const changeSpy = vi.fn();
-      component.$on("change", changeSpy);
+      const { component } = await renderEditor({ onchange: changeSpy });
+      const view = component.getView();
 
       await act(() => typeInEditor(view, "hello"));
 
@@ -843,15 +841,15 @@ describe("SearchEditor", () => {
     });
 
     it("emits change when a range chip is inserted via shortcut", async () => {
-      const { component, editor } = await renderEditor();
+      const changeSpy = vi.fn();
+      const { component, editor } = await renderEditor({ onchange: changeSpy });
       const view = component.getView();
 
       // Type and select created_at
       await act(() => typeInEditor(view, "created"));
 
-      // Attach spy AFTER typing, so we only observe the chip insertion
-      const changeSpy = vi.fn();
-      component.$on("change", changeSpy);
+      // changeSpy is already attached via props; reset call count
+      changeSpy.mockClear();
 
       await act(() => {
         editor.dispatchEvent(
@@ -871,7 +869,7 @@ describe("SearchEditor", () => {
 
       // Now change should fire (range chip is structural)
       expect(changeSpy).toHaveBeenCalledTimes(1);
-      expect(changeSpy.mock.calls[0]?.[0].detail.q).toContain("created_at:");
+      expect(changeSpy.mock.calls[0]?.[0].q).toContain("created_at:");
     });
   });
 

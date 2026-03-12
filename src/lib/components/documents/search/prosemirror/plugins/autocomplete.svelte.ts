@@ -15,6 +15,7 @@ import {
 import { searchSchema } from "../schema";
 import AutocompleteDropdown from "../../AutocompleteDropdown.svelte";
 import RangeBuilder from "../../RangeBuilder.svelte";
+import { mount, unmount } from "svelte";
 
 export const autocompletePluginKey = new PluginKey("autocomplete");
 
@@ -75,20 +76,20 @@ function computeAutocompleteState(
   if (from !== to) return null;
   if (from < 1 || from > doc.content.size) return null;
 
-  const $pos = doc.resolve(from);
-  if ($pos.parent.type.name !== "paragraph") return null;
+  const resolvedPos = doc.resolve(from);
+  if (resolvedPos.parent.type.name !== "paragraph") return null;
 
   // Get text from start of paragraph to cursor.
   // Use space as the leaf-text separator so atom nodes (chips) produce a
   // space boundary, keeping word detection correct.
-  const textBeforeCursor = doc.textBetween($pos.start(), from, " ", " ");
+  const textBeforeCursor = doc.textBetween(resolvedPos.start(), from, " ", " ");
 
   const trigger = detectTrigger(textBeforeCursor, preloadedFields);
   // Use triggerStart from detectTrigger for accurate positioning,
   // especially for quoted values that contain spaces.
   const wordStartPos =
     trigger.triggerStart != null
-      ? $pos.start() + trigger.triggerStart
+      ? resolvedPos.start() + trigger.triggerStart
       : from;
 
   if (trigger.stage === "field" && trigger.fieldFilter) {
@@ -694,18 +695,20 @@ export function autocompletePlugin(
 
       // Mount Svelte components eagerly (kept alive for the editor's lifetime).
       // The components' {#if visible} blocks handle show/hide internally.
-      const dropdownComponent = new AutocompleteDropdown({
-        target: dropdownContainer,
-        props: {
-          suggestions: [],
-          selectedIndex: 0,
-          loading: false,
-          dropdownId,
-          onSelect,
-          onHover,
-        },
+      const dropdownProps = $state({
+        suggestions: [] as Suggestion[],
+        selectedIndex: 0,
+        loading: false,
+        dropdownId,
+        onSelect,
+        onHover,
       });
-      let rangeComponent: RangeBuilder | null = null;
+      const dropdownComponent = mount(AutocompleteDropdown, {
+        target: dropdownContainer,
+        props: dropdownProps,
+      });
+      let rangeProps: Record<string, any> = $state({});
+      let rangeComponent: Record<string, any> | null = null;
 
       // Set ARIA attributes on the editor
       const editorDom = editorView.dom;
@@ -869,19 +872,19 @@ export function autocompletePlugin(
       ) {
         // Hide range builder
         if (rangeComponent) {
-          rangeComponent.getElement().style.display = "none";
+          rangeComponent.getElement()?.style.setProperty("display", "none");
         }
 
-        dropdownComponent.$set({
-          suggestions: pluginState.suggestions,
-          selectedIndex: pluginState.selectedIndex,
-          loading: pluginState.loading,
-        });
+        dropdownProps.suggestions = pluginState.suggestions;
+        dropdownProps.selectedIndex = pluginState.selectedIndex;
+        dropdownProps.loading = pluginState.loading;
 
         const el = dropdownComponent.getElement();
-        el.style.display = "block";
-        if (pluginState.from != null) {
-          positionDropdown(el, view, pluginState.to ?? pluginState.from);
+        if (el) {
+          el.style.display = "block";
+          if (pluginState.from != null) {
+            positionDropdown(el, view, pluginState.to ?? pluginState.from);
+          }
         }
       }
 
@@ -891,48 +894,49 @@ export function autocompletePlugin(
         view: EditorView,
       ) {
         // Hide the standard dropdown
-        dropdownComponent.getElement().style.display = "none";
+        dropdownComponent.getElement()?.style.setProperty("display", "none");
 
         if (!rangeComponent) {
-          rangeComponent = new RangeBuilder({
-            target: rangeContainer,
-            props: {
-              fieldName: pluginState.fieldName!,
-              suggestions: pluginState.suggestions,
-              selectedIndex: pluginState.selectedIndex,
-              dropdownId,
-              onSelect,
-              onHover,
-              onCustomRange: (lower: string, upper: string) => {
-                applyCustomRange(view, lower, upper);
-                editorView.focus();
-              },
-              onFixedValue: (value: string) => {
-                applyFixedValue(view, value);
-                editorView.focus();
-              },
-            },
-          });
-        } else {
-          rangeComponent.$set({
+          Object.assign(rangeProps, {
             fieldName: pluginState.fieldName!,
             suggestions: pluginState.suggestions,
             selectedIndex: pluginState.selectedIndex,
+            dropdownId,
+            onSelect,
+            onHover,
+            onCustomRange: (lower: string, upper: string) => {
+              applyCustomRange(view, lower, upper);
+              editorView.focus();
+            },
+            onFixedValue: (value: string) => {
+              applyFixedValue(view, value);
+              editorView.focus();
+            },
           });
+          rangeComponent = mount(RangeBuilder, {
+            target: rangeContainer,
+            props: rangeProps,
+          });
+        } else {
+          rangeProps.fieldName = pluginState.fieldName!;
+          rangeProps.suggestions = pluginState.suggestions;
+          rangeProps.selectedIndex = pluginState.selectedIndex;
         }
 
         const el = rangeComponent.getElement();
-        el.style.display = "block";
-        if (pluginState.from != null) {
-          positionDropdown(el, view, pluginState.to ?? pluginState.from);
+        if (el) {
+          el.style.display = "block";
+          if (pluginState.from != null) {
+            positionDropdown(el, view, pluginState.to ?? pluginState.from);
+          }
         }
       }
 
       /** Hide all dropdowns */
       function hideAll() {
-        dropdownComponent.getElement().style.display = "none";
+        dropdownComponent.getElement()?.style.setProperty("display", "none");
         if (rangeComponent) {
-          rangeComponent.getElement().style.display = "none";
+          rangeComponent.getElement()?.style.setProperty("display", "none");
         }
       }
 
@@ -1116,8 +1120,8 @@ export function autocompletePlugin(
           if (abortController) abortController.abort();
           document.removeEventListener("mousedown", onDocumentMousedown);
           editorDom.removeEventListener("blur", onEditorBlur);
-          dropdownComponent.$destroy();
-          if (rangeComponent) rangeComponent.$destroy();
+          unmount(dropdownComponent);
+          if (rangeComponent) unmount(rangeComponent);
           dropdownContainer.remove();
           rangeContainer.remove();
           liveRegion.remove();

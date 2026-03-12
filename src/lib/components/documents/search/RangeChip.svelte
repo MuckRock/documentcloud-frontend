@@ -3,15 +3,26 @@
   Shows field name, bounds, and bracket style (inclusive/exclusive).
 -->
 <script lang="ts">
-  export let field: string = "";
-  export let lower: string = "*";
-  export let upper: string = "*";
-  export let inclusiveLower: boolean = true;
-  export let inclusiveUpper: boolean = true;
-  export let prefix: string | null = null;
+  interface Props {
+    field?: string;
+    lower?: string;
+    upper?: string;
+    inclusiveLower?: boolean;
+    inclusiveUpper?: boolean;
+    prefix?: string | null;
+  }
 
-  $: lb = inclusiveLower ? "[" : "{";
-  $: rb = inclusiveUpper ? "]" : "}";
+  let {
+    field = "",
+    lower = "*",
+    upper = "*",
+    inclusiveLower = true,
+    inclusiveUpper = true,
+    prefix = null
+  }: Props = $props();
+
+  let lb = $derived(inclusiveLower ? "[" : "{");
+  let rb = $derived(inclusiveUpper ? "]" : "}");
 
   /** Format a bound value for display. ISO dates become locale strings.
    * 
@@ -30,8 +41,8 @@
     return value;
   }
 
-  $: displayLower = displayBound(lower);
-  $: displayUpper = displayBound(upper);
+  let displayLower = $derived(displayBound(lower));
+  let displayUpper = $derived(displayBound(upper));
 </script>
 
 <span class="search-chip search-range">
