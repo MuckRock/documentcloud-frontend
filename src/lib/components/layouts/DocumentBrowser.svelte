@@ -5,10 +5,13 @@
     DocumentResults,
     Maybe,
     Nullable,
+    Org,
     Project,
+    User,
   } from "$lib/api/types";
 
   import { goto } from "$app/navigation";
+  import type { Suggestion } from "$lib/components/documents/search/prosemirror/plugins/autocomplete-data";
 
   import { getContext, setContext } from "svelte";
   import { _ } from "svelte-i18n";
@@ -191,6 +194,74 @@
     };
   }
 
+  /**
+   * Extract autocomplete suggestions from the current search results.
+   * Uses expanded user/org objects on documents to provide contextually
+   * relevant suggestions without an API call.
+   */
+  function extractSuggestions(docs: Document[]): Record<string, Suggestion[]> {
+    const users = new Map<string, Suggestion>();
+    const orgs = new Map<string, Suggestion>();
+    const documents = new Map<string, Suggestion>();
+    // data_* and tag values: keyed by field name, deduped by value
+    const dataFields = new Map<string, Map<string, Suggestion>>();
+
+    for (const doc of docs) {
+      // User (expanded object when DEFAULT_EXPAND includes "user")
+      if (typeof doc.user === "object" && doc.user) {
+        const u = doc.user as User;
+        const key = String(u.id);
+        if (!users.has(key)) {
+          users.set(key, { label: u.name || u.username, value: key });
+        }
+      }
+
+      // Organization (expanded object when DEFAULT_EXPAND includes "organization")
+      if (typeof doc.organization === "object" && doc.organization) {
+        const o = doc.organization as Org;
+        const key = String(o.id);
+        if (!orgs.has(key)) {
+          orgs.set(key, { label: o.name, value: key });
+        }
+      }
+
+      // Document itself
+      const dKey = String(doc.id);
+      if (!documents.has(dKey)) {
+        documents.set(dKey, { label: doc.title, value: dKey });
+      }
+
+      // Extract tag and data_* values from doc.data
+      if (doc.data) {
+        for (const [rawKey, values] of Object.entries(doc.data)) {
+          if (!Array.isArray(values)) continue;
+          // "_tag" key maps to the "tag" search field;
+          // other keys need the "data_" prefix for Lucene syntax
+          const fieldName =
+            rawKey === "_tag" ? "tag" : `data_${rawKey}`;
+          if (!dataFields.has(fieldName)) {
+            dataFields.set(fieldName, new Map());
+          }
+          const fieldMap = dataFields.get(fieldName)!;
+          for (const v of values) {
+            if (!fieldMap.has(v)) {
+              fieldMap.set(v, { label: v, value: v });
+            }
+          }
+        }
+      }
+    }
+
+    const result: Record<string, Suggestion[]> = {};
+    if (users.size) result.user = [...users.values()];
+    if (orgs.size) result.organization = [...orgs.values()];
+    if (documents.size) result.document = [...documents.values()];
+    for (const [fieldName, valueMap] of dataFields) {
+      if (valueMap.size) result[fieldName] = [...valueMap.values()];
+    }
+    return result;
+  }
+
   function selectAll(e: Event) {
     const target = e.target as HTMLInputElement;
     if (target.checked) {
@@ -214,6 +285,19 @@
   let searchResults = $derived(
     fixResults(documents, $deleted, $edited, pending_ids, $finished),
   );
+  let preloadedSuggestions: Record<string, Suggestion[]> = $state({});
+  let lastResults: DocumentResults | null = $state(null);
+  // Update preloaded suggestions when search results resolve
+  $effect(() => {
+    let stale = false;
+    searchResults.then((r) => {
+      if (!stale) {
+        preloadedSuggestions = extractSuggestions(r.results ?? []);
+        lastResults = r;
+      }
+    });
+    return () => { stale = true };
+  });
 </script>
 
 <div class="container">
@@ -245,7 +329,7 @@
                   </Button>
                 </div>
               {/if}
-              <DocumentListToolbar {query} />
+              <DocumentListToolbar {query} {project} {preloadedSuggestions} />
               {#if $sidebars["action"] === false}
                 <div class="toolbar w-auto">
                   <Button
@@ -261,7 +345,22 @@
           {/if}
         </svelte:fragment>
         {#await searchResults}
+          {#if lastResults}
+            <ResultsList
+              results={lastResults.results}
+              next={lastResults.next}
+              count={lastResults.count}
+              auto
+            >
+              {#snippet start()}
+                {#if $me && !canUploadFiles($me)}
+                  <Unverified user={$me} />
+                {/if}
+              {/snippet}
+            </ResultsList>
+          {:else}
           <Empty icon={Hourglass24}>{$_(uiText.loading)}</Empty>
+          {/if}
         {:then documentsResults}
           {#if !query && !documentsResults.results?.length}
             <Empty icon={FileDirectory24}>{$_(uiText.empty)}</Empty>
