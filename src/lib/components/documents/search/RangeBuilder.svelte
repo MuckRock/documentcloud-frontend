@@ -80,10 +80,11 @@
     <div class="search-ac-section-label">Fixed</div>
     <div class="search-ac-range-inputs">
       <div class="search-ac-range-field">
-        <label>Value</label>
+        <label for="{dropdownId}-fixed">Value</label>
         {#if isDateField}
           <input
             bind:this={fixedInput}
+            id="{dropdownId}-fixed"
             type="date"
             placeholder="YYYY-MM-DD"
             onmousedown={(e) => e.stopPropagation()}
@@ -92,6 +93,7 @@
         {:else}
           <input
             bind:this={fixedInput}
+            id="{dropdownId}-fixed"
             type="number"
             placeholder="0"
             onmousedown={(e) => e.stopPropagation()}
@@ -119,6 +121,7 @@
         class="search-ac-option"
         class:selected={index === selectedIndex}
         role="option"
+        tabindex="-1"
         id="{dropdownId}-opt-{index}"
         aria-selected={index === selectedIndex}
         onmousedown={(e) => { e.preventDefault(); e.stopPropagation(); onSelect(index); }}
@@ -135,10 +138,11 @@
     <!-- Custom range inputs -->
     <div class="search-ac-range-inputs">
       <div class="search-ac-range-field">
-        <label>{rangeConfig.startLabel}</label>
+        <label for="{dropdownId}-start">{rangeConfig.startLabel}</label>
         {#if isDateField}
           <input
             bind:this={startInput}
+            id="{dropdownId}-start"
             type="date"
             placeholder="YYYY-MM-DD"
             onmousedown={(e) => e.stopPropagation()}
@@ -147,6 +151,7 @@
         {:else}
           <input
             bind:this={startInput}
+            id="{dropdownId}-start"
             type="number"
             placeholder="0"
             onmousedown={(e) => e.stopPropagation()}
@@ -155,10 +160,11 @@
         {/if}
       </div>
       <div class="search-ac-range-field">
-        <label>{rangeConfig.endLabel}</label>
+        <label for="{dropdownId}-end">{rangeConfig.endLabel}</label>
         {#if isDateField}
           <input
             bind:this={endInput}
+            id="{dropdownId}-end"
             type="date"
             placeholder="YYYY-MM-DD"
             onmousedown={(e) => e.stopPropagation()}
@@ -167,6 +173,7 @@
         {:else}
           <input
             bind:this={endInput}
+            id="{dropdownId}-end"
             type="number"
             placeholder="∞"
             onmousedown={(e) => e.stopPropagation()}

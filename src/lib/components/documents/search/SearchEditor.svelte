@@ -56,11 +56,13 @@
   let queryValid = $state(true);
 
   /** Last query emitted via the change event, to avoid redundant dispatches. */
-  let lastEmittedQuery = initialQuery;
+  // svelte-ignore state_referenced_locally
+  let lastEmittedQuery = $state(initialQuery);
 
   // When the initialQuery prop changes externally (e.g. route navigation),
   // update the editor contents to match — but NOT while the user is actively
   // typing (editor has focus), to avoid disrupting their input.
+  // svelte-ignore state_referenced_locally
   let lastInitialQuery = $state(initialQuery);
 
   /** Upon submission, serialize the current PM document to a Lucene query string. */

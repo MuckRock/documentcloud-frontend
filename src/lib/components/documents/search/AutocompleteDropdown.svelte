@@ -54,6 +54,7 @@
         class="search-ac-option"
         class:selected={index === selectedIndex}
         role="option"
+        tabindex="-1"
         id="{dropdownId}-opt-{index}"
         aria-selected={index === selectedIndex}
         onmousedown={(e) => { e.preventDefault(); e.stopPropagation(); onSelect(index); }}

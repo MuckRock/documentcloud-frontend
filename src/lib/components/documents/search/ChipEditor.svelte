@@ -279,19 +279,4 @@
     margin: 4px 0;
   }
 
-  .chip-editor-delete {
-    width: 100%;
-    padding: 4px 8px;
-    font-size: var(--font-sm, 14px);
-    border: none;
-    border-radius: 4px;
-    background: none;
-    cursor: pointer;
-    color: var(--red-3, #d1242f);
-    text-align: left;
-  }
-
-  .chip-editor-delete:hover {
-    background: var(--red-0, #ffebe9);
-  }
 </style>
