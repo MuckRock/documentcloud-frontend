@@ -1,5 +1,6 @@
-<script lang="ts" module>
-  import { Template, Story } from "@storybook/addon-svelte-csf";
+<script context="module" lang="ts">
+  import type { ComponentProps } from "svelte";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import { http, HttpResponse } from "msw";
   import SearchEditorComponent from "../../search/SearchEditor.svelte";
   import { usersList, organizationsList } from "@/test/fixtures/accounts";
@@ -108,35 +109,38 @@
     }),
   ];
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Components / Documents / Search Editor",
     component: SearchEditorComponent,
     parameters: {
       layout: "centered",
       msw: { handlers: apiHandlers },
     },
-  };
+  });
+
+  type Args = ComponentProps<typeof SearchEditorComponent>;
 </script>
 
-<Template >
-  {#snippet children({ args })}
-    <SearchEditorComponent {...args} />
-  {/snippet}
-</Template>
+{#snippet template(storyArgs: Args)}
+  <SearchEditorComponent {...storyArgs} />
+{/snippet}
 
-<Story name="Empty" args={{ ...args, initialQuery: "" }} />
-<Story name="Single Term" args={{ ...args, initialQuery: "documents" }} />
+<Story name="Empty" args={{ ...args, initialQuery: "" }} {template} />
+<Story name="Single Term" args={{ ...args, initialQuery: "documents" }} {template} />
 <Story
   name="Multiple Terms"
   args={{ ...args, initialQuery: "multi term query" }}
+  {template}
 />
 <Story
   name="Complex Terms"
   args={{ ...args, initialQuery: 'iPhone "steve jobs" -iPad +mac^3' }}
+  {template}
 />
 <Story
   name="Boolean Operators"
   args={{ ...args, initialQuery: "mueller AND report OR memo" }}
+  {template}
 />
 <Story
   name="Field Queries"
@@ -144,6 +148,7 @@
     ...args,
     initialQuery: "user:102112 access:public sort:-created_at",
   }}
+  {template}
 />
 <Story
   name="Grouped Operators"
@@ -151,6 +156,7 @@
     ...args,
     initialQuery: "(mueller OR watergate) AND NOT report",
   }}
+  {template}
 />
 <Story
   name="Prefix Operators"
@@ -158,6 +164,7 @@
     ...args,
     initialQuery: '+mueller -report +"steve jobs"',
   }}
+  {template}
 />
 <Story
   name="Date Range"
@@ -165,6 +172,7 @@
     ...args,
     initialQuery: "created_at:[NOW-1MONTH TO *] report",
   }}
+  {template}
 />
 
 <!-- Phase 4: Deserialization produces chips automatically from initialQuery -->
@@ -174,6 +182,7 @@
     ...args,
     initialQuery: "user:102112 access:private",
   }}
+  {template}
 />
 <Story
   name="Chips / Range"
@@ -181,6 +190,7 @@
     ...args,
     initialQuery: "created_at:[NOW-1MONTH TO *] report",
   }}
+  {template}
 />
 <Story
   name="Chips / Sort"
@@ -188,6 +198,7 @@
     ...args,
     initialQuery: "mueller sort:page_count",
   }}
+  {template}
 />
 <Story
   name="Chips / Mixed Query"
@@ -196,6 +207,7 @@
     initialQuery:
       "+user:102112 created_at:[NOW-11MONTH TO NOW-3MONTH] AND project:214246 sort:page_count",
   }}
+  {template}
 />
 <Story
   name="Chips / Prefixes"
@@ -203,12 +215,14 @@
     ...args,
     initialQuery: "+user:102112 -access:private",
   }}
+  {template}
 />
 
 <!-- Phase 6: API-backed autocomplete -->
 <Story
   name="API / Autocomplete"
   args={{ ...args, initialQuery: "" }}
+  {template}
 />
 <Story
   name="API / Enriched Chips"
@@ -216,4 +230,5 @@
     ...args,
     initialQuery: "user:7143 organization:10010 project:1",
   }}
+  {template}
 />
