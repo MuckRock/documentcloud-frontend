@@ -41,7 +41,7 @@
     onFocusEditor
   }: Props = $props();
 
-  let popover: HTMLElement = $state();
+  let popover: HTMLElement | undefined = $state();
 
   /** Focus the popover container (called externally via ArrowDown). */
   export function focus() {

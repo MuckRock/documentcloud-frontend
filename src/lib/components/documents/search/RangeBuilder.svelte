@@ -28,16 +28,16 @@
     onFixedValue
   }: Props = $props();
 
-  let dropdown: HTMLElement = $state();
-  let fixedInput: HTMLInputElement = $state();
-  let startInput: HTMLInputElement = $state();
-  let endInput: HTMLInputElement = $state();
+  let dropdown: HTMLElement | undefined = $state();
+  let fixedInput: HTMLInputElement | undefined = $state();
+  let startInput: HTMLInputElement | undefined = $state();
+  let endInput: HTMLInputElement | undefined = $state();
 
   let rangeConfig = $derived(getRangeConfig(fieldName));
   let isDateField = $derived(fieldName === "created_at" || fieldName === "updated_at");
 
   /** Expose the dropdown element so the plugin can position it. */
-  export function getElement(): HTMLElement {
+  export function getElement(): HTMLElement | undefined {
     return dropdown;
   }
 

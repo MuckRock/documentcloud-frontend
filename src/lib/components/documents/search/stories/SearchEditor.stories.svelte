@@ -93,7 +93,7 @@
       let results = documentsList.results;
       // Filter by title prefix for queries like "title:foo*"
       const titleMatch = q.match(/^title:(.+?)(\*?)$/);
-      if (titleMatch) {
+      if (titleMatch?.[1]) {
         const prefix = titleMatch[1].toLowerCase();
         results = results.filter((d) =>
           d.title.toLowerCase().startsWith(prefix),

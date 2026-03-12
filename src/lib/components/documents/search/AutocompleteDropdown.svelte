@@ -23,7 +23,7 @@
     onHover,
   }: Props = $props();
 
-  let dropdown: HTMLElement = $state();
+  let dropdown: HTMLElement | undefined = $state();
 
   $effect(() => {
     if (!dropdown) return;
@@ -34,7 +34,7 @@
   });
 
   /** Expose the dropdown element so the plugin can position it. */
-  export function getElement(): HTMLElement {
+  export function getElement(): HTMLElement | undefined {
     return dropdown;
   }
 </script>

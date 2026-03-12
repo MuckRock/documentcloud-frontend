@@ -9,7 +9,7 @@
   import { page } from "$app/stores";
 
   import { _ } from "svelte-i18n";
-  import Search from "../inputs/Search.svelte";
+  import { Search16, XCircleFill24 } from "svelte-octicons";
 
   interface Props {
     name?: string;
@@ -69,7 +69,7 @@
 <form
   class="container"
   {action}
-  onsubmit={search}
+  onsubmit={submit}
   onreset={clear}
   bind:this={form}
 >

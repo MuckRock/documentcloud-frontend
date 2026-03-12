@@ -49,8 +49,8 @@
     onchange,
   }: Props = $props();
 
-  let editorRef: HTMLDivElement = $state();
-  let view: EditorView = $state();
+  let editorRef: HTMLDivElement | undefined = $state();
+  let view: EditorView | undefined = $state();
 
   /** Whether the current query is valid Lucene syntax. */
   let queryValid = $state(true);
@@ -72,7 +72,7 @@
   }
 
   onMount(() => {
-    view = createSearchEditor(editorRef, {
+    view = createSearchEditor(editorRef!, {
       initialQuery,
       getPreloadedSuggestions: () => preloadedSuggestions,
       onDocChange(q, structural, valid) {
@@ -110,7 +110,7 @@
 
   /** Get the EditorView instance for programmatic node insertion. Used by tests. */
   export function getView(): EditorView {
-    return view;
+    return view!;
   }
 
   $effect(() => {
