@@ -34,7 +34,7 @@
 
   /** Format a value for display. ISO dates become locale strings. */
   function displayBound(v: string): string {
-    if (v.includes("-")) {
+    if (/^\d{4}-\d{2}-\d{2}/.test(v)) {
       const date = new Date(v);
       if (!isNaN(date.getTime())) {
         return date.toLocaleDateString();
