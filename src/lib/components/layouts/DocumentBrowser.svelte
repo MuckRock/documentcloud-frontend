@@ -360,6 +360,7 @@
             </ResultsList>
           {:else}
           <Empty icon={Hourglass24}>{$_(uiText.loading)}</Empty>
+          {/if}
         {:then documentsResults}
           {#if !query && !documentsResults.results?.length}
             <Empty icon={FileDirectory24}>{$_(uiText.empty)}</Empty>
