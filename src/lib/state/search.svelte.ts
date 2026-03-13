@@ -4,9 +4,9 @@
  *
  * This class manages visibility, selection and pagination.
  */
-import { get, type Writable } from "svelte/store";
 
 import type {
+  APIError,
   APIResponse,
   Document,
   DocumentResults,
@@ -17,8 +17,10 @@ import type {
 } from "$lib/api/types";
 
 import { createContext } from "svelte";
+import { get, type Writable } from "svelte/store";
 import { SvelteMap, SvelteSet } from "svelte/reactivity";
 import { search } from "$lib/api/documents";
+import { isDefined } from "$lib/utils";
 import { getApiResponse } from "$lib/utils/api";
 
 interface Args {
@@ -45,6 +47,7 @@ export class SearchResultsState {
   options: Maybe<SearchOptions> = $state();
   loading: boolean = $state(false);
   next: Nullable<string> = $state(null);
+  error: Maybe<APIError<any>> = $state();
 
   watching: Record<string, () => void> = {};
   #stores: WatchStores = {};
@@ -66,7 +69,7 @@ export class SearchResultsState {
   get selected(): Document[] {
     return [...this.selectedIds]
       .map((id) => this.visible.get(id))
-      .filter(Boolean) as Document[];
+      .filter(isDefined<Document>);
   }
 
   get editable(): boolean {
@@ -136,9 +139,9 @@ export class SearchResultsState {
    * Search results include a `next` URL with a cursor for pagination.
    * This should append results to `visible`.
    *
-   * Can return an error message used in ResultsList
+   * Can return an error used in ResultsList
    */
-  async loadNext(): Promise<Maybe<string>> {
+  async loadNext(): Promise<Maybe<APIError<unknown>>> {
     if (!this.next) return;
 
     // one at a time
@@ -166,10 +169,9 @@ export class SearchResultsState {
 
     this.loading = false;
 
-    // would it be better to just return the whole APIError?
-    if (error) {
-      return error.message;
-    }
+    // stash and return the error, even if it's undefined
+    this.error = error;
+    return error;
   }
 
   /**

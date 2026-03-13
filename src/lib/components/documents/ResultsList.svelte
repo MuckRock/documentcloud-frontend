@@ -1,5 +1,5 @@
 <script module lang="ts">
-  import type { Maybe } from "$lib/api/types";
+  import type { APIError, Maybe } from "$lib/api/types";
 
   import { writable, type Writable } from "svelte/store";
   import { Hourglass24 } from "svelte-octicons";
@@ -49,7 +49,7 @@
     preload?: "hover" | "tap";
     start?: Snippet;
     end?: Snippet;
-    onNext?: () => Promise<Maybe<string>>; // can return an error
+    onNext?: () => Promise<Maybe<APIError<any>>>; // can return an error
   }
 
   let {
@@ -62,7 +62,7 @@
   }: Props = $props();
 
   let endEl: Maybe<HTMLElement> = $state();
-  let error: Maybe<string> = $state();
+  let error: Maybe<APIError<unknown>> = $derived(search.error); // catch any initial errors, but overwrite if needed
   let observer: Maybe<IntersectionObserver>;
 
   // we can pass in an onNext callback or ust use the SearchResultsState
@@ -208,7 +208,7 @@
     {/if}
 
     {#if error}
-      <p class="error">{error}</p>
+      <p class="error">{error.message}</p>
       <p class="error">{$_("documents.retry")}</p>
     {/if}
   </div>

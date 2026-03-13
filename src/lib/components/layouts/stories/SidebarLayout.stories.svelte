@@ -36,7 +36,6 @@
 </script>
 
 <script lang="ts">
-  import { setContext } from "svelte";
   import {
     SearchResultsState,
     setSearchResults,
