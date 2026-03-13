@@ -113,7 +113,7 @@ Invalidation of finished documents is handled by ProcessContext.
   <Portal>
     <Modal on:close={() => (reprocess = null)}>
       <h1 slot="title">{$_("dialogReprocessDialog.title")}</h1>
-      <Reprocess documents={[reprocess]} on:close={() => (reprocess = null)} />
+      <Reprocess documents={[reprocess]} onclose={() => (reprocess = null)} />
     </Modal>
   </Portal>
 {/if}

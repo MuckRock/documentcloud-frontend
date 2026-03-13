@@ -5,9 +5,8 @@ Confirm deletion or one or more documents.
   import type { APIError, Document, Maybe } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
-  import { invalidateAll, goto } from "$app/navigation";
+  import { goto } from "$app/navigation";
 
-  import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
   import { Alert24, Trash16 } from "svelte-octicons";
 
@@ -23,22 +22,27 @@ Confirm deletion or one or more documents.
 
   const me = getCurrentUser();
 
-  // one document or a list of IDs
-  export let documents: Document[] = [];
+  interface Props {
+    // one document or a list of IDs
+    documents?: Document[];
+    onclose?: () => void;
+  }
 
-  const dispatch = createEventDispatcher();
+  let { documents = [], onclose }: Props = $props();
 
-  let error: Maybe<APIError<null>> = undefined;
+  let error: Maybe<APIError<null>> = $state(undefined);
 
-  $: ids = documents.map((d) => d.id);
-  $: bulk = documents.length !== 1; // if it's zero, handle that elsewhere
-  $: count = documents.length;
-  $: disabled = count > MAX_EDIT_BATCH || count === 0 || !$me;
-  $: action = bulk
-    ? "/documents/?/delete"
-    : documents[0]
-      ? canonicalUrl(documents[0]).href + "?/delete"
-      : "";
+  let ids = $derived(documents.map((d) => d.id));
+  let bulk = $derived(documents.length !== 1); // if it's zero, handle that elsewhere
+  let count = $derived(documents.length);
+  let disabled = $derived(count > MAX_EDIT_BATCH || count === 0 || !$me);
+  let action = $derived(
+    bulk
+      ? "/documents/?/delete"
+      : documents[0]
+        ? canonicalUrl(documents[0]).href + "?/delete"
+        : "",
+  );
 
   function onSubmit({ submitter, cancel }) {
     submitter.disabled = true;
@@ -53,22 +57,26 @@ Confirm deletion or one or more documents.
           break;
 
         case "success":
-          deleted.update((s) => { ids.forEach((d) => s.add(String(d))); return s; });
-          dispatch("close");
+          deleted.update((s) => {
+            ids.forEach((d) => s.add(String(d)));
+            return s;
+          });
+          onclose?.();
           update(result);
           submitter.disabled = false;
           break;
 
         case "redirect":
-          deleted.update((s) => { ids.forEach((d) => s.add(String(d))); return s; });
+          deleted.update((s) => {
+            ids.forEach((d) => s.add(String(d)));
+            return s;
+          });
+          // don't redirect for bulk deletes
           if (count === 1) {
             // go back home for single deletes
             goto(searchUrl(userDocs($me)), { invalidateAll: true });
-          } else {
-            // don't redirect for bulk deletes
-            invalidateAll();
           }
-          dispatch("close");
+          onclose?.();
       }
     };
   }
@@ -104,7 +112,7 @@ Confirm deletion or one or more documents.
         <Trash16 />
         {$_("delete.confirm")}
       </Button>
-      <Button on:click={() => dispatch("close")}>
+      <Button on:click={() => onclose?.()}>
         {$_("delete.cancel")}
       </Button>
     </Flex>

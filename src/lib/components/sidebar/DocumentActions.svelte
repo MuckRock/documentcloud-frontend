@@ -182,18 +182,20 @@ Most actual actions are deferred to their own forms, so this is more of a switch
         {:else}
           <EditMany documents={search.selected} on:close={close}>
             {#if search.selected?.length}
-              <p>{$_("edit.many", { values: { n: search.selected?.length } })}</p>
+              <p>
+                {$_("edit.many", { values: { n: search.selected?.length } })}
+              </p>
             {/if}
           </EditMany>
         {/if}
       {/if}
 
       {#if visible === "delete"}
-        <ConfirmDelete documents={search.selected} on:close={close} />
+        <ConfirmDelete documents={search.selected} onclose={close} />
       {/if}
 
       {#if visible === "reprocess"}
-        <Reprocess documents={search.selected} on:close={close} />
+        <Reprocess documents={search.selected} onclose={close} />
       {/if}
 
       {#if visible === "data"}

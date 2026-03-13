@@ -189,11 +189,11 @@
       {/if}
 
       {#if visible === "reprocess"}
-        <Reprocess documents={[document]} on:close={close} />
+        <Reprocess documents={[document]} onclose={close} />
       {/if}
 
       {#if visible === "delete"}
-        <ConfirmDelete documents={[document]} on:close={close} />
+        <ConfirmDelete documents={[document]} onclose={close} />
       {/if}
 
       {#if visible === "change_owner"}
