@@ -1,4 +1,5 @@
 <script module lang="ts">
+  import type { ComponentProps } from "svelte";
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import AddOnLayout from "../AddOnLayout.svelte";
 
@@ -22,9 +23,16 @@
             url: "/",
           },
         },
+        state: {
+          page: {
+            url: new URL("https://www.documentcloud.org/"),
+          },
+        },
       },
     },
   });
+
+  type Args = ComponentProps<typeof AddOnLayout>;
 </script>
 
 <script lang="ts">
@@ -34,13 +42,21 @@
     defaultVisibleFields,
     setVisibleFieldsContext,
   } from "$lib/components/documents/VisibleFields.svelte";
+  import {
+    SearchResultsState,
+    setSearchResults,
+  } from "$lib/state/search.svelte";
 
   // Set up contexts needed by ResultsList (used in AddOnLayout -> DocumentList)
   setContext("embed", false);
   setVisibleFieldsContext(writable(defaultVisibleFields));
+
+  const searchState = new SearchResultsState();
+  searchState.setResults(Promise.resolve({ data: documentsList }));
+  setSearchResults(searchState);
 </script>
 
-{#snippet template(args)}
+{#snippet template(args: Args)}
   <div class="vh">
     <AddOnLayout {...args} />
   </div>

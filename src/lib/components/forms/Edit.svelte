@@ -3,6 +3,7 @@ Edit the metadata for one document. This touches all top-level data.
 Usually this will be rendered inside a modal, but it doesn't have to be.
 -->
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import type {
     Document,
     Maybe,
@@ -11,8 +12,8 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
   } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
+  import { invalidate } from "$app/navigation";
 
-  import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
   import { Alert24 } from "svelte-octicons";
 
@@ -28,12 +29,21 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
 
   import { canonicalUrl, edited } from "$lib/api/documents";
 
-  export let document: Document;
-  export let error: Maybe<APIError<ValidationError>> = undefined;
+  interface Props {
+    document: Document;
+    error?: Maybe<APIError<ValidationError>>;
+    children?: Snippet;
+    onclose?: () => void;
+  }
 
-  const dispatch = createEventDispatcher();
+  let {
+    document,
+    error = $bindable(undefined),
+    children,
+    onclose,
+  }: Props = $props();
 
-  $: action = new URL("?/edit", canonicalUrl(document)).href;
+  let action = $derived(new URL("?/edit", canonicalUrl(document)).href);
 
   /**
    * @type {import('@sveltejs/kit').SubmitFunction}
@@ -41,7 +51,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
   function onSubmit({ submitter, formData }) {
     submitter.disabled = true;
 
-    return async ({ result, update }) => {
+    return async ({ result }) => {
       submitter.disabled = false;
       if (result.type === "failure") {
         console.error(result);
@@ -56,8 +66,8 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
           m.set(String(d.id), d);
           return m;
         });
-        await update(result);
-        dispatch("close");
+        invalidate(`document:${document.id}`);
+        onclose?.();
       }
     };
   }
@@ -66,7 +76,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
 <form {action} method="post" use:enhance={onSubmit}>
   <Flex direction="column" gap={1}>
     <!-- Add any header and messaging using this slot -->
-    <slot />
+    {@render children?.()}
 
     {#if error}
       <Tip mode="error">
@@ -127,7 +137,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
 
     <Flex class="buttons">
       <Button type="submit" mode="primary" full>{$_("edit.save")}</Button>
-      <Button full on:click={(e) => dispatch("close")}>
+      <Button full on:click={(e) => onclose?.()}>
         {$_("edit.cancel")}
       </Button>
     </Flex>

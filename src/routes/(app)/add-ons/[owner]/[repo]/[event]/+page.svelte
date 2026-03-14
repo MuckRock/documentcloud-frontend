@@ -1,5 +1,6 @@
 <script lang="ts">
   import { afterNavigate } from "$app/navigation";
+  import { onDestroy } from "svelte";
   import { _ } from "svelte-i18n";
 
   import AddOnLayout from "$lib/components/layouts/AddOnLayout.svelte";
@@ -9,6 +10,15 @@
   import { isAddon } from "$lib/api/addons";
   import { isPremiumOrg, getCreditBalance } from "$lib/api/accounts";
   import { getCurrentUser } from "$lib/utils/permissions";
+  import {
+    SearchResultsState,
+    setSearchResults,
+  } from "$lib/state/search.svelte";
+  import { deleted, edited } from "$lib/api/documents";
+  import {
+    getPendingDocuments,
+    getFinishedDocuments,
+  } from "$lib/components/processing/ProcessContext.svelte";
 
   let { data } = $props();
 
@@ -17,7 +27,6 @@
   let event = $derived(data.event);
   let addon = $derived(isAddon(data.event.addon) ? data.event.addon : undefined);
   let query = $derived(data.query);
-  let search = $derived(data.searchResults);
   let scheduled = $derived(data.scheduled);
   let organization = $derived(
     typeof $me?.organization === "object" ? $me.organization : null,
@@ -31,6 +40,21 @@
     isPremiumAddon && (!isPremiumUser || creditBalance === 0),
   );
   let history = $derived(data.history);
+
+  const search = new SearchResultsState({ loading: true });
+  setSearchResults(search);
+
+  search.watch({
+    deleted,
+    edited,
+    pending: getPendingDocuments(),
+    finished: getFinishedDocuments(),
+  });
+  onDestroy(search.unwatch);
+
+  $effect(() => {
+    search.setResults(data.searchResults.then((data) => ({ data })));
+  });
 
   // set initial form values when route changes
   afterNavigate(() => {
@@ -48,7 +72,6 @@
   <AddOnLayout
     {addon}
     {event}
-    {search}
     {query}
     {disablePremium}
     {scheduled}

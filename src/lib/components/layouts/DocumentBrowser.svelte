@@ -1,42 +1,27 @@
 <script lang="ts">
-  import type {
-    APIResponse,
-    Document,
-    DocumentResults,
-    Maybe,
-    Nullable,
-    Project,
-  } from "$lib/api/types";
+  import type { Nullable, Project } from "$lib/api/types";
 
   import { goto } from "$app/navigation";
 
-  import { getContext, setContext } from "svelte";
+  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
-  import {
-    FileDirectory24,
-    Hourglass24,
-    Upload24,
-    SidebarExpand16,
-    ChevronUp12,
-  } from "svelte-octicons";
+  import { Upload24, SidebarExpand16, ChevronUp12 } from "svelte-octicons";
 
   // Common components
   import Button from "$lib/components/common/Button.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
-  import Error from "$lib/components/common/Error.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
   import NavItem from "$lib/components/common/NavItem.svelte";
 
-  // Document comopnents
+  // Document components
   import ResultsList, {
-    editable,
-    selected,
-    selectedIds,
-    total,
-    visible,
     visibleFields,
   } from "$lib/components/documents/ResultsList.svelte";
   import { setVisibleFieldsContext } from "$lib/components/documents/VisibleFields.svelte";
+  import {
+    getSearchResults,
+    SearchResultsState,
+  } from "$lib/state/search.svelte";
 
   // Form components
   import Dropzone from "$lib/components/inputs/Dropzone.svelte";
@@ -54,149 +39,41 @@
   import Unverified from "../accounts/Unverified.svelte";
 
   import { sidebars } from "$lib/components/layouts/Sidebar.svelte";
-  import {
-    getPendingDocuments,
-    getFinishedDocuments,
-  } from "$lib/components/processing/ProcessContext.svelte";
 
   // Utilities
-  import { deleted, edited, DEFAULT_EXPAND } from "$lib/api/documents";
   import { isSupported } from "$lib/utils/files";
   import { canUploadFiles, getCurrentUser } from "$lib/utils/permissions";
   import { remToPx } from "$lib/utils/layout";
 
-  interface UITextProps {
-    loading: string;
-    error: string;
-    empty: string;
-    search: string;
-  }
-
-  // these just pass through
-  setContext("editable", editable);
-  setContext("selected", selected);
   setVisibleFieldsContext(visibleFields);
 
   const embed: boolean = getContext("embed");
   const me = getCurrentUser();
-  const pending = getPendingDocuments();
-  const finished = getFinishedDocuments();
 
   interface Props {
-    documents: Promise<APIResponse<DocumentResults, any>>;
+    search?: SearchResultsState;
     query?: string;
     project?: Nullable<Project>;
-    uiText?: UITextProps;
   }
 
   let {
-    documents,
+    search: searchProp,
     query = "",
     project = null,
-    uiText = {
-      loading: "common.loading",
-      error: "common.error",
-      empty: "common.empty",
-      search: "common.search",
-    },
   }: Props = $props();
 
+  // this lets us pass in non-global search results, for testing
+  // will error if neither is present
+  const search = $derived(searchProp ?? getSearchResults());
+
   let footerToolbarWidth: number = $state(800);
-
-  function fixResults(
-    documents: Promise<APIResponse<DocumentResults, any>>,
-    deleted: Set<string>,
-    edited: Map<string, Document>,
-    pending_ids: Set<string>,
-    finished: Maybe<Set<number>>,
-  ): Promise<DocumentResults> {
-    return documents
-      .then((r) => excludeDeleted(deleted, r.data))
-      .then((r) => patchEdited(edited, r))
-      .then((r) => setPendingStatus(r, pending_ids, finished));
-  }
-
-  // filter out deleted documents that haven't been purged from search yet
-  function excludeDeleted(
-    deleted: Set<string>,
-    searchResults?: DocumentResults, // optional params must come second
-  ): DocumentResults {
-    if (!searchResults)
-      return { count: 0, results: [], next: null, previous: null };
-    if (deleted.size === 0) return searchResults;
-
-    const filtered =
-      searchResults.results.filter((d) => !deleted.has(String(d.id))) ?? [];
-
-    return {
-      ...searchResults,
-      results: filtered,
-      count: (searchResults.count ?? filtered.length) - deleted.size,
-    };
-  }
-
-  function patchEdited(
-    edited: Map<string, Document>,
-    searchResults?: DocumentResults,
-  ): DocumentResults {
-    if (!searchResults)
-      return { count: 0, results: [], next: null, previous: null };
-
-    if (edited.size === 0) return searchResults;
-
-    console.debug(`Patching ${edited.size} documents`);
-    const updated = searchResults.results.map((d) => {
-      const edit = edited.get(String(d.id));
-
-      if (edit && edit.updated_at > d.updated_at) {
-        console.debug(`Patching: ${edit.title}`);
-        for (const [k, v] of Object.entries(edit)) {
-          // ignore expandable fields and id
-          if (![...DEFAULT_EXPAND, "id"].includes(k)) {
-            d[k] = v;
-          }
-        }
-      }
-
-      return d;
-    });
-
-    return {
-      ...searchResults,
-      results: updated,
-    };
-  }
-
-  function setPendingStatus(
-    documents: DocumentResults,
-    pending_ids: Set<string>,
-    finished: Maybe<Set<number>>,
-  ): DocumentResults {
-    if (pending_ids.size === 0 && finished?.size === 0) return documents;
-
-    const updated = documents.results.map((d) => {
-      if (pending_ids.has(String(d.id))) {
-        d.status = "pending";
-      }
-
-      if (finished?.has(+d.id)) {
-        d.status = "success";
-      }
-      return d;
-    });
-
-    return {
-      ...documents,
-      results: updated,
-    };
-  }
 
   function selectAll(e: Event) {
     const target = e.target as HTMLInputElement;
     if (target.checked) {
-      $selectedIds = [...$visible.keys()];
+      search.selectAll();
     } else {
-      $selectedIds = [];
+      search.deselectAll();
     }
   }
 
@@ -207,13 +84,10 @@
       goto("/upload/");
     }
   }
+
   let BREAKPOINTS = $derived({
     HIDE_COUNT: footerToolbarWidth < remToPx(26),
   });
-  let pending_ids = $derived(new Set($pending?.map((d) => String(d.doc_id))));
-  let searchResults = $derived(
-    fixResults(documents, $deleted, $edited, pending_ids, $finished),
-  );
 </script>
 
 <div class="container">
@@ -229,7 +103,7 @@
         </Empty>
       </div>
       <ContentLayout>
-        <svelte:fragment slot="header">
+        {#snippet header()}
           {#if !embed}
             <Flex>
               {#if $sidebars["navigation"] === false}
@@ -259,30 +133,15 @@
               {/if}
             </Flex>
           {/if}
-        </svelte:fragment>
-        {#await searchResults}
-          <Empty icon={Hourglass24}>{$_(uiText.loading)}</Empty>
-        {:then documentsResults}
-          {#if !query && !documentsResults.results?.length}
-            <Empty icon={FileDirectory24}>{$_(uiText.empty)}</Empty>
-          {:else}
-            <ResultsList
-              results={documentsResults.results}
-              next={documentsResults.next}
-              count={documentsResults.count}
-              auto
-            >
-              {#snippet start()}
-                {#if $me && !canUploadFiles($me)}
-                  <Unverified user={$me} />
-                {/if}
-              {/snippet}
-            </ResultsList>
-          {/if}
-        {:catch}
-          <Error>{$_(uiText.error)}</Error>
-        {/await}
-        <svelte:fragment slot="footer">
+        {/snippet}
+        <ResultsList {search} auto>
+          {#snippet start()}
+            {#if $me && !canUploadFiles($me)}
+              <Unverified user={$me} />
+            {/if}
+          {/snippet}
+        </ResultsList>
+        {#snippet footer()}
           {#if !embed}
             <div class="toolbar" bind:clientWidth={footerToolbarWidth}>
               <Flex align="center">
@@ -291,14 +150,14 @@
                     <input
                       type="checkbox"
                       name="select_all"
-                      checked={$selected.length > 0 &&
-                        $selected.length === $visible.size}
-                      indeterminate={$selected.length > 0 &&
-                        $selected.length < $visible.size}
+                      checked={search.selected.length > 0 &&
+                        search.selected.length === search.visible.size}
+                      indeterminate={search.selected.length > 0 &&
+                        search.selected.length < search.visible.size}
                       onchange={selectAll}
                     />
-                    {#if $selected.length > 0}
-                      {$selected.length.toLocaleString()}
+                    {#if search.selected.length > 0}
+                      {search.selected.length.toLocaleString()}
                       {$_("inputs.selected")}
                     {:else}
                       {$_("inputs.selectAll")}
@@ -308,7 +167,9 @@
                 <Dropdown position="top-start">
                   <NavItem
                     slot="anchor"
-                    disabled={!$me || $selected?.length < 1 || !$editable}
+                    disabled={!$me ||
+                      search.selected.length < 1 ||
+                      !search.editable}
                   >
                     {$_("bulk.title")}
                     <ChevronUp12 slot="end" />
@@ -319,16 +180,16 @@
                   </Menu>
                 </Dropdown>
               </Flex>
-              {#if !BREAKPOINTS.HIDE_COUNT && $visible && $total}
+              {#if !BREAKPOINTS.HIDE_COUNT && search.visible && search.total}
                 <p class="resultsCount">
                   {$_("inputs.resultsCount", {
-                    values: { n: $visible.size, total: $total },
+                    values: { n: search.visible.size, total: search.total },
                   })}
                 </p>
               {/if}
             </div>
           {/if}
-        </svelte:fragment>
+        {/snippet}
       </ContentLayout>
     {/snippet}
   </Dropzone>

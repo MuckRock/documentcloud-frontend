@@ -1,5 +1,5 @@
 import type { Actions } from "./$types.js";
-import type { Data, Document } from "$lib/api/types";
+import type { Document } from "$lib/api/types";
 
 import { fail } from "@sveltejs/kit";
 

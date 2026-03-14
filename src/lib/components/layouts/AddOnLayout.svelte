@@ -1,6 +1,5 @@
 <script lang="ts">
   import type {
-    DocumentResults,
     Maybe,
     Page,
     AddOn,
@@ -9,10 +8,9 @@
   } from "$lib/api/types";
 
   import { afterNavigate } from "$app/navigation";
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 
   import { _ } from "svelte-i18n";
-  import { setContext } from "svelte";
   import { writable } from "svelte/store";
   import { fade, slide } from "svelte/transition";
   import {
@@ -31,7 +29,7 @@
   import Button from "../common/Button.svelte";
   import Empty from "../common/Empty.svelte";
   import Flex from "../common/Flex.svelte";
-  import Selection from "../inputs/Selection.svelte";
+  import Selection from "../addons/Selection.svelte";
   import Tab from "../common/Tab.svelte";
 
   import AddOns from "../sidebar/AddOns.svelte";
@@ -43,46 +41,61 @@
   import { schedules } from "../addons/ScheduledEvent.svelte";
   import { getProcessLoader } from "../processing/ProcessContext.svelte";
   import { remToPx } from "$lib/utils/layout";
-  import { selected } from "../documents/ResultsList.svelte";
   import { sidebars } from "./Sidebar.svelte";
 
   import {
     defaultVisibleFields,
     setVisibleFieldsContext,
   } from "$lib/components/documents/VisibleFields.svelte";
+  import { getSearchResults } from "$lib/state/search.svelte";
 
-  export let addon: AddOn;
-  export let event: Maybe<Event> = undefined;
-  export let scheduled: Promise<Maybe<Page<Event>>> | null = null;
-  export let history: Promise<Maybe<Page<Run>>> | null = null;
-  export let search: Promise<Maybe<DocumentResults>>;
-  export let query: string;
-  export let disablePremium: boolean = false;
+  interface Props {
+    addon: AddOn;
+    event?: Maybe<Event>;
+    scheduled?: Promise<Maybe<Page<Event>>> | null;
+    history?: Promise<Maybe<Page<Run>>> | null;
+    query: string;
+    disablePremium?: boolean;
+  }
 
-  type Tab = "dispatch" | "history" | "scheduled";
-  const tabs: Tab[] = ["dispatch", "history", "scheduled"];
+  let {
+    addon,
+    event = undefined,
+    scheduled = null,
+    history = null,
+    query,
+    disablePremium = false,
+  }: Props = $props();
 
-  function getDefaultTab(): Tab {
-    const hash = $page.url.hash?.slice(1);
-    if (tabs.some((tab) => tab === hash)) return hash as Tab;
+  const search = getSearchResults();
+
+  type TabChoice = "dispatch" | "history" | "scheduled";
+  const tabs: TabChoice[] = ["dispatch", "history", "scheduled"];
+
+  function getDefaultTab(): TabChoice {
+    const hash = page.url.hash?.slice(1);
+    if (tabs.some((tab) => tab === hash)) return hash as TabChoice;
     return "dispatch";
   }
 
-  let currentTab: Tab = getDefaultTab();
+  let currentTab: TabChoice = $state(getDefaultTab());
 
   const SMALL_BREAKPOINT = remToPx(30);
-  let clientWidth: number;
-  let docSelectModalOpen = false;
+  let clientWidth: number = $state(800);
+  let docSelectModalOpen = $state(false);
 
-  setContext("selected", selected);
   setVisibleFieldsContext(writable(defaultVisibleFields));
 
-  $: action = event
-    ? `/add-ons/${addon.repository}/${event.id}/?/update`
-    : `/add-ons/${addon.repository}/?/dispatch`;
+  let action = $derived(
+    event
+      ? `/add-ons/${addon.repository}/${event.id}/?/update`
+      : `/add-ons/${addon.repository}/?/dispatch`,
+  );
 
-  $: canSchedule = addon.parameters.eventOptions?.events.some((event) =>
-    schedules.includes(event),
+  let canSchedule = $derived(
+    addon.parameters.eventOptions?.events.some((event) =>
+      schedules.includes(event),
+    ),
   );
 
   const load = getProcessLoader();
@@ -111,142 +124,143 @@
     <Projects />
     <AddOns />
   </svelte:fragment>
-  <div class="container" slot="content" bind:clientWidth>
-    <section class="addon">
-      <header>
-        {#if !addon.parameters.documents && $sidebars["navigation"] === false}
-          <div class="toolbar w-auto">
-            <Button
-              ghost
-              minW={false}
-              on:click={() => ($sidebars["navigation"] = true)}
-            >
-              <span class="flipV">
-                <SidebarExpand16 />
-              </span>
-            </Button>
-          </div>
-        {/if}
-        <AddOnMeta {addon} />
-      </header>
-      <div class="tabs" role="tablist">
-        <Tab
-          active={currentTab === "dispatch"}
-          on:click={() => (currentTab = "dispatch")}
-        >
-          <Play16 />
-          {$_("addonDispatchDialog.dispatch")}
-        </Tab>
 
-        <Tab
-          active={currentTab === "history"}
-          on:click={() => (currentTab = "history")}
-        >
-          <History16 />
-          {$_("addonDispatchDialog.history")}
-        </Tab>
-
-        {#if canSchedule}
+  <svelte:fragment slot="content">
+    <div class="container" bind:clientWidth>
+      <section class="addon">
+        <header>
+          {#if !addon.parameters.documents && $sidebars["navigation"] === false}
+            <div class="toolbar w-auto">
+              <Button
+                ghost
+                minW={false}
+                on:click={() => ($sidebars["navigation"] = true)}
+              >
+                <span class="flipV">
+                  <SidebarExpand16 />
+                </span>
+              </Button>
+            </div>
+          {/if}
+          <AddOnMeta {addon} />
+        </header>
+        <div class="tabs" role="tablist">
           <Tab
-            active={currentTab === "scheduled"}
-            on:click={() => (currentTab = "scheduled")}
+            active={currentTab === "dispatch"}
+            on:click={() => (currentTab = "dispatch")}
           >
-            <Clock16 />
-            {$_("addonDispatchDialog.scheduled")}
+            <Play16 />
+            {$_("addonDispatchDialog.dispatch")}
           </Tab>
-        {/if}
-      </div>
-      <main>
-        {#if currentTab === "scheduled"}
-          {#await scheduled}
-            <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
-          {:then scheduled}
-            {#if scheduled}
-              <Scheduled
-                events={scheduled.results}
-                next={scheduled.next}
-                previous={scheduled.previous}
-              />
-            {/if}
-          {/await}
-        {:else if currentTab === "history"}
-          <div class="padding">
-            {#await history}
+
+          <Tab
+            active={currentTab === "history"}
+            on:click={() => (currentTab = "history")}
+          >
+            <History16 />
+            {$_("addonDispatchDialog.history")}
+          </Tab>
+
+          {#if canSchedule}
+            <Tab
+              active={currentTab === "scheduled"}
+              on:click={() => (currentTab = "scheduled")}
+            >
+              <Clock16 />
+              {$_("addonDispatchDialog.scheduled")}
+            </Tab>
+          {/if}
+        </div>
+        <main>
+          {#if currentTab === "scheduled"}
+            {#await scheduled}
               <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
-            {:then history}
-              {#if history}
-                <History
-                  runs={history.results}
-                  next={history.next}
-                  previous={history.previous}
-                  {event}
+            {:then scheduled}
+              {#if scheduled}
+                <Scheduled
+                  events={scheduled.results}
+                  next={scheduled.next}
+                  previous={scheduled.previous}
                 />
-              {:else}
-                <Empty>{$_("addonDispatchDialog.noHistory")}</Empty>
               {/if}
             {/await}
-          </div>
-        {:else}
-          <AddOnDispatch
-            {action}
-            {event}
-            properties={addon.parameters.properties}
-            required={addon.parameters.required}
-            eventOptions={addon.parameters.eventOptions}
-            {disablePremium}
-            on:dispatch={onDispatch}
-          >
-            <svelte:fragment slot="selection">
-              {#if addon.parameters.documents && clientWidth <= SMALL_BREAKPOINT}
-                <Flex justify="center">
-                  <Button
-                    ghost
-                    mode="primary"
-                    on:click={() => (docSelectModalOpen = true)}
-                  >
-                    {$_("addonDispatchDialog.selectDocuments")}
-                  </Button>
-                </Flex>
-              {/if}
-              {#await search then results}
+          {:else if currentTab === "history"}
+            <div class="padding">
+              {#await history}
+                <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
+              {:then history}
+                {#if history}
+                  <History
+                    runs={history.results}
+                    next={history.next}
+                    previous={history.previous}
+                    {event}
+                  />
+                {:else}
+                  <Empty>{$_("addonDispatchDialog.noHistory")}</Empty>
+                {/if}
+              {/await}
+            </div>
+          {:else}
+            <AddOnDispatch
+              {action}
+              {event}
+              properties={addon.parameters.properties}
+              required={addon.parameters.required}
+              eventOptions={addon.parameters.eventOptions}
+              {disablePremium}
+              on:dispatch={onDispatch}
+            >
+              <svelte:fragment slot="selection">
+                {#if addon.parameters.documents && clientWidth <= SMALL_BREAKPOINT}
+                  <Flex justify="center">
+                    <Button
+                      ghost
+                      mode="primary"
+                      on:click={() => (docSelectModalOpen = true)}
+                    >
+                      {$_("addonDispatchDialog.selectDocuments")}
+                    </Button>
+                  </Flex>
+                {/if}
                 <Selection
                   bind:value={$values["selection"]}
                   documents={new Set(addon.parameters.documents)}
-                  resultsCount={results?.count}
+                  resultsCount={search.total}
                   {query}
                 />
-              {/await}
-            </svelte:fragment>
-          </AddOnDispatch>
+              </svelte:fragment>
+            </AddOnDispatch>
+          {/if}
+        </main>
+      </section>
+      {#if addon.parameters.documents}
+        {#if clientWidth > SMALL_BREAKPOINT}
+          <div class="docs">
+            <DocumentList {query} />
+          </div>
+        {:else if docSelectModalOpen}
+          <div class="backdrop" transition:fade></div>
+          <div class="doc-picker-drawer" transition:slide>
+            <header>
+              <h2>{$_("addonDispatchDialog.selectDocuments")}</h2>
+              <Button
+                mode="primary"
+                ghost
+                on:click={() => (docSelectModalOpen = false)}
+                minW={false}
+              >
+                {$_("dialog.done")}
+              </Button>
+            </header>
+            <main>
+              <DocumentList {query} />
+            </main>
+          </div>
         {/if}
-      </main>
-    </section>
-    {#if addon.parameters.documents}
-      {#if clientWidth > SMALL_BREAKPOINT}
-        <div class="docs">
-          <DocumentList {search} {query} />
-        </div>
-      {:else if docSelectModalOpen}
-        <div class="backdrop" transition:fade></div>
-        <div class="doc-picker-drawer" transition:slide>
-          <header>
-            <h2>{$_("addonDispatchDialog.selectDocuments")}</h2>
-            <Button
-              mode="primary"
-              ghost
-              on:click={() => (docSelectModalOpen = false)}
-              minW={false}
-            >
-              {$_("dialog.done")}
-            </Button>
-          </header>
-          <main>
-            <DocumentList {search} {query} />
-          </main>
-        </div>
       {/if}
-    {/if}
-  </div>
+    </div>
+  </svelte:fragment>
 </SidebarLayout>
 
 <style>

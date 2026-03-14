@@ -1,38 +1,14 @@
 <script module lang="ts">
-  import type { Document, DocumentResults, Maybe } from "$lib/api/types";
-  import {
-    derived,
-    writable,
-    type Readable,
-    type Writable,
-  } from "svelte/store";
+  import type { APIError, Maybe } from "$lib/api/types";
+
+  import { writable, type Writable } from "svelte/store";
+  import { Hourglass24 } from "svelte-octicons";
 
   import {
     defaultVisibleFields,
     getVisibleFieldsContext,
     type VisibleFields,
   } from "./VisibleFields.svelte";
-
-  // IDs might be strings or numbers, depending on the API endpoint
-  // enforce type consistency here to avoid comparison bugs later
-  export const visible: Writable<Map<string, Document>> = writable(new Map());
-  export const selectedIds: Writable<string[]> = writable([]);
-  export const selected: Readable<Document[]> = derived(
-    [visible, selectedIds],
-    ([$visible, $selectedIds]) =>
-      $selectedIds.map((d) => $visible.get(d)).filter(Boolean) as Document[],
-  );
-
-  // this selection is editable if every document in it is editable
-  export const editable: Readable<boolean> = derived(
-    [selected],
-    ([$selected]) =>
-      $selected &&
-      $selected?.length > 0 &&
-      $selected?.every((d) => d.edit_access),
-  );
-
-  export let total: Writable<number> = writable(0);
 
   // Allow users to customize the visible fields in document list items
   const storage = new StorageManager("document-browser");
@@ -64,34 +40,34 @@
   import NoteHighlights from "./NoteHighlights.svelte";
   import PageHighlights from "./PageHighlights.svelte";
 
-  import { getApiResponse } from "$lib/utils/api";
   import { StorageManager } from "$lib/utils/storage";
+  import { SearchResultsState } from "$lib/state/search.svelte";
 
   interface Props {
-    results?: Document[];
-    count?: Maybe<number>;
-    next?: string | null;
+    search: SearchResultsState;
     auto?: boolean;
     preload?: "hover" | "tap";
     start?: Snippet;
     end?: Snippet;
+    onNext?: () => Promise<Maybe<APIError<any>>>; // can return an error
   }
 
   let {
-    results = $bindable([]),
-    count = undefined,
-    next = $bindable(null),
     auto = $bindable(false),
     preload = "hover",
     start,
     end,
+    onNext: onNextProp,
+    search,
   }: Props = $props();
 
-  let container: Maybe<HTMLElement> = $state();
   let endEl: Maybe<HTMLElement> = $state();
-  let error: string = $state("");
-  let loading = $state(false);
+  let error: Maybe<APIError<unknown>> = $derived(search.error); // catch any initial errors, but overwrite if needed
   let observer: Maybe<IntersectionObserver>;
+
+  // we can pass in an onNext callback or ust use the SearchResultsState
+  // this is likely just for testing and storybook, and may go away if we don't need it
+  let onNext = $derived(onNextProp ?? search.loadNext);
 
   const embed: boolean = getContext("embed");
   const visibleFields = getVisibleFieldsContext();
@@ -106,58 +82,17 @@
     highlightState.update((state) => ({ ...state, allOpen: true }));
   }
 
-  // track what's visible so we can compare to $selected
-  $effect(() => {
-    $visible = new Map(results.map((d) => [String(d.id), d]));
-  });
-
-  // load the next set of results
-  async function load(url: string | URL) {
-    try {
-      url = new URL(url);
-    } catch (e) {
-      error = e.message;
-      loading = false;
-      return console.warn(e);
-    }
-
-    // only one at a time
-    if (loading) return;
-
-    loading = true;
-    const resp = await fetch(url, { credentials: "include" }).catch(
-      console.warn,
-    );
-
-    const { data, error: err } = await getApiResponse<DocumentResults>(resp);
-
-    if (err) {
-      // show an error message, but let the user try loading more
-      error = err.message;
-      auto = false;
-      loading = false;
-    }
-
-    if (data) {
-      results = [...results, ...data.results];
-      $total = data.count ?? $total;
-      next = data.next;
-      error = "";
-      if (auto && endEl) watch(endEl);
-    }
-    loading = false;
-  }
-
   function watch(el: HTMLElement): Maybe<IntersectionObserver> {
     if (!el) return;
     const io = new IntersectionObserver((entries, observer) => {
       entries.forEach(async (entry) => {
-        if (entry.isIntersecting && next) {
+        if (entry.isIntersecting && search.next) {
           observer?.unobserve(el);
-          await load(next).catch((e) => {
-            loading = false;
-            error = e.message;
-          });
+          error = await onNext();
+          if (error) {
+            // don't keep trying if something fails
+            auto = false;
+          }
         }
       });
     });
@@ -178,10 +113,14 @@
     }
   }
 
-  onMount(() => {
-    // set initial total, update later
-    $total = count ?? 0;
-    if (auto && endEl) {
+  // Re-observe the sentinel whenever results change (search.next updates)
+  // so auto-loading continues for subsequent pages
+  $effect(() => {
+    if (auto && endEl && search.next) {
+      // clean up previous observer
+      if (observer) {
+        unwatch(observer, endEl);
+      }
       observer = watch(endEl);
     }
 
@@ -193,24 +132,29 @@
   });
 </script>
 
-<div
-  class="container"
-  data-sveltekit-preload-data={preload}
-  bind:this={container}
->
+<div class="container" data-sveltekit-preload-data={preload}>
   <Flex direction="column" gap={1}>
     {@render start?.()}
-    {#each results as document (document.id)}
+
+    {#each search.results as document (document.id)}
       <div
         class="result-row"
-        class:selected={$selectedIds.includes(String(document.id))}
+        class:selected={search.selectedIds.has(String(document.id))}
       >
         {#if !embed}
           <label>
             <span class="sr-only">{$_("documents.select")}</span>
             <input
               type="checkbox"
-              bind:group={$selectedIds}
+              checked={search.selectedIds.has(String(document.id))}
+              onchange={(e) => {
+                const id = String(document.id);
+                if (e.currentTarget.checked) {
+                  search.selectedIds.add(id);
+                } else {
+                  search.selectedIds.delete(id);
+                }
+              }}
               value={document.id}
             />
           </label>
@@ -234,28 +178,28 @@
         </div>
       </div>
     {:else}
-      <Empty icon={Search24}>
-        <h2>{$_("noDocuments.noSearchResults")}</h2>
-        <p>{$_("noDocuments.queryNoResults")}</p>
-      </Empty>
+      {#if search.loading}
+        <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
+      {:else}
+        <Empty icon={Search24}>
+          <h2>{$_("noDocuments.noSearchResults")}</h2>
+          <p>{$_("noDocuments.queryNoResults")}</p>
+        </Empty>
+      {/if}
     {/each}
   </Flex>
 
   <div bind:this={endEl} class="end">
-    {#if next}
+    {#if search.next}
       <Button
         ghost
         mode="primary"
-        disabled={loading}
-        on:click={() => {
-          if (next)
-            load(next).catch((e) => {
-              error = e.message;
-              loading = false;
-            });
+        disabled={search.loading}
+        on:click={async () => {
+          error = await onNext();
         }}
       >
-        {#if loading}
+        {#if search.loading}
           {$_("common.loading")}
         {:else}
           {$_("documents.more")}
@@ -264,7 +208,7 @@
     {/if}
 
     {#if error}
-      <p class="error">{error}</p>
+      <p class="error">{error.message}</p>
       <p class="error">{$_("documents.retry")}</p>
     {/if}
   </div>

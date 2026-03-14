@@ -11,7 +11,7 @@ export const addon: AddOn = {
     type: "object",
     title: "Bulk Edit",
     version: 2,
-    documents: ["query"],
+    documents: ["query", "selected"],
     categories: ["bulk"],
     properties: {
       source: {

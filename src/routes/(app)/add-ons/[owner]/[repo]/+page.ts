@@ -20,7 +20,7 @@ export async function load({ url, params, fetch, parent }) {
   const { me } = await parent();
   const query = me ? url.searchParams.get("q") || userDocs(me) : "";
 
-  const searchResults = search(query, {}, fetch).then((r) => r.data);
+  const searchResults = search(query, {}, fetch);
 
   return {
     addon,

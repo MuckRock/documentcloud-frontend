@@ -18,8 +18,6 @@
   import { organizations, users } from "@/test/handlers/accounts";
   import { activeAddons } from "@/test/fixtures/addons";
 
-  const documents = Promise.resolve({ data: documentsList });
-
   type Args = ComponentProps<typeof AppLayout>;
 
   const { Story } = defineMeta({
@@ -44,6 +42,20 @@
   });
 </script>
 
+<script lang="ts">
+  import { setContext } from "svelte";
+  import {
+    SearchResultsState,
+    setSearchResults,
+  } from "$lib/state/search.svelte";
+
+  setContext("embed", false);
+
+  const search = new SearchResultsState();
+  search.setResults(Promise.resolve({ data: documentsList }));
+  setSearchResults(search);
+</script>
+
 {#snippet template(args: Args)}
   <AppLayout {...args}>
     <SidebarLayout>
@@ -53,7 +65,7 @@
         <AddOns />
       </svelte:fragment>
 
-      <DocumentBrowser slot="content" {documents} />
+      <DocumentBrowser slot="content" />
 
       <svelte:fragment slot="action">
         <Button mode="primary" href="/upload/">

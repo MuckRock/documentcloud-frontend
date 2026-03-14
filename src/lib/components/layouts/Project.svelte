@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { setContext } from "svelte";
   import { _ } from "svelte-i18n";
 
   import type {
@@ -19,22 +18,13 @@
   import DocumentActions from "../sidebar/DocumentActions.svelte";
   import UploadButton from "../sidebar/UploadButton.svelte";
 
-  import {
-    editable,
-    selected,
-  } from "$lib/components/documents/ResultsList.svelte";
-
-  setContext("editable", editable);
-  setContext("selected", selected);
-
   interface Props {
     project: Project;
     users: ProjectUser[];
-    documents: Promise<APIResponse<DocumentResults>>;
     query?: string;
   }
 
-  let { project, users, documents, query = "" }: Props = $props();
+  let { project, users, query = "" }: Props = $props();
 
   let combinedQuery = $derived(
     `+project:${project.slug}-${project.id} ${query}`.trim(),
@@ -51,17 +41,7 @@
   <article slot="content">
     <header><ProjectHeader {project} /></header>
     <main>
-      <DocumentBrowser
-        {documents}
-        {project}
-        {query}
-        uiText={{
-          empty: $_("projects.empty"),
-          loading: $_("projects.loading"),
-          error: $_("projects.error"),
-          search: $_("projects.placeholder.documents"),
-        }}
-      />
+      <DocumentBrowser {project} {query} />
     </main>
   </article>
 
