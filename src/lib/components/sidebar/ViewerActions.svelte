@@ -169,7 +169,7 @@
       {/if}
 
       {#if visible === "edit"}
-        <Edit {document} on:close={close} />
+        <Edit {document} onclose={close} />
       {/if}
 
       {#if visible === "revisions"}

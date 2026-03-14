@@ -178,7 +178,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 
       {#if visible === "edit"}
         {#if search.selected.length === 1}
-          <Edit document={single(search.selected)} on:close={close} />
+          <Edit document={single(search.selected)} onclose={close} />
         {:else}
           <EditMany documents={search.selected} on:close={close}>
             {#if search.selected?.length}
