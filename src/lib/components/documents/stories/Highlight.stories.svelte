@@ -6,7 +6,7 @@
   import searchResultsFixture from "@/test/fixtures/documents/search-highlight.json";
 
   const document = searchResultsFixture.results[0];
-  const noteHighlights = document?.note_highlights["197010"]!;
+  const noteHighlights = document?.note_highlights?.["197010"];
 
   export const meta: Meta = {
     title: "Common / Highlight",
@@ -28,7 +28,7 @@
 
 <Story name="With Note">
   <Highlight
-    title={noteHighlights.title[0]}
-    segments={noteHighlights.description}
+    title={noteHighlights?.title[0]}
+    segments={noteHighlights?.description}
   />
 </Story>

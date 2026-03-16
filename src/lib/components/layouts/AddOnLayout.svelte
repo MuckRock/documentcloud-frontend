@@ -1,11 +1,5 @@
 <script lang="ts">
-  import type {
-    Maybe,
-    Page,
-    AddOn,
-    Event,
-    Run,
-  } from "$lib/api/types";
+  import type { Maybe, Page, AddOn, Event, Run } from "$lib/api/types";
 
   import { afterNavigate } from "$app/navigation";
   import { page } from "$app/state";

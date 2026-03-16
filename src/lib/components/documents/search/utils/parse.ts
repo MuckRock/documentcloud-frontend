@@ -21,7 +21,6 @@ const validFields = [
   /^page_count$/,
   /^pages$/, // maps to page count
   /^projects?$/,
-  /^project?$/, // maps to projects
   /^slug$/,
   /^source$/,
   /^status$/,
@@ -33,7 +32,7 @@ const validFields = [
   /^text$/, // maps to doctext
   /^page_no_[0-9]+$/,
   /^sort$/,
-  /^order$/, // maps to order
+  /^order$/, // maps to sort
 ];
 
 interface ValidQueryResponse {
@@ -86,8 +85,6 @@ export function validateQuery(
     return { isValid: true };
   } catch (error) {
     console.error("Error parsing query:", error);
-    // Catch any initial commmon error cases
-
     // Return catch-all error message
     let message = "Invalid query syntax";
     // Get position of error

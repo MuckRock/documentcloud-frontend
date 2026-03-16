@@ -5,7 +5,7 @@ import { Schema } from "prosemirror-model";
  *
  * Defines four content types within a single paragraph block:
  * - text: regular text for unqualified terms, phrases, operators, etc.
- * - field-value: inline atom for field:value filter pairs (rendered as chips)
+ * - field-value: inline atom for field:value filter pairs (rendered as atoms)
  * - range: inline atom for range queries like created_at:[NOW-1MONTH TO *]
  * - sort: inline atom for sort directives like sort:created_at
  *
@@ -44,7 +44,7 @@ export const searchSchema = new Schema({
         quoted: { default: false },
       },
       toDOM() {
-        return ["span", { class: "search-chip search-field-value" }];
+        return ["span", { class: "search-atom search-field-value" }];
       },
     },
     range: {
@@ -60,7 +60,7 @@ export const searchSchema = new Schema({
         prefix: { default: null },
       },
       toDOM() {
-        return ["span", { class: "search-chip search-range" }];
+        return ["span", { class: "search-atom search-range" }];
       },
     },
     sort: {
@@ -72,7 +72,7 @@ export const searchSchema = new Schema({
         direction: { default: "asc" },
       },
       toDOM() {
-        return ["span", { class: "search-chip search-sort" }];
+        return ["span", { class: "search-atom search-sort" }];
       },
     },
   },

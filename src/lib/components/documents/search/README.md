@@ -61,6 +61,7 @@ Provides keyboard navigation for inline atom nodes (chips):
 
 - **ArrowLeft/ArrowRight** — When the cursor is adjacent to a chip, selects it rather than jumping over it.
 - **ArrowDown** — When an editable chip (field-value or range) is selected, moves focus into its popover editor.
+- **Tab** — When an editable chip (field-value or range) is selected, moves focus into its popover editor (same as ArrowDown).
 
 ##### Clipboard (`plugins/clipboard-plugin.ts`)
 

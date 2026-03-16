@@ -1,5 +1,7 @@
-<!-- SortChip renders a "sort" atom node. -->
+<!-- SortAtom renders a "sort" atom node. -->
 <script lang="ts">
+  import { sortLabel } from "./utils/label";
+
   interface Props {
     field?: string;
     direction?: "asc" | "desc";
@@ -8,23 +10,23 @@
   let { field = "", direction = "asc" }: Props = $props();
 
   let arrow = $derived(direction === "desc" ? "\u2193" : "\u2191");
-  let chipLabel = $derived(`Sort by ${field}, ${direction === "desc" ? "descending" : "ascending"}`);
+  let atomLabel = $derived(sortLabel({ field, direction }));
 </script>
 
-<span class="search-chip search-sort" aria-label={chipLabel}>
-  <span class="chip-label">Sort</span>
-  <span class="chip-field">{field}</span>
-  <span class="chip-direction">{arrow}</span>
+<span class="search-atom search-sort" aria-label={atomLabel}>
+  <span class="atom-label">Sort</span>
+  <span class="atom-field">{field}</span>
+  <span class="atom-direction">{arrow}</span>
 </span>
 
 <style>
-  .search-chip.search-sort {
+  .search-atom.search-sort {
     background-color: var(--purple-1);
     border: 1px solid var(--purple-2);
     color: var(--purple-5);
   }
 
-  .chip-label {
+  .atom-label {
     opacity: 0.7;
     margin: 0 0.125rem 0 0;
     text-transform: uppercase;
@@ -33,7 +35,7 @@
     font-size: var(--font-xs, 12px);
   }
 
-  .chip-direction {
+  .atom-direction {
     margin-left: 2px;
   }
 </style>

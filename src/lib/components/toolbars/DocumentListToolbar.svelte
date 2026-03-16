@@ -2,7 +2,7 @@
   import { _ } from "svelte-i18n";
   import { ChevronDown12, Eye16 } from "svelte-octicons";
 
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import { goto } from "$app/navigation";
 
   import Dropdown from "../common/Dropdown.svelte";
@@ -24,28 +24,25 @@
   let {
     query = "",
     project = null,
-    preloadedSuggestions = {}
+    preloadedSuggestions = {},
   }: Props = $props();
 
   let headerToolbarWidth: number = $state(800);
 
-  let contextChips = $derived(project
-    ? [{ field: "project", label: project.title }]
-    : []
-  )
+  let contextAtoms = $derived(
+    project ? [{ field: "project", label: project.title }] : [],
+  );
 
   function handleSearchChange(detail: { q: string; structural: boolean }) {
-    // Only reload for structural changes (chip insert/remove).
+    // Only reload for structural changes (atom insert/remove).
     // Plain text typing waits for explicit Enter/submit.
     if (detail.structural) {
-      const url = new URL($page.url);
-      url.searchParams.set("q", detail.q);
-      goto(url, { replaceState: true, noScroll: true, keepFocus: true });
+      handleSearchSubmit(detail);
     }
   }
 
   function handleSearchSubmit(detail: { q: string }) {
-    const url = new URL($page.url);
+    const url = new URL(page.url);
     url.searchParams.set("q", detail.q);
     goto(url, { noScroll: true, keepFocus: true });
   }
@@ -56,7 +53,7 @@
     <div class="items">
       <SearchEditor
         initialQuery={query}
-        {contextChips}
+        {contextAtoms}
         {preloadedSuggestions}
         onchange={handleSearchChange}
         onsubmit={handleSearchSubmit}

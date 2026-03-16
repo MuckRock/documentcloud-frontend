@@ -286,9 +286,7 @@ describe("lucene parser evaluation", () => {
       // LIMITATION: Even quoted ISO dates with colons fail inside range syntax.
       // We need to pre-process these before parsing.
       expect(() =>
-        parse(
-          'created_at:["2024-01-01T00:00:00Z" TO "2024-01-31T00:00:00Z"]',
-        ),
+        parse('created_at:["2024-01-01T00:00:00Z" TO "2024-01-31T00:00:00Z"]'),
       ).toThrow();
     });
 
@@ -304,9 +302,7 @@ describe("lucene parser evaluation", () => {
     it("fails to parse date math with / rounding in ranges", () => {
       // LIMITATION: The / character in date math (e.g., NOW/DAY) causes
       // parse errors inside ranges. We need to pre-process or quote these.
-      expect(() =>
-        parse("updated_at:[NOW/DAY-7DAYS TO NOW/DAY]"),
-      ).toThrow();
+      expect(() => parse("updated_at:[NOW/DAY-7DAYS TO NOW/DAY]")).toThrow();
     });
 
     it("parses date range with complex date math (no rounding)", () => {

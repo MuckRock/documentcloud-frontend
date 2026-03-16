@@ -63,18 +63,21 @@ This captures both uncommitted modifications and changes committed in the curren
 ### Step 2: Parse changes
 
 Look for lines starting with `+` in the diff that contain JSON keys:
+
 - Lines like `+    "keyName": "Value"` indicate additions or modifications
 - Ignore lines that are just structural changes (commas, brackets)
 
 ### Step 3: Extract key paths
 
 For each modified line, determine:
+
 - The full JSON path (e.g., `addonDispatchDialog.signedOut`)
 - The new English value
 
 ### Step 4: Translate
 
 For each modified key:
+
 1. Generate translations for all 6 languages
 2. Maintain the same HTML structure (e.g., `<a href="{href}">text</a>`)
 3. Preserve placeholders like `{href}`, `{n}`, etc.
@@ -83,6 +86,7 @@ For each modified key:
 ### Step 5: Update files
 
 For each language file:
+
 1. Read the current content
 2. Locate the key to update using the JSON path
 3. Use Edit tool to update the specific key
@@ -99,11 +103,13 @@ For each language file:
 ## Example Translations
 
 English:
+
 ```json
 "signedOut": "You must <a href=\"{href}\">sign in</a> before dispatching this add-on."
 ```
 
 Translations should maintain:
+
 - The `<a href="{href}">` structure
 - The `{href}` placeholder
 - Appropriate word order for each language
@@ -111,6 +117,7 @@ Translations should maintain:
 ## Output Format
 
 After translating, show:
+
 1. Summary of changes detected
 2. List of keys modified
 3. Confirmation of files updated
@@ -119,6 +126,7 @@ After translating, show:
 ## Verification
 
 After updates, verify with:
+
 ```bash
 for file in src/langs/json/{de,es,fr,it,ru,uk}.json; do
   echo "=== $file ==="

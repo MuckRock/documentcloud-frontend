@@ -1,11 +1,5 @@
 <script lang="ts">
-  import type {
-    Document,
-    Nullable,
-    Org,
-    Project,
-    User,
-  } from "$lib/api/types";
+  import type { Document, Nullable, Org, Project, User } from "$lib/api/types";
 
   import { goto } from "$app/navigation";
   import type { Suggestion } from "$lib/components/documents/search/prosemirror/plugins/autocomplete-data";
@@ -63,11 +57,7 @@
     project?: Nullable<Project>;
   }
 
-  let {
-    search: searchProp,
-    query = "",
-    project = null,
-  }: Props = $props();
+  let { search: searchProp, query = "", project = null }: Props = $props();
 
   // this lets us pass in non-global search results, for testing
   // will error if neither is present
@@ -101,7 +91,9 @@
    * Uses expanded user/org objects on documents to provide contextually
    * relevant suggestions without an API call.
    */
-  function extractSuggestions(docs: MapIterator<Document>): Record<string, Suggestion[]> {
+  function extractSuggestions(
+    docs: MapIterator<Document>,
+  ): Record<string, Suggestion[]> {
     const users = new Map<string, Suggestion>();
     const orgs = new Map<string, Suggestion>();
     const documents = new Map<string, Suggestion>();
@@ -139,8 +131,7 @@
           if (!Array.isArray(values)) continue;
           // "_tag" key maps to the "tag" search field;
           // other keys need the "data_" prefix for Lucene syntax
-          const fieldName =
-            rawKey === "_tag" ? "tag" : `data_${rawKey}`;
+          const fieldName = rawKey === "_tag" ? "tag" : `data_${rawKey}`;
           if (!dataFields.has(fieldName)) {
             dataFields.set(fieldName, new Map());
           }
@@ -165,7 +156,9 @@
   }
 
   // Update preloaded suggestions when search results change
-  let preloadedSuggestions: Record<string, Suggestion[]> = $derived(extractSuggestions(search.results));
+  let preloadedSuggestions: Record<string, Suggestion[]> = $derived(
+    extractSuggestions(search.results),
+  );
 </script>
 
 <div class="container">

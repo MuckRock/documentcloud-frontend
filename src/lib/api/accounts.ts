@@ -188,8 +188,10 @@ export function inMyOrg(orgId: number, myId: number, users?: User[]) {
   return [...adminUsers, ...regularUsers].filter((u) => u.id !== myId);
 }
 
-export interface ListUsersParams
-  extends Record<string, Maybe<string | number>> {
+export interface ListUsersParams extends Record<
+  string,
+  Maybe<string | number>
+> {
   name?: string;
   name__istartswith?: string;
   id__in?: string;

@@ -10,7 +10,11 @@ import { list as listProjects } from "$lib/api/projects";
 import { search as searchDocuments } from "$lib/api/documents";
 
 /** How a field selection is inserted into the editor. */
-export type InsertBehavior = "field-value-chip" | "sort-chip" | "range-chip" | "text";
+export type InsertBehavior =
+  | "field-value-atom"
+  | "sort-atom"
+  | "range-atom"
+  | "text";
 
 export interface FieldDef {
   name: string;
@@ -30,62 +34,62 @@ export interface Suggestion {
 // ── Field catalog ──────────────────────────────────────────────
 
 const FIELDS: FieldDef[] = [
-  // Chippable with static values
+  // Atom fields with static values
   {
     name: "access",
     label: "Access",
     description: "Access level",
-    insertBehavior: "field-value-chip",
+    insertBehavior: "field-value-atom",
     hasValueSuggestions: true,
   },
   {
     name: "status",
     label: "Status",
     description: "Processing status",
-    insertBehavior: "field-value-chip",
+    insertBehavior: "field-value-atom",
     hasValueSuggestions: true,
   },
   {
     name: "language",
     label: "Language",
     description: "Document language",
-    insertBehavior: "field-value-chip",
+    insertBehavior: "field-value-atom",
     hasValueSuggestions: true,
   },
-  // Chippable — API-backed values
+  // Atom fields — API-backed values
   {
     name: "user",
     label: "User",
     description: "Filter by user",
-    insertBehavior: "field-value-chip",
+    insertBehavior: "field-value-atom",
     hasValueSuggestions: true,
   },
   {
     name: "organization",
     label: "Organization",
     description: "Filter by organization",
-    insertBehavior: "field-value-chip",
+    insertBehavior: "field-value-atom",
     hasValueSuggestions: true,
   },
   {
     name: "project",
     label: "Project",
     description: "Filter by project",
-    insertBehavior: "field-value-chip",
+    insertBehavior: "field-value-atom",
     hasValueSuggestions: true,
   },
   {
     name: "document",
     label: "Document",
     description: "Filter by document ID",
-    insertBehavior: "field-value-chip",
+    insertBehavior: "field-value-atom",
     hasValueSuggestions: true,
   },
   {
     name: "tag",
     label: "Tag",
     description: "Filter by tag",
-    insertBehavior: "field-value-chip",
+    insertBehavior: "field-value-atom",
     hasValueSuggestions: false,
   },
   // Sort
@@ -93,7 +97,7 @@ const FIELDS: FieldDef[] = [
     name: "sort",
     label: "Sort",
     description: "Sort results",
-    insertBehavior: "sort-chip",
+    insertBehavior: "sort-atom",
     hasValueSuggestions: true,
   },
   // Plain-text fields (insert "field:" as text)
@@ -129,21 +133,21 @@ const FIELDS: FieldDef[] = [
     name: "created_at",
     label: "Created At",
     description: "Filter by creation date",
-    insertBehavior: "range-chip",
+    insertBehavior: "range-atom",
     hasValueSuggestions: false,
   },
   {
     name: "updated_at",
     label: "Updated At",
     description: "Filter by update date",
-    insertBehavior: "range-chip",
+    insertBehavior: "range-atom",
     hasValueSuggestions: false,
   },
   {
     name: "page_count",
     label: "Page Count",
     description: "Filter by page count",
-    insertBehavior: "range-chip",
+    insertBehavior: "range-atom",
     hasValueSuggestions: false,
   },
   {
@@ -154,6 +158,9 @@ const FIELDS: FieldDef[] = [
     hasValueSuggestions: false,
   },
 ];
+
+/** Fast field lookup by canonical name. */
+const FIELD_MAP = new Map(FIELDS.map((f) => [f.name, f]));
 
 /** Alias field names that map to canonical names. */
 const FIELD_ALIASES: Record<string, string> = {
@@ -262,7 +269,9 @@ const RANGE_CONFIGS: Record<string, RangeFieldConfig> = {
 };
 
 /** Get range configuration for a field, or undefined if it's not a range field. */
-export function getRangeConfig(fieldName: string): RangeFieldConfig | undefined {
+export function getRangeConfig(
+  fieldName: string,
+): RangeFieldConfig | undefined {
   const canonical = resolveFieldName(fieldName);
   return RANGE_CONFIGS[canonical];
 }
@@ -278,7 +287,7 @@ export function resolveFieldName(name: string): string {
  *  Returns a synthetic FieldDef for data_* fields. */
 export function resolveField(name: string): FieldDef | undefined {
   const canonical = resolveFieldName(name);
-  const found = FIELDS.find((f) => f.name === canonical);
+  const found = FIELD_MAP.get(canonical);
   if (found) return found;
 
   // Synthetic def for data_* fields
@@ -287,7 +296,7 @@ export function resolveField(name: string): FieldDef | undefined {
       name: canonical,
       label: canonical.replace(/^data_/, ""),
       description: `Data field: ${canonical.replace(/^data_/, "")}`,
-      insertBehavior: "field-value-chip",
+      insertBehavior: "field-value-atom",
       hasValueSuggestions: false, // suggestions come from preloaded data
     };
   }
@@ -348,7 +357,7 @@ export function getFieldSuggestions(
   // Also match aliases
   for (const [alias, canonical] of Object.entries(FIELD_ALIASES)) {
     if (alias.startsWith(lower)) {
-      const field = FIELDS.find((f) => f.name === canonical);
+      const field = FIELD_MAP.get(canonical);
       if (field && !results.some((r) => r.value === canonical)) {
         results.push({
           label: `${field.label} (${alias})`,
@@ -411,6 +420,30 @@ export function getValueSuggestions(
  *   from search results. Fields in this set trigger value-stage autocomplete
  *   even if they don't have static or API-backed suggestions (e.g. tag, data_*).
  */
+type ValueTriggerResult = {
+  stage: "value";
+  fieldName: string;
+  valueFilter: string;
+  triggerStart: number;
+};
+
+function resolveValueTrigger(
+  rawField: string,
+  valueFilter: string,
+  triggerStart: number,
+  preloadedFields?: Set<string>,
+): ValueTriggerResult | null {
+  const canonical = resolveFieldName(rawField);
+  const field = FIELD_MAP.get(canonical);
+  if (field?.hasValueSuggestions)
+    return { stage: "value", fieldName: canonical, valueFilter, triggerStart };
+  if (field && preloadedFields?.has(canonical))
+    return { stage: "value", fieldName: canonical, valueFilter, triggerStart };
+  if (!field && preloadedFields?.has(rawField))
+    return { stage: "value", fieldName: rawField, valueFilter, triggerStart };
+  return null;
+}
+
 export function detectTrigger(
   textBeforeCursor: string,
   preloadedFields?: Set<string>,
@@ -433,31 +466,18 @@ export function detectTrigger(
 
   // Check for quoted value pattern: field:"value text
   // This allows spaces inside the value while maintaining autocomplete.
-  const quotedMatch = text.match(
-    /([+-]?[a-zA-Z_][a-zA-Z0-9_]*):\"([^"]*)$/,
-  );
+  const quotedMatch = text.match(/([+-]?[a-zA-Z_][a-zA-Z0-9_]*):\"([^"]*)$/);
   if (quotedMatch) {
     const rawField = quotedMatch[1]!.replace(/^[+-]/, "");
-    const canonical = resolveFieldName(rawField);
     const valueFilter = quotedMatch[2]!;
     const triggerStart = quotedMatch.index!;
-    const field = FIELDS.find((f) => f.name === canonical);
-
-    if (field && field.hasValueSuggestions) {
-      return { stage: "value", fieldName: canonical, valueFilter, triggerStart };
-    }
-    if (field && preloadedFields?.has(canonical)) {
-      return { stage: "value", fieldName: canonical, valueFilter, triggerStart };
-    }
-    if (!field && preloadedFields?.has(rawField)) {
-      return {
-        stage: "value",
-        fieldName: rawField,
-        valueFilter,
-        triggerStart,
-      };
-    }
-    if (field) return { stage: null };
+    const result = resolveValueTrigger(
+      rawField,
+      valueFilter,
+      triggerStart,
+      preloadedFields,
+    );
+    if (result) return result;
     return { stage: null };
   }
 
@@ -475,42 +495,16 @@ export function detectTrigger(
     // Strip leading +/- prefix
     const fieldName = rawField.replace(/^[+-]/, "");
     const valueText = word.substring(colonIndex + 1);
-    const canonical = resolveFieldName(fieldName);
-    const field = FIELDS.find((f) => f.name === canonical);
+    const result = resolveValueTrigger(
+      fieldName,
+      valueText,
+      triggerStart,
+      preloadedFields,
+    );
+    if (result) return result;
 
-    if (field && field.hasValueSuggestions) {
-      return {
-        stage: "value",
-        fieldName: canonical,
-        valueFilter: valueText,
-        triggerStart,
-      };
-    }
-
-    // Field exists but no static/API suggestions — check preloaded data
-    if (field && preloadedFields?.has(canonical)) {
-      return {
-        stage: "value",
-        fieldName: canonical,
-        valueFilter: valueText,
-        triggerStart,
-      };
-    }
-
-    // Unknown field with preloaded data (data_* fields)
-    if (!field && preloadedFields?.has(fieldName)) {
-      return {
-        stage: "value",
-        fieldName: fieldName,
-        valueFilter: valueText,
-        triggerStart,
-      };
-    }
-
-    // Field exists but no suggestions at all → no autocomplete
-    if (field) return { stage: null };
-
-    // Unknown field — could be data_* or typo — no autocomplete
+    // Field exists but no suggestions → no autocomplete
+    // Unknown field — could be data_* or typo → no autocomplete
     return { stage: null };
   }
 

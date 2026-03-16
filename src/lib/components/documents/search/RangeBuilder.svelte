@@ -38,7 +38,9 @@
   let endInput: HTMLInputElement | undefined = $state();
 
   let rangeConfig = $derived(getRangeConfig(fieldName));
-  let isDateField = $derived(fieldName === "created_at" || fieldName === "updated_at");
+  let isDateField = $derived(
+    fieldName === "created_at" || fieldName === "updated_at",
+  );
 
   /** Expose the dropdown element so the plugin can position it. */
   export function getElement(): HTMLElement | undefined {
@@ -95,7 +97,10 @@
       const first = focusable[0]!;
       const last = focusable[focusable.length - 1]!;
       if (e.shiftKey) {
-        if (document.activeElement === first || document.activeElement === dropdown) {
+        if (
+          document.activeElement === first ||
+          document.activeElement === dropdown
+        ) {
           e.preventDefault();
           onFocusEditor();
         }
@@ -148,7 +153,11 @@
       <button
         class="search-ac-insert-btn"
         type="button"
-        onmousedown={(e) => { e.preventDefault(); e.stopPropagation(); handleFixedInsert(); }}
+        onmousedown={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          handleFixedInsert();
+        }}
       >
         Insert
       </button>
@@ -169,9 +178,19 @@
           tabindex="0"
           id="{dropdownId}-opt-{index}"
           aria-selected={index === selectedIndex}
-          onmousedown={(e) => { e.preventDefault(); e.stopPropagation(); onSelect(index); }}
+          onmousedown={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onSelect(index);
+          }}
           onmouseenter={() => onHover(index)}
-          onkeydown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); onSelect(index); } }}
+          onkeydown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              e.stopPropagation();
+              onSelect(index);
+            }
+          }}
         >
           <span class="search-ac-label">{suggestion.label}</span>
         </div>
@@ -231,7 +250,11 @@
       <button
         class="search-ac-insert-btn"
         type="button"
-        onmousedown={(e) => { e.preventDefault(); e.stopPropagation(); handleRangeInsert(); }}
+        onmousedown={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          handleRangeInsert();
+        }}
       >
         Insert
       </button>

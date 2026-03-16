@@ -24,12 +24,14 @@
   }: Props = $props();
 
   let dropdown: HTMLElement | undefined = $state();
+  let options: HTMLElement[] = $state([]);
 
   $effect(() => {
-    if (!dropdown) return;
-    const selected = dropdown.querySelector(".selected");
-    if (selected && typeof selected.scrollIntoView === "function") {
-      selected.scrollIntoView({ block: "nearest" });
+    // Always keep the selected element in view
+    const el = options[selectedIndex];
+    // Protect calling `scrollIntoView` in tests by checking if it's a function.
+    if (el && typeof el.scrollIntoView === "function") {
+      el.scrollIntoView({ block: "nearest" });
     }
   });
 
@@ -53,14 +55,21 @@
   {:else}
     {#each suggestions as suggestion, index}
       <div
+        bind:this={options[index]}
         class="search-ac-option"
         class:selected={index === selectedIndex}
         role="option"
         tabindex="-1"
         id="{dropdownId}-opt-{index}"
         aria-selected={index === selectedIndex}
-        aria-label={suggestion.description ? `${suggestion.label}, ${suggestion.description}` : suggestion.label}
-        onmousedown={(e) => { e.preventDefault(); e.stopPropagation(); onSelect(index); }}
+        aria-label={suggestion.description
+          ? `${suggestion.label}, ${suggestion.description}`
+          : suggestion.label}
+        onmousedown={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onSelect(index);
+        }}
         onmouseenter={() => onHover(index)}
       >
         <span class="search-ac-label">{suggestion.label}</span>

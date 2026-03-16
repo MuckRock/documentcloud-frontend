@@ -47,10 +47,11 @@
 
   $: creditHelpText = active_org.credit_reset_date
     ? $_("authSection.credits.refreshOn", {
-        values: { date: formatResetDate(active_org.credit_reset_date, $locale) },
+        values: {
+          date: formatResetDate(active_org.credit_reset_date, $locale),
+        },
       })
     : undefined;
-
 
   // wrapping setOrg here
   async function switchOrg(org: Org) {

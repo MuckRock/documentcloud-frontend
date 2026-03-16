@@ -25,7 +25,9 @@
   const me = getCurrentUser();
 
   let event = $derived(data.event);
-  let addon = $derived(isAddon(data.event.addon) ? data.event.addon : undefined);
+  let addon = $derived(
+    isAddon(data.event.addon) ? data.event.addon : undefined,
+  );
   let query = $derived(data.query);
   let scheduled = $derived(data.scheduled);
   let organization = $derived(
@@ -69,12 +71,5 @@
 </svelte:head>
 
 {#if addon}
-  <AddOnLayout
-    {addon}
-    {event}
-    {query}
-    {disablePremium}
-    {scheduled}
-    {history}
-  />
+  <AddOnLayout {addon} {event} {query} {disablePremium} {scheduled} {history} />
 {/if}

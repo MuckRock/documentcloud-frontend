@@ -1,7 +1,11 @@
-import { Plugin } from "prosemirror-state";
+import { Plugin, PluginKey } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import type { Node as ProseMirrorNode } from "prosemirror-model";
-import { serialize } from "../../utils/serialize";
+import {
+  serialize,
+  serializeWithOffsets,
+  type TextOffsetSegment,
+} from "../../utils/serialize";
 import { validateQuery } from "../../utils/parse";
 
 /**
@@ -9,9 +13,21 @@ import { validateQuery } from "../../utils/parse";
  *
  * Scans text content after each transaction and applies inline decorations
  * for boolean operators (AND, OR, NOT), parentheses, and prefix operators (+, -).
- * Also applies wavy underline error decorations when the query has invalid syntax.
+ * Error decorations (wavy underlines) are only shown after a submit attempt fails
+ * validation. Once in error mode, the plugin re-validates on each edit and keeps
+ * showing errors until the query becomes valid.
  * Decorations are ephemeral — they don't affect the document model or serialization.
  */
+
+export const decorationPluginKey = new PluginKey<DecorationPluginState>(
+  "search-decorations",
+);
+
+interface DecorationPluginState {
+  decorations: DecorationSet;
+  /** Whether we're in error mode (triggered by a failed submit). */
+  showErrors: boolean;
+}
 
 // Match AND, OR, NOT as whole words (word boundary on both sides)
 const OPERATOR_RE = /\b(AND|OR|NOT)\b/g;
@@ -24,7 +40,8 @@ const PAREN_RE = /[()]/g;
 const PREFIX_RE = /(?:^|(?<=\s))[+\-](?=\S)/g;
 
 // Match a prefix operator and the full term that follows it (for background highlighting)
-const PREFIX_TERM_RE = /(?:^|(?<=\s))[+\-]\S+/g;
+// Handles both unquoted terms (+term) and quoted terms (+"multi word")
+const PREFIX_TERM_RE = /(?:^|(?<=\s))[+\-](?:"[^"]*"?|\S+)/g;
 
 /**
  * Given the validation error message, find the error region as
@@ -69,50 +86,10 @@ function findErrorRegion(
   return { from: 0, to: query.length };
 }
 
-/**
- * Compute the serialized length of an atom node.
- * Must match the logic in serialize.ts exactly.
- */
-function serializeAtomLength(node: ProseMirrorNode): number {
-  switch (node.type.name) {
-    case "field-value": {
-      const { field, value, prefix, boost, quoted } = node.attrs;
-      let len = 0;
-      if (prefix) len += (prefix as string).length;
-      len += (field as string).length + 1; // field + ":"
-      if (quoted) len += 1;
-      len += (value as string).length;
-      if (quoted) len += 1;
-      if (boost) len += 1 + String(boost).length; // ^boost
-      return len;
-    }
-    case "range": {
-      const { field, lower, upper, prefix } = node.attrs;
-      let len = 0;
-      if (prefix) len += (prefix as string).length;
-      len += (field as string).length + 1; // field + ":"
-      len += 1; // [ or {
-      len += (lower as string).length;
-      len += 4; // " TO "
-      len += (upper as string).length;
-      len += 1; // ] or }
-      return len;
-    }
-    case "sort": {
-      const { field, direction } = node.attrs;
-      let len = 5; // "sort:"
-      if (direction === "desc") len += 1; // "-"
-      len += (field as string).length;
-      return len;
-    }
-    default:
-      return 0;
-  }
-}
-
-const ATOM_TYPES = new Set(["field-value", "range", "sort"]);
-
-function buildDecorations(doc: ProseMirrorNode): DecorationSet {
+function buildDecorations(
+  doc: ProseMirrorNode,
+  includeErrors: boolean,
+): DecorationSet {
   const decorations: Decoration[] = [];
 
   doc.descendants((node, pos) => {
@@ -127,6 +104,7 @@ function buildDecorations(doc: ProseMirrorNode): DecorationSet {
       const from = pos + match.index;
       const to = from + match[0].length;
       decorations.push(
+        // Decorations are visual overlays — they add CSS classes without changing the document model
         Decoration.inline(from, to, { class: "search-operator" }),
       );
     }
@@ -136,9 +114,7 @@ function buildDecorations(doc: ProseMirrorNode): DecorationSet {
     while ((match = PAREN_RE.exec(text)) !== null) {
       const from = pos + match.index;
       const to = from + 1;
-      decorations.push(
-        Decoration.inline(from, to, { class: "search-paren" }),
-      );
+      decorations.push(Decoration.inline(from, to, { class: "search-paren" }));
     }
 
     // Prefix operators (+ and -)
@@ -147,9 +123,7 @@ function buildDecorations(doc: ProseMirrorNode): DecorationSet {
       const from = pos + match.index;
       const to = from + 1;
       const cls =
-        match[0] === "+"
-          ? "search-prefix-required"
-          : "search-prefix-excluded";
+        match[0] === "+" ? "search-prefix-required" : "search-prefix-excluded";
       decorations.push(Decoration.inline(from, to, { class: cls }));
     }
 
@@ -158,112 +132,104 @@ function buildDecorations(doc: ProseMirrorNode): DecorationSet {
     while ((match = PREFIX_TERM_RE.exec(text)) !== null) {
       const from = pos + match.index;
       const to = from + match[0].length;
-      const cls =
-        match[0].startsWith("+")
-          ? "search-term-required"
-          : "search-term-excluded";
+      const cls = match[0].startsWith("+")
+        ? "search-term-required"
+        : "search-term-excluded";
       decorations.push(Decoration.inline(from, to, { class: cls }));
     }
   });
 
-  // Error decorations for invalid syntax
-  const query = serialize(doc);
-  const validation = validateQuery(query);
-  if (!validation.isValid) {
-    const region = findErrorRegion(query, validation.error);
-    if (region) {
-      const errorDecos = mapErrorToDecorations(doc, region.from, region.to);
-      decorations.push(...errorDecos);
+  // Error decorations for invalid syntax (only when in error mode)
+  if (includeErrors) {
+    const { text: query, offsets } = serializeWithOffsets(doc);
+    const validation = validateQuery(query);
+    if (!validation.isValid) {
+      const region = findErrorRegion(query, validation.error);
+      if (region) {
+        const errorDecos = mapErrorToDecorations(
+          offsets,
+          region.from,
+          region.to,
+        );
+        decorations.push(...errorDecos);
+      }
     }
   }
 
+  // DecorationSet must be created against a specific doc version so PM can map positions correctly
   return DecorationSet.create(doc, decorations);
 }
 
 /**
  * Map an error region (from/to offsets in the serialized string) to
- * ProseMirror inline decorations. Walks the doc in serialize order,
- * tracking string offset, and creates decorations for text node regions
- * that overlap with the error region.
+ * ProseMirror inline decorations using the offset map from serializeWithOffsets().
  */
 function mapErrorToDecorations(
-  doc: ProseMirrorNode,
+  offsets: TextOffsetSegment[],
   errorFrom: number,
   errorTo: number,
 ): Decoration[] {
   const decorations: Decoration[] = [];
-  let strOffset = 0;
-  let lastWasAtom = false;
-  // Tracks whether the serialized string so far ends with a space,
-  // mirroring serialize()'s `result.endsWith(" ")` check.
-  let resultEndsWithSpace = false;
 
-  const paragraph = doc.firstChild;
-  if (!paragraph) return decorations;
+  for (const seg of offsets) {
+    const overlapStart = Math.max(seg.strFrom, errorFrom);
+    const overlapEnd = Math.min(seg.strTo, errorTo);
 
-  paragraph.forEach((node, offset) => {
-    const pmPos = offset + 1; // +1 for paragraph open tag
-
-    if (node.isText && node.text) {
-      const text = node.text.replace(/\u00A0/g, " ");
-
-      // Synthetic space: serialize() does `if (lastWasAtom && text.length > 0 && !text.startsWith(" "))`
-      if (lastWasAtom && text.length > 0 && !text.startsWith(" ")) {
-        strOffset += 1;
-      }
-
-      const textStrStart = strOffset;
-      const textStrEnd = strOffset + text.length;
-
-      // Check overlap between [textStrStart, textStrEnd) and [errorFrom, errorTo)
-      const overlapStart = Math.max(textStrStart, errorFrom);
-      const overlapEnd = Math.min(textStrEnd, errorTo);
-
-      if (overlapStart < overlapEnd) {
-        const pmFrom = pmPos + (overlapStart - textStrStart);
-        const pmTo = pmPos + (overlapEnd - textStrStart);
-        decorations.push(
-          Decoration.inline(pmFrom, pmTo, { class: "search-syntax-error" }),
-        );
-      }
-
-      strOffset = textStrEnd;
-      lastWasAtom = false;
-      resultEndsWithSpace = text.endsWith(" ");
-      return;
+    if (overlapStart < overlapEnd) {
+      const pmFrom = seg.pmPos + (overlapStart - seg.strFrom);
+      const pmTo = seg.pmPos + (overlapEnd - seg.strFrom);
+      decorations.push(
+        Decoration.inline(pmFrom, pmTo, { class: "search-syntax-error" }),
+      );
     }
-
-    if (ATOM_TYPES.has(node.type.name)) {
-      // Synthetic space: serialize() does `if (isAtom && result.length > 0 && !result.endsWith(" "))`
-      if (strOffset > 0 && !resultEndsWithSpace) {
-        strOffset += 1;
-      }
-
-      strOffset += serializeAtomLength(node);
-      lastWasAtom = true;
-      resultEndsWithSpace = false; // atom serialization never ends with space
-    }
-  });
+  }
 
   return decorations;
 }
 
 export function decorationPlugin() {
-  return new Plugin({
+  return new Plugin<DecorationPluginState>({
+    key: decorationPluginKey,
     state: {
       init(_, { doc }) {
-        return buildDecorations(doc);
+        return {
+          decorations: buildDecorations(doc, false),
+          showErrors: false,
+        };
       },
-      apply(tr, decorations) {
-        if (tr.docChanged) {
-          return buildDecorations(tr.doc);
+      // Runs on every transaction — rebuild decorations if the doc changed
+      apply(tr, pluginState) {
+        // Check if this transaction triggers error mode
+        const triggerErrors = tr.getMeta(decorationPluginKey);
+        if (triggerErrors === true) {
+          return {
+            decorations: buildDecorations(tr.doc, true),
+            showErrors: true,
+          };
         }
-        return decorations;
+
+        if (tr.docChanged) {
+          if (pluginState.showErrors) {
+            // In error mode: re-validate and exit error mode if now valid
+            const query = serialize(tr.doc);
+            const isValid = validateQuery(query).isValid;
+            return {
+              decorations: buildDecorations(tr.doc, !isValid),
+              showErrors: !isValid,
+            };
+          }
+          return {
+            decorations: buildDecorations(tr.doc, false),
+            showErrors: false,
+          };
+        }
+        return pluginState;
       },
     },
     props: {
+      // PM queries each plugin for decorations to render via this prop
       decorations(state) {
-        return this.getState(state);
+        return this.getState(state)?.decorations ?? DecorationSet.empty;
       },
     },
   });

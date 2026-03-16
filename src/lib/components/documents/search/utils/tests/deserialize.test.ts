@@ -46,7 +46,7 @@ describe("deserialize", () => {
   });
 
   describe("field-value nodes", () => {
-    it("deserializes user:102112 as a field-value chip", () => {
+    it("deserializes user:102112 as a field-value atom", () => {
       const doc = deserialize("user:102112");
       const nodes = describeDoc(doc);
       expect(nodes).toEqual([
@@ -90,7 +90,7 @@ describe("deserialize", () => {
       ]);
     });
 
-    it("deserializes access:public as a field-value chip", () => {
+    it("deserializes access:public as a field-value atom", () => {
       const doc = deserialize("access:public");
       const nodes = describeDoc(doc);
       expect(nodes).toEqual([
@@ -118,7 +118,7 @@ describe("deserialize", () => {
       ]);
     });
 
-    it("deserializes organization:1 as a field-value chip", () => {
+    it("deserializes organization:1 as a field-value atom", () => {
       const doc = deserialize("organization:1");
       const nodes = describeDoc(doc);
       expect(nodes).toEqual([
@@ -132,7 +132,7 @@ describe("deserialize", () => {
       ]);
     });
 
-    it("deserializes status:success as a field-value chip", () => {
+    it("deserializes status:success as a field-value atom", () => {
       const doc = deserialize("status:success");
       const nodes = describeDoc(doc);
       expect(nodes).toEqual([
@@ -146,7 +146,7 @@ describe("deserialize", () => {
       ]);
     });
 
-    it("deserializes language:eng as a field-value chip", () => {
+    it("deserializes language:eng as a field-value atom", () => {
       const doc = deserialize("language:eng");
       const nodes = describeDoc(doc);
       expect(nodes).toEqual([
@@ -160,7 +160,7 @@ describe("deserialize", () => {
       ]);
     });
 
-    it("deserializes tag:significant as a field-value chip", () => {
+    it("deserializes tag:significant as a field-value atom", () => {
       const doc = deserialize("tag:significant");
       const nodes = describeDoc(doc);
       expect(nodes).toEqual([
@@ -174,7 +174,7 @@ describe("deserialize", () => {
       ]);
     });
 
-    it("deserializes document:20059100 as a field-value chip", () => {
+    it("deserializes document:20059100 as a field-value atom", () => {
       const doc = deserialize("document:20059100");
       const nodes = describeDoc(doc);
       expect(nodes).toEqual([
@@ -189,7 +189,7 @@ describe("deserialize", () => {
     });
   });
 
-  describe("plain text fields (not chipped)", () => {
+  describe("plain text fields (not atom fields)", () => {
     it("deserializes title:Mueller* as plain text", () => {
       const doc = deserialize("title:Mueller*");
       expect(serialize(doc)).toBe("title:Mueller*");
@@ -212,24 +212,24 @@ describe("deserialize", () => {
       expect(serialize(doc)).toBe("source:gema");
     });
 
-    it("deserializes data_Folder:test as a chip", () => {
+    it("deserializes data_Folder:test as an atom", () => {
       const doc = deserialize("data_Folder:test");
       const nodes = describeDoc(doc);
-      const chip = nodes.find((n) => n.type === "field-value");
-      expect(chip).toBeDefined();
-      expect(chip!.attrs).toMatchObject({
+      const atom = nodes.find((n) => n.type === "field-value");
+      expect(atom).toBeDefined();
+      expect(atom!.attrs).toMatchObject({
         field: "data_Folder",
         value: "test",
       });
       expect(serialize(doc)).toBe("data_Folder:test");
     });
 
-    it('deserializes data_Folder:"Environmental docs" as a chip', () => {
+    it('deserializes data_Folder:"Environmental docs" as an atom', () => {
       const doc = deserialize('data_Folder:"Environmental docs"');
       const nodes = describeDoc(doc);
-      const chip = nodes.find((n) => n.type === "field-value");
-      expect(chip).toBeDefined();
-      expect(chip!.attrs).toMatchObject({
+      const atom = nodes.find((n) => n.type === "field-value");
+      expect(atom).toBeDefined();
+      expect(atom!.attrs).toMatchObject({
         field: "data_Folder",
         value: "Environmental docs",
         quoted: true,
@@ -374,7 +374,7 @@ describe("deserialize", () => {
       expect(serialize(doc)).toBe("(mueller OR watergate) AND report");
     });
 
-    it("preserves AND between field-value chips", () => {
+    it("preserves AND between field-value atoms", () => {
       const doc = deserialize("+user:102112 AND access:private");
       const nodes = describeDoc(doc);
       // Should have: field-value, text(" AND "), field-value
@@ -410,27 +410,27 @@ describe("deserialize", () => {
         '+user:102112 "classified documents" AND access:private title:Mueller*',
       );
       const nodes = describeDoc(doc);
-      // user chip, text, access chip, text for title:Mueller*
+      // user atom, text, access atom, text for title:Mueller*
       const fieldValues = nodes.filter((n) => n.type === "field-value");
       const texts = nodes.filter((n) => n.type === "text");
       expect(fieldValues.length).toBe(2); // user + access
       expect(texts.length).toBeGreaterThanOrEqual(2); // quoted phrase, AND, title:...
     });
 
-    it("deserializes data_* fields as chips in mixed queries", () => {
+    it("deserializes data_* fields as atoms in mixed queries", () => {
       const doc = deserialize(
         '+data_Folder:"From ARMY site" AND +data_Subfolder:38',
       );
       const nodes = describeDoc(doc);
-      const chips = nodes.filter((n) => n.type === "field-value");
-      expect(chips).toHaveLength(2);
-      expect(chips[0]?.attrs).toMatchObject({
+      const atoms = nodes.filter((n) => n.type === "field-value");
+      expect(atoms).toHaveLength(2);
+      expect(atoms[0]?.attrs).toMatchObject({
         field: "data_Folder",
         value: "From ARMY site",
         prefix: "+",
         quoted: true,
       });
-      expect(chips[1]?.attrs).toMatchObject({
+      expect(atoms[1]?.attrs).toMatchObject({
         field: "data_Subfolder",
         value: "38",
         prefix: "+",

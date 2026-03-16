@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { render, act } from "@testing-library/svelte";
 import { NodeSelection, TextSelection } from "prosemirror-state";
-import SearchEditor from "../SearchEditor.svelte";
-import { searchSchema } from "../prosemirror/schema";
+import SearchEditor from "../../SearchEditor.svelte";
+import { searchSchema } from "../schema";
 
 /** Render the editor and wait for ProseMirror to initialize */
 async function renderEditor(props: Record<string, unknown> = {}) {
@@ -20,13 +20,14 @@ function insertNode(
 ) {
   const view = component.getView();
   const node = searchSchema.nodes[nodeType]?.create(attrs);
+  // Insert the atom node at the current cursor position
   const tr = view.state.tr.replaceSelectionWith(node);
   view.dispatch(tr);
 }
 
 describe("NodeViews in SearchEditor", () => {
-  describe("field-value chip rendering", () => {
-    it("renders a field-value node as a chip in the editor", async () => {
+  describe("field-value atom rendering", () => {
+    it("renders a field-value node as an atom in the editor", async () => {
       const { component, editor } = await renderEditor();
       await act(() => {
         insertNode(component, "field-value", {
@@ -34,13 +35,13 @@ describe("NodeViews in SearchEditor", () => {
           value: "102112",
         });
       });
-      const chip = editor.querySelector(".search-field-value");
-      expect(chip).toBeInTheDocument();
-      expect(chip?.textContent).toContain("user");
-      expect(chip?.textContent).toContain("102112");
+      const atom = editor.querySelector(".search-field-value");
+      expect(atom).toBeInTheDocument();
+      expect(atom?.textContent).toContain("user");
+      expect(atom?.textContent).toContain("102112");
     });
 
-    it("renders a field-value chip with displayValue", async () => {
+    it("renders a field-value atom with displayValue", async () => {
       const { component, editor } = await renderEditor();
       await act(() => {
         insertNode(component, "field-value", {
@@ -49,11 +50,11 @@ describe("NodeViews in SearchEditor", () => {
           displayValue: "Mitchell Kotler",
         });
       });
-      const chip = editor.querySelector(".search-field-value");
-      expect(chip?.textContent).toContain("Mitchell Kotler");
+      const atom = editor.querySelector(".search-field-value");
+      expect(atom?.textContent).toContain("Mitchell Kotler");
     });
 
-    it("renders a field-value chip with prefix", async () => {
+    it("renders a field-value atom with prefix", async () => {
       const { component, editor } = await renderEditor();
       await act(() => {
         insertNode(component, "field-value", {
@@ -62,13 +63,13 @@ describe("NodeViews in SearchEditor", () => {
           prefix: "+",
         });
       });
-      const prefix = editor.querySelector(".chip-prefix-required");
+      const prefix = editor.querySelector(".atom-prefix-required");
       expect(prefix).toBeInTheDocument();
     });
   });
 
-  describe("range chip rendering", () => {
-    it("renders a range node as a chip in the editor", async () => {
+  describe("range atom rendering", () => {
+    it("renders a range node as an atom in the editor", async () => {
       const { component, editor } = await renderEditor();
       await act(() => {
         insertNode(component, "range", {
@@ -77,14 +78,14 @@ describe("NodeViews in SearchEditor", () => {
           upper: "*",
         });
       });
-      const chip = editor.querySelector(".search-range");
-      expect(chip).toBeInTheDocument();
-      expect(chip?.textContent).toContain("created_at");
+      const atom = editor.querySelector(".search-range");
+      expect(atom).toBeInTheDocument();
+      expect(atom?.textContent).toContain("created_at");
     });
   });
 
-  describe("sort chip rendering", () => {
-    it("renders a sort node as a chip in the editor", async () => {
+  describe("sort atom rendering", () => {
+    it("renders a sort node as an atom in the editor", async () => {
       const { component, editor } = await renderEditor();
       await act(() => {
         insertNode(component, "sort", {
@@ -92,15 +93,15 @@ describe("NodeViews in SearchEditor", () => {
           direction: "desc",
         });
       });
-      const chip = editor.querySelector(".search-sort");
-      expect(chip).toBeInTheDocument();
-      expect(chip?.textContent).toContain("page_count");
-      expect(chip?.textContent).toContain("\u2193"); // ↓
+      const atom = editor.querySelector(".search-sort");
+      expect(atom).toBeInTheDocument();
+      expect(atom?.textContent).toContain("page_count");
+      expect(atom?.textContent).toContain("\u2193"); // ↓
     });
   });
 
   describe("serialization still works with NodeViews", () => {
-    it("serializes field-value chip correctly", async () => {
+    it("serializes field-value atom correctly", async () => {
       const { component } = await renderEditor();
       await act(() => {
         insertNode(component, "field-value", {
@@ -112,7 +113,7 @@ describe("NodeViews in SearchEditor", () => {
       expect(component.getQuery()).toBe("+user:102112");
     });
 
-    it("serializes mixed content with chips and text", async () => {
+    it("serializes mixed content with atoms and text", async () => {
       const { component } = await renderEditor();
       await act(() => {
         const view = component.getView();
@@ -128,6 +129,7 @@ describe("NodeViews in SearchEditor", () => {
             value: "private",
           }),
         ];
+        // Replace a range with multiple nodes (atoms + text)
         const tr = view.state.tr.replaceWith(
           1, // start of paragraph content
           1, // end (empty paragraph)
@@ -148,14 +150,14 @@ describe("NodeViews in SearchEditor", () => {
           value: "102112",
         });
       });
-      const chip = editor.querySelector(".search-field-value");
-      expect(chip?.textContent).toContain("102112");
+      const atom = editor.querySelector(".search-field-value");
+      expect(atom?.textContent).toContain("102112");
       // Loading indicator should be visible for entity fields without displayValue
-      const loading = editor.querySelector(".chip-loading");
+      const loading = editor.querySelector(".atom-loading");
       expect(loading).toBeInTheDocument();
     });
 
-    it("updates chip when displayValue is set via transaction", async () => {
+    it("updates atom when displayValue is set via transaction", async () => {
       const { component, editor } = await renderEditor();
       await act(() => {
         insertNode(component, "field-value", {
@@ -169,6 +171,7 @@ describe("NodeViews in SearchEditor", () => {
         const view = component.getView();
         const { doc } = view.state;
         let nodePos: number | null = null;
+        // Walk the doc tree to find the atom's position
         doc.descendants((node, pos) => {
           if (
             node.type.name === "field-value" &&
@@ -180,6 +183,7 @@ describe("NodeViews in SearchEditor", () => {
           }
         });
         expect(nodePos).not.toBeNull();
+        // Update the node's attributes in place without replacing it
         const tr = view.state.tr.setNodeMarkup(nodePos!, undefined, {
           ...view.state.doc.nodeAt(nodePos!)!.attrs,
           displayValue: "Mitchell Kotler",
@@ -187,10 +191,10 @@ describe("NodeViews in SearchEditor", () => {
         view.dispatch(tr);
       });
 
-      const chip = editor.querySelector(".search-field-value");
-      expect(chip?.textContent).toContain("Mitchell Kotler");
+      const atom = editor.querySelector(".search-field-value");
+      expect(atom?.textContent).toContain("Mitchell Kotler");
       // Loading indicator should be gone
-      const loading = editor.querySelector(".chip-loading");
+      const loading = editor.querySelector(".atom-loading");
       expect(loading).not.toBeInTheDocument();
     });
 
@@ -213,7 +217,7 @@ describe("NodeViews in SearchEditor", () => {
         view.dispatch(tr);
       });
 
-      // Enrich both chips
+      // Enrich both atoms
       await act(() => {
         const view = component.getView();
         const { doc } = view.state;
@@ -266,15 +270,15 @@ describe("NodeViews in SearchEditor", () => {
         }
       });
 
-      const chips = editor.querySelectorAll(".search-field-value");
-      expect(chips.length).toBe(2);
-      expect(chips[0]?.textContent).toContain("Mitchell Kotler");
-      expect(chips[1]?.textContent).toContain("Panama Papers");
+      const atoms = editor.querySelectorAll(".search-field-value");
+      expect(atoms.length).toBe(2);
+      expect(atoms[0]?.textContent).toContain("Mitchell Kotler");
+      expect(atoms[1]?.textContent).toContain("Panama Papers");
     });
   });
 
-  describe("chip accessibility (aria-activedescendant)", () => {
-    it("chip wrapper has id, tabindex, and role", async () => {
+  describe("atom accessibility (aria-activedescendant)", () => {
+    it("atom wrapper has id, tabindex, and role", async () => {
       const { component, editor } = await renderEditor();
       await act(() => {
         insertNode(component, "field-value", {
@@ -283,12 +287,12 @@ describe("NodeViews in SearchEditor", () => {
         });
       });
       const wrapper = editor.querySelector(".search-nodeview") as HTMLElement;
-      expect(wrapper.id).toMatch(/^search-chip-\d+$/);
+      expect(wrapper.id).toMatch(/^search-atom-\d+$/);
       expect(wrapper.getAttribute("tabindex")).toBe("-1");
       expect(wrapper.getAttribute("role")).toBe("option");
     });
 
-    it("sets aria-activedescendant on the editor when chip is selected", async () => {
+    it("sets aria-activedescendant on the editor when atom is selected", async () => {
       const { component, editor } = await renderEditor();
       await act(() => {
         insertNode(component, "field-value", {
@@ -299,7 +303,7 @@ describe("NodeViews in SearchEditor", () => {
       const wrapper = editor.querySelector(".search-nodeview") as HTMLElement;
       const view = component.getView();
 
-      // Select the chip via NodeSelection
+      // Select the atom via NodeSelection
       await act(() => {
         let nodePos: number | null = null;
         view.state.doc.descendants((node: any, pos: number) => {
@@ -309,6 +313,7 @@ describe("NodeViews in SearchEditor", () => {
           }
         });
         expect(nodePos).not.toBeNull();
+        // Select the atom node (NodeSelection highlights the whole node, not a text range)
         const tr = view.state.tr.setSelection(
           NodeSelection.create(view.state.doc, nodePos!),
         );
@@ -318,7 +323,7 @@ describe("NodeViews in SearchEditor", () => {
       expect(view.dom.getAttribute("aria-activedescendant")).toBe(wrapper.id);
     });
 
-    it("clears aria-activedescendant when chip is deselected", async () => {
+    it("clears aria-activedescendant when atom is deselected", async () => {
       const { component } = await renderEditor();
       await act(() => {
         insertNode(component, "field-value", {
@@ -328,7 +333,7 @@ describe("NodeViews in SearchEditor", () => {
       });
       const view = component.getView();
 
-      // Select the chip
+      // Select the atom
       await act(() => {
         let nodePos: number | null = null;
         view.state.doc.descendants((node: any, pos: number) => {
@@ -347,6 +352,7 @@ describe("NodeViews in SearchEditor", () => {
 
       // Move selection away (text cursor at end of doc)
       await act(() => {
+        // Move cursor to a text position, deselecting the atom
         const endPos = view.state.doc.content.size - 1;
         const tr = view.state.tr.setSelection(
           TextSelection.create(view.state.doc, endPos),
@@ -357,7 +363,7 @@ describe("NodeViews in SearchEditor", () => {
       expect(view.dom.getAttribute("aria-activedescendant")).toBeNull();
     });
 
-    it("field-value chip wrapper has aria-label describing the chip", async () => {
+    it("field-value atom wrapper has aria-label describing the atom", async () => {
       const { component, editor } = await renderEditor();
       await act(() => {
         insertNode(component, "field-value", {
@@ -370,7 +376,7 @@ describe("NodeViews in SearchEditor", () => {
       expect(wrapper.getAttribute("aria-label")).toBe("required, user: 102112");
     });
 
-    it("field-value chip wrapper aria-label uses displayValue when available", async () => {
+    it("field-value atom wrapper aria-label uses displayValue when available", async () => {
       const { component, editor } = await renderEditor();
       await act(() => {
         insertNode(component, "field-value", {
@@ -383,7 +389,7 @@ describe("NodeViews in SearchEditor", () => {
       expect(wrapper.getAttribute("aria-label")).toBe("user: Mitchell Kotler");
     });
 
-    it("range chip wrapper has aria-label describing the range", async () => {
+    it("range atom wrapper has aria-label describing the range", async () => {
       const { component, editor } = await renderEditor();
       await act(() => {
         insertNode(component, "range", {
@@ -394,11 +400,11 @@ describe("NodeViews in SearchEditor", () => {
       });
       const wrapper = editor.querySelector(".search-nodeview") as HTMLElement;
       expect(wrapper.getAttribute("aria-label")).toBe(
-        "created_at: from NOW-1MONTH to *",
+        "created_at: from NOW-1MONTH to any",
       );
     });
 
-    it("sort chip wrapper has aria-label describing sort direction", async () => {
+    it("sort atom wrapper has aria-label describing sort direction", async () => {
       const { component, editor } = await renderEditor();
       await act(() => {
         insertNode(component, "sort", {
@@ -443,7 +449,7 @@ describe("NodeViews in SearchEditor", () => {
       expect(wrapper.getAttribute("aria-label")).toBe("user: Mitchell Kotler");
     });
 
-    it("each chip type has role='option'", async () => {
+    it("each atom type has role='option'", async () => {
       const { component, editor } = await renderEditor();
       await act(() => {
         const view = component.getView();
@@ -472,7 +478,7 @@ describe("NodeViews in SearchEditor", () => {
       expect(wrappers.length).toBe(3);
       wrappers.forEach((wrapper) => {
         expect(wrapper.getAttribute("role")).toBe("option");
-        expect(wrapper.id).toMatch(/^search-chip-\d+$/);
+        expect(wrapper.id).toMatch(/^search-atom-\d+$/);
         expect(wrapper.getAttribute("tabindex")).toBe("-1");
       });
     });

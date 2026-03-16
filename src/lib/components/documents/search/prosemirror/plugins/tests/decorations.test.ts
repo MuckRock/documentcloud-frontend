@@ -144,6 +144,27 @@ describe("Decoration Plugin", () => {
       expect(prefixes).toHaveLength(1);
       expect(prefixes[0]?.textContent).toBe("+");
     });
+
+    it("applies background highlight to the full prefixed quoted phrase", async () => {
+      const { editor } = await renderEditor({
+        initialQuery: '+"steve jobs" macintosh',
+      });
+      const terms = getDecorations(editor, "search-term-required");
+      // ProseMirror splits into 2 spans due to overlapping prefix decoration
+      expect(terms).toHaveLength(2);
+      expect(terms[0]?.textContent).toBe("+");
+      expect(terms[1]?.textContent).toBe('"steve jobs"');
+    });
+
+    it("applies background highlight to a prefixed excluded quoted phrase", async () => {
+      const { editor } = await renderEditor({
+        initialQuery: '-"steve jobs" macintosh',
+      });
+      const terms = getDecorations(editor, "search-term-excluded");
+      expect(terms).toHaveLength(2);
+      expect(terms[0]?.textContent).toBe("-");
+      expect(terms[1]?.textContent).toBe('"steve jobs"');
+    });
   });
 
   describe("Mixed content", () => {
@@ -177,9 +198,9 @@ describe("Decoration Plugin", () => {
         component.updateQuery("mueller AND report");
       });
       expect(getDecorations(editor, "search-operator")).toHaveLength(1);
-      expect(
-        getDecorations(editor, "search-operator")[0]?.textContent,
-      ).toBe("AND");
+      expect(getDecorations(editor, "search-operator")[0]?.textContent).toBe(
+        "AND",
+      );
     });
 
     it("removes decorations when operators are removed", async () => {

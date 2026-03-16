@@ -254,7 +254,7 @@ describe("autocomplete-data", () => {
     it("resolveField returns field def for aliases", () => {
       const field = resolveField("account");
       expect(field?.name).toBe("user");
-      expect(field?.insertBehavior).toBe("field-value-chip");
+      expect(field?.insertBehavior).toBe("field-value-atom");
     });
 
     it("returns undefined for unknown fields", () => {
@@ -266,7 +266,7 @@ describe("autocomplete-data", () => {
       expect(field).toBeDefined();
       expect(field!.name).toBe("data_Folder");
       expect(field!.label).toBe("Folder");
-      expect(field!.insertBehavior).toBe("field-value-chip");
+      expect(field!.insertBehavior).toBe("field-value-atom");
     });
   });
 
@@ -563,11 +563,7 @@ describe("autocomplete-data", () => {
           { label: "Finance", value: "Finance" },
         ],
       };
-      const results = await fetchValueSuggestions(
-        "data_Folder",
-        "",
-        preloaded,
-      );
+      const results = await fetchValueSuggestions("data_Folder", "", preloaded);
       expect(results).toHaveLength(2);
     });
 
@@ -654,24 +650,24 @@ describe("autocomplete-data", () => {
   // ── Range field insertBehavior ─────────────────────────────
 
   describe("range field insertBehavior", () => {
-    it("created_at has range-chip insertBehavior", () => {
+    it("created_at has range-atom insertBehavior", () => {
       const field = resolveField("created_at");
-      expect(field?.insertBehavior).toBe("range-chip");
+      expect(field?.insertBehavior).toBe("range-atom");
     });
 
-    it("updated_at has range-chip insertBehavior", () => {
+    it("updated_at has range-atom insertBehavior", () => {
       const field = resolveField("updated_at");
-      expect(field?.insertBehavior).toBe("range-chip");
+      expect(field?.insertBehavior).toBe("range-atom");
     });
 
-    it("page_count has range-chip insertBehavior", () => {
+    it("page_count has range-atom insertBehavior", () => {
       const field = resolveField("page_count");
-      expect(field?.insertBehavior).toBe("range-chip");
+      expect(field?.insertBehavior).toBe("range-atom");
     });
 
-    it("pages alias resolves to range-chip", () => {
+    it("pages alias resolves to range-atom", () => {
       const field = resolveField("pages");
-      expect(field?.insertBehavior).toBe("range-chip");
+      expect(field?.insertBehavior).toBe("range-atom");
     });
   });
 

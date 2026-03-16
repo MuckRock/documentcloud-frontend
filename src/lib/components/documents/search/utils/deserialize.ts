@@ -1,19 +1,13 @@
 import lucene from "lucene";
 import type { Node as ProseMirrorNode } from "prosemirror-model";
 import { searchSchema } from "../prosemirror/schema";
-import type {
-  AST,
-  BinaryAST,
-  Node,
-  NodeTerm,
-  NodeRangedTerm,
-} from "lucene";
+import type { AST, BinaryAST, Node, NodeTerm, NodeRangedTerm } from "lucene";
 
 /**
- * Fields that should be rendered as field-value chips.
+ * Fields that should be rendered as field-value atoms.
  * All other field:value pairs remain as plain text.
  */
-const CHIPPABLE_FIELDS = new Set([
+const ATOM_FIELDS = new Set([
   "user",
   "account",
   "organization",
@@ -54,6 +48,8 @@ function isBinaryAST(ast: unknown): ast is BinaryAST {
  */
 export function deserialize(query: string): ProseMirrorNode {
   if (!query || !query.trim()) {
+    // Build a PM doc programmatically: doc > paragraph > inline nodes.
+    // Schema enforces this structure (doc must contain paragraphs, paragraphs contain inline content).
     return searchSchema.node("doc", null, [
       searchSchema.node("paragraph", null, []),
     ]);
@@ -66,8 +62,9 @@ export function deserialize(query: string): ProseMirrorNode {
     return searchSchema.node("doc", null, [
       searchSchema.node("paragraph", null, content),
     ]);
-  } catch {
+  } catch (e) {
     // Parse failed — fall back to the whole string as plain text
+    console.error("Search query parse failed:", e);
     return searchSchema.node("doc", null, [
       searchSchema.node("paragraph", null, [searchSchema.text(query)]),
     ]);
@@ -78,17 +75,14 @@ export function deserialize(query: string): ProseMirrorNode {
  * Walk the lucene AST and produce an array of PM inline nodes.
  *
  * Strategy: we reconstruct the original text from the AST, converting
- * recognized structured patterns (chippable fields, ranges, sorts) into
+ * recognized structured patterns (atomic fields, ranges, sorts) into
  * PM atom nodes, and keeping everything else as text.
  *
  * Because the lucene AST doesn't perfectly preserve whitespace and operator
  * positioning, we use the original query string with position information
  * from the AST to extract text spans accurately.
  */
-function astToNodes(
-  ast: AST,
-  originalQuery: string,
-): ProseMirrorNode[] {
+function astToNodes(ast: AST, originalQuery: string): ProseMirrorNode[] {
   const result: ProseMirrorNode[] = [];
   // Use a position-based approach: collect "segments" with their positions,
   // then fill gaps with text from the original query.
@@ -191,8 +185,7 @@ function handleTerm(
 
   // Handle sort:field
   if (field === "sort") {
-    const direction =
-      node.prefix === "-" ? "desc" : "asc";
+    const direction = node.prefix === "-" ? "desc" : "asc";
     const sortField = node.term;
 
     const pmNode = searchSchema.nodes.sort.create({
@@ -205,10 +198,10 @@ function handleTerm(
     return;
   }
 
-  // Handle chippable field:value (including data_* fields)
+  // Handle atom field:value (including data_* fields)
   if (
     field !== IMPLICIT &&
-    (CHIPPABLE_FIELDS.has(field) || field.startsWith("data_"))
+    (ATOM_FIELDS.has(field) || field.startsWith("data_"))
   ) {
     const attrs: Record<string, unknown> = {
       field,
@@ -219,15 +212,16 @@ function handleTerm(
       displayValue: null,
     };
 
+    // Create an atom node from the schema's node type, passing attributes
     const pmNode = searchSchema.nodes["field-value"].create(attrs);
     const { start, end } = getTermFullSpan(node, query, prefix);
     segments.push({ start, end, node: pmNode });
     return;
   }
 
-  // Everything else: implicit terms, non-chippable fields, etc.
+  // Everything else: implicit terms, non-atomic fields, etc.
   // These stay as text — we don't create a segment, letting the gap-fill handle it.
-  // But if it's a field:value that's not chippable, we still need to mark its span
+  // But if it's a field:value that's not an atom field, we still need to mark its span
   // so it doesn't get double-counted.
   if (field !== IMPLICIT) {
     const { start, end } = getTermFullSpan(node, query, prefix);

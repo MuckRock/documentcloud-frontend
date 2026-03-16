@@ -1,16 +1,13 @@
 <!--
-  FieldValueChip renders a field-value atom node as an interactive chip.
+  FieldValueAtom renders a field-value atom node.
   Shows field label, value (or displayValue), prefix indicator, boost badge,
   and a loading indicator for entity fields awaiting API enrichment.
 -->
 <script lang="ts">
+  import { displayBound, fieldValueLabel } from "./utils/label";
+
   /** Entity fields that may need async enrichment */
-  const RICH_FIELDS = new Set([
-    "user",
-    "organization",
-    "project",
-    "document",
-  ]);
+  const RICH_FIELDS = new Set(["user", "organization", "project", "document"]);
 
   interface Props {
     field?: string;
@@ -28,49 +25,39 @@
     displayValue = null,
     prefix = null,
     boost = null,
-    quoted = false,
-    locked = false
+    locked = false,
   }: Props = $props();
-
-  /** Format a value for display. ISO dates become locale strings. */
-  function displayBound(v: string): string {
-    if (/^\d{4}-\d{2}-\d{2}/.test(v)) {
-      const date = new Date(v);
-      if (!isNaN(date.getTime())) {
-        return date.toLocaleDateString();
-      }
-    }
-    return v;
-  }
 
   let isRich = $derived(RICH_FIELDS.has(field));
   let showLoading = $derived(isRich && !displayValue);
   let label = $derived(displayValue ?? displayBound(value));
 
-  let chipLabel = $derived(() => {
-    const prefixText = prefix === "+" ? "required, " : prefix === "-" ? "excluded, " : "";
-    const boostText = boost && boost > 1 ? `, boost ${boost}` : "";
-    return `${prefixText}${field}: ${label}${boostText}`;
-  });
+  let atomLabel = $derived(
+    fieldValueLabel({ field, value, displayValue, prefix, boost }),
+  );
 </script>
 
-<span class="search-chip search-field-value" class:locked class:chip-required={prefix === "+"} class:chip-excluded={prefix === "-"} aria-label={chipLabel()}>
+<span
+  class="search-atom search-field-value"
+  class:locked
+  class:atom-required={prefix === "+"}
+  class:atom-excluded={prefix === "-"}
+  aria-label={atomLabel}
+>
   {#if prefix}
     <span
-      class="chip-prefix"
-      class:chip-prefix-required={prefix === "+"}
-      class:chip-prefix-excluded={prefix === "-"}>{prefix}</span
+      class="atom-prefix"
+      class:atom-prefix-required={prefix === "+"}
+      class:atom-prefix-excluded={prefix === "-"}>{prefix}</span
     >
   {/if}
-  <span class="chip-field">{field}</span>
-  <span class="chip-value">{label}</span>
+  <span class="atom-field">{field}</span>
+  <span class="atom-value">{label}</span>
   {#if showLoading}
-    <span class="chip-loading" aria-label="Loading display name"
-      >&hellip;</span
-    >
+    <span class="atom-loading" aria-label="Loading display name">&hellip;</span>
   {/if}
   {#if boost && boost > 1}
-    <span class="chip-boost">^{boost}</span>
+    <span class="atom-boost">^{boost}</span>
   {/if}
 </span>
 
@@ -81,18 +68,18 @@
     color: var(--blue-5);
   }
 
-  .search-field-value.chip-required {
+  .search-field-value.atom-required {
     background-color: var(--green-1);
     border-color: var(--green-2);
     color: var(--green-5);
   }
 
-  .search-field-value.chip-excluded {
+  .search-field-value.atom-excluded {
     background-color: var(--red-1);
     border-color: var(--red-2);
     color: var(--red-5);
   }
-  
+
   .search-field-value.locked {
     flex: 0 0 auto;
     opacity: 0.7;
@@ -100,7 +87,7 @@
     user-select: none;
   }
 
-  .chip-field {
+  .atom-field {
     opacity: 0.75;
     margin: 0 0.125rem 0 0;
     text-transform: uppercase;
@@ -109,25 +96,25 @@
     font-size: var(--font-xs, 12px);
   }
 
-  .chip-prefix {
+  .atom-prefix {
     font-weight: 600;
     margin-right: 1px;
   }
 
-  .chip-prefix-required {
+  .atom-prefix-required {
     color: inherit;
   }
 
-  .chip-prefix-excluded {
+  .atom-prefix-excluded {
     color: inherit;
   }
 
-  .chip-loading {
+  .atom-loading {
     opacity: 0.5;
     margin-left: 2px;
   }
 
-  .chip-boost {
+  .atom-boost {
     font-size: 0.8em;
     opacity: 0.6;
     margin-left: 2px;

@@ -17,16 +17,18 @@
     createSearchEditor,
     updateEditorQuery,
     getEditorQuery,
+    validateEditorQuery,
+    isEditorInErrorMode,
   } from "./prosemirror/searchEditor";
 
   import { Search16, Stop16 } from "svelte-octicons";
   import Button from "$lib/components/common/Button.svelte";
-  import FieldValueChip from "$lib/components/documents/search/FieldValueChip.svelte";
+  import FieldValueAtom from "$lib/components/documents/search/FieldValueAtom.svelte";
 
   interface Props {
     initialQuery?: string;
-    /** Locked chips displayed before the editor as search context (e.g. project scope). */
-    contextChips?: Array<{
+    /** Locked atoms displayed before the editor as search context (e.g. project scope). */
+    contextAtoms?: Array<{
       field: string;
       label: string;
     }>;
@@ -43,7 +45,7 @@
 
   let {
     initialQuery = "",
-    contextChips = [],
+    contextAtoms = [],
     preloadedSuggestions = {},
     onsubmit,
     onchange,
@@ -52,8 +54,8 @@
   let editorRef: HTMLDivElement | undefined = $state();
   let view: EditorView | undefined = $state();
 
-  /** Whether the current query is valid Lucene syntax. */
-  let queryValid = $state(true);
+  /** Whether the editor is showing validation errors. */
+  let hasErrors = $state(false);
 
   /** Last query emitted via the change event, to avoid redundant dispatches. */
   // svelte-ignore state_referenced_locally
@@ -65,23 +67,32 @@
   // svelte-ignore state_referenced_locally
   let lastInitialQuery = $state(initialQuery);
 
-  /** Upon submission, serialize the current PM document to a Lucene query string. */
+  /** Upon submission, validate and serialize the current PM document to a Lucene query string. */
   function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
-    if (!queryValid) return;
-    const query = view ? getEditorQuery(view) : initialQuery;
-    onsubmit?.({ "q": query });
+    if (!view) return;
+    if (!validateEditorQuery(view)) {
+      hasErrors = true;
+      return;
+    }
+    hasErrors = false;
+    const query = getEditorQuery(view);
+    onsubmit?.({ q: query });
   }
 
   onMount(() => {
     view = createSearchEditor(editorRef!, {
       initialQuery,
       getPreloadedSuggestions: () => preloadedSuggestions,
-      onDocChange(q, structural, valid) {
-        queryValid = valid;
+      onDocChange(q, structural) {
+        // Sync error state with the decoration plugin (it clears errors
+        // automatically when the query becomes valid while in error mode)
+        if (hasErrors) {
+          hasErrors = isEditorInErrorMode(view!);
+        }
         if (q !== lastEmittedQuery) {
           lastEmittedQuery = q;
-          // Only emit change for structural changes (chip insert/remove).
+          // Only emit change for structural changes (atom insert/remove).
           // Plain text typing should not trigger searches — the user must
           // explicitly submit the form for text-only queries.
           if (structural) {
@@ -125,34 +136,45 @@
   });
 </script>
 
-<form class="search-editor-container" aria-label="Search documents" onsubmit={handleSubmit}>
-  <div class="search-editor-status" class:invalid={!queryValid}>
-    {#if queryValid}
-      <Search16 />
-    {:else}
+<form
+  class="search-editor-container"
+  aria-label="Search documents"
+  onsubmit={handleSubmit}
+>
+  <div class="search-editor-status" class:invalid={hasErrors}>
+    {#if hasErrors}
       <Stop16 />
+    {:else}
+      <Search16 />
     {/if}
   </div>
-  {#each contextChips as chip}
-    <FieldValueChip field={chip.field} value={chip.label} locked />
+  {#each contextAtoms as atom}
+    <FieldValueAtom field={atom.field} value={atom.label} locked />
   {/each}
   <div
     bind:this={editorRef}
     class="prosemirror-editor"
     role="textbox"
     aria-label="Search documents"
-    aria-invalid={!queryValid ? true : undefined}
+    aria-invalid={hasErrors ? true : undefined}
   ></div>
-  <Button type="submit" mode="primary" ghost minW={false} disabled={!queryValid} aria-label="Search">Search</Button>
+  <Button
+    type="submit"
+    mode="primary"
+    ghost
+    minW={false}
+    disabled={hasErrors}
+    aria-label="Search">Search</Button
+  >
   <div class="sr-only" aria-live="assertive" aria-atomic="true">
-    {#if !queryValid}Query syntax error{/if}
+    {#if hasErrors}Query syntax error{/if}
   </div>
 </form>
 
 <style>
   .search-editor-container {
     flex: 1 1 auto;
-    min-width: 16rem;
+    min-width: 0;
     border: 1px solid #ddd;
     border-radius: 8px;
     background-color: white;
@@ -176,7 +198,10 @@
 
   .prosemirror-editor {
     flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
     padding: 0.375rem 0.75rem;
+    text-align: left;
   }
 
   .sr-only {
@@ -203,6 +228,7 @@
     pointer-events: none;
     float: left;
     height: 0;
+    white-space: nowrap;
   }
 
   /* Decoration styles for operators, parens, and prefixes */
@@ -241,19 +267,40 @@
     border-radius: 3px;
   }
 
-  /* Chip styles (used by atom nodes) */
-  :global(.search-chip) {
+  /* Merge rounded corners for adjacent spans of the same highlight */
+  :global(.search-term-required + .search-term-required) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  :global(.search-term-required:has(+ .search-term-required)) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  :global(.search-term-excluded + .search-term-excluded) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  :global(.search-term-excluded:has(+ .search-term-excluded)) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  /* Atom styles */
+  :global(.search-atom) {
     display: inline;
-    border-radius: .25rem;
+    border-radius: 0.25rem;
     padding: 0 4px;
     margin: 0 2px;
     white-space: nowrap;
   }
 
-  /* Selected chip — ProseMirror adds this class when an atom node is selected */
-  :global(.ProseMirror-selectednode .search-chip) {
+  /* Selected atom — ProseMirror adds this class when an atom node is selected */
+  :global(.ProseMirror-selectednode .search-atom) {
     outline: 1px solid var(--blue-3);
-    border-radius: .25rem;
+    border-radius: 0.25rem;
   }
 
   /* Wavy underline for syntax errors */

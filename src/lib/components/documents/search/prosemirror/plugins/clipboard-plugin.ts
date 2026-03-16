@@ -7,10 +7,10 @@ import { deserialize } from "../../utils/deserialize";
  *
  * Copy: Serializes the selected PM fragment to a Lucene query string
  * and writes it to the clipboard as plain text. This ensures that
- * copying chips produces valid Lucene syntax.
+ * copying atoms produces valid Lucene syntax.
  *
  * Paste: Deserializes pasted text through the Lucene parser, producing
- * structured PM nodes (chips) where appropriate. Operators like AND/OR/NOT
+ * structured PM nodes (atoms) where appropriate. Operators like AND/OR/NOT
  * in pasted text get decorations, which is intentional — they reflect
  * how Solr will actually interpret the text.
  */
@@ -26,6 +26,7 @@ export function clipboardPlugin(): Plugin {
           const { state } = view;
           if (state.selection.empty) return false;
 
+          // selection.content() returns a Slice — a fragment with open/close depth info
           const slice = state.selection.content();
           const text = serialize(slice.content);
 
@@ -60,11 +61,13 @@ export function clipboardPlugin(): Plugin {
        * Parse pasted text as a Lucene query, producing structured PM nodes.
        * Returns a Slice containing the deserialized content.
        */
+      // This hook intercepts plain-text paste before PM's default HTML parsing
       clipboardTextParser(text) {
         const doc = deserialize(text);
         // Extract the inline content from inside the doc > paragraph wrapper.
         // doc structure is: doc > paragraph > [inline nodes]
         // We want a Slice of just the inline nodes.
+        // Strip the doc > paragraph wrapper to get just the inline content as a Slice
         return doc.slice(1, doc.content.size - 1);
       },
     },

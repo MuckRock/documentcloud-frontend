@@ -50,7 +50,10 @@ function range(attrs: {
   });
 }
 
-function sort(attrs: { field: string; direction?: "asc" | "desc" }): ProseMirrorNode {
+function sort(attrs: {
+  field: string;
+  direction?: "asc" | "desc";
+}): ProseMirrorNode {
   return searchSchema.nodes.sort.create({
     field: attrs.field,
     direction: attrs.direction ?? "asc",
@@ -162,7 +165,9 @@ describe("serialize", () => {
   describe("range nodes", () => {
     it("serializes inclusive range", () => {
       expect(
-        serialize(doc(range({ field: "page_count", lower: "10", upper: "100" }))),
+        serialize(
+          doc(range({ field: "page_count", lower: "10", upper: "100" })),
+        ),
       ).toBe("page_count:[10 TO 100]");
     });
 
@@ -272,7 +277,11 @@ describe("serialize", () => {
           doc(
             fieldValue({ field: "user", value: "102112", prefix: "+" }),
             text(" "),
-            range({ field: "created_at", lower: "NOW-11MONTH", upper: "NOW-3MONTH" }),
+            range({
+              field: "created_at",
+              lower: "NOW-11MONTH",
+              upper: "NOW-3MONTH",
+            }),
             text(" AND "),
             fieldValue({ field: "project", value: "214246" }),
             text(" "),
