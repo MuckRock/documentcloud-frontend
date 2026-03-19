@@ -86,7 +86,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
     <!-- Add any header and messaging using this slot -->
     {@render children?.()}
     <ShowSize size={documents.length}>
-      <Tip mode="error" slot="icon">
+      <Tip mode="error" slot="empty">
         <Alert24 slot="icon" />
         {$_("edit.nodocs")}
       </Tip>
