@@ -6,12 +6,21 @@
   import EmbedLayout from "$lib/components/layouts/EmbedLayout.svelte";
 
   import { canonicalUrl } from "$lib/api/projects";
+  import {
+    SearchResultsState,
+    setSearchResults,
+  } from "$lib/state/search.svelte";
 
   setContext("embed", true);
 
   let { data } = $props();
 
-  let documents = $derived(data.documents);
+  const search = new SearchResultsState();
+  setSearchResults(search);
+
+  $effect(() => {
+    search.setResults(data.documents);
+  });
   let project = $derived(data.project);
 </script>
 
@@ -25,7 +34,7 @@
       <ProjectHeader {project} show={{ pin: false, access: false }} />
     </header>
     <main>
-      <DocumentBrowser {documents} />
+      <DocumentBrowser />
     </main>
   </article>
 </EmbedLayout>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { setContext } from "svelte";
+  import { onDestroy } from "svelte";
   import { _ } from "svelte-i18n";
 
   import SidebarLayout from "$lib/components/layouts/SidebarLayout.svelte";
@@ -13,18 +13,33 @@
   import DocumentBrowser from "$lib/components/layouts/DocumentBrowser.svelte";
   import GuidedTour from "$lib/components/onboarding/GuidedTour.svelte";
 
-  // stores
   import {
-    editable,
-    selected,
-  } from "$lib/components/documents/ResultsList.svelte";
+    SearchResultsState,
+    setSearchResults,
+  } from "$lib/state/search.svelte";
+  import { deleted, edited } from "$lib/api/documents";
+  import {
+    getPendingDocuments,
+    getFinishedDocuments,
+  } from "$lib/components/processing/ProcessContext.svelte";
 
   let { data } = $props();
-
-  setContext("editable", editable);
-  setContext("selected", selected);
-
   let query = $derived(data.query);
+
+  const search = new SearchResultsState({ loading: true });
+  setSearchResults(search);
+
+  search.watch({
+    deleted,
+    edited,
+    pending: getPendingDocuments(),
+    finished: getFinishedDocuments(),
+  });
+  onDestroy(search.unwatch);
+
+  $effect(() => {
+    search.setResults(data.searchResults);
+  });
 </script>
 
 <svelte:head>
@@ -38,7 +53,7 @@
     <AddOnsNavigation {query} />
   </svelte:fragment>
 
-  <DocumentBrowser slot="content" documents={data.searchResults} {query} />
+  <DocumentBrowser slot="content" {query} />
 
   <svelte:fragment slot="action">
     <UploadButton />

@@ -1,8 +1,6 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
 
-  import { _ } from "svelte-i18n";
-
   import SidebarLayout from "../SidebarLayout.svelte";
   import DocumentBrowser from "../DocumentBrowser.svelte";
   import UploadButton from "$lib/components/sidebar/UploadButton.svelte";
@@ -14,8 +12,6 @@
   import { documentsList } from "@/test/fixtures/documents";
   import { activeAddons } from "@/test/fixtures/addons";
   import { addons } from "@/test/handlers/addons";
-
-  const documents = Promise.resolve({ data: documentsList });
 
   const { Story } = defineMeta({
     title: "Layout / Sidebar",
@@ -39,6 +35,17 @@
   });
 </script>
 
+<script lang="ts">
+  import {
+    SearchResultsState,
+    setSearchResults,
+  } from "$lib/state/search.svelte";
+
+  const search = new SearchResultsState();
+  search.setResults(Promise.resolve({ data: documentsList }));
+  setSearchResults(search);
+</script>
+
 {#snippet template(args)}
   <div class="vh-100 vw-100">
     <SidebarLayout {...args}>
@@ -48,7 +55,7 @@
         <AddOnsNavigation />
       </svelte:fragment>
       <svelte:fragment slot="content">
-        <DocumentBrowser {documents} />
+        <DocumentBrowser />
       </svelte:fragment>
       <svelte:fragment slot="action">
         <UploadButton />

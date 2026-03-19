@@ -60,41 +60,43 @@
   </svelte:fragment>
 
   <ContentLayout slot="content">
-    <Flex slot="header">
-      {#if $sidebars["navigation"] === false}
-        <div class="toolbar w-auto">
-          <Button
-            ghost
-            minW={false}
-            on:click={() => ($sidebars["navigation"] = true)}
-          >
-            <span class="flipV">
+    {#snippet header()}
+      <Flex>
+        {#if $sidebars["navigation"] === false}
+          <div class="toolbar w-auto">
+            <Button
+              ghost
+              minW={false}
+              on:click={() => ($sidebars["navigation"] = true)}
+            >
+              <span class="flipV">
+                <SidebarExpand16 />
+              </span>
+            </Button>
+          </div>
+        {/if}
+        <PageToolbar>
+          {#snippet center()}
+            <Search
+              name="query"
+              placeholder={$_("projects.placeholder.projects")}
+              {query}
+            />
+          {/snippet}
+        </PageToolbar>
+        {#if $sidebars["action"] === false}
+          <div class="toolbar w-auto">
+            <Button
+              ghost
+              minW={false}
+              on:click={() => ($sidebars["action"] = true)}
+            >
               <SidebarExpand16 />
-            </span>
-          </Button>
-        </div>
-      {/if}
-      <PageToolbar>
-        {#snippet center()}
-          <Search
-            name="query"
-            placeholder={$_("projects.placeholder.projects")}
-            {query}
-          />
-        {/snippet}
-      </PageToolbar>
-      {#if $sidebars["action"] === false}
-        <div class="toolbar w-auto">
-          <Button
-            ghost
-            minW={false}
-            on:click={() => ($sidebars["action"] = true)}
-          >
-            <SidebarExpand16 />
-          </Button>
-        </div>
-      {/if}
-    </Flex>
+            </Button>
+          </div>
+        {/if}
+      </Flex>
+    {/snippet}
 
     {#each projects as project}
       <ProjectListItem {project} />
@@ -102,16 +104,18 @@
       <Empty icon={FileDirectory24}>{$_("projects.none")}</Empty>
     {/each}
 
-    <PageToolbar slot="footer">
-      {#snippet center()}
-        <Paginator
-          has_next={Boolean(next)}
-          has_previous={Boolean(previous)}
-          on:next={() => paginate(next)}
-          on:previous={() => paginate(previous)}
-        />
-      {/snippet}
-    </PageToolbar>
+    {#snippet footer()}
+      <PageToolbar>
+        {#snippet center()}
+          <Paginator
+            has_next={Boolean(next)}
+            has_previous={Boolean(previous)}
+            on:next={() => paginate(next)}
+            on:previous={() => paginate(previous)}
+          />
+        {/snippet}
+      </PageToolbar>
+    {/snippet}
   </ContentLayout>
 
   <svelte:fragment slot="action">

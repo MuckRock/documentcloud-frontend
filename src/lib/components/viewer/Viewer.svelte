@@ -53,42 +53,44 @@ Assumes it's a child of a ViewerContext
 
 <div class="container">
   <ContentLayout noBgColor>
-    <!-- toolbars -->
-    <Flex slot="header">
-      {#if !embed && $sidebars["navigation"] === false}
-        <div class="toolbar w-auto">
-          <Button
-            ghost
-            minW={false}
-            on:click={() => ($sidebars["navigation"] = true)}
-          >
-            <span class="flipV">
+    {#snippet header()}
+      <!-- toolbars -->
+      <Flex>
+        {#if !embed && $sidebars["navigation"] === false}
+          <div class="toolbar w-auto">
+            <Button
+              ghost
+              minW={false}
+              on:click={() => ($sidebars["navigation"] = true)}
+            >
+              <span class="flipV">
+                <SidebarExpand16 />
+              </span>
+            </Button>
+          </div>
+        {/if}
+        {#if showLoading && loading && loading < 1}
+          <LoadingToolbar progress={loading} />
+        {:else if !embed && mode === "annotating"}
+          <AnnotationToolbar />
+        {:else if !embed && mode === "redacting"}
+          <RedactionToolbar />
+        {:else}
+          <ReadingToolbar />
+        {/if}
+        {#if !embed && $sidebars["action"] === false}
+          <div class="toolbar w-auto">
+            <Button
+              ghost
+              minW={false}
+              on:click={() => ($sidebars["action"] = true)}
+            >
               <SidebarExpand16 />
-            </span>
-          </Button>
-        </div>
-      {/if}
-      {#if showLoading && loading && loading < 1}
-        <LoadingToolbar progress={loading} />
-      {:else if !embed && mode === "annotating"}
-        <AnnotationToolbar />
-      {:else if !embed && mode === "redacting"}
-        <RedactionToolbar />
-      {:else}
-        <ReadingToolbar />
-      {/if}
-      {#if !embed && $sidebars["action"] === false}
-        <div class="toolbar w-auto">
-          <Button
-            ghost
-            minW={false}
-            on:click={() => ($sidebars["action"] = true)}
-          >
-            <SidebarExpand16 />
-          </Button>
-        </div>
-      {/if}
-    </Flex>
+            </Button>
+          </div>
+        {/if}
+      </Flex>
+    {/snippet}
 
     <!-- content -->
     {#if showPDF}
@@ -102,11 +104,12 @@ Assumes it's a child of a ViewerContext
     {:else if mode === "search"}
       <Search />
     {/if}
-    <svelte:fragment slot="footer">
+
+    {#snippet footer()}
       {#if !["notes", "search"].includes(mode)}
         <PaginationToolbar />
       {/if}
-    </svelte:fragment>
+    {/snippet}
   </ContentLayout>
 </div>
 

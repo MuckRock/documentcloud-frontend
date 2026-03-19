@@ -6,11 +6,9 @@ This will mostly be used inside a modal but isn't dependent on one.
 <script lang="ts">
   import type { Document, Status, APIError, Maybe } from "$lib/api/types";
 
-  import { createEventDispatcher } from "svelte";
+  import { untrack } from "svelte";
   import { _ } from "svelte-i18n";
   import { Alert24, IssueReopened16 } from "svelte-octicons";
-
-  import { invalidateAll } from "$app/navigation";
 
   import Button from "../common/Button.svelte";
   import Field from "../common/Field.svelte";
@@ -30,10 +28,6 @@ This will mostly be used inside a modal but isn't dependent on one.
   import { load } from "$lib/components/processing/ProcessContext.svelte";
   import { getCsrfToken } from "$lib/utils/api";
 
-  export let documents: Document[] = [];
-
-  const dispatch = createEventDispatcher();
-
   const ocrEngineOptions = [
     {
       value: "tess4",
@@ -47,22 +41,42 @@ This will mostly be used inside a modal but isn't dependent on one.
     },
   ];
 
-  let ocrEngine = ocrEngineOptions[0];
-  let language: { value: string; label: string } = {
-    value: documents[0]?.language ?? DEFAULT_LANGUAGE,
-    label: LANGUAGE_MAP.get(documents[0]?.language),
-  };
+  let ocrEngine = $state(ocrEngineOptions[0]);
 
-  // exported for testing and demos
-  export let errors: Maybe<APIError<string[]>> = undefined;
+  interface Props {
+    documents?: Document[];
+    // exported for testing and demos
+    errors?: Maybe<APIError<string[]>>;
+    children?: import("svelte").Snippet;
+    onclose?: () => void;
+  }
 
-  let force_ocr = false;
-  let submitting = false;
+  let {
+    documents = [],
+    errors = $bindable(undefined),
+    children,
+    onclose,
+  }: Props = $props();
+
+  // initialize from the first document's language; this is intentionally
+  // not reactive — the user can change it via the Language input
+  const initialLanguage = untrack(
+    () => documents[0]?.language ?? DEFAULT_LANGUAGE,
+  );
+  let language: { value: string; label: string } = $state({
+    value: initialLanguage,
+    label: LANGUAGE_MAP.get(initialLanguage),
+  });
+
+  let force_ocr = $state(false);
+  let submitting = $state(false);
 
   // todo: warn if documents are in more than one language
-  $: multilingual = new Set(documents.map((d) => d.language)).size > 1;
-  $: pending = documents.filter((d) => d.status === "pending");
-  $: disabled = submitting || documents.length > MAX_EDIT_BATCH;
+  let multilingual = $derived(
+    new Set(documents.map((d) => d.language)).size > 1,
+  );
+  let pending = $derived(documents.filter((d) => d.status === "pending"));
+  let disabled = $derived(submitting || documents.length > MAX_EDIT_BATCH);
 
   async function onSubmit(e: SubmitEvent) {
     e.preventDefault();
@@ -123,8 +137,7 @@ This will mostly be used inside a modal but isn't dependent on one.
 
     if (!error) {
       load();
-      invalidateAll(); // just refetch all the things
-      dispatch("close"); // closing destroys the component
+      onclose?.(); // closing destroys the component
     } else {
       errors = error;
       console.error(error);
@@ -133,16 +146,16 @@ This will mostly be used inside a modal but isn't dependent on one.
   }
 </script>
 
-<form method="post" on:submit={onSubmit}>
+<form method="post" onsubmit={onSubmit}>
   <Flex direction="column" gap={1.5}>
     <!-- Add any header and messaging using this slot -->
-    <slot>
+    {#if children}{@render children()}{:else}
       <header>
         <h2>
           {$_("dialogReprocessDialog.title")}
         </h2>
       </header>
-    </slot>
+    {/if}
     {#if errors}
       <Tip mode="error">
         <Alert24 slot="icon" />
@@ -209,12 +222,14 @@ This will mostly be used inside a modal but isn't dependent on one.
             values: { n: documents.length },
           })}
 
-          <Tip mode="danger" slot="oversize">
-            <Alert24 slot="icon" />
-            {$_("dialogReprocessDialog.toomany", {
-              values: { max: MAX_EDIT_BATCH, n: documents.length },
-            })}
-          </Tip>
+          <svelte:fragment slot="oversize">
+            <Tip mode="danger">
+              <Alert24 slot="icon" />
+              {$_("dialogReprocessDialog.toomany", {
+                values: { max: MAX_EDIT_BATCH, n: documents.length },
+              })}
+            </Tip>
+          </svelte:fragment>
         </ShowSize>
       {/if}
       <ul class="documents">
@@ -235,7 +250,7 @@ This will mostly be used inside a modal but isn't dependent on one.
       <Button {disabled} type="submit" full mode="danger">
         <IssueReopened16 />{$_("dialogReprocessDialog.confirm")}
       </Button>
-      <Button full on:click={() => dispatch("close")}>
+      <Button full on:click={() => onclose?.()}>
         {$_("edit.cancel")}
       </Button>
     </Flex>

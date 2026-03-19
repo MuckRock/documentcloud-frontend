@@ -1,82 +1,84 @@
 <script module lang="ts">
-  import type { Document } from "$lib/api/types";
+  import type { DocumentResults } from "$lib/api/types";
 
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
+
   import ResultsList from "../ResultsList.svelte";
   import Pending from "../Pending.svelte";
   import Unverified from "../../accounts/Unverified.svelte";
+  import { SearchResultsState } from "$lib/state/search.svelte";
 
   import { me } from "@/test/fixtures/accounts";
   import { documents as mock } from "@/test/handlers/documents";
 
   // typescript complains without the type assertion
   import searchResults from "@/test/fixtures/documents/search-highlight.json";
-  const highlighted = searchResults.results as unknown as Document[];
-  const results = highlighted.map((d) => ({
+  const highlighted = searchResults as unknown as DocumentResults;
+
+  highlighted.results = highlighted.results.map((d) => ({
     ...d,
-    highlights: null,
-    note_highlights: null,
-  })) as unknown as Document[];
-  const count = searchResults.count;
-  const next = searchResults.next;
+    highlights: undefined,
+    note_highlights: undefined,
+  }));
 
   import pending from "@/test/fixtures/documents/pending.json";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Documents / Results list",
     component: ResultsList,
-  };
+  });
 
   const user = { ...me, verified_journalist: false };
+
+  const empty = new SearchResultsState();
+  const search = new SearchResultsState();
+
+  search.setResults(Promise.resolve({ data: highlighted }));
 </script>
 
 <script lang="ts">
   import { writable } from "svelte/store";
-  import { setContext } from "svelte";
   import {
     defaultVisibleFields,
     setVisibleFieldsContext,
   } from "../VisibleFields.svelte";
 
-  // Set up contexts needed by ResultsList
-  setContext("embed", false);
   setVisibleFieldsContext(writable(defaultVisibleFields));
 </script>
 
-<Story name="With Results">
-  <ResultsList {results} {count} {next} />
+<Story name="With Results" args={{ search }} />
+
+<Story name="Empty" args={{ search: empty }} />
+
+<Story
+  name="Loading"
+  args={{ search: new SearchResultsState({ loading: true }) }}
+/>
+
+<Story name="Infinite" asChild>
+  <ResultsList {search} auto />
 </Story>
 
-<Story name="Empty">
-  <ResultsList />
-</Story>
-
-<Story name="Infinite">
-  <ResultsList {results} {count} {next} auto />
-</Story>
-
-<Story name="Pending documents">
-  <ResultsList {results} {count} {next}>
+<Story name="Pending documents" asChild>
+  <ResultsList {search}>
     {#snippet start()}
       <Pending {pending} />
     {/snippet}
   </ResultsList>
 </Story>
 
-<!-- too big to render
-  <Story name="Highlighted">
-    <ResultsList results={highlighted} {count} {next} />
-  </Story>
--->
-
-<Story name="Unverified user">
-  <ResultsList {results} {count} {next}>
+<Story name="Unverified user" asChild>
+  <ResultsList {search}>
     {#snippet start()}
       <Unverified {user} />
     {/snippet}
   </ResultsList>
 </Story>
 
-<Story name="Loading error" parameters={{ msw: { handlers: [mock.error] } }}>
-  <ResultsList {results} {count} {next} auto />
+<Story
+  name="Loading error"
+  parameters={{ msw: { handlers: [mock.error] } }}
+  asChild
+>
+  <ResultsList {search} auto />
 </Story>

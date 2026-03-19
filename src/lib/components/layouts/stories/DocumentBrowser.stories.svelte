@@ -1,26 +1,42 @@
-<script context="module" lang="ts">
-  import type { Meta } from "@storybook/svelte";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
 
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+  import ContextDecorator from "$lib/components/storybook/ContextDecorator.svelte";
   import DocumentBrowser from "../DocumentBrowser.svelte";
 
   import { documentsList } from "@/test/fixtures/documents";
 
-  export const meta: Meta = {
+  const { Story } = defineMeta({
     title: "Layout / Document Browser",
     component: DocumentBrowser,
     parameters: {
       layout: "fullscreen",
     },
-  };
-
-  const args = {
-    documents: Promise.resolve({ data: documentsList }),
-  };
+  });
 </script>
 
-<Template let:args>
-  <DocumentBrowser {...args} />
-</Template>
+<script lang="ts">
+  import { setContext } from "svelte";
+  import {
+    SearchResultsState,
+    setSearchResults,
+  } from "$lib/state/search.svelte";
 
-<Story name="With Data" {args} />
+  setContext("embed", false);
+
+  const search = new SearchResultsState();
+  search.setResults(Promise.resolve({ data: documentsList }));
+  setSearchResults(search);
+
+  const emptySearch = new SearchResultsState();
+</script>
+
+<Story name="With Data" />
+
+<Story name="No documents" args={{ search: emptySearch }} />
+
+<Story name="Embedded" asChild>
+  <ContextDecorator embed={true}>
+    <DocumentBrowser />
+  </ContextDecorator>
+</Story>
