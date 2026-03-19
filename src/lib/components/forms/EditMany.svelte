@@ -12,7 +12,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
 
   import { enhance } from "$app/forms";
 
-  import { createEventDispatcher } from "svelte";
+  import { tick, type Snippet } from "svelte";
   import { _ } from "svelte-i18n";
   import { Alert24 } from "svelte-octicons";
 
@@ -30,17 +30,27 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
   import { MAX_EDIT_BATCH } from "@/config/config.js";
   import { edited } from "$lib/api/documents";
 
-  export let documents: Document[];
+  interface Props {
+    documents: Document[];
+    // exported for testing and demos
+    error?: Maybe<APIError<ValidationError>>;
+    children?: Snippet;
+    onclose?: () => void;
+  }
 
-  // exported for testing and demos
-  export let error: Maybe<APIError<ValidationError>> = undefined;
-
-  const dispatch = createEventDispatcher();
+  let {
+    documents,
+    error = $bindable(undefined),
+    children,
+    onclose,
+  }: Props = $props();
 
   const action = "/documents/?/edit";
 
-  $: ids = documents?.map((d) => d.id) ?? [];
-  $: disabled = documents.length < 1 || documents.length > MAX_EDIT_BATCH;
+  let ids = $derived(documents?.map((d) => d.id) ?? []);
+  let disabled = $derived(
+    documents.length < 1 || documents.length > MAX_EDIT_BATCH,
+  );
 
   /**
    * @type {import('@sveltejs/kit').SubmitFunction}
@@ -48,7 +58,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
   function onSubmit({ submitter }) {
     submitter.disabled = true;
 
-    return async ({ result, update }) => {
+    return async ({ result }) => {
       submitter.disabled = false;
       if (result.type === "failure") {
         console.error(result);
@@ -58,14 +68,14 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
       if (result.type === "success") {
         // save edits
         edited.update((m) => {
-          result.data.documents?.forEach((d) => {
+          result.data.documents?.forEach((d: Document) => {
             m.set(String(d.id), d);
           });
           return m;
         });
 
-        update(result);
-        dispatch("close");
+        await tick();
+        onclose?.();
       }
     };
   }
@@ -74,9 +84,9 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
 <form {action} method="post" use:enhance={onSubmit}>
   <Flex direction="column" gap={1}>
     <!-- Add any header and messaging using this slot -->
-    <slot />
+    {@render children?.()}
     <ShowSize size={documents.length}>
-      <Tip mode="error" slot="empty">
+      <Tip mode="error" slot="icon">
         <Alert24 slot="icon" />
         {$_("edit.nodocs")}
       </Tip>
@@ -140,7 +150,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
       <Button type="submit" mode="primary" full {disabled}>
         {$_("edit.save")}
       </Button>
-      <Button full on:click={() => dispatch("close")}>
+      <Button full on:click={() => onclose?.()}>
         {$_("edit.cancel")}
       </Button>
     </Flex>

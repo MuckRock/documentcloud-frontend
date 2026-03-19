@@ -180,7 +180,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
         {#if search.selected.length === 1}
           <Edit document={single(search.selected)} onclose={close} />
         {:else}
-          <EditMany documents={search.selected} on:close={close}>
+          <EditMany documents={search.selected} onclose={close}>
             {#if search.selected?.length}
               <p>
                 {$_("edit.many", { values: { n: search.selected?.length } })}
