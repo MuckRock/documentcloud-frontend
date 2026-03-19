@@ -24,7 +24,6 @@ Change owner of one or more documents.
   }
 
   import { enhance } from "$app/forms";
-  import { invalidateAll } from "$app/navigation";
 
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
@@ -38,7 +37,7 @@ Change owner of one or more documents.
 
   import { MAX_EDIT_BATCH } from "@/config/config.js";
   import { getCurrentUser } from "$lib/utils/permissions";
-  import { canonicalUrl } from "$lib/api/documents";
+  import { canonicalUrl, edited } from "$lib/api/documents";
   import { userOrgs, orgUsers, getUserName, isOrg } from "$lib/api/accounts";
 
   const me = getCurrentUser();
@@ -121,7 +120,7 @@ Change owner of one or more documents.
       formData.set("user", user?.value);
     }
 
-    return ({ result }) => {
+    return ({ result, update }) => {
       switch (result.type) {
         case "error":
           error = result.data.error;
@@ -129,13 +128,26 @@ Change owner of one or more documents.
           break;
 
         case "success":
-          invalidateAll();
+          edited.update((m) => {
+            result.data.documents?.forEach((d: Document) => {
+              m.set(String(d.id), d);
+            });
+            return m;
+          });
+
           submitter.disabled = false;
           onclose?.();
           break;
 
+        // if we're supposed to redirect, do it
         case "redirect":
-          invalidateAll();
+          edited.update((m) => {
+            result.data.documents?.forEach((d: Document) => {
+              m.set(String(d.id), d);
+            });
+            return m;
+          });
+          update(result);
           onclose?.();
           break;
       }
@@ -154,10 +166,6 @@ Change owner of one or more documents.
         ? canonicalUrl(documents[0]).href + "?/change_owner"
         : "",
   );
-
-  // run(() => {
-  //   userOptions = getUserOptions(org?.org);
-  // });
 
   let currentOrg = $derived(isOrg($me?.organization) ? $me.organization : null);
 </script>

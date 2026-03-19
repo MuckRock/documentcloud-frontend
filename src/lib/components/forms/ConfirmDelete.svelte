@@ -49,7 +49,7 @@ Confirm deletion or one or more documents.
     if (!$me) {
       return cancel();
     }
-    return ({ result, update }) => {
+    return ({ result }) => {
       switch (result.type) {
         case "error":
           error = result.data.error;
@@ -62,7 +62,6 @@ Confirm deletion or one or more documents.
             return s;
           });
           onclose?.();
-          update(result);
           submitter.disabled = false;
           break;
 
