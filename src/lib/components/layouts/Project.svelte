@@ -1,12 +1,8 @@
 <script lang="ts">
+  import type { Project, ProjectUser } from "$lib/api/types";
+
   import { _ } from "svelte-i18n";
 
-  import type {
-    APIResponse,
-    DocumentResults,
-    Project,
-    ProjectUser,
-  } from "$lib/api/types";
   import AddOns from "$lib/components/sidebar/AddOns.svelte";
   import ProjectActions from "$lib/components/sidebar/ProjectActions.svelte";
   import ProjectHeader from "$lib/components/projects/ProjectHeader.svelte";
