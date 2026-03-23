@@ -1,18 +1,14 @@
-<script lang="ts" context="module">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+<script lang="ts" module>
+  import { defineMeta } from "@storybook/addon-svelte-csf";
 
   import UserMenu from "../UserMenu.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Accounts / User Menu",
     component: UserMenu,
     parameters: { layout: "centered" },
-  };
+  });
 </script>
-
-<Template let:args>
-  <UserMenu {...args} />
-</Template>
 
 <Story
   name="Signed In"
@@ -31,6 +27,7 @@
         slug: "lasserallan",
         monthly_credits: 2000,
         purchased_credits: 0,
+        uuid: "org-9ae6ba3f-d5d4-456c-a7b7-0e83512dfd98",
       },
       organizations: [40742, 125],
       admin_organizations: [40742],
@@ -40,12 +37,13 @@
     },
   }}
 />
+
 <Story
   name="Missing Avatar"
   args={{
     user: {
       id: 110237,
-      avatar_url: null,
+      avatar_url: undefined,
       name: "Allan Lasser",
       organization: {
         id: 40742,
@@ -66,13 +64,14 @@
     },
   }}
 />
+
 <Story
   name="Missing Name"
   args={{
     user: {
       id: 110237,
-      avatar_url: null,
-      name: null,
+      avatar_url: undefined,
+      name: undefined,
       organization: {
         id: 40742,
         avatar_url:

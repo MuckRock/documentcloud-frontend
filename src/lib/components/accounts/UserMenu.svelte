@@ -7,20 +7,17 @@
     type Placement,
   } from "$lib/components/common/Dropdown.svelte";
 
-  import Portal from "$lib/components/layouts/Portal.svelte";
+  import Avatar from "./Avatar.svelte";
   import NavItem from "$lib/components/common/NavItem.svelte";
   import {
     ChevronDown12,
     Gear16,
-    Paperclip16,
     ChevronUp12,
     SignOut16,
   } from "svelte-octicons";
   import Menu from "$lib/components/common/Menu.svelte";
-  import Mailkey from "./Mailkey.svelte";
 
   import { SQUARELET_BASE, SIGN_OUT_URL } from "@/config/config.js";
-  import Avatar from "./Avatar.svelte";
   import { remToPx } from "$lib/utils/layout";
   import { getUserName } from "$lib/api/accounts";
 
@@ -32,11 +29,6 @@
   let { user, position = "bottom-end" }: Props = $props();
 
   let width: number | undefined = $state();
-
-  let mailkeyOpen = $state(false);
-  function setMailkeyOpen(open?: boolean) {
-    mailkeyOpen = open ?? !mailkeyOpen;
-  }
 </script>
 
 <svelte:window bind:innerWidth={width} />
@@ -60,27 +52,13 @@
       <Gear16 slot="start" />
       {$_("authSection.user.acctSettings")}
     </NavItem>
-    <NavItem
-      hover
-      on:click={() => {
-        setMailkeyOpen(true);
-        close();
-      }}
-    >
-      <Paperclip16 slot="start" />
-      {$_("authSection.user.uploadEmail")}
-    </NavItem>
+
     <NavItem href={SIGN_OUT_URL} on:click={close}>
       <SignOut16 slot="start" />
       {$_("authSection.user.signOut")}
     </NavItem>
   </Menu>
 </Dropdown>
-{#if mailkeyOpen}
-  <Portal>
-    <Mailkey on:close={() => setMailkeyOpen(false)} />
-  </Portal>
-{/if}
 
 <style>
   .dropdownArrow {
