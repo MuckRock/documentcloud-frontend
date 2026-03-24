@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { clean, renderMarkdown } from "../markup";
+import { ALLOWED_TAGS } from "@/config/config.js";
 
 describe("clean() security tests", () => {
   // Test allowed tags work correctly
@@ -330,5 +331,15 @@ describe("renderMarkdown() security tests", () => {
     const result = renderMarkdown(input);
     // Images aren't in the allowed tags, so they should be removed
     expect(result).not.toContain("<img");
+  });
+
+  test("strips anchor tags when excluded from allowedTags", () => {
+    const input = "[Example](https://example.com)";
+    const tagsWithoutAnchors = ALLOWED_TAGS.filter(
+      (tag: string) => tag !== "a",
+    );
+    const result = renderMarkdown(input, { allowedTags: tagsWithoutAnchors });
+    expect(result).not.toContain("<a");
+    expect(result).toContain("Example");
   });
 });

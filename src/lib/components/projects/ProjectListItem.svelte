@@ -7,7 +7,11 @@
   import ProjectPin from "./ProjectPin.svelte";
 
   import { canonicalUrl } from "$lib/api/projects";
-  import { clean } from "$lib/utils/markup";
+  import { renderMarkdown } from "$lib/utils/markup";
+  import { ALLOWED_TAGS } from "@/config/config.js";
+
+  // Strip anchor tags to avoid invalid nested <a> inside the card link
+  const listItemTags = ALLOWED_TAGS.filter((tag: string) => tag !== "a");
 
   interface Props {
     project: Project;
@@ -38,7 +42,7 @@
       {/if}
     </div>
     {#if project.description}
-      <div class="description">{@html clean(project.description ?? "")}</div>
+      <div class="description">{@html renderMarkdown(project.description ?? "", { allowedTags: listItemTags })}</div>
     {/if}
   </div>
 </a>
