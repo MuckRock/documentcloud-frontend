@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, act } from "@testing-library/svelte";
-import SearchEditor from "../../../SearchEditor.svelte";
+import SearchEditor from "../../../tests/SearchEditor.demo.svelte";
 import { serialize } from "../../../utils/serialize";
 
 /** Mock DataTransfer for jsdom which doesn't have it */
@@ -26,7 +26,7 @@ describe("Clipboard plugin", () => {
   describe("copy", () => {
     it("serializes selection to clipboard as plain text on copy", async () => {
       const { component, editor } = await renderEditor({
-        initialQuery: "user:102112 AND access:private",
+        query: "user:102112 AND access:private",
       });
       const view = component.getView();
 

@@ -30,28 +30,39 @@
   import { getCsrfToken } from "$lib/utils/api";
   import { remToPx } from "$lib/utils/layout";
 
-  export let active_org: Org;
-  export let orgs: Org[] = [];
-  export let users: User[] = [];
-  export let position: Placement = "bottom-end";
+  interface Props {
+    active_org: Org;
+    orgs?: Org[];
+    users?: User[];
+    position?: Placement;
+  }
 
-  let width: number;
+  let {
+    active_org,
+    orgs = [],
+    users = [],
+    position = "bottom-end",
+  }: Props = $props();
 
-  $: isPremium = active_org.plan !== "Free";
-  $: isPro = isPremium && active_org.individual;
-  $: upgrade_url = getUpgradeUrl(active_org).href;
-  $: otherOrgs = orgs.filter((org) => org.id !== active_org.id);
+  let width: number | undefined = $state();
+
+  let isPremium = $derived(active_org.plan !== "Free");
+  let isPro = $derived(isPremium && active_org.individual);
+  let upgrade_url = $derived(getUpgradeUrl(active_org).href);
+  let otherOrgs = $derived(orgs.filter((org) => org.id !== active_org.id));
 
   // Only show credit meter if the org has any allowance
-  $: showCredits = (active_org.monthly_credit_allowance ?? 0) > 0;
+  let showCredits = $derived((active_org.monthly_credit_allowance ?? 0) > 0);
 
-  $: creditHelpText = active_org.credit_reset_date
-    ? $_("authSection.credits.refreshOn", {
-        values: {
-          date: formatResetDate(active_org.credit_reset_date, $locale),
-        },
-      })
-    : undefined;
+  let creditHelpText = $derived(
+    active_org.credit_reset_date
+      ? $_("authSection.credits.refreshOn", {
+          values: {
+            date: formatResetDate(active_org.credit_reset_date, $locale),
+          },
+        })
+      : undefined,
+  );
 
   // wrapping setOrg here
   async function switchOrg(org: Org) {
@@ -93,7 +104,7 @@
             src={active_org.avatar_url}
           />
         </div>
-        {#if width > remToPx(48)}<p class="orgname hide-sm">
+        {#if width && width > remToPx(48)}<p class="orgname hide-sm">
             {active_org.name}
           </p>{/if}
         <div class="dropdownArrow" slot="end">
@@ -107,7 +118,7 @@
     {/if}
   </svelte:fragment>
   <Menu slot="inner" let:close>
-    <div class="menu-inner" class:sm={width <= remToPx(32)}>
+    <div class="menu-inner" class:sm={width && width <= remToPx(32)}>
       {#if showCredits}
         <MenuInsert>
           <CreditMeter
@@ -123,7 +134,9 @@
       {:else}
         <div class="min-width">
           <MenuInsert>
-            <h3 class="heading">{$_("authSection.premiumUpgrade.heading")}</h3>
+            <h3 class="heading">
+              {$_("authSection.premiumUpgrade.heading")}
+            </h3>
             <p class="description">
               {$_("authSection.premiumUpgrade.description")}
             </p>
@@ -144,7 +157,9 @@
           {#snippet title()}
             <NavItem>
               <People16 slot="start" />
-              {$_("authSection.org.userCount", { values: { n: users.length } })}
+              {$_("authSection.org.userCount", {
+                values: { n: users.length },
+              })}
             </NavItem>
           {/snippet}
           <ul class="user-list">
@@ -161,7 +176,9 @@
                   </svelte:fragment>
                   <span class="username">{getUserName(user)}</span>
                   {#if user.admin_organizations.includes(active_org.id)}
-                    <span class="badge">{$_("authSection.org.adminRole")}</span>
+                    <span class="badge">
+                      {$_("authSection.org.adminRole")}
+                    </span>
                   {/if}
                 </NavItem>
               </li>
@@ -186,7 +203,7 @@
             <p class="orgname">{active_org.name}</p>
             <span class="arrow" slot="end"><ChevronDown12 /></span>
           </NavItem>
-          <Menu slot="inner" --max-height="24rem">
+          <Menu --max-height="24rem" slot="inner">
             {#each otherOrgs as otherOrg}
               <NavItem
                 hover

@@ -1,9 +1,11 @@
 <script lang="ts">
-  import { _ } from "svelte-i18n";
-  import { ChevronDown12, Eye16 } from "svelte-octicons";
+  import type { Nullable, Project } from "$lib/api/types";
 
   import { page } from "$app/state";
   import { goto } from "$app/navigation";
+
+  import { _ } from "svelte-i18n";
+  import { ChevronDown12, Eye16 } from "svelte-octicons";
 
   import Dropdown from "../common/Dropdown.svelte";
   import Menu from "../common/Menu.svelte";
@@ -11,21 +13,14 @@
   import NavItem from "../common/NavItem.svelte";
   import SearchEditor from "../documents/search/SearchEditor.svelte";
   import VisibleFields from "../documents/VisibleFields.svelte";
-  import type { Nullable, Project } from "$lib/api/types";
-  import type { Suggestion } from "../documents/search/prosemirror/plugins/autocomplete-data";
   import { remToPx } from "$lib/utils/layout";
 
   interface Props {
     query?: string;
     project?: Nullable<Project>;
-    preloadedSuggestions?: Record<string, Suggestion[]>;
   }
 
-  let {
-    query = "",
-    project = null,
-    preloadedSuggestions = {},
-  }: Props = $props();
+  let { query = "", project = null }: Props = $props();
 
   let headerToolbarWidth: number = $state(800);
 
@@ -52,9 +47,8 @@
   {#snippet left()}
     <div class="items">
       <SearchEditor
-        initialQuery={query}
+        {query}
         {contextAtoms}
-        {preloadedSuggestions}
         onchange={handleSearchChange}
         onsubmit={handleSearchSubmit}
       />

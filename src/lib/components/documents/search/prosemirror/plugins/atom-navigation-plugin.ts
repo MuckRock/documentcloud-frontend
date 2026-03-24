@@ -7,7 +7,7 @@
 import { NodeSelection, TextSelection, type Command } from "prosemirror-state";
 import { keymap } from "prosemirror-keymap";
 
-const ATOM_TYPES = new Set(["field-value", "range", "sort"]);
+import { ATOM_TYPES } from "../schema";
 
 /**
  * Arrow-left: if the cursor (empty TextSelection) is immediately
@@ -65,23 +65,10 @@ const arrowDownIntoPopover: Command = (state) => {
   return true;
 };
 
-/**
- * Tab: if an atom with a popover is selected, move focus
- * into the atom editor popover (same as ArrowDown).
- */
-const tabIntoPopover: Command = (state) => {
-  if (!(state.selection instanceof NodeSelection)) return false;
-  const node = state.selection.node;
-  if (!ATOM_TYPES.has(node.type.name) || node.type.name === "sort")
-    return false;
-  const popover = document.querySelector(".atom-editor") as HTMLElement;
-  if (!popover) return false;
-  popover.focus();
-  return true;
-};
+/** Tab behaves the same as ArrowDown for atom popovers. */
+const tabIntoPopover: Command = arrowDownIntoPopover;
 
 export function atomNavigationKeymap() {
-  // keymap() creates a plugin that maps key bindings to PM commands
   return keymap({
     ArrowLeft: arrowLeftIntoAtom,
     ArrowRight: arrowRightIntoAtom,

@@ -61,7 +61,7 @@
         {/if}
         <PageToolbar>
           {#snippet center()}
-            <SearchEditor initialQuery={query} onsubmit={handleSearchSubmit} />
+            <SearchEditor {query} onsubmit={handleSearchSubmit} />
           {/snippet}
         </PageToolbar>
       </Flex>

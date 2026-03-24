@@ -5,14 +5,22 @@
 
   The PM document is the source of truth for the query.
   Serialization to a Lucene string happens only on submit.
-  Deserialization from a Lucene string happens when the initialQuery prop changes.
+  Deserialization from a Lucene string happens when the query prop changes.
 
   SearchEditor was written by Allan Lasser with assistance from Claude Opus 4.6.
 -->
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
   import type { EditorView } from "prosemirror-view";
-  import type { Suggestion } from "./prosemirror/plugins/autocomplete-data";
+
+  import { onMount, onDestroy } from "svelte";
+  import { Search16, Stop16 } from "svelte-octicons";
+
+  import Button from "$lib/components/common/Button.svelte";
+  import FieldValueAtom from "$lib/components/documents/search/FieldValueAtom.svelte";
+  import { isMac } from "$lib/utils/platform";
+  import { getSearchResults } from "$lib/state/search.svelte";
+  import { extractSuggestions } from "./utils/extractSuggestions";
+
   import {
     createSearchEditor,
     updateEditorQuery,
@@ -21,35 +29,26 @@
     isEditorInErrorMode,
   } from "./prosemirror/searchEditor";
 
-  import { Search16, Stop16 } from "svelte-octicons";
-  import Button from "$lib/components/common/Button.svelte";
-  import FieldValueAtom from "$lib/components/documents/search/FieldValueAtom.svelte";
-
   interface Props {
-    initialQuery?: string;
+    query?: string;
     /** Locked atoms displayed before the editor as search context (e.g. project scope). */
     contextAtoms?: Array<{
       field: string;
       label: string;
     }>;
-    /**
-     * Preloaded suggestions derived from current search results.
-     * Keyed by canonical field name (e.g. "user", "organization").
-     * Used as default suggestions when the autocomplete filter is empty,
-     * avoiding an API call and showing contextually relevant values.
-     */
-    preloadedSuggestions?: Record<string, Suggestion[]>;
     onsubmit?: (detail: { q: string }) => void;
     onchange?: (detail: { q: string; structural: boolean }) => void;
   }
 
   let {
-    initialQuery = "",
+    query = "",
     contextAtoms = [],
-    preloadedSuggestions = {},
     onsubmit,
     onchange,
   }: Props = $props();
+
+  const search = getSearchResults();
+  let preloadedSuggestions = $derived(extractSuggestions(search.results));
 
   let editorRef: HTMLDivElement | undefined = $state();
   let view: EditorView | undefined = $state();
@@ -59,13 +58,13 @@
 
   /** Last query emitted via the change event, to avoid redundant dispatches. */
   // svelte-ignore state_referenced_locally
-  let lastEmittedQuery = $state(initialQuery);
+  let lastEmittedQuery = $state(query);
 
-  // When the initialQuery prop changes externally (e.g. route navigation),
+  // When the query prop changes externally (e.g. route navigation),
   // update the editor contents to match — but NOT while the user is actively
   // typing (editor has focus), to avoid disrupting their input.
   // svelte-ignore state_referenced_locally
-  let lastInitialQuery = $state(initialQuery);
+  let lastQuery = $state(query);
 
   /** Upon submission, validate and serialize the current PM document to a Lucene query string. */
   function handleSubmit(e: SubmitEvent) {
@@ -81,8 +80,11 @@
   }
 
   onMount(() => {
+    if (isMac()) {
+      editorRef!.classList.add("isMac");
+    }
     view = createSearchEditor(editorRef!, {
-      initialQuery,
+      query,
       getPreloadedSuggestions: () => preloadedSuggestions,
       onDocChange(q, structural) {
         // Sync error state with the decoration plugin (it clears errors
@@ -117,7 +119,7 @@
 
   /** Get the current serialized query. Used by tests. */
   export function getQuery(): string {
-    if (!view) return initialQuery;
+    if (!view) return query;
     return getEditorQuery(view);
   }
 
@@ -127,10 +129,10 @@
   }
 
   $effect(() => {
-    if (view && initialQuery !== lastInitialQuery) {
-      lastInitialQuery = initialQuery;
+    if (view && query !== lastQuery) {
+      lastQuery = query;
       if (!view.hasFocus()) {
-        updateQuery(initialQuery);
+        updateQuery(query);
       }
     }
   });
@@ -221,14 +223,17 @@
     margin: 0;
   }
 
-  /* Placeholder when editor is empty */
   :global(.ProseMirror.is-empty p:first-child::before) {
-    content: "Search documents\2026   \2318/ for fields";
+    content: "Search documents\2026   Ctrl+/ for fields";
     color: var(--gray-4, #8b949e);
     pointer-events: none;
     float: left;
     height: 0;
     white-space: nowrap;
+  }
+  /* Platform-aware shortcut hint */
+  :global(.isMac .ProseMirror.is-empty p:first-child::before) {
+    content: "Search documents\2026   \2318/ for fields";
   }
 
   /* Decoration styles for operators, parens, and prefixes */

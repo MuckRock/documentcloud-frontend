@@ -5,15 +5,15 @@
  * atom enrichment, and document update helpers so the Svelte component
  * only needs to handle lifecycle and event dispatching.
  */
+import type { Node } from "prosemirror-model";
+import type { Transaction } from "prosemirror-state";
 
 import { EditorState, Plugin } from "prosemirror-state";
-import type { Transaction } from "prosemirror-state";
-import type { Node } from "prosemirror-model";
 import { EditorView } from "prosemirror-view";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
 import { history, undo, redo } from "prosemirror-history";
-import { searchSchema } from "./schema";
+import { searchSchema, ATOM_TYPES } from "./schema";
 import { nodeViews } from "./nodeviews.svelte";
 import { decorationPlugin } from "./plugins/decoration-plugin";
 import { clipboardPlugin } from "./plugins/clipboard-plugin";
@@ -47,8 +47,6 @@ function placeholderPlugin(): Plugin {
     },
   });
 }
-
-const ATOM_TYPES = new Set(["field-value", "range", "sort"]);
 
 /** Collect a fingerprint of all atom nodes in a document.
  *  Only includes attributes that affect the serialized query —
@@ -170,7 +168,7 @@ export async function enrichAtoms(v: EditorView): Promise<void> {
 // --- Editor factory ---
 
 export interface SearchEditorOptions {
-  initialQuery: string;
+  query: string;
   getPreloadedSuggestions: () => Record<string, Suggestion[]>;
   /** Called when the document changes. `structural` is true when atoms were added/removed. */
   onDocChange: (query: string, structural: boolean) => void;
@@ -185,7 +183,7 @@ export function createSearchEditor(
   // PM never mutates state — every change produces a new state via transactions.
   const state = EditorState.create({
     schema: searchSchema,
-    doc: deserialize(opts.initialQuery),
+    doc: deserialize(opts.query),
     plugins: [
       history(),
       autocompletePlugin({

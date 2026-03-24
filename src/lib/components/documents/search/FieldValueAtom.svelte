@@ -101,14 +101,6 @@
     margin-right: 1px;
   }
 
-  .atom-prefix-required {
-    color: inherit;
-  }
-
-  .atom-prefix-excluded {
-    color: inherit;
-  }
-
   .atom-loading {
     opacity: 0.5;
     margin-left: 2px;

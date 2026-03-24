@@ -84,14 +84,6 @@
     margin-right: 1px;
   }
 
-  .atom-prefix-required {
-    color: inherit;
-  }
-
-  .atom-prefix-excluded {
-    color: inherit;
-  }
-
   .atom-bounds {
     font-size: 0.9em;
   }

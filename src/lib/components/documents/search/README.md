@@ -6,7 +6,7 @@
 
 ### Svelte Components
 
-**SearchEditor** (`SearchEditor.svelte`) is the root component. It renders a form containing a status icon, context chips, the ProseMirror editor, and a search button. It accepts an `initialQuery` string, optional `contextChips` (locked chips displayed before the editor, e.g. for project scope), and `preloadedSuggestions` from search results. It exposes `updateQuery()`, `getQuery()`, and `getView()` methods for programmatic control. Only structural changes (chip insert/remove) emit `change` events — plain text typing does not.
+**SearchEditor** (`SearchEditor.svelte`) is the root component. It renders a form containing a status icon, context chips, the ProseMirror editor, and a search button. It accepts an `query` string, optional `contextChips` (locked chips displayed before the editor, e.g. for project scope), and `preloadedSuggestions` from search results. It exposes `updateQuery()`, `getQuery()`, and `getView()` methods for programmatic control. Only structural changes (chip insert/remove) emit `change` events — plain text typing does not.
 
 The chip components render the atom nodes inside the editor:
 

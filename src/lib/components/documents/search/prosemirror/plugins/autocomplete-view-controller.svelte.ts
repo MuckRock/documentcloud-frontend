@@ -1,5 +1,8 @@
 import type { EditorView } from "prosemirror-view";
+
 import { computePosition, flip, offset, shift } from "@floating-ui/dom";
+import { flushSync, mount, unmount } from "svelte";
+
 import {
   isAsyncField,
   fetchValueSuggestions,
@@ -7,7 +10,6 @@ import {
 } from "./autocomplete-data";
 import AutocompleteDropdown from "../../AutocompleteDropdown.svelte";
 import RangeBuilder from "../../RangeBuilder.svelte";
-import { flushSync, mount, unmount } from "svelte";
 import {
   autocompletePluginKey,
   computeAutocompleteState,
@@ -368,64 +370,82 @@ export class AutocompleteViewController {
     }
   }
 
-  update(view: EditorView): void {
-    const pluginState = autocompletePluginKey.getState(
-      view.state,
-    ) as AutocompleteState;
+  /** Mark the dropdown as expanded and update ARIA + screen reader announcements. */
+  private setExpandedAria(pluginState: AutocompleteState): void {
+    this.editorDom.setAttribute("aria-expanded", "true");
+    const activeId = `${this.dropdownId}-opt-${pluginState.selectedIndex}`;
+    this.editorDom.setAttribute("aria-activedescendant", activeId);
+    if (pluginState.suggestions.length !== this.prevSuggestionCount) {
+      this.announceCount(
+        pluginState.suggestions.length,
+        pluginState.stage,
+        pluginState.fieldName,
+      );
+      this.prevSuggestionCount = pluginState.suggestions.length;
+    }
+  }
 
-    const preloaded = this.options.getPreloadedSuggestions?.();
-    const preloadedFieldNames = preloaded
-      ? new Set(Object.keys(preloaded))
-      : undefined;
+  /** Mark the dropdown as collapsed and clear ARIA state. */
+  private setCollapsedAria(): void {
+    this.editorDom.setAttribute("aria-expanded", "false");
+    this.clearActiveDescendant();
+    if (this.prevSuggestionCount !== 0) {
+      this.announceCount(0, "field", null);
+      this.prevSuggestionCount = 0;
+    }
+  }
 
-    if (!pluginState.active) {
-      this.lastFetchKey = "";
-      const computed = pluginState.dismissed
-        ? null
-        : computeAutocompleteState(view, preloadedFieldNames);
-      if (computed) {
-        if (
-          !populateInterimSuggestions(
-            computed,
-            this.lastAsyncResults,
-            preloaded,
-          )
-        ) {
-          this.hideAll();
-          this.editorDom.setAttribute("aria-expanded", "false");
-          this.clearActiveDescendant();
-          return;
-        }
-        view.dispatch(view.state.tr.setMeta(autocompletePluginKey, computed));
+  /**
+   * Plugin state is not active — try to auto-activate from the cursor
+   * position, or hide the UI and reset ARIA.
+   */
+  private handleInactive(
+    view: EditorView,
+    pluginState: AutocompleteState,
+    preloadedFieldNames: Set<string> | undefined,
+    preloaded: Record<string, Suggestion[]> | undefined,
+  ): void {
+    this.lastFetchKey = "";
+    const computed = pluginState.dismissed
+      ? null
+      : computeAutocompleteState(view, preloadedFieldNames);
+
+    if (computed) {
+      if (
+        !populateInterimSuggestions(computed, this.lastAsyncResults, preloaded)
+      ) {
+        this.hideAll();
+        this.setCollapsedAria();
         return;
       }
-
-      this.hideAll();
-      this.editorDom.setAttribute("aria-expanded", "false");
-      this.clearActiveDescendant();
-      if (this.prevSuggestionCount !== 0) {
-        this.announceCount(0, "field", null);
-        this.prevSuggestionCount = 0;
-      }
+      view.dispatch(view.state.tr.setMeta(autocompletePluginKey, computed));
       return;
     }
 
-    if (pluginState.stage === "range" && pluginState.fieldName) {
-      this.showRangeBuilder(pluginState, view);
-      this.editorDom.setAttribute("aria-expanded", "true");
-      const activeId = `${this.dropdownId}-opt-${pluginState.selectedIndex}`;
-      this.editorDom.setAttribute("aria-activedescendant", activeId);
-      if (pluginState.suggestions.length !== this.prevSuggestionCount) {
-        this.announceCount(
-          pluginState.suggestions.length,
-          pluginState.stage,
-          pluginState.fieldName,
-        );
-        this.prevSuggestionCount = pluginState.suggestions.length;
-      }
-      return;
-    }
+    this.hideAll();
+    this.setCollapsedAria();
+  }
 
+  /** Active in the "range" stage — show the range builder popover. */
+  private handleActiveRange(
+    view: EditorView,
+    pluginState: AutocompleteState,
+  ): void {
+    this.showRangeBuilder(pluginState, view);
+    this.setExpandedAria(pluginState);
+  }
+
+  /**
+   * Active in "field" or "value" stage — recompute suggestions if the
+   * cursor context changed, kick off async fetches, and show the dropdown.
+   */
+  private handleActiveDropdown(
+    view: EditorView,
+    pluginState: AutocompleteState,
+    preloadedFieldNames: Set<string> | undefined,
+    preloaded: Record<string, Suggestion[]> | undefined,
+  ): void {
+    // Recompute if not waiting on an async fetch
     if (
       !pluginState.loading ||
       !pluginState.fieldName ||
@@ -433,11 +453,15 @@ export class AutocompleteViewController {
     ) {
       const computed = computeAutocompleteState(view, preloadedFieldNames);
       if (computed) {
-        if (
+        const triggerChanged =
           computed.filterText !== pluginState.filterText ||
           computed.stage !== pluginState.stage ||
-          computed.fieldName !== pluginState.fieldName
-        ) {
+          computed.fieldName !== pluginState.fieldName;
+
+        // Re-populate when the trigger context changed, or when the current
+        // state has no suggestions yet (e.g. tag/data_* fields that need
+        // wildcard injection after applyFieldSuggestion sets up an empty list).
+        if (triggerChanged || pluginState.suggestions.length === 0) {
           populateInterimSuggestions(
             computed,
             this.lastAsyncResults,
@@ -463,6 +487,7 @@ export class AutocompleteViewController {
       }
     }
 
+    // Kick off debounced API fetch for async fields
     if (
       pluginState.loading &&
       pluginState.fieldName &&
@@ -476,18 +501,30 @@ export class AutocompleteViewController {
     }
 
     this.showDropdown(pluginState, view);
+    this.setExpandedAria(pluginState);
+  }
 
-    this.editorDom.setAttribute("aria-expanded", "true");
-    const activeId = `${this.dropdownId}-opt-${pluginState.selectedIndex}`;
-    this.editorDom.setAttribute("aria-activedescendant", activeId);
+  update(view: EditorView): void {
+    const pluginState = autocompletePluginKey.getState(
+      view.state,
+    ) as AutocompleteState;
 
-    if (pluginState.suggestions.length !== this.prevSuggestionCount) {
-      this.announceCount(
-        pluginState.suggestions.length,
-        pluginState.stage,
-        pluginState.fieldName,
+    const preloaded = this.options.getPreloadedSuggestions?.();
+    const preloadedFieldNames = preloaded
+      ? new Set(Object.keys(preloaded))
+      : undefined;
+
+    if (!pluginState.active) {
+      this.handleInactive(view, pluginState, preloadedFieldNames, preloaded);
+    } else if (pluginState.stage === "range" && pluginState.fieldName) {
+      this.handleActiveRange(view, pluginState);
+    } else {
+      this.handleActiveDropdown(
+        view,
+        pluginState,
+        preloadedFieldNames,
+        preloaded,
       );
-      this.prevSuggestionCount = pluginState.suggestions.length;
     }
   }
 

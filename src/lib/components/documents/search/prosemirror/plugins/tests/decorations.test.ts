@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, act } from "@testing-library/svelte";
-import SearchEditor from "../../../SearchEditor.svelte";
+import SearchEditor from "../../../tests/SearchEditor.demo.svelte";
 
 /** Render the editor and wait for ProseMirror to initialize */
 async function renderEditor(props: Record<string, unknown> = {}) {
@@ -19,7 +19,7 @@ describe("Decoration Plugin", () => {
   describe("Boolean operators", () => {
     it("decorates AND as a boolean operator", async () => {
       const { editor } = await renderEditor({
-        initialQuery: "mueller AND report",
+        query: "mueller AND report",
       });
       const ops = getDecorations(editor, "search-operator");
       expect(ops).toHaveLength(1);
@@ -28,7 +28,7 @@ describe("Decoration Plugin", () => {
 
     it("decorates OR as a boolean operator", async () => {
       const { editor } = await renderEditor({
-        initialQuery: "mueller OR report",
+        query: "mueller OR report",
       });
       const ops = getDecorations(editor, "search-operator");
       expect(ops).toHaveLength(1);
@@ -37,7 +37,7 @@ describe("Decoration Plugin", () => {
 
     it("decorates NOT as a boolean operator", async () => {
       const { editor } = await renderEditor({
-        initialQuery: "NOT mueller",
+        query: "NOT mueller",
       });
       const ops = getDecorations(editor, "search-operator");
       expect(ops).toHaveLength(1);
@@ -46,7 +46,7 @@ describe("Decoration Plugin", () => {
 
     it("decorates multiple operators in one query", async () => {
       const { editor } = await renderEditor({
-        initialQuery: "mueller AND report OR memo",
+        query: "mueller AND report OR memo",
       });
       const ops = getDecorations(editor, "search-operator");
       expect(ops).toHaveLength(2);
@@ -56,7 +56,7 @@ describe("Decoration Plugin", () => {
 
     it("does not decorate lowercase 'and'", async () => {
       const { editor } = await renderEditor({
-        initialQuery: "mueller and report",
+        query: "mueller and report",
       });
       const ops = getDecorations(editor, "search-operator");
       expect(ops).toHaveLength(0);
@@ -64,7 +64,7 @@ describe("Decoration Plugin", () => {
 
     it("does not decorate 'ANDY' (must be whole word)", async () => {
       const { editor } = await renderEditor({
-        initialQuery: "ANDY report",
+        query: "ANDY report",
       });
       const ops = getDecorations(editor, "search-operator");
       expect(ops).toHaveLength(0);
@@ -72,7 +72,7 @@ describe("Decoration Plugin", () => {
 
     it("does not decorate 'ORGANIC' containing OR", async () => {
       const { editor } = await renderEditor({
-        initialQuery: "ORGANIC food",
+        query: "ORGANIC food",
       });
       const ops = getDecorations(editor, "search-operator");
       expect(ops).toHaveLength(0);
@@ -80,7 +80,7 @@ describe("Decoration Plugin", () => {
 
     it("does not decorate 'NOTHING' containing NOT", async () => {
       const { editor } = await renderEditor({
-        initialQuery: "NOTHING found",
+        query: "NOTHING found",
       });
       const ops = getDecorations(editor, "search-operator");
       expect(ops).toHaveLength(0);
@@ -90,7 +90,7 @@ describe("Decoration Plugin", () => {
   describe("Parentheses", () => {
     it("decorates parentheses as grouping", async () => {
       const { editor } = await renderEditor({
-        initialQuery: "(mueller OR watergate) AND report",
+        query: "(mueller OR watergate) AND report",
       });
       const parens = getDecorations(editor, "search-paren");
       expect(parens).toHaveLength(2);
@@ -100,7 +100,7 @@ describe("Decoration Plugin", () => {
 
     it("decorates nested parentheses", async () => {
       const { editor } = await renderEditor({
-        initialQuery: "((a OR b) AND (c OR d))",
+        query: "((a OR b) AND (c OR d))",
       });
       const parens = getDecorations(editor, "search-paren");
       expect(parens).toHaveLength(6);
@@ -110,7 +110,7 @@ describe("Decoration Plugin", () => {
   describe("Prefix operators", () => {
     it("decorates + prefix as required", async () => {
       const { editor } = await renderEditor({
-        initialQuery: "+mueller report",
+        query: "+mueller report",
       });
       const prefixes = getDecorations(editor, "search-prefix-required");
       expect(prefixes).toHaveLength(1);
@@ -119,7 +119,7 @@ describe("Decoration Plugin", () => {
 
     it("decorates - prefix as excluded", async () => {
       const { editor } = await renderEditor({
-        initialQuery: "-report mueller",
+        query: "-report mueller",
       });
       const prefixes = getDecorations(editor, "search-prefix-excluded");
       expect(prefixes).toHaveLength(1);
@@ -128,7 +128,7 @@ describe("Decoration Plugin", () => {
 
     it("does not decorate + or - in the middle of a word", async () => {
       const { editor } = await renderEditor({
-        initialQuery: "foo+bar baz-qux",
+        query: "foo+bar baz-qux",
       });
       const req = getDecorations(editor, "search-prefix-required");
       const exc = getDecorations(editor, "search-prefix-excluded");
@@ -138,7 +138,7 @@ describe("Decoration Plugin", () => {
 
     it("decorates + before a quoted phrase", async () => {
       const { editor } = await renderEditor({
-        initialQuery: '+\"steve jobs\" macintosh',
+        query: '+\"steve jobs\" macintosh',
       });
       const prefixes = getDecorations(editor, "search-prefix-required");
       expect(prefixes).toHaveLength(1);
@@ -147,7 +147,7 @@ describe("Decoration Plugin", () => {
 
     it("applies background highlight to the full prefixed quoted phrase", async () => {
       const { editor } = await renderEditor({
-        initialQuery: '+"steve jobs" macintosh',
+        query: '+"steve jobs" macintosh',
       });
       const terms = getDecorations(editor, "search-term-required");
       // ProseMirror splits into 2 spans due to overlapping prefix decoration
@@ -158,7 +158,7 @@ describe("Decoration Plugin", () => {
 
     it("applies background highlight to a prefixed excluded quoted phrase", async () => {
       const { editor } = await renderEditor({
-        initialQuery: '-"steve jobs" macintosh',
+        query: '-"steve jobs" macintosh',
       });
       const terms = getDecorations(editor, "search-term-excluded");
       expect(terms).toHaveLength(2);
@@ -170,7 +170,7 @@ describe("Decoration Plugin", () => {
   describe("Mixed content", () => {
     it("decorates operators and parens in a complex query", async () => {
       const { editor } = await renderEditor({
-        initialQuery: "(mueller OR watergate) AND NOT report",
+        query: "(mueller OR watergate) AND NOT report",
       });
       const ops = getDecorations(editor, "search-operator");
       const parens = getDecorations(editor, "search-paren");
@@ -179,7 +179,7 @@ describe("Decoration Plugin", () => {
     });
 
     it("handles empty query without errors", async () => {
-      const { editor } = await renderEditor({ initialQuery: "" });
+      const { editor } = await renderEditor({ query: "" });
       const ops = getDecorations(editor, "search-operator");
       const parens = getDecorations(editor, "search-paren");
       expect(ops).toHaveLength(0);
@@ -190,7 +190,7 @@ describe("Decoration Plugin", () => {
   describe("Decorations update on content change", () => {
     it("adds decorations when operators are typed via updateQuery", async () => {
       const { component, editor } = await renderEditor({
-        initialQuery: "mueller report",
+        query: "mueller report",
       });
       expect(getDecorations(editor, "search-operator")).toHaveLength(0);
 
@@ -205,7 +205,7 @@ describe("Decoration Plugin", () => {
 
     it("removes decorations when operators are removed", async () => {
       const { component, editor } = await renderEditor({
-        initialQuery: "mueller AND report",
+        query: "mueller AND report",
       });
       expect(getDecorations(editor, "search-operator")).toHaveLength(1);
 

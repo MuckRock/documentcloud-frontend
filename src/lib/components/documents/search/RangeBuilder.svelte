@@ -47,11 +47,6 @@
     return dropdown;
   }
 
-  /** Allow external code to move focus into this component. */
-  export function focus() {
-    dropdown?.focus();
-  }
-
   function handleFixedInsert() {
     if (fixedInput?.value) onFixedValue(fixedInput.value);
   }

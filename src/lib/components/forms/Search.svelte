@@ -73,7 +73,6 @@
   onreset={clear}
   bind:this={form}
 >
-  <!-- <Search {name} {placeholder} bind:value={query} on:reset={clear} /> -->
   <label for={id} title={$_("common.search")}>
     <Search16 />
     <span class="sr-only">{$_("common.search")}</span>

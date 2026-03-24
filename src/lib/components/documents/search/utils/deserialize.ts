@@ -1,7 +1,8 @@
-import lucene from "lucene";
-import type { Node as ProseMirrorNode } from "prosemirror-model";
-import { searchSchema } from "../prosemirror/schema";
 import type { AST, BinaryAST, Node, NodeTerm, NodeRangedTerm } from "lucene";
+import type { Node as ProseMirrorNode } from "prosemirror-model";
+
+import lucene from "lucene";
+import { searchSchema } from "../prosemirror/schema";
 
 /**
  * Fields that should be rendered as field-value atoms.

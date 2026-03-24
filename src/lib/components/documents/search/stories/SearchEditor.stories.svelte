@@ -1,17 +1,14 @@
 <script context="module" lang="ts">
-  import type { ComponentProps } from "svelte";
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import { http, HttpResponse } from "msw";
+
   import SearchEditorComponent from "../../search/SearchEditor.svelte";
+
   import { usersList, organizationsList } from "@/test/fixtures/accounts";
   import { projectList } from "@/test/fixtures/projects";
   import { documentsList } from "@/test/fixtures/documents";
   import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
   import { createApiUrl } from "@/test/handlers/utils";
-
-  const args = {
-    initialQuery: "example query",
-  };
 
   // MSW handlers for API-backed autocomplete and atom enrichment.
   // Use exact paths (no wildcard) — these endpoints only vary by query params.
@@ -109,7 +106,7 @@
   ];
 
   const { Story } = defineMeta({
-    title: "Components / Documents / Search Editor",
+    title: "Documents / Search Editor",
     component: SearchEditorComponent,
     parameters: {
       layout: "centered",
@@ -119,162 +116,126 @@
       },
     },
   });
-
-  type Args = ComponentProps<typeof SearchEditorComponent>;
 </script>
 
-{#snippet template(storyArgs: Args)}
-  <SearchEditorComponent {...storyArgs} />
-{/snippet}
+<script lang="ts">
+  import {
+    SearchResultsState,
+    setSearchResults,
+  } from "$lib/state/search.svelte";
 
-<Story name="Empty" args={{ ...args, initialQuery: "" }} {template} />
-<Story
-  name="Single Term"
-  args={{ ...args, initialQuery: "documents" }}
-  {template}
-/>
-<Story
-  name="Multiple Terms"
-  args={{ ...args, initialQuery: "multi term query" }}
-  {template}
-/>
+  const search = new SearchResultsState();
+  search.setResults(Promise.resolve({ data: documentsList }));
+  setSearchResults(search);
+</script>
+
+<Story name="Empty" args={{ query: "" }} />
+<Story name="Single Term" args={{ query: "documents" }} />
+<Story name="Multiple Terms" args={{ query: "multi term query" }} />
 <Story
   name="Complex Terms"
-  args={{ ...args, initialQuery: 'iPhone "steve jobs" -iPad +mac^3' }}
-  {template}
+  args={{ query: 'iPhone "steve jobs" -iPad +mac^3' }}
 />
 <Story
   name="Boolean Operators"
-  args={{ ...args, initialQuery: "mueller AND report OR memo" }}
-  {template}
+  args={{ query: "mueller AND report OR memo" }}
 />
 <Story
   name="Field Queries"
   args={{
-    ...args,
-    initialQuery: "user:102112 access:public sort:-created_at",
+    query: "user:102112 access:public sort:-created_at",
   }}
-  {template}
 />
 <Story
   name="Grouped Operators"
   args={{
-    ...args,
-    initialQuery: "(mueller OR watergate) AND NOT report",
+    query: "(mueller OR watergate) AND NOT report",
   }}
-  {template}
 />
 <Story
   name="Prefix Operators"
   args={{
-    ...args,
-    initialQuery: '+mueller -report +"steve jobs"',
+    query: '+mueller -report +"steve jobs"',
   }}
-  {template}
 />
 <Story
   name="Date Range"
   args={{
-    ...args,
-    initialQuery: "created_at:[NOW-1MONTH TO *] report",
+    query: "created_at:[NOW-1MONTH TO *] report",
   }}
-  {template}
 />
 
-<!-- Phase 4: Deserialization produces atoms automatically from initialQuery -->
+<!-- Phase 4: Deserialization produces atoms automatically from query -->
 <Story
   name="Atoms / Field Values"
   args={{
-    ...args,
-    initialQuery: "user:102112 access:private",
+    query: "user:102112 access:private",
   }}
-  {template}
 />
 <Story
   name="Atoms / Range"
   args={{
-    ...args,
-    initialQuery: "created_at:[NOW-1MONTH TO *] report",
+    query: "created_at:[NOW-1MONTH TO *] report",
   }}
-  {template}
 />
 <Story
   name="Atoms / Sort"
   args={{
-    ...args,
-    initialQuery: "mueller sort:page_count",
+    query: "mueller sort:page_count",
   }}
-  {template}
 />
 <Story
   name="Atoms / Mixed Query"
   args={{
-    ...args,
-    initialQuery:
+    query:
       "+user:102112 created_at:[NOW-11MONTH TO NOW-3MONTH] AND project:214246 sort:page_count",
   }}
-  {template}
 />
 <Story
   name="Atoms / Prefixes"
   args={{
-    ...args,
-    initialQuery: "+user:102112 -access:private",
+    query: "+user:102112 -access:private",
   }}
-  {template}
 />
 
 <!-- Phase 6: API-backed autocomplete -->
-<Story
-  name="API / Autocomplete"
-  args={{ ...args, initialQuery: "" }}
-  {template}
-/>
+<Story name="API / Autocomplete" args={{ query: "" }} />
 <Story
   name="API / Enriched Atoms"
   args={{
-    ...args,
-    initialQuery: "user:7143 organization:10010 project:1",
+    query: "user:7143 organization:10010 project:1",
   }}
-  {template}
 />
 
 <!-- Responsive viewport stories for manual visual audit -->
 <Story
   name="Mobile / Empty"
-  args={{ ...args, initialQuery: "" }}
+  args={{ query: "" }}
   parameters={{ viewport: { defaultViewport: "mobile1" } }}
-  {template}
 />
 <Story
   name="Mobile / With Atoms"
   args={{
-    ...args,
-    initialQuery:
+    query:
       "+user:102112 created_at:[NOW-11MONTH TO NOW-3MONTH] AND project:214246 sort:page_count",
   }}
   parameters={{ viewport: { defaultViewport: "mobile1" } }}
-  {template}
 />
 <Story
   name="Mobile / Autocomplete Open"
-  args={{ ...args, initialQuery: "" }}
+  args={{ query: "" }}
   parameters={{ viewport: { defaultViewport: "mobile1" } }}
-  {template}
 />
 <Story
   name="Tablet / With Atoms"
   args={{
-    ...args,
-    initialQuery:
+    query:
       "+user:102112 created_at:[NOW-11MONTH TO NOW-3MONTH] AND project:214246 sort:page_count",
   }}
   parameters={{ viewport: { defaultViewport: "ipad" } }}
-  {template}
 />
 <Story
   name="Tablet / Autocomplete Open"
-  args={{ ...args, initialQuery: "" }}
+  args={{ query: "" }}
   parameters={{ viewport: { defaultViewport: "ipad" } }}
-  {template}
 />

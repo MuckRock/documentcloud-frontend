@@ -29,6 +29,8 @@ export interface Suggestion {
   label: string;
   value: string;
   description?: string;
+  /** Display label for inserted atoms, when different from `label`. */
+  displayValue?: string;
 }
 
 // ── Field catalog ──────────────────────────────────────────────
@@ -90,7 +92,7 @@ const FIELDS: FieldDef[] = [
     label: "Tag",
     description: "Filter by tag",
     insertBehavior: "field-value-atom",
-    hasValueSuggestions: false,
+    hasValueSuggestions: true,
   },
   // Sort
   {
@@ -563,7 +565,8 @@ export async function fetchValueSuggestions(
       const resp = await listUsers({ name__istartswith: filter });
       if (!resp.data) return [];
       return resp.data.results.map((u) => ({
-        label: u.name || u.username,
+        label: u.name ? `${u.name} (${u.username})` : u.username,
+        displayValue: u.name || u.username,
         value: String(u.id),
       }));
     }

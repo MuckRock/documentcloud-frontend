@@ -1,5 +1,8 @@
 import { Schema } from "prosemirror-model";
 
+/** The set of atom node type names defined in the schema. */
+export const ATOM_TYPES = new Set(["field-value", "range", "sort"]);
+
 /**
  * ProseMirror schema for the search editor.
  *

@@ -1,7 +1,7 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
-import { render, screen, waitFor, act } from "@testing-library/svelte";
+import { render, screen, act } from "@testing-library/svelte";
 import { NodeSelection, TextSelection } from "prosemirror-state";
-import SearchEditor from "../SearchEditor.svelte";
+import SearchEditor from "./SearchEditor.demo.svelte";
 import { autocompletePluginKey } from "../prosemirror/plugins/autocomplete.svelte";
 
 // Mock API modules for async autocomplete and enrichment
@@ -82,7 +82,7 @@ describe("SearchEditor", () => {
   });
 
   it("renders with an initial query", async () => {
-    const { editor } = await renderEditor({ initialQuery: "hello world" });
+    const { editor } = await renderEditor({ query: "hello world" });
     expect(editor.textContent).toContain("hello world");
   });
 
@@ -100,7 +100,7 @@ describe("SearchEditor", () => {
   it("emits submit event with serialized query on form submission", async () => {
     const submitSpy = vi.fn();
     await renderEditor({
-      initialQuery: "mueller report",
+      query: "mueller report",
       onsubmit: submitSpy,
     });
 
@@ -118,13 +118,13 @@ describe("SearchEditor", () => {
   });
 
   it("provides getQuery() that returns the serialized document", async () => {
-    const { component } = await renderEditor({ initialQuery: "test query" });
+    const { component } = await renderEditor({ query: "test query" });
     expect(component.getQuery()).toBe("test query");
   });
 
   it("updateQuery() replaces editor content", async () => {
     const { component, editor } = await renderEditor({
-      initialQuery: "old query",
+      query: "old query",
     });
     await act(() => {
       component.updateQuery("new query");
@@ -330,9 +330,9 @@ describe("SearchEditor", () => {
       expect(state.active).toBe(true);
       expect(state.loading).toBe(false);
       expect(state.suggestions.length).toBeGreaterThan(0);
-      expect(state.suggestions.some((s) => s.label === "Alice Smith")).toBe(
-        true,
-      );
+      expect(
+        state.suggestions.some((s) => s.label === "Alice Smith (alice)"),
+      ).toBe(true);
     });
 
     it("sets displayValue when selecting an async suggestion", async () => {
@@ -369,7 +369,7 @@ describe("SearchEditor", () => {
   describe("atom enrichment (Phase 6)", () => {
     it("enriches atoms with display names on initial load", async () => {
       const { component } = await renderEditor({
-        initialQuery: "user:102112",
+        query: "user:102112",
       });
 
       // Wait for enrichment to complete
@@ -928,7 +928,7 @@ describe("SearchEditor", () => {
 
     it("clicking a sort atom toggles its direction", async () => {
       const { editor, component } = await renderEditor({
-        initialQuery: "sort:created_at",
+        query: "sort:created_at",
       });
       const view = component.getView();
 
@@ -961,7 +961,7 @@ describe("SearchEditor", () => {
 
     it("clicking a sort atom twice toggles back to asc", async () => {
       const { editor, component } = await renderEditor({
-        initialQuery: "sort:-created_at",
+        query: "sort:-created_at",
       });
       const view = component.getView();
       const nodeview = editor
@@ -982,7 +982,7 @@ describe("SearchEditor", () => {
 
     it("selecting a field-value atom opens the atom editor popover", async () => {
       const { component } = await renderEditor({
-        initialQuery: "access:public",
+        query: "access:public",
       });
       const view = component.getView();
 
@@ -995,7 +995,7 @@ describe("SearchEditor", () => {
 
     it("selecting a range atom opens the atom editor popover", async () => {
       const { component } = await renderEditor({
-        initialQuery: "created_at:[NOW-1MONTH TO *]",
+        query: "created_at:[NOW-1MONTH TO *]",
       });
       const view = component.getView();
 
@@ -1007,7 +1007,7 @@ describe("SearchEditor", () => {
 
     it("deselecting an atom closes the popover", async () => {
       const { component } = await renderEditor({
-        initialQuery: "access:public report",
+        query: "access:public report",
       });
       const view = component.getView();
 
@@ -1027,7 +1027,7 @@ describe("SearchEditor", () => {
 
     it("toggling Require in the popover updates the atom prefix", async () => {
       const { component } = await renderEditor({
-        initialQuery: "access:public",
+        query: "access:public",
       });
       const view = component.getView();
 
@@ -1053,7 +1053,7 @@ describe("SearchEditor", () => {
 
     it("toggling Exclude in the popover updates the atom prefix", async () => {
       const { component } = await renderEditor({
-        initialQuery: "access:public",
+        query: "access:public",
       });
       const view = component.getView();
 
@@ -1071,7 +1071,7 @@ describe("SearchEditor", () => {
 
     it("toggling Require when already required removes the prefix", async () => {
       const { component } = await renderEditor({
-        initialQuery: "+access:public",
+        query: "+access:public",
       });
       const view = component.getView();
 
@@ -1089,7 +1089,7 @@ describe("SearchEditor", () => {
 
     it("deleting an atom via the popover removes it from the document", async () => {
       const { editor, component } = await renderEditor({
-        initialQuery: "access:public report",
+        query: "access:public report",
       });
       const view = component.getView();
 
@@ -1111,7 +1111,7 @@ describe("SearchEditor", () => {
 
     it("Escape closes the atom editor popover", async () => {
       const { component } = await renderEditor({
-        initialQuery: "access:public",
+        query: "access:public",
       });
       const view = component.getView();
 
@@ -1131,7 +1131,7 @@ describe("SearchEditor", () => {
 
     it("boost stepper increments and decrements on field-value atoms", async () => {
       const { component } = await renderEditor({
-        initialQuery: "access:public",
+        query: "access:public",
       });
       const view = component.getView();
 
@@ -1182,7 +1182,7 @@ describe("SearchEditor", () => {
 
     it("range atom editor does not show boost controls", async () => {
       const { component } = await renderEditor({
-        initialQuery: "created_at:[NOW-1MONTH TO *]",
+        query: "created_at:[NOW-1MONTH TO *]",
       });
       const view = component.getView();
 
@@ -1199,9 +1199,9 @@ describe("SearchEditor", () => {
   });
 
   describe("deserialization on load (Phase 4)", () => {
-    it("deserializes initialQuery with field-value into atoms", async () => {
+    it("deserializes query with field-value into atoms", async () => {
       const { editor, component } = await renderEditor({
-        initialQuery: "user:102112 AND access:private",
+        query: "user:102112 AND access:private",
       });
       // Should have atoms rendered
       const atoms = editor.querySelectorAll(".search-field-value");
@@ -1210,18 +1210,18 @@ describe("SearchEditor", () => {
       expect(component.getQuery()).toBe("user:102112 AND access:private");
     });
 
-    it("deserializes initialQuery with sort into atom", async () => {
+    it("deserializes query with sort into atom", async () => {
       const { editor, component } = await renderEditor({
-        initialQuery: "sort:-created_at",
+        query: "sort:-created_at",
       });
       const sortChip = editor.querySelector(".search-sort");
       expect(sortChip).toBeInTheDocument();
       expect(component.getQuery()).toBe("sort:-created_at");
     });
 
-    it("deserializes initialQuery with range into atom", async () => {
+    it("deserializes query with range into atom", async () => {
       const { editor, component } = await renderEditor({
-        initialQuery: "created_at:[NOW-1MONTH TO *]",
+        query: "created_at:[NOW-1MONTH TO *]",
       });
       const rangeChip = editor.querySelector(".search-range");
       expect(rangeChip).toBeInTheDocument();
@@ -1230,7 +1230,7 @@ describe("SearchEditor", () => {
 
     it("deserializes complex mixed query with atoms and text", async () => {
       const { editor, component } = await renderEditor({
-        initialQuery:
+        query:
           "+user:102112 created_at:[NOW-1MONTH TO *] AND access:private sort:-page_count",
       });
       expect(editor.querySelectorAll(".search-field-value").length).toBe(2);
@@ -1240,7 +1240,7 @@ describe("SearchEditor", () => {
 
     it("leaves plain text fields as text", async () => {
       const { editor, component } = await renderEditor({
-        initialQuery: "title:Mueller*",
+        query: "title:Mueller*",
       });
       // Should not create an atom for title
       const atoms = editor.querySelectorAll(".search-field-value");
@@ -1494,7 +1494,7 @@ describe("SearchEditor", () => {
   describe("atom keyboard interaction", () => {
     it("Backspace deletes a selected atom", async () => {
       const { component, editor } = await renderEditor({
-        initialQuery: "access:public report",
+        query: "access:public report",
       });
       const view = component.getView();
 
@@ -1535,7 +1535,7 @@ describe("SearchEditor", () => {
 
     it("Delete key deletes a selected atom", async () => {
       const { component, editor } = await renderEditor({
-        initialQuery: "access:public report",
+        query: "access:public report",
       });
       const view = component.getView();
 

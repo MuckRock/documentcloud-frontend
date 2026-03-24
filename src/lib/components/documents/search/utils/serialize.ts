@@ -1,5 +1,7 @@
 import type { Node as ProseMirrorNode, Fragment } from "prosemirror-model";
 
+import { ATOM_TYPES } from "../prosemirror/schema";
+
 /**
  * A segment in the offset map produced by serializeWithOffsets().
  * Maps a range in the serialized string back to a ProseMirror position.
@@ -20,8 +22,6 @@ export interface SerializeResult {
   /** Offset map: serialized string ranges → ProseMirror positions for text nodes. */
   offsets: TextOffsetSegment[];
 }
-
-const ATOM_TYPES = new Set(["field-value", "range", "sort"]);
 
 /**
  * Core serialization logic shared by serialize() and serializeWithOffsets().

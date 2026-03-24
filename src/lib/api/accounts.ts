@@ -9,7 +9,6 @@ import {
   SQUARELET_BASE,
 } from "@/config/config.js";
 import { getAll, getApiResponse } from "../utils";
-import { objectToSearchParams } from "../utils/search";
 
 /** Get the logged-in user */
 export async function getMe(fetch = globalThis.fetch): Promise<Maybe<User>> {
@@ -188,10 +187,7 @@ export function inMyOrg(orgId: number, myId: number, users?: User[]) {
   return [...adminUsers, ...regularUsers].filter((u) => u.id !== myId);
 }
 
-export interface ListUsersParams extends Record<
-  string,
-  Maybe<string | number>
-> {
+interface ListUsersParams extends Record<string, Maybe<string | number>> {
   name?: string;
   name__istartswith?: string;
   id__in?: string;
@@ -205,13 +201,16 @@ export async function listUsers(
   fetch = globalThis.fetch,
 ): Promise<APIResponse<Page<User>, unknown>> {
   const endpoint = new URL("users/", BASE_API_URL);
-  const searchParams = objectToSearchParams(params);
-  endpoint.search = searchParams.toString();
-  const response = await fetch(endpoint, { credentials: "include" });
+  for (const [k, v] of Object.entries(params)) {
+    if (v != null) endpoint.searchParams.set(k, String(v));
+  }
+  const response = await fetch(endpoint, { credentials: "include" }).catch(
+    console.warn,
+  );
   return getApiResponse<Page<User>>(response);
 }
 
-export interface ListOrgsParams extends Record<string, Maybe<string>> {
+interface ListOrgsParams extends Record<string, Maybe<string>> {
   name?: string;
   name__istartswith?: string;
   id__in?: string;
@@ -222,9 +221,12 @@ export async function listOrgs(
   fetch = globalThis.fetch,
 ): Promise<APIResponse<Page<Org>, unknown>> {
   const endpoint = new URL("organizations/", BASE_API_URL);
-  const searchParams = objectToSearchParams(params);
-  endpoint.search = searchParams.toString();
+  for (const [k, v] of Object.entries(params)) {
+    if (v != null) endpoint.searchParams.set(k, String(v));
+  }
   endpoint.searchParams.set("individual", "false");
-  const response = await fetch(endpoint, { credentials: "include" });
+  const response = await fetch(endpoint, { credentials: "include" }).catch(
+    console.warn,
+  );
   return getApiResponse<Page<Org>>(response);
 }

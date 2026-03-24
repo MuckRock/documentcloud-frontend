@@ -1,5 +1,6 @@
-import lucene from "lucene";
 import type { Nullable } from "$lib/api/types";
+
+import lucene from "lucene";
 import {
   isAST,
   isBinaryAST,

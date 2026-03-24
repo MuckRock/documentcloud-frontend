@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, act } from "@testing-library/svelte";
 import { NodeSelection, TextSelection } from "prosemirror-state";
-import SearchEditor from "../../SearchEditor.svelte";
+import SearchEditor from "../../tests/SearchEditor.demo.svelte";
 import { searchSchema } from "../schema";
 
 /** Render the editor and wait for ProseMirror to initialize */

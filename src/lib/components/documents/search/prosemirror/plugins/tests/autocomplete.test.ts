@@ -383,8 +383,10 @@ describe("autocomplete-data", () => {
       expect(result.valueFilter).toBe("imp");
     });
 
-    it("does not trigger for tag: without preloaded data", () => {
-      expect(detectTrigger("tag:").stage).toBeNull();
+    it("triggers value stage for tag:", () => {
+      const result = detectTrigger("tag:");
+      expect(result.stage).toBe("value");
+      expect(result.fieldName).toBe("tag");
     });
 
     // Phase 6: async entity fields now trigger value stage
@@ -500,8 +502,16 @@ describe("autocomplete-data", () => {
     it("fetches user suggestions", async () => {
       const results = await fetchValueSuggestions("user", "Ali");
       expect(results).toHaveLength(2);
-      expect(results[0]).toEqual({ label: "Alice Smith", value: "100" });
-      expect(results[1]).toEqual({ label: "Alice Jones", value: "101" });
+      expect(results[0]).toEqual({
+        label: "Alice Smith (alice)",
+        displayValue: "Alice Smith",
+        value: "100",
+      });
+      expect(results[1]).toEqual({
+        label: "Alice Jones (alicej)",
+        displayValue: "Alice Jones",
+        value: "101",
+      });
     });
 
     it("fetches organization suggestions", async () => {
@@ -522,7 +532,7 @@ describe("autocomplete-data", () => {
       expect(results[0]).toEqual({ label: "Test Document", value: "400" });
     });
 
-    it("fetches document suggestions with empty filter", async () => {
+    it("fetches document suggestions with empty filter (no wildcard)", async () => {
       const results = await fetchValueSuggestions("document", "");
       expect(results).toHaveLength(2);
     });
@@ -532,7 +542,7 @@ describe("autocomplete-data", () => {
       expect(results).toEqual([]);
     });
 
-    it("returns preloaded suggestions for tag field", async () => {
+    it("returns preloaded suggestions for tag field with wildcard", async () => {
       const preloaded = {
         tag: [
           { label: "important", value: "important" },
@@ -544,7 +554,7 @@ describe("autocomplete-data", () => {
       expect(results[0]?.value).toBe("important");
     });
 
-    it("filters preloaded suggestions by prefix", async () => {
+    it("filters preloaded tag suggestions by prefix without wildcard", async () => {
       const preloaded = {
         tag: [
           { label: "important", value: "important" },
@@ -567,7 +577,7 @@ describe("autocomplete-data", () => {
       expect(results).toHaveLength(2);
     });
 
-    it("uses preloaded as default for async fields with empty filter", async () => {
+    it("uses preloaded as default for async fields with empty filter (no wildcard)", async () => {
       const preloaded = {
         user: [{ label: "Preloaded User", value: "999" }],
       };
@@ -581,9 +591,8 @@ describe("autocomplete-data", () => {
         user: [{ label: "Preloaded User", value: "999" }],
       };
       const results = await fetchValueSuggestions("user", "Ali", preloaded);
-      // Should call API, not return preloaded
       expect(results).toHaveLength(2);
-      expect(results[0]?.label).toBe("Alice Smith");
+      expect(results[0]?.label).toBe("Alice Smith (alice)");
     });
   });
 

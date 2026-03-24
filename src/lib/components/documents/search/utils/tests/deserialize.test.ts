@@ -1,7 +1,8 @@
+import type { Node as ProseMirrorNode } from "prosemirror-model";
+
 import { describe, it, expect } from "vitest";
 import { serialize } from "../serialize";
 import { deserialize } from "../deserialize";
-import type { Node as ProseMirrorNode } from "prosemirror-model";
 
 /** Helper to extract the inline content of the first paragraph as an array of node descriptions */
 function describeDoc(doc: ProseMirrorNode): Array<Record<string, unknown>> {
