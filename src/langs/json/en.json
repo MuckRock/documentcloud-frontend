@@ -224,7 +224,22 @@
     "select": "Select",
     "noteCount": "{n, plural, one {# note} other {# notes}}",
     "more": "Load more",
-    "retry": "Please try again."
+    "retry": "Please try again.",
+    "savedSearches": {
+      "save": "Save current search",
+      "saveTitle": "Save this search to your sidebar",
+      "createTitle": "Save Search",
+      "editTitle": "Edit Saved Search",
+      "name": "Name",
+      "query": "Search Query",
+      "edit": "Edit saved search",
+      "delete": "Delete saved search",
+      "confirmDelete": "Really delete?",
+      "loading": "Loading saved searches…",
+      "empty": "Your saved searches will appear here",
+      "noSearch": "No search to save",
+      "alreadySaved": "This search is already saved"
+    }
   },
   "error": {
     "error": "Error",

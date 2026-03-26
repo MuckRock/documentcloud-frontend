@@ -1,37 +1,94 @@
 <script lang="ts">
-  import type { Org } from "$lib/api/types";
+  import type { Org, SavedSearch } from "$lib/api/types";
   import type { Writable } from "svelte/store";
 
-  import { getContext } from "svelte";
+  import { getContext, onMount } from "svelte";
   import { _ } from "svelte-i18n";
   import {
-    Search16,
+    Bookmark16,
     File16,
     Globe16,
     Lock16,
     Organization16,
+    Pencil16,
     Person16,
+    Plus16,
+    Search16,
   } from "svelte-octicons";
   import { page } from "$app/state";
 
   import Button from "$lib/components/common/Button.svelte";
   import NavItem from "$lib/components/common/NavItem.svelte";
   import SignedIn from "$lib/components/common/SignedIn.svelte";
+  import Tooltip from "$lib/components/common/Tooltip.svelte";
+  import Modal from "$lib/components/layouts/Modal.svelte";
+  import Portal from "$lib/components/layouts/Portal.svelte";
   import SidebarGroup from "$lib/components/sidebar/SidebarGroup.svelte";
+  import SavedSearchForm from "$lib/components/sidebar/SavedSearchForm.svelte";
 
   import { userDocs, searchUrl } from "$lib/utils/search";
   import { getCurrentUser } from "$lib/utils/permissions";
+  import { listAll } from "$lib/api/saved-searches";
 
   const me = getCurrentUser();
   const org: Writable<Org> = getContext("org");
 
-  let query = $derived(page.url.searchParams?.get("q") || "");
+  // Normalize: the search editor's trailing join operator encodes as "+"
+  // in the URL, which URLSearchParams decodes as a space. Trim both.
+  let normalizeQuery = (q: string) => q.replace(/[\s+]+$/, "");
+  let query = $derived(normalizeQuery(page.url.searchParams?.get("q") || ""));
 
   let mine = $derived($me ? userDocs($me) : "");
   let minePublic = $derived($me ? userDocs($me, "public") : "");
   let minePrivate = $derived($me ? userDocs($me, "private") : "");
 
   let orgDocs = $derived($org ? `organization:${$org.id}` : "");
+
+  // Saved searches state
+  let savedSearches: SavedSearch[] = $state([]);
+  let loadingSavedSearches = $state(true);
+  type ModalState = "save" | { edit: SavedSearch } | null;
+  let showModal: ModalState = $state(null);
+
+  // All queries that are already represented in the sidebar
+  let builtInQueries = $derived(
+    [mine, minePublic, minePrivate, orgDocs].filter(Boolean),
+  );
+
+  let isCurrentSearchSaved = $derived(
+    !query ||
+      builtInQueries.includes(query) ||
+      savedSearches.some((s) => normalizeQuery(s.query) === query),
+  );
+
+  let saveSearchTooltip = $derived(
+    !query
+      ? $_("documents.savedSearches.noSearch")
+      : isCurrentSearchSaved
+        ? $_("documents.savedSearches.alreadySaved")
+        : $_("documents.savedSearches.saveTitle"),
+  );
+
+  onMount(async () => {
+    try {
+      savedSearches = await listAll();
+    } finally {
+      loadingSavedSearches = false;
+    }
+  });
+
+  function handleSave(saved: SavedSearch) {
+    const idx = savedSearches.findIndex((s) => s.uuid === saved.uuid);
+    if (idx >= 0) {
+      savedSearches[idx] = saved;
+    } else {
+      savedSearches = [...savedSearches, saved];
+    }
+  }
+
+  function handleDelete(uuid: string) {
+    savedSearches = savedSearches.filter((s) => s.uuid !== uuid);
+  }
 </script>
 
 <SignedIn>
@@ -89,9 +146,95 @@
         })}
       </NavItem>
     {/if}
+
+    <div class="saved-searches">
+      {#if loadingSavedSearches}
+        <p class="help">
+          {$_("documents.savedSearches.loading")}
+        </p>
+      {:else}
+        {#each savedSearches as savedSearch (savedSearch.uuid)}
+          <NavItem
+            small
+            hover
+            href={searchUrl(savedSearch.query).href}
+            active={query === savedSearch.query}
+          >
+            <Bookmark16 height={14} width={14} slot="start" />
+            {savedSearch.name}
+            <span slot="end">
+              <Button
+                ghost
+                minW={false}
+                size="small"
+                title={$_("documents.savedSearches.edit")}
+                on:click={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  showModal = { edit: savedSearch };
+                }}
+              >
+                <Pencil16 height={12} width={12} />
+              </Button>
+            </span>
+          </NavItem>
+        {:else}
+          <p class="help">
+            {$_("documents.savedSearches.empty")}
+          </p>
+        {/each}
+      {/if}
+
+      <Tooltip caption={saveSearchTooltip}>
+        <Button
+          ghost
+          mode="primary"
+          minW={false}
+          size="small"
+          disabled={isCurrentSearchSaved}
+          title={$_("documents.savedSearches.saveTitle")}
+          on:click={() => (showModal = "save")}
+        >
+          <Plus16 height={14} width={14} />
+          {$_("documents.savedSearches.save")}
+        </Button>
+      </Tooltip>
+    </div>
   </SidebarGroup>
   <NavItem slot="signedOut" href={searchUrl("").href}>
     <File16 slot="start" />
     {$_("documents.publicDocuments")}
   </NavItem>
 </SignedIn>
+
+{#if showModal}
+  <Portal>
+    <Modal on:close={() => (showModal = null)}>
+      <h1 slot="title">
+        {showModal === "save"
+          ? $_("documents.savedSearches.createTitle")
+          : $_("documents.savedSearches.editTitle")}
+      </h1>
+      <SavedSearchForm
+        savedSearch={showModal === "save" ? undefined : showModal.edit}
+        initialQuery={showModal === "save" ? query : undefined}
+        onclose={() => (showModal = null)}
+        onsave={handleSave}
+        ondelete={handleDelete}
+      />
+    </Modal>
+  </Portal>
+{/if}
+
+<style>
+  .saved-searches {
+    margin-top: .25em;
+    padding-top: .25em;
+    border-top: 1px solid var(--gray-2);
+  }
+  p.help {
+    font-size: var(--font-sm, .875em);
+    color: var(--gray-4);
+    padding: 0.25em 0.5em;
+  }
+</style>

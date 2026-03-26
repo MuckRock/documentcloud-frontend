@@ -215,7 +215,22 @@
     "select": "Seleccionar",
     "noteCount": "{n, plural, one {# nota} other {# notas}}",
     "more": "Cargar más",
-    "retry": "Por favor, inténtelo de nuevo."
+    "retry": "Por favor, inténtelo de nuevo.",
+    "savedSearches": {
+      "save": "Guardar b\u00fasqueda actual",
+      "saveTitle": "Guardar esta b\u00fasqueda en su barra lateral",
+      "createTitle": "Guardar b\u00fasqueda",
+      "editTitle": "Editar b\u00fasqueda guardada",
+      "name": "Nombre",
+      "query": "Consulta de b\u00fasqueda",
+      "edit": "Editar b\u00fasqueda guardada",
+      "delete": "Eliminar b\u00fasqueda guardada",
+      "confirmDelete": "\u00bfRealmente eliminar?",
+      "loading": "Cargando b\u00fasquedas guardadas\u2026",
+      "empty": "Sus b\u00fasquedas guardadas aparecer\u00e1n aqu\u00ed",
+      "noSearch": "No hay b\u00fasqueda para guardar",
+      "alreadySaved": "Esta b\u00fasqueda ya est\u00e1 guardada"
+    }
   },
   "error": {
     "report": "Informar un problema"

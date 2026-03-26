@@ -215,7 +215,22 @@
     "select": "Selezionare",
     "noteCount": "{n, plural, one {# nota} other {# note}}",
     "more": "Carica altro",
-    "retry": "Per favore, riprova."
+    "retry": "Per favore, riprova.",
+    "savedSearches": {
+      "save": "Salva la ricerca attuale",
+      "saveTitle": "Salva questa ricerca nella tua barra laterale",
+      "createTitle": "Salva ricerca",
+      "editTitle": "Modifica ricerca salvata",
+      "name": "Nome",
+      "query": "Query di ricerca",
+      "edit": "Modifica ricerca salvata",
+      "delete": "Elimina ricerca salvata",
+      "confirmDelete": "Eliminare davvero?",
+      "loading": "Caricamento delle ricerche salvate\u2026",
+      "empty": "Le tue ricerche salvate appariranno qui",
+      "noSearch": "Nessuna ricerca da salvare",
+      "alreadySaved": "Questa ricerca \u00e8 gi\u00e0 salvata"
+    }
   },
   "error": {
     "report": "Segnala un problema"

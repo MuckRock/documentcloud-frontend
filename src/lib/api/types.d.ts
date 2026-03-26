@@ -95,6 +95,17 @@ export interface NoteHighlight {
   description: string[];
 }
 
+// https://api.www.documentcloud.org/api/documents/search/saved/
+export interface SavedSearch {
+  uuid: string;
+  name: string;
+  query: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export type SavedSearchResults = Page<SavedSearch>;
+
 // https://api.www.documentcloud.org/api/projects/
 export interface Project {
   id: number;
