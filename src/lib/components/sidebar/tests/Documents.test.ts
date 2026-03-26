@@ -3,7 +3,10 @@ import { render, screen } from "@testing-library/svelte";
 
 import DocumentsDemo from "./Documents.demo.svelte";
 import { me } from "@/test/fixtures/accounts";
-import { savedSearches } from "@/test/fixtures/saved-searches";
+import { savedSearch, savedSearches } from "@/test/fixtures/saved-searches";
+import type { Org } from "$lib/api/types";
+
+const meOrg = me.organization as Org;
 
 // Mock $app/state to control the page URL
 let mockQuery = "";
@@ -96,12 +99,12 @@ describe("Documents sidebar — saved search detection", () => {
   });
 
   it("disables save button for org documents query", async () => {
-    mockQuery = `organization:${me.organization.id}`;
+    mockQuery = `organization:${meOrg.id}`;
 
     render(DocumentsDemo, {
       props: {
         user: me,
-        org: me.organization,
+        org: meOrg,
       },
     });
 
@@ -139,7 +142,7 @@ describe("Documents sidebar — saved search detection", () => {
   });
 
   it("disables save button when saved search query has trailing +", async () => {
-    mockQuery = savedSearches[0].query + "+";
+    mockQuery = savedSearch.query + "+";
     mockGetAll.mockResolvedValue(savedSearches);
 
     render(DocumentsDemo, {
@@ -153,7 +156,7 @@ describe("Documents sidebar — saved search detection", () => {
   });
 
   it("disables save button when query matches a user-saved search", async () => {
-    mockQuery = savedSearches[0].query;
+    mockQuery = savedSearch.query;
     mockGetAll.mockResolvedValue(savedSearches);
 
     render(DocumentsDemo, {
