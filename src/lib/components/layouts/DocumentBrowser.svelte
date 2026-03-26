@@ -56,11 +56,7 @@
     project?: Nullable<Project>;
   }
 
-  let {
-    search: searchProp,
-    query = "",
-    project = null,
-  }: Props = $props();
+  let { search: searchProp, query = "", project = null }: Props = $props();
 
   // this lets us pass in non-global search results, for testing
   // will error if neither is present
@@ -119,7 +115,7 @@
                   </Button>
                 </div>
               {/if}
-              <DocumentListToolbar {query} />
+              <DocumentListToolbar {query} {project} />
               {#if $sidebars["action"] === false}
                 <div class="toolbar w-auto">
                   <Button

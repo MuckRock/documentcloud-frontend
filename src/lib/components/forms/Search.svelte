@@ -8,8 +8,8 @@
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
 
-  import { Search16, XCircleFill24 } from "svelte-octicons";
   import { _ } from "svelte-i18n";
+  import { Search16, XCircleFill24 } from "svelte-octicons";
 
   interface Props {
     name?: string;
@@ -45,7 +45,7 @@
     return goto(url);
   }
 
-  function search(e: Event): Promise<void> {
+  function submit(e: Event): Promise<void> {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const fd = new FormData(form);
@@ -53,7 +53,7 @@
     const url = new URL($page.url);
 
     if (q) {
-      url.searchParams.set(name, q);
+      url.searchParams.set(name, query);
     } else {
       url.searchParams.delete(name);
     }
@@ -69,7 +69,7 @@
 <form
   class="container"
   {action}
-  onsubmit={search}
+  onsubmit={submit}
   onreset={clear}
   bind:this={form}
 >

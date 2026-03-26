@@ -69,9 +69,10 @@
         href="{SQUARELET_BASE}/users/{document.user.username}"
         target="_blank"
         class="publishedUrl"
-        title="View {document.user.username} on MuckRock Accounts">
-          {userOrgString(document)}
-          <LinkExternal16 height={12} width={12} />
+        title="View {document.user.username} on MuckRock Accounts"
+      >
+        {userOrgString(document)}
+        <LinkExternal16 height={12} width={12} />
       </a>
     {:else}
       {userOrgString(document)}

@@ -1,4 +1,4 @@
-import type { Maybe, Nullable, User, Org } from "$lib/api/types";
+import type { Maybe, Nullable, User, Org, Page } from "$lib/api/types";
 import type { APIResponse } from "./types";
 
 import {
@@ -185,4 +185,48 @@ export function inMyOrg(orgId: number, myId: number, users?: User[]) {
     users?.filter((u) => !adminUsers.includes(u)).sort(alphabetizeUsers) ?? [];
   // Remove me from the user list
   return [...adminUsers, ...regularUsers].filter((u) => u.id !== myId);
+}
+
+interface ListUsersParams extends Record<string, Maybe<string | number>> {
+  name?: string;
+  name__istartswith?: string;
+  id__in?: string;
+  username?: string;
+  organization?: string;
+  project?: string;
+}
+
+export async function listUsers(
+  params: ListUsersParams,
+  fetch = globalThis.fetch,
+): Promise<APIResponse<Page<User>, unknown>> {
+  const endpoint = new URL("users/", BASE_API_URL);
+  for (const [k, v] of Object.entries(params)) {
+    if (v != null) endpoint.searchParams.set(k, String(v));
+  }
+  const response = await fetch(endpoint, { credentials: "include" }).catch(
+    console.warn,
+  );
+  return getApiResponse<Page<User>>(response);
+}
+
+interface ListOrgsParams extends Record<string, Maybe<string>> {
+  name?: string;
+  name__istartswith?: string;
+  id__in?: string;
+}
+
+export async function listOrgs(
+  params: ListOrgsParams,
+  fetch = globalThis.fetch,
+): Promise<APIResponse<Page<Org>, unknown>> {
+  const endpoint = new URL("organizations/", BASE_API_URL);
+  for (const [k, v] of Object.entries(params)) {
+    if (v != null) endpoint.searchParams.set(k, String(v));
+  }
+  endpoint.searchParams.set("individual", "false");
+  const response = await fetch(endpoint, { credentials: "include" }).catch(
+    console.warn,
+  );
+  return getApiResponse<Page<Org>>(response);
 }

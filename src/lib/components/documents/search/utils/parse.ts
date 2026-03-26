@@ -1,4 +1,12 @@
+import type { Nullable } from "$lib/api/types";
+
 import lucene from "lucene";
+import {
+  isAST,
+  isBinaryAST,
+  isNodeRangedTerm,
+  isNodeTerm,
+} from "$lib/utils/search";
 
 const validFields = [
   /^id$/,
@@ -14,7 +22,6 @@ const validFields = [
   /^page_count$/,
   /^pages$/, // maps to page count
   /^projects?$/,
-  /^project?$/, // maps to projects
   /^slug$/,
   /^source$/,
   /^status$/,
@@ -26,36 +33,134 @@ const validFields = [
   /^text$/, // maps to doctext
   /^page_no_[0-9]+$/,
   /^sort$/,
-  /^order$/, // maps to order
+  /^order$/, // maps to sort
 ];
 
-const OPERATORS = ["AND", "OR", "NOT"];
+interface ValidQueryResponse {
+  isValid: true;
+}
+
+interface InvalidQueryResponse {
+  isValid: false;
+  error: string;
+  position?: number;
+}
+
+export function validateQuery(
+  query: string,
+): ValidQueryResponse | InvalidQueryResponse {
+  // Empty queries are valid
+  if (!query || !query.trim()) {
+    return { isValid: true };
+  }
+
+  try {
+    // Basic parse to catch syntax errors
+    parse(query);
+
+    // Additional validation logic for common mistakes
+    if (query.includes('""')) {
+      return {
+        isValid: false,
+        error: "Empty quotes are not allowed in queries",
+      };
+    }
+
+    // Check for unbalanced quotes
+    const quoteCount = (query.match(/"/g) || []).length;
+    if (quoteCount % 2 !== 0) {
+      return {
+        isValid: false,
+        error: "Unbalanced quotes in query",
+      };
+    }
+
+    // Check for incomplete range queries
+    if (query.includes("[") && !query.includes("]")) {
+      return {
+        isValid: false,
+        error: "Incomplete range query: missing closing bracket",
+      };
+    }
+
+    return { isValid: true };
+  } catch (error) {
+    console.error("Error parsing query:", error);
+    // Return catch-all error message
+    let message = "Invalid query syntax";
+    // Get position of error
+    let position: number | undefined = undefined;
+    if (error instanceof Error) {
+      message = error.message;
+      const posMatch = error.message.match(/at character (\d+)/i);
+      if (posMatch && posMatch[1]) {
+        position = parseInt(posMatch[1], 10);
+      }
+    }
+    return {
+      isValid: false,
+      error: error instanceof Error ? error.message : "Invalid query syntax",
+      position,
+    };
+  }
+}
+
+interface Clause {
+  must?: Nullable<string>;
+  field?: Nullable<string>;
+  rawField?: string;
+  isPhrase?: boolean;
+  hasWhitespace?: boolean;
+  hasSpecialSyntax?: boolean;
+  val?: string;
+  syntaxError?: boolean;
+  pos?: [number, number];
+  raw?: string;
+}
+
+interface Chunk {
+  type: string;
+  position: Pair;
+}
+
+interface Highlight {
+  type: string;
+  text?: string;
+  field?: Nullable<string>;
+  value?: Nullable<string>;
+}
+
+type Pair = [Nullable<number>, Nullable<number>];
+
+const OPERATORS: lucene.Operator[] = ["AND", "OR", "NOT"];
 const OPERATORS_RE = new RegExp(
   `${OPERATORS.map((x) => `(${x})`).join("|")}|(.+?)`,
 );
-
 const NORMALIZE_PREFIX = /^[-+]+/g;
 
-export function validField(field) {
+export function validField(field: string): boolean {
   // Normalize away prefixes
   field = field.replace(NORMALIZE_PREFIX, "");
   for (let i = 0; i < validFields.length; i++) {
-    if (validFields[i].test(field)) return true;
+    if (validFields[i]?.test(field)) return true;
   }
   return false;
 }
 
-export function highlight(query) {
+export function highlight(query: string) {
   const parsed = parse(query);
   return parseHighlight(query, parsed);
 }
 
-export function parseHighlight(query, parsed) {
+export function parseHighlight(query: string, parsed: lucene.AST) {
   // Get outer bounds of positions from parsed structure
-  const getSuperPosition = (...parsedStructures) => {
-    let posMin = null;
-    let posMax = null;
-    const reconcile = (...nums) => {
+  const getSuperPosition = (
+    ...parsedStructures: Array<lucene.AST | lucene.Node>
+  ): [Nullable<number>, Nullable<number>] => {
+    let posMin: Nullable<number> = null;
+    let posMax: Nullable<number> = null;
+
+    const reconcile = (...nums: Nullable<number>[]) => {
       for (let i = 0; i < nums.length; i++) {
         const num = nums[i];
         if (num != null) {
@@ -65,12 +170,11 @@ export function parseHighlight(query, parsed) {
       }
     };
 
-    for (let i = 0; i < parsedStructures.length; i++) {
-      const parsed = parsedStructures[i];
-      if (parsed.left != null) {
+    parsedStructures.forEach((parsed) => {
+      if (isAST(parsed) && parsed.left != null) {
         reconcile(...getSuperPosition(parsed.left));
       }
-      if (parsed.right != null) {
+      if (isBinaryAST(parsed) && parsed.right != null) {
         reconcile(...getSuperPosition(parsed.right));
       }
       if (parsed.fieldLocation != null) {
@@ -79,27 +183,29 @@ export function parseHighlight(query, parsed) {
           parsed.fieldLocation.end.offset,
         );
       }
-      if (parsed.termLocation != null) {
+      if (isNodeTerm(parsed) && parsed.termLocation != null) {
         reconcile(
           parsed.termLocation.start.offset,
           parsed.termLocation.end.offset,
         );
       }
-    }
+    });
     return [posMin, posMax];
   };
 
-  const getChunks = (parsed) => {
+  const getChunks = (parsed: lucene.AST | lucene.Node) => {
     // Grab all field and term locations recursively
-    let chunks = [];
+    let chunks: Chunk[] = [];
     if (
+      isAST(parsed) &&
       parsed.fieldLocation != null &&
       parsed.parenthesized &&
+      parsed.field &&
       validField(parsed.field)
     ) {
       const position = getSuperPosition(parsed);
       // Extend super position to grab end paren
-      const endParenIdx = query.indexOf(")", position[1]);
+      const endParenIdx = query.indexOf(")", position[1] ?? undefined);
       if (endParenIdx != -1) {
         position[1] = endParenIdx + 1;
       }
@@ -108,14 +214,16 @@ export function parseHighlight(query, parsed) {
         position,
       });
     } else if (
+      isNodeRangedTerm(parsed) &&
       parsed.fieldLocation != null &&
       parsed.inclusive &&
+      parsed.field &&
       validField(parsed.field)
     ) {
       const position = getSuperPosition(parsed);
       // Extend super position to grab end bracket or brace
-      const endParenIndex = query.indexOf("]", position[1]);
-      const endBraceIndex = query.indexOf("}", position[1]);
+      const endParenIndex = query.indexOf("]", position[1] ?? undefined);
+      const endBraceIndex = query.indexOf("}", position[1] ?? undefined);
       const endIndex = Math.min(
         endParenIndex == -1 ? Infinity : endParenIndex,
         endBraceIndex == -1 ? Infinity : endBraceIndex,
@@ -128,13 +236,17 @@ export function parseHighlight(query, parsed) {
         position,
       });
     } else {
-      if (parsed.left != null) {
+      if (isAST(parsed) && parsed.left != null) {
         chunks = chunks.concat(getChunks(parsed.left));
       }
-      if (parsed.right != null) {
+      if (isBinaryAST(parsed) && parsed.right != null) {
         chunks = chunks.concat(getChunks(parsed.right));
       }
-      if (parsed.fieldLocation != null && parsed.termLocation != null) {
+      if (
+        isNodeTerm(parsed) &&
+        parsed.fieldLocation != null &&
+        parsed.termLocation != null
+      ) {
         if (validField(parsed.field)) {
           chunks.push({
             type: "field",
@@ -144,12 +256,15 @@ export function parseHighlight(query, parsed) {
             ],
           });
         }
-      } else if (parsed.quoted) {
-        const position = [
+      } else if (isNodeTerm(parsed) && parsed.quoted) {
+        const position: Pair = [
           parsed.termLocation.start.offset,
           parsed.termLocation.end.offset,
         ];
-        const text = query.substring(...position);
+        const text = query.substring(
+          parsed.termLocation.start.offset,
+          parsed.termLocation.end.offset,
+        );
         if (text.startsWith('"') || text.endsWith('"')) {
           chunks.push({
             type: "quote",
@@ -163,10 +278,17 @@ export function parseHighlight(query, parsed) {
 
   // Obtain highlight regions and sort
   const chunks = getChunks(parsed);
-  chunks.sort((a, b) => a.position[0] - b.position[0]);
+  chunks.sort((a, b) => {
+    let aPos = a.position[0];
+    let bPos = b.position[0];
+    if (aPos && bPos) {
+      return aPos - bPos;
+    }
+    return 0;
+  });
 
   let pos = 0;
-  const highlights = [];
+  const highlights: Array<Highlight> = [];
 
   const advance = (offset) => {
     const text = query.substr(0, offset);
@@ -194,7 +316,7 @@ export function parseHighlight(query, parsed) {
     };
     for (let i = 0; i < textGroups.length; i++) {
       const group = textGroups[i];
-      if (OPERATORS.includes(group)) {
+      if (group && OPERATORS.includes(group as lucene.Operator)) {
         clearBuffer();
         highlights.push({ type: "operator", text: group });
       } else {
@@ -212,8 +334,8 @@ export function parseHighlight(query, parsed) {
 
     const text = advance(position);
     const colonIdx = text.indexOf(":");
-    let field = null;
-    let value = null;
+    let field: Nullable<string> = null;
+    let value: Nullable<string> = null;
     if (colonIdx != -1) {
       field = text.substr(0, colonIdx + 1);
       value = text.substr(colonIdx + 1);
@@ -227,18 +349,20 @@ export function parseHighlight(query, parsed) {
     });
   };
 
-  for (let i = 0; i < chunks.length; i++) {
-    const chunk = chunks[i];
-    const start = chunk.position[0] - pos;
+  chunks.forEach((chunk) => {
+    const start = (chunk.position[0] ?? 0) - pos;
     pushRaw(start);
-    pushHighlight(chunk.type, chunk.position[1] - chunk.position[0]);
-  }
-  pushRaw();
+    pushHighlight(
+      chunk.type,
+      (chunk.position[1] ?? 0) - (chunk.position[0] ?? 0),
+    );
+  });
+  pushRaw(null);
 
   return highlights;
 }
 
-export function parse(query) {
+export function parse(query: string): lucene.AST {
   try {
     return lucene.parse(query);
   } catch (e) {
@@ -252,7 +376,7 @@ export function parse(query) {
   }
 }
 
-export function splitAndEscape(query) {
+export function splitAndEscape(query: string) {
   const clauses = splitIntoClauses(query, false);
   return escapeUserQuery(clauses);
 }
@@ -299,14 +423,17 @@ const isWhitespace = /\s/;
 const isJavaIdentifierPart = /[a-zA-Z0-9$_]/;
 const isAllowed = () => true; // if user field is allowed
 
-export function splitIntoClauses(s, ignoreQuote) {
-  const lst = [];
-  let clause;
+export function splitIntoClauses(
+  s: string,
+  ignoreQuote: boolean,
+): Array<Clause> {
+  const lst: Array<Clause> = [];
+  let clause: Clause;
   let pos = 0;
   let end = s.length;
-  let ch = null;
-  let start;
-  let disallowUserField;
+  let ch: Nullable<string> = null;
+  let start: number;
+  let disallowUserField: boolean;
 
   while (pos < end) {
     clause = {};
@@ -326,7 +453,7 @@ export function splitIntoClauses(s, ignoreQuote) {
     }
 
     clause.field = getFieldName(s, pos, end);
-    if (clause.field != null && !isAllowed(clause.field)) {
+    if (clause.field != null && !isAllowed()) {
       clause.field = null;
     }
     if (clause.field != null) {
@@ -339,7 +466,7 @@ export function splitIntoClauses(s, ignoreQuote) {
 
     if (pos >= end) break;
 
-    let inString = null;
+    let inString: Nullable<string> = null;
     ch = s.charAt(pos);
     if (!ignoreQuote && ch == '"') {
       clause.isPhrase = true;
@@ -365,7 +492,7 @@ export function splitIntoClauses(s, ignoreQuote) {
         break;
       } else if (isWhitespace.test(ch)) {
         clause.hasWhitespace = true;
-        if (inString == null) {
+        if (!inString) {
           // end of the token if we aren't in a string, backing
           // up the position.
           pos--;
@@ -424,7 +551,7 @@ export function splitIntoClauses(s, ignoreQuote) {
           clause.hasSpecialSyntax = true;
         } else {
           // uh.. this shouldn't happen.
-          clause = null;
+          throw new Error("Unexpected clause");
         }
       }
     }
@@ -476,12 +603,11 @@ function getFieldName(s, pos, end) {
   return isInSchema || isAlias || isMagic ? fname : null;
 }
 
-function escapeUserQuery(clauses) {
+function escapeUserQuery(clauses: Clause[]) {
   let sb = "";
-  const mapping = [];
-  for (let i = 0; i < clauses.length; i++) {
+  const mapping: [Pair, Pair][] = [];
+  clauses.forEach((clause) => {
     const start = sb.length;
-    const clause = clauses[i];
     let doQuote = clause.isPhrase;
 
     const s = clause.val;
@@ -504,14 +630,14 @@ function escapeUserQuery(clauses) {
       sb += '"';
     }
     let shift = 0;
-    if (clause.field != clause.rawField && clause.field != null) {
+    if (clause.field != clause.rawField && clause.field) {
       // Accommodate shifts due to preceding characters
-      shift = clause.field.length - clause.rawField.length;
+      shift = clause.field.length - (clause.rawField?.length ?? 0);
     }
     // Skip adding user field boost
     const end = sb.length;
-    mapping.push([clause.pos, [start + shift, end + shift]]);
+    mapping.push([clause.pos ?? [null, null], [start + shift, end + shift]]);
     sb += " ";
-  }
+  });
   return { escaped: sb, mapping };
 }

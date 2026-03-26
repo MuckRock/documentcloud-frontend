@@ -1,7 +1,6 @@
 import { test, expect, describe } from "vitest";
 
 import { APP_URL } from "@/config/config.js";
-import { slugify } from "$lib/utils/slugify";
 import { me } from "@/test/fixtures/accounts";
 import { userDocs, tag, kv, searchUrl, highlight } from "../search";
 
@@ -13,14 +12,12 @@ describe("search utilities", () => {
   });
 
   test("userDocs", () => {
-    expect(userDocs(me)).toStrictEqual(`+user:${slugify(me.name!)}-${me.id}`);
+    expect(userDocs(me)).toStrictEqual(`user:${me.id}`);
 
-    expect(userDocs(me, "public")).toStrictEqual(
-      `+user:${slugify(me.name!)}-${me.id} access:public`,
-    );
+    expect(userDocs(me, "public")).toStrictEqual(`user:${me.id} access:public`);
 
     expect(userDocs(me, "private")).toStrictEqual(
-      `+user:${slugify(me.name!)}-${me.id} access:private`,
+      `user:${me.id} access:private`,
     );
   });
 

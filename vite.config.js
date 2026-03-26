@@ -47,6 +47,10 @@ export default defineConfig(({ mode }) => ({
   },
 
   resolve: {
+    // Add 'browser' condition in test mode so Svelte lifecycle hooks
+    // (onMount, etc.) work correctly instead of being SSR no-ops.
+    // See: https://github.com/testing-library/svelte-testing-library/issues/222
+    ...(process.env.VITEST ? { conditions: ["browser"] } : {}),
     alias: {
       "@": path.resolve(__dirname, "src"),
     },
@@ -64,7 +68,7 @@ export default defineConfig(({ mode }) => ({
     exclude: [
       ...configDefaults.exclude,
       "storybook-static",
-      "./src/legacy",
+      "./src/legacy/modification",
       "node_modules",
       "./src/config/*",
       "./src/**/*.stories.@(js|jsx|ts|tsx|svelte)",
