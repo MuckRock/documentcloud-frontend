@@ -94,10 +94,7 @@ describe("saved searches API", () => {
   });
 
   test("create handles validation error", async () => {
-    const mockFetch = mockFetchJson(
-      { name: ["This field is required."] },
-      400,
-    );
+    const mockFetch = mockFetchJson({ name: ["This field is required."] }, 400);
 
     const { data, error } = await savedSearches.create(
       { name: "", query: "test" },
@@ -125,10 +122,7 @@ describe("saved searches API", () => {
     expect(error).toBeUndefined();
     expect(data).toStrictEqual(updated);
     expect(mockFetch).toBeCalledWith(
-      new URL(
-        `documents/search/saved/${savedSearch.uuid}/`,
-        BASE_API_URL,
-      ),
+      new URL(`documents/search/saved/${savedSearch.uuid}/`, BASE_API_URL),
       {
         body: JSON.stringify({ name: "Updated Name" }),
         credentials: "include",
@@ -161,10 +155,7 @@ describe("saved searches API", () => {
 
     expect(error).toBeUndefined();
     expect(mockFetch).toBeCalledWith(
-      new URL(
-        `documents/search/saved/${savedSearch.uuid}/`,
-        BASE_API_URL,
-      ),
+      new URL(`documents/search/saved/${savedSearch.uuid}/`, BASE_API_URL),
       {
         credentials: "include",
         headers: {

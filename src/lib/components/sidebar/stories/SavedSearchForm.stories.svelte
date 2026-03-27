@@ -1,44 +1,51 @@
-<script lang="ts" context="module">
-  import type { Meta } from "@storybook/svelte";
-  import { Story } from "@storybook/addon-svelte-csf";
+<script module>
+  import { defineMeta } from "@storybook/addon-svelte-csf";
+
   import SavedSearchForm from "../SavedSearchForm.svelte";
 
-  export const meta: Meta = {
+  const { Story } = defineMeta({
     title: "Navigation / SavedSearchForm",
     component: SavedSearchForm,
     parameters: { layout: "centered" },
-  };
+    render: template,
+  });
 </script>
 
-<Story name="Create">
+{#snippet template(args)}
   <div style="width: 24rem;">
-    <SavedSearchForm
-      initialQuery="police report"
-      onclose={() => {}}
-      onsave={() => {}}
-    />
+    <SavedSearchForm {...args} />
   </div>
-</Story>
+{/snippet}
 
-<Story name="Edit">
-  <div style="width: 24rem;">
-    <SavedSearchForm
-      savedSearch={{
-        uuid: "test-uuid",
-        name: "Police reports",
-        query: "police report",
-        created_at: "2026-01-15T10:30:00Z",
-        updated_at: "2026-01-15T10:30:00Z",
-      }}
-      onclose={() => {}}
-      onsave={() => {}}
-      ondelete={() => {}}
-    />
-  </div>
-</Story>
+<Story
+  name="Create"
+  args={{
+    initialQuery: "police report",
+    onclose: () => {},
+    onsave: () => {},
+  }}
+/>
 
-<Story name="Empty (no initial query)">
-  <div style="width: 24rem;">
-    <SavedSearchForm onclose={() => {}} onsave={() => {}} />
-  </div>
-</Story>
+<Story
+  name="Edit"
+  args={{
+    savedSearch: {
+      uuid: "test-uuid",
+      name: "Police reports",
+      query: "police report",
+      created_at: "2026-01-15T10:30:00Z",
+      updated_at: "2026-01-15T10:30:00Z",
+    },
+    onclose: () => {},
+    onsave: () => {},
+    ondelete: () => {},
+  }}
+/>
+
+<Story
+  name="Empty (no initial query)"
+  args={{
+    onclose: () => {},
+    onsave: () => {},
+  }}
+/>

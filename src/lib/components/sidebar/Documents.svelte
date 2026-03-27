@@ -228,12 +228,12 @@
 
 <style>
   .saved-searches {
-    margin-top: .25em;
-    padding-top: .25em;
+    margin-top: 0.25em;
+    padding-top: 0.25em;
     border-top: 1px solid var(--gray-2);
   }
   p.help {
-    font-size: var(--font-sm, .875em);
+    font-size: var(--font-sm, 0.875em);
     color: var(--gray-4);
     padding: 0.25em 0.5em;
   }

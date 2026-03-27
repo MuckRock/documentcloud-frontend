@@ -33,10 +33,4 @@
   }
 </script>
 
-<SearchEditor
-  bind:this={editor}
-  {query}
-  {contextAtoms}
-  {onsubmit}
-  {onchange}
-/>
+<SearchEditor bind:this={editor} {query} {contextAtoms} {onsubmit} {onchange} />

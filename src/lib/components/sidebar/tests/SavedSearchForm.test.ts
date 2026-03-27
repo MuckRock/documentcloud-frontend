@@ -119,9 +119,7 @@ describe("SavedSearchForm", () => {
       props: { savedSearch },
     });
 
-    expect(
-      screen.getByRole("button", { name: /delete/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /delete/i })).toBeInTheDocument();
   });
 
   it("requires confirmation before deleting", async () => {
@@ -144,10 +142,7 @@ describe("SavedSearchForm", () => {
     });
     await user.click(confirmBtn);
 
-    expect(mockDestroy).toHaveBeenCalledWith(
-      savedSearch.uuid,
-      "test-csrf",
-    );
+    expect(mockDestroy).toHaveBeenCalledWith(savedSearch.uuid, "test-csrf");
     expect(ondelete).toHaveBeenCalledWith(savedSearch.uuid);
   });
 
@@ -161,15 +156,10 @@ describe("SavedSearchForm", () => {
     });
 
     const user = userEvent.setup();
-    await user.type(
-      screen.getByRole("textbox", { name: /name/i }),
-      "Test",
-    );
+    await user.type(screen.getByRole("textbox", { name: /name/i }), "Test");
     await user.click(screen.getByRole("button", { name: /save/i }));
 
-    expect(
-      await screen.findByText(/bad request/i),
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/bad request/i)).toBeInTheDocument();
   });
 
   it("displays error from API on delete failure", async () => {
@@ -183,9 +173,7 @@ describe("SavedSearchForm", () => {
 
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: /delete/i }));
-    await user.click(
-      screen.getByRole("button", { name: /really delete/i }),
-    );
+    await user.click(screen.getByRole("button", { name: /really delete/i }));
 
     expect(await screen.findByText(/not found/i)).toBeInTheDocument();
   });

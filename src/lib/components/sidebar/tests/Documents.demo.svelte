@@ -10,10 +10,10 @@
     org?: Org | null;
   }
 
-  const { user = null, org = null }: Props = $props();
+  const props: Props = $props();
 
-  setContext("me", writable(user));
-  setContext("org", writable(org));
+  setContext("me", writable(props.user));
+  setContext("org", writable(props.org));
 </script>
 
 <Documents />

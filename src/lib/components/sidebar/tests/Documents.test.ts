@@ -13,7 +13,9 @@ let mockQuery = "";
 vi.mock("$app/state", () => ({
   page: {
     get url() {
-      return new URL(`https://www.documentcloud.org/documents/?q=${encodeURIComponent(mockQuery)}`);
+      return new URL(
+        `https://www.documentcloud.org/documents/?q=${encodeURIComponent(mockQuery)}`,
+      );
     },
   },
 }));

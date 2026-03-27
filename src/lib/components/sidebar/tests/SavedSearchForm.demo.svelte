@@ -20,10 +20,4 @@
   }: Props = $props();
 </script>
 
-<SavedSearchForm
-  {savedSearch}
-  {initialQuery}
-  {onsave}
-  {onclose}
-  {ondelete}
-/>
+<SavedSearchForm {savedSearch} {initialQuery} {onsave} {onclose} {ondelete} />

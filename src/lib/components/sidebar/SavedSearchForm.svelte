@@ -5,7 +5,7 @@ Renders inside a modal.
 <script lang="ts">
   import type { SavedSearch } from "$lib/api/types";
 
-  import { onMount } from "svelte";
+  import { onMount, untrack } from "svelte";
   import { _ } from "svelte-i18n";
 
   import { Alert24 } from "svelte-octicons";
@@ -35,8 +35,10 @@ Renders inside a modal.
     ondelete,
   }: Props = $props();
 
-  let name = $state(savedSearch?.name ?? "");
-  let query = $state(savedSearch?.query ?? initialQuery);
+  // snapshot initial values for editing
+  let name = $state(untrack(() => savedSearch?.name ?? ""));
+  let query = $state(untrack(() => savedSearch?.query ?? initialQuery));
+
   let csrf_token = $state("");
   let loading = $state(false);
   let error: string | null = $state(null);
@@ -128,7 +130,11 @@ Renders inside a modal.
           <Button mode="danger" full on:click={handleDelete} disabled={loading}>
             {$_("documents.savedSearches.confirmDelete")}
           </Button>
-          <Button full on:click={() => (confirmDelete = false)} disabled={loading}>
+          <Button
+            full
+            on:click={() => (confirmDelete = false)}
+            disabled={loading}
+          >
             {$_("edit.cancel")}
           </Button>
         </Flex>

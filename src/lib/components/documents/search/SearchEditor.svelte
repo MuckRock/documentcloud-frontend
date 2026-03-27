@@ -40,12 +40,7 @@
     onchange?: (detail: { q: string; structural: boolean }) => void;
   }
 
-  let {
-    query = "",
-    contextAtoms = [],
-    onsubmit,
-    onchange,
-  }: Props = $props();
+  let { query = "", contextAtoms = [], onsubmit, onchange }: Props = $props();
 
   const search = getSearchResults();
   let preloadedSuggestions = $derived(extractSuggestions(search.results));
