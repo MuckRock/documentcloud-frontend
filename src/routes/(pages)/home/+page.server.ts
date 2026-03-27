@@ -9,10 +9,11 @@ import { ALLOWED_TAGS } from "@/config/config.js";
 
 export const trailingSlash = "ignore";
 
-export async function load({ fetch, setHeaders }) {
+export async function load({ fetch, cookies, setHeaders }) {
+  const sessionId = cookies.get("sessionid");
   const [{ data: page, error: err }, me] = await Promise.all([
     flatpages.get("/home/", fetch),
-    getMe(fetch),
+    sessionId && getMe(fetch),
   ]);
 
   if (err) {
