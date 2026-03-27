@@ -1,16 +1,14 @@
-<script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
-  import ProjectActions from "../ProjectActions.svelte";
+<script module>
+  import { defineMeta } from "@storybook/addon-svelte-csf";
 
+  import ProjectActions from "../ProjectActions.svelte";
   import { project } from "@/test/fixtures/projects";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Navigation / Project Actions",
     component: ProjectActions,
     parameters: { layout: "centered" },
-  };
+  });
 </script>
 
-<Story name="default">
-  <ProjectActions {project} />
-</Story>
+<Story name="default" args={{ project }} />
