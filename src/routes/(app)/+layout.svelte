@@ -6,29 +6,31 @@
 
   import AppLayout from "$lib/components/layouts/AppLayout.svelte";
 
-  export let data;
+  // don't destructure props to preserve reactivity
+  let props = $props();
 
-  const me: Writable<Maybe<User>> = writable(data.me);
-  const org: Writable<Org> = writable(data.org);
-  const user_orgs: Writable<Promise<Org[]>> = writable(data.user_orgs);
-  const org_users: Writable<Promise<User[]>> = writable(data.org_users);
+  const me: Writable<Maybe<User>> = writable(props.data.me);
+  const org: Writable<Maybe<Org>> = writable(props.data.org);
+  const user_orgs: Writable<Promise<Org[]>> = writable(props.data.user_orgs);
+  const org_users: Writable<Promise<User[]>> = writable(props.data.org_users);
 
   // set the $me and $org store whenever we load user data
-  $: me.set(data.me);
-  $: org.set(data.org);
-
-  $: user_orgs.set(data.user_orgs);
-  $: org_users.set(data.org_users);
+  $effect(() => {
+    me.set(props.data.me);
+    org.set(props.data.org);
+    user_orgs.set(props.data.user_orgs);
+    org_users.set(props.data.org_users);
+  });
 
   // update context so other components can access and update
   setContext("me", me);
   setContext("org", org);
   setContext("user_orgs", user_orgs);
   setContext("org_users", org_users);
-  setContext("tipOfDay", data.tipOfDay);
+  setContext("tipOfDay", props.data.tipOfDay);
 
   onMount(async () => {
-    if (data.me) {
+    if (props.data.me) {
       const { init } = await import("@plausible-analytics/tracker");
       init({
         domain: "documentcloud.org",
@@ -39,5 +41,5 @@
 </script>
 
 <AppLayout>
-  <slot />
+  {@render props.children?.()}
 </AppLayout>
