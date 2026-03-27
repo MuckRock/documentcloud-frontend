@@ -5,7 +5,7 @@ Renders inside a modal.
 <script lang="ts">
   import type { SavedSearch } from "$lib/api/types";
 
-  import { onMount, untrack } from "svelte";
+  import { untrack } from "svelte";
   import { _ } from "svelte-i18n";
 
   import { Alert24 } from "svelte-octicons";
@@ -39,63 +39,56 @@ Renders inside a modal.
   let name = $state(untrack(() => savedSearch?.name ?? ""));
   let query = $state(untrack(() => savedSearch?.query ?? initialQuery));
 
-  let csrf_token = $state("");
   let loading = $state(false);
   let error: string | null = $state(null);
   let confirmDelete = $state(false);
 
-  onMount(() => {
-    csrf_token = getCsrfToken() ?? "";
-  });
+  const csrf_token = getCsrfToken() ?? "";
 
   async function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
     loading = true;
     error = null;
-    try {
-      const resp = savedSearch
-        ? await api.update(savedSearch.uuid, { name, query }, csrf_token)
-        : await api.create({ name, query }, csrf_token);
 
-      if (resp.error) {
-        error = resp.error.message;
-        return;
-      }
-      if (resp.data) onsave(resp.data);
-      onclose();
-    } catch (e) {
-      error = $_("common.error");
-    } finally {
-      loading = false;
+    const resp = savedSearch
+      ? await api.update(savedSearch.uuid, { name, query }, csrf_token)
+      : await api.create({ name, query }, csrf_token);
+
+    loading = false;
+
+    if (resp.error) {
+      error = resp.error.message;
+      return;
     }
+    if (resp.data) onsave(resp.data);
+    onclose();
   }
 
   async function handleDelete() {
     loading = true;
     error = null;
-    try {
-      const resp = await api.destroy(savedSearch!.uuid, csrf_token);
-      if (resp.error) {
-        error = resp.error.message;
-        return;
-      }
-      ondelete?.(savedSearch!.uuid);
-      onclose();
-    } catch (e) {
-      error = $_("common.error");
-    } finally {
-      loading = false;
+
+    const resp = await api.destroy(savedSearch!.uuid, csrf_token);
+
+    loading = false;
+
+    if (resp.error) {
+      error = resp.error.message;
+      return;
     }
+    ondelete?.(savedSearch!.uuid);
+    onclose();
   }
 </script>
 
-<form onsubmit={handleSubmit}>
+<form onsubmit={handleSubmit} autocomplete="off">
   <Flex direction="column" gap={1}>
     <Field title={$_("documents.savedSearches.name")} required>
       <Text
         name="name"
         bind:value={name}
         placeholder={$_("documents.savedSearches.name")}
+        autocomplete="off"
         required
         autofocus
       />

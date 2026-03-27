@@ -10,6 +10,7 @@
   export let required = false;
   export let disabled = false;
   export let readonly = false;
+  export let autocomplete: string | undefined = undefined;
 </script>
 
 <!-- svelte-ignore a11y-autofocus -->
@@ -21,6 +22,7 @@
   {disabled}
   {autofocus}
   {readonly}
+  {autocomplete}
   bind:value
   on:change
   on:input

@@ -47,8 +47,8 @@
   // Saved searches state
   let savedSearches: SavedSearch[] = $state([]);
   let loadingSavedSearches = $state(true);
-  type ModalState = "save" | { edit: SavedSearch } | null;
-  let showModal: ModalState = $state(null);
+
+  let editing: SavedSearch | "create" | null = $state(null);
 
   // All queries that are already represented in the sidebar
   let builtInQueries = $derived(
@@ -171,7 +171,7 @@
                 on:click={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  showModal = { edit: savedSearch };
+                  editing = savedSearch;
                 }}
               >
                 <Pencil16 height={12} width={12} />
@@ -193,7 +193,7 @@
           size="small"
           disabled={isCurrentSearchSaved}
           title={$_("documents.savedSearches.saveTitle")}
-          on:click={() => (showModal = "save")}
+          on:click={() => (editing = "create")}
         >
           <Plus16 height={14} width={14} />
           {$_("documents.savedSearches.save")}
@@ -207,18 +207,18 @@
   </NavItem>
 </SignedIn>
 
-{#if showModal}
+{#if editing}
   <Portal>
-    <Modal on:close={() => (showModal = null)}>
+    <Modal on:close={() => (editing = null)}>
       <h1 slot="title">
-        {showModal === "save"
+        {editing === "create"
           ? $_("documents.savedSearches.createTitle")
           : $_("documents.savedSearches.editTitle")}
       </h1>
       <SavedSearchForm
-        savedSearch={showModal === "save" ? undefined : showModal.edit}
-        initialQuery={showModal === "save" ? query : undefined}
-        onclose={() => (showModal = null)}
+        savedSearch={editing === "create" ? undefined : editing}
+        initialQuery={editing === "create" ? query : undefined}
+        onclose={() => (editing = null)}
         onsave={handleSave}
         ondelete={handleDelete}
       />
