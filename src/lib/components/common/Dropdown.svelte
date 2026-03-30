@@ -1,8 +1,9 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
   export type { Placement } from "@floating-ui/dom";
 </script>
 
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import { writable } from "svelte/store";
   import {
     autoUpdate,
@@ -13,21 +14,35 @@
     type Placement,
   } from "@floating-ui/dom";
 
-  export let position: Placement = "bottom-start";
-  export let offset: number = 4;
-  export let overlay = false;
-  export let border = false;
+  interface Props {
+    position?: Placement;
+    offset?: number;
+    overlay?: boolean;
+    border?: boolean;
+    anchor?: Snippet;
+    inner?: Snippet<[any]>;
+  }
 
-  let dropdown: HTMLDivElement;
-  let anchor: HTMLDivElement;
+  let {
+    position = "bottom-start",
+    offset = 4,
+    overlay = false,
+    border = false,
+    anchor,
+    inner,
+  }: Props = $props();
+
+  let dropdown: HTMLDivElement | undefined = $state();
+  let anchorEl: HTMLDivElement | undefined = $state();
   let cleanup: () => void;
-  let isOpen = false;
+  let isOpen = $state(false);
 
   const dropdownCoords = writable({ x: 0, y: 0 });
 
   function update() {
+    if (!anchorEl || !dropdown) return;
     const middleware = [offsetFn(offset), shift({ padding: 6 }), flip()];
-    computePosition(anchor, dropdown, {
+    computePosition(anchorEl, dropdown, {
       placement: position,
       middleware,
     }).then(({ x, y }) => {
@@ -36,9 +51,10 @@
   }
 
   function open() {
+    if (!anchorEl || !dropdown) return;
     isOpen = true;
     update();
-    cleanup = autoUpdate(anchor, dropdown, update);
+    cleanup = autoUpdate(anchorEl, dropdown, update);
   }
 
   function close() {
@@ -69,14 +85,16 @@
   }
 
   function closeOnEventOutside(event: MouseEvent) {
+    if (!anchorEl || !dropdown) return;
+
     if (!isOpen || !(event.target instanceof Element)) return;
 
     // Don't close if clicking this dropdown's own anchor
-    if (anchor.contains(event.target)) return;
+    if (anchorEl.contains(event.target)) return;
 
     // Close if clicking outside this dropdown's subtree
     const clickedInside =
-      dropdown.contains(event.target) || anchor.contains(event.target);
+      dropdown.contains(event.target) || anchorEl.contains(event.target);
     if (!clickedInside) {
       close();
     }
@@ -99,14 +117,14 @@
 <div
   role="button"
   tabindex={0}
-  bind:this={anchor}
+  bind:this={anchorEl}
   class="anchor"
   class:open={isOpen}
   class:border
-  on:click={toggleOnAnchorEvent}
-  on:keydown={toggleOnAnchorEvent}
+  onclick={toggleOnAnchorEvent}
+  onkeydown={toggleOnAnchorEvent}
 >
-  <slot name="anchor" />
+  {@render anchor?.()}
 </div>
 <!-- Dropdown with contents -->
 <div
@@ -115,7 +133,7 @@
   class:open={isOpen}
   style="left: {$dropdownCoords.x}px; top: {$dropdownCoords.y}px;"
 >
-  <slot name="inner" {close} />
+  {@render inner?.({ close })}
 </div>
 
 <style>

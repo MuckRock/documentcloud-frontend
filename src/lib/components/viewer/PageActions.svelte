@@ -59,45 +59,49 @@
     </Flex>
   {:else}
     <Dropdown position="bottom-end">
-      <Button minW={false} slot="anchor" ghost mode="primary">
-        <KebabHorizontal16 />
-      </Button>
-      <Menu slot="inner" let:close>
-        <MenuItem
-          on:click={() => {
-            close();
-            pageShareOpen = true;
-          }}
-        >
-          <Share16 slot="icon" />
-          {$_("dialog.share")}
-        </MenuItem>
-        {#if document.edit_access}
+      {#snippet anchor()}
+        <Button minW={false} ghost mode="primary">
+          <KebabHorizontal16 />
+        </Button>
+      {/snippet}
+      {#snippet inner({ close })}
+        <Menu>
           <MenuItem
             on:click={() => {
               close();
-              pageNote = true;
+              pageShareOpen = true;
             }}
           >
-            <Comment16 slot="icon" />
-            {$_("annotate.cta.add-note")}
+            <Share16 slot="icon" />
+            {$_("dialog.share")}
           </MenuItem>
+          {#if document.edit_access}
+            <MenuItem
+              on:click={() => {
+                close();
+                pageNote = true;
+              }}
+            >
+              <Comment16 slot="icon" />
+              {$_("annotate.cta.add-note")}
+            </MenuItem>
 
-          <MenuItem
-            on:click={() => {
-              close();
-              editSection = true;
-            }}
-          >
-            <ListOrdered16 slot="icon" />
-            {#if section}
-              {$_("annotate.cta.edit-section")}
-            {:else}
-              {$_("annotate.cta.add-section")}
-            {/if}
-          </MenuItem>
-        {/if}
-      </Menu>
+            <MenuItem
+              on:click={() => {
+                close();
+                editSection = true;
+              }}
+            >
+              <ListOrdered16 slot="icon" />
+              {#if section}
+                {$_("annotate.cta.edit-section")}
+              {:else}
+                {$_("annotate.cta.add-section")}
+              {/if}
+            </MenuItem>
+          {/if}
+        </Menu>
+      {/snippet}
     </Dropdown>
   {/if}
 </div>

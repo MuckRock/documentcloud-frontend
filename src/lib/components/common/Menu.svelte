@@ -1,9 +1,16 @@
 <script lang="ts">
-  export let small = false;
+  import type { Snippet } from "svelte";
+
+  interface Props {
+    small?: boolean;
+    children: Snippet;
+  }
+
+  let { small = false, children }: Props = $props();
 </script>
 
 <div class="menu" class:small role="menu">
-  <slot>Define some menu items</slot>
+  {@render children()}
 </div>
 
 <style>
@@ -20,7 +27,7 @@
     max-height: var(--max-height, auto);
     overflow-y: var(--overflow-y, auto);
   }
-  :global(.menu.small) {
+  .menu.small {
     color: var(--gray-3);
     font-size: var(--font-sm);
     text-transform: uppercase;

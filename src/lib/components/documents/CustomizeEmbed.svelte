@@ -66,8 +66,8 @@
                     {/if}
                   </label>
                   {#snippet help()}<p>
-                    {$_(dimension.automatic!.help)}
-                  </p>{/snippet}
+                      {$_(dimension.automatic!.help)}
+                    </p>{/snippet}
                 </Field>
               </div>
 
@@ -90,8 +90,8 @@
                   </label>
 
                   {#snippet help()}<p>
-                    {$_(dimension.fixed.help)}
-                  </p>{/snippet}
+                      {$_(dimension.fixed.help)}
+                    </p>{/snippet}
                 </Field>
               </div>
             </Flex>

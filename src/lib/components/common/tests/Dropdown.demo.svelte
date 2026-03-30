@@ -1,23 +1,37 @@
 <script lang="ts">
-  import Dropdown from "../Dropdown.svelte";
   import type { Placement } from "@floating-ui/dom";
+  import Dropdown from "../Dropdown.svelte";
 
-  export let anchorText: string;
-  export let items: string[];
-  export let position: Placement = "bottom-start";
-  export let border = false;
-  export let overlay = false;
+  interface Props {
+    anchorText: string;
+    items: string[];
+    position?: Placement;
+    border?: boolean;
+    overlay?: boolean;
+  }
+
+  let {
+    anchorText,
+    items,
+    position = "bottom-start",
+    border = false,
+    overlay = false,
+  }: Props = $props();
 </script>
 
 <Dropdown {position} {border} {overlay}>
-  <div slot="anchor">{anchorText}</div>
-  <div slot="inner" let:close>
-    {#each items as item}
-      <button class="item" on:click={close} type="button">
-        {item}
-      </button>
-    {/each}
-  </div>
+  {#snippet anchor()}
+    <div>{anchorText}</div>
+  {/snippet}
+  {#snippet inner({ close })}
+    <div>
+      {#each items as item}
+        <button class="item" onclick={close} type="button">
+          {item}
+        </button>
+      {/each}
+    </div>
+  {/snippet}
 </Dropdown>
 
 <style>
