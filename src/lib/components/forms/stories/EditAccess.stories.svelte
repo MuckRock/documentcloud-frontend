@@ -82,7 +82,7 @@
   <div style="min-width: 600px;">
     <EditAccess document={{ ...document, access: "public" }}>
       <header>
-        <h2>Change document access</h2>
+        <h2>Access</h2>
         <p>This document is currently public.</p>
       </header>
     </EditAccess>
