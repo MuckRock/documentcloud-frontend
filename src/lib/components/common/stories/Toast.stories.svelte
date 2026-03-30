@@ -23,13 +23,13 @@
   </Toast>
 {/snippet}
 
-<Story name="Default">
+<Story name="Default" asChild>
   <Toast lifespan={0} onclose={close} oncancel={cancel} onreset={reset}>
     <p>Default toast contains a message</p>
   </Toast>
 </Story>
 
-<Story name="Multiple">
+<Story name="Multiple" asChild>
   <Flex direction="column">
     <Toast lifespan={0} onclose={close} oncancel={cancel} onreset={reset}>
       <p>First message</p>

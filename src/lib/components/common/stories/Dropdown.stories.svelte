@@ -14,7 +14,7 @@
   });
 </script>
 
-<Story name="Basic">
+<Story name="Basic" asChild>
   <Dropdown>
     <NavItem slot="anchor">
       <Globe16 slot="start" />
@@ -29,7 +29,7 @@
   </Dropdown>
 </Story>
 
-<Story name="With Border">
+<Story name="With Border" asChild>
   <Dropdown border>
     <NavItem slot="anchor">
       <Globe16 slot="start" />
@@ -44,7 +44,7 @@
   </Dropdown>
 </Story>
 
-<Story name="With Overlay">
+<Story name="With Overlay" asChild>
   <Dropdown overlay>
     <NavItem slot="anchor">
       <Globe16 slot="start" />
@@ -59,7 +59,7 @@
   </Dropdown>
 </Story>
 
-<Story name="Right Position">
+<Story name="Right Position" asChild>
   <Dropdown position="right">
     <NavItem slot="anchor">
       <Globe16 slot="start" />
@@ -74,7 +74,7 @@
   </Dropdown>
 </Story>
 
-<Story name="With Nested Dropdown">
+<Story name="With Nested Dropdown" asChild>
   <Dropdown position="right">
     <NavItem slot="anchor">
       <Globe16 slot="start" />
@@ -98,7 +98,7 @@
   </Dropdown>
 </Story>
 
-<Story name="Multiple Dropdowns">
+<Story name="Multiple Dropdowns" asChild>
   <div style="display: flex; gap: 2rem; align-items: center;">
     <Dropdown>
       <NavItem slot="anchor">
@@ -141,7 +141,7 @@
   </div>
 </Story>
 
-<Story name="Sibling Dropdowns With Nested">
+<Story name="Sibling Dropdowns With Nested" asChild>
   <div style="display: flex; gap: 2rem; align-items: center;">
     <Dropdown>
       <NavItem slot="anchor">

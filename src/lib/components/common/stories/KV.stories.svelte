@@ -10,28 +10,34 @@
   });
 </script>
 
-<Story name="default">
-  <KV
-    key="Project"
-    value="Old Computer Project"
-    href="/projects/old-computer-project/"
-  />
-</Story>
+<Story
+  name="default"
+  args={{
+    key: "Project",
+    value: "Old Computer Project",
+    href: "/projects/old-computer-project/",
+  }}
+/>
 
-<Story name="tag">
-  <KV
-    key="Project"
-    value="Old Computer Project"
-    href="/projects/old-computer-project/"
-    tag
-  />
-</Story>
+<Story
+  name="tag"
+  args={{
+    key: "Project",
+    value: "Old Computer Project",
+    href: "/projects/old-computer-project/",
+    tag: true,
+  }}
+/>
 
-<Story name="no link">
-  <KV key="Project" value="Old Computer Project" />
-</Story>
+<Story
+  name="no link"
+  args={{
+    key: "Project",
+    value: "Old Computer Project",
+  }}
+/>
 
-<Story name="Long Value">
+<Story name="Long Value" asChild>
   <div class="constrain-width">
     <KV
       key="id"

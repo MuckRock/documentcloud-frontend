@@ -30,19 +30,19 @@
 
 <Story name="small" args={{ size: "small" }} />
 
-<Story name="slotted">
+<Story name="slotted" asChild>
   <Button>
     <PlusCircle16 /> Upload
   </Button>
 </Story>
 
-<Story name="slotted ghost">
+<Story name="slotted ghost" asChild>
   <Button ghost mode="primary">
     <PlusCircle16 /> Upload
   </Button>
 </Story>
 
-<Story name="disabled ghost">
+<Story name="disabled ghost" asChild>
   <Button ghost mode="primary" disabled>
     <PlusCircle16 /> Upload
   </Button>

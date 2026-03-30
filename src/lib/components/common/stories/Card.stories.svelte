@@ -8,7 +8,7 @@
   });
 </script>
 
-<Story name="default">
+<Story name="default" asChild>
   <Card>
     <h2>CHAPTER 6. The Street.</h2>
     <p>

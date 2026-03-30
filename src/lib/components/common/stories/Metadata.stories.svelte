@@ -12,11 +12,11 @@
   });
 </script>
 
-<Story name="default">
+<Story name="default" asChild>
   <Metadata key="Last Updated">March 21, 2024</Metadata>
 </Story>
 
-<Story name="icon">
+<Story name="icon" asChild>
   <Metadata key="Last Updated">
     March 21, 2024
     <Tag16 slot="icon" />

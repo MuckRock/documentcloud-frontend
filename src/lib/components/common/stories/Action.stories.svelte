@@ -11,14 +11,14 @@
   });
 </script>
 
-<Story name="Text Only">
+<Story name="Text Only" asChild>
   <Action>Open</Action>
 </Story>
 
-<Story name="Text and Icon">
+<Story name="Text and Icon" asChild>
   <Action icon={Pencil16}>Edit</Action>
 </Story>
 
-<Story name="Custom colors">
+<Story name="Custom colors" asChild>
   <Action --fill="red" --color="green" icon={Pencil16}>Edit</Action>
 </Story>

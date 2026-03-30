@@ -1,23 +1,27 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
+  import type { HTMLButtonAttributes } from "svelte/elements";
+
   import type { SvgComponent } from "svelte-octicons";
 
-  export let icon: null | typeof SvgComponent = null;
-  export let disabled = false;
-  export let title: undefined | string = undefined;
+  interface Props extends HTMLButtonAttributes {
+    icon?: null | typeof SvgComponent;
+    children?: Snippet;
+  }
+
+  let {
+    icon: Icon = null,
+    disabled = false,
+    title = undefined,
+    children,
+    ...rest
+  }: Props = $props();
 </script>
 
-<span
-  class="container"
-  class:disabled
-  role="button"
-  tabindex={0}
-  {title}
-  on:click|stopPropagation
-  on:keydown|stopPropagation
->
-  {#if icon}<svelte:component this={icon} height="14" width="14" />{/if}
-  <slot />
-</span>
+<button class="container" class:disabled {disabled} {title} {...rest}>
+  {#if Icon}<Icon height="14" width="14" />{/if}
+  {@render children?.()}
+</button>
 
 <style>
   .container {
@@ -29,9 +33,11 @@
 
     border-radius: 0.5rem;
 
+    border: none;
     background: transparent;
     color: var(--color, var(--primary, --blue-3, #4294f0));
     fill: var(--fill, var(--primary, --blue-3, #4294f0));
+    font-family: inherit;
 
     font-size: var(--font-xs, 0.75rem);
     font-weight: var(--font-semibold, 700);

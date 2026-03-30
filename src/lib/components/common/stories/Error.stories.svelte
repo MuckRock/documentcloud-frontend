@@ -9,6 +9,6 @@
   });
 </script>
 
-<Story name="Error">
+<Story name="Error" asChild>
   <ErrorComponent>Something has gone terribly wrong!</ErrorComponent>
 </Story>
