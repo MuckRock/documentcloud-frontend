@@ -50,6 +50,23 @@
   </div>
 </Story>
 
+<Story name="Private document with scheduled publication" asChild>
+  <div style="min-width: 600px;">
+    <EditAccess
+      document={{
+        ...document,
+        access: "private",
+        publish_at: "2026-03-30T16:38:02.407Z",
+      }}
+    >
+      <header>
+        <h2>Change document access</h2>
+        <p>This document will become public.</p>
+      </header>
+    </EditAccess>
+  </div>
+</Story>
+
 <Story name="Organization document" asChild>
   <div style="min-width: 600px;">
     <EditAccess document={{ ...document, access: "organization" }}>

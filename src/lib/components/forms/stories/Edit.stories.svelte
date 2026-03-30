@@ -35,6 +35,16 @@
   </div>
 </Story>
 
+<Story name="Edit one (private)" asChild>
+  <div style="min-width: 600px;">
+    <EditForm document={{ ...document, access: "private" }}>
+      <header>
+        <h2>Edit document</h2>
+      </header>
+    </EditForm>
+  </div>
+</Story>
+
 {#snippet bulkTemplate(
   documents: Document[],
   bulkError?: APIError<ValidationError>,

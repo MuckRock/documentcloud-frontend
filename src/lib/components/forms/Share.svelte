@@ -278,7 +278,7 @@
   <Portal>
     <Modal on:close={closeEditing}>
       <h1 slot="title">{$_("access.edit")}</h1>
-      <EditAccess {document} on:close={closeEditing} />
+      <EditAccess {document} onclose={closeEditing} />
     </Modal>
   </Portal>
 {/if}

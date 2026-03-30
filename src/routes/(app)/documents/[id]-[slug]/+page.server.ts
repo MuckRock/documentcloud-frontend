@@ -67,6 +67,11 @@ export const actions = {
     // noindex is a boolean so needs special treatment
     update.noindex = form.get("noindex") === "on";
 
+    // clear publish_at if empty
+    if ("publish_at" in update && !update.publish_at) {
+      update.publish_at = null;
+    }
+
     const { data: document, error } = await edit(id, update, csrf_token, fetch);
 
     if (error) {
