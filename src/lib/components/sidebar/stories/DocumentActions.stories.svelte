@@ -1,17 +1,18 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import type { Document } from "$lib/api/types";
 
-  import { Story } from "@storybook/addon-svelte-csf";
-  import DocumentActions from "../DocumentActions.svelte";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
 
+  import DocumentActions from "../DocumentActions.svelte";
   import docs from "@/test/fixtures/documents/documents.json";
+
   const documents = docs.results as Document[];
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Navigation / Document Actions",
     component: DocumentActions,
     parameters: { layout: "centered" },
-  };
+  });
 </script>
 
 <script lang="ts">
@@ -28,6 +29,4 @@
   setSearchResults(search);
 </script>
 
-<Story name="default">
-  <DocumentActions />
-</Story>
+<Story name="default" />

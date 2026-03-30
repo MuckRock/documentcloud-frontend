@@ -1,7 +1,8 @@
-<script lang="ts" context="module">
-  import { projectList } from "@/test/fixtures/projects";
+<script module>
   import { defineMeta } from "@storybook/addon-svelte-csf";
+
   import Projects from "../Projects.svelte";
+  import { projectList } from "@/test/fixtures/projects";
 
   const { Story } = defineMeta({
     title: "Navigation / Projects",

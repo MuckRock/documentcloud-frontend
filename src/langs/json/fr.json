@@ -215,7 +215,22 @@
     "select": "S\u00e9lection",
     "noteCount": "{n, plural, one {# note} other {# notes}}",
     "more": "Charger plus",
-    "retry": "Veuillez réessayer."
+    "retry": "Veuillez réessayer.",
+    "savedSearches": {
+      "save": "Enregistrer la recherche actuelle",
+      "saveTitle": "Enregistrer cette recherche dans votre barre lat\u00e9rale",
+      "createTitle": "Enregistrer la recherche",
+      "editTitle": "Modifier la recherche enregistr\u00e9e",
+      "name": "Nom",
+      "query": "Requ\u00eate de recherche",
+      "edit": "Modifier la recherche enregistr\u00e9e",
+      "delete": "Supprimer la recherche enregistr\u00e9e",
+      "confirmDelete": "Vraiment supprimer\u00a0?",
+      "loading": "Chargement des recherches enregistr\u00e9es\u2026",
+      "empty": "Vos recherches enregistr\u00e9es appara\u00eetront ici",
+      "noSearch": "Aucune recherche \u00e0 enregistrer",
+      "alreadySaved": "Cette recherche est d\u00e9j\u00e0 enregistr\u00e9e"
+    }
   },
   "error": {
     "report": "Signaler un probl\u00e8me"

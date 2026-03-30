@@ -103,7 +103,22 @@
     "select": "Auswählen",
     "noteCount": "{n, plural, one {# Notiz} other {# Notizen}}",
     "more": "Mehr laden",
-    "retry": "Bitte versuchen Sie es erneut."
+    "retry": "Bitte versuchen Sie es erneut.",
+    "savedSearches": {
+      "save": "Aktuelle Suche speichern",
+      "saveTitle": "Diese Suche in Ihrer Seitenleiste speichern",
+      "createTitle": "Suche speichern",
+      "editTitle": "Gespeicherte Suche bearbeiten",
+      "name": "Name",
+      "query": "Suchanfrage",
+      "edit": "Gespeicherte Suche bearbeiten",
+      "delete": "Gespeicherte Suche l\u00f6schen",
+      "confirmDelete": "Wirklich l\u00f6schen?",
+      "loading": "Gespeicherte Suchen werden geladen\u2026",
+      "empty": "Ihre gespeicherten Suchen werden hier angezeigt",
+      "noSearch": "Keine Suche zum Speichern",
+      "alreadySaved": "Diese Suche ist bereits gespeichert"
+    }
   },
   "document": {
     "remove": "Entfernen",

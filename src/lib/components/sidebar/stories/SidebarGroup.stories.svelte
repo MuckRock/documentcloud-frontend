@@ -1,5 +1,5 @@
-<script module lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+<script module>
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import {
     Book16,
     FileDirectory16,
@@ -15,19 +15,14 @@
 
   import SidebarGroup from "../SidebarGroup.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Navigation / Group",
     component: SidebarGroup,
     parameters: { layout: "centered" },
-    argTypes: {
-      toggle: {
-        action: "Toggle",
-      },
-    },
-  };
+  });
 </script>
 
-<Story name="With Items">
+<Story name="With Items" asChild>
   <SidebarGroup>
     {#snippet title()}
       <NavItem>
@@ -55,7 +50,7 @@
   </SidebarGroup>
 </Story>
 
-<Story name="Empty">
+<Story name="Empty" asChild>
   <div style="width: 18rem">
     <SidebarGroup>
       {#snippet title()}
@@ -74,7 +69,7 @@
   </div>
 </Story>
 
-<Story name="Remember collapsed state">
+<Story name="Remember collapsed state" asChild>
   <p>Refresh to check that <code>collapsed</code> state persists</p>
   <SidebarGroup name="storybook-files">
     {#snippet title()}
