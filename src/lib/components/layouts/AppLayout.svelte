@@ -1,14 +1,21 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import Navigation from "./Navigation.svelte";
   import ProcessContext from "../processing/ProcessContext.svelte";
   import Toaster from "./Toaster.svelte";
+
+  interface Props {
+    children?: Snippet;
+  }
+
+  let { children }: Props = $props();
 </script>
 
 <ProcessContext>
   <div class="app">
     <Navigation>
       <div class="inner">
-        <slot />
+        {@render children?.()}
       </div>
     </Navigation>
     <Toaster />
