@@ -48,7 +48,8 @@
       <fieldset>
         <legend>{$_(config.field.label)}</legend>
         {#if config.field.type === "dimension"}
-          {#if config.field.automatic}
+          {@const dimension = config.field}
+          {#if dimension.automatic}
             <Flex>
               <div class="flexItem">
                 <Field inline>
@@ -56,17 +57,17 @@
                     <input
                       type="radio"
                       {name}
-                      value={config.field.automatic.value}
+                      value={dimension.automatic.value}
                       bind:group={$embedSettings[name]}
                     />
-                    {$_(config.field.automatic.label)}
-                    {#if config.defaultValue === config.field.automatic.value}
+                    {$_(dimension.automatic.label)}
+                    {#if config.defaultValue === dimension.automatic.value}
                       <span class="default">{$_("share.default")}</span>
                     {/if}
                   </label>
-                  <p slot="help">
-                    {$_(config.field.automatic.help)}
-                  </p>
+                  {#snippet help()}<p>
+                    {$_(dimension.automatic!.help)}
+                  </p>{/snippet}
                 </Field>
               </div>
 
@@ -78,19 +79,19 @@
                       {name}
                       value={$embedSettings[name] >= 1
                         ? $embedSettings[name]
-                        : config.field.fixed.value}
+                        : dimension.fixed.value}
                       bind:group={$embedSettings[name]}
                     />
-                    {$_(config.field.fixed.label)}
+                    {$_(dimension.fixed.label)}
 
-                    {#if config.defaultValue === config.field.fixed.value}
+                    {#if config.defaultValue === dimension.fixed.value}
                       <span class="default">{$_("share.default")}</span>
                     {/if}
                   </label>
 
-                  <p slot="help">
-                    {$_(config.field.fixed.help)}
-                  </p>
+                  {#snippet help()}<p>
+                    {$_(dimension.fixed.help)}
+                  </p>{/snippet}
                 </Field>
               </div>
             </Flex>
@@ -117,7 +118,7 @@
                       <span class="default">{$_("share.default")}</span>
                     {/if}
                   </label>
-                  <p slot="help">{$_(option.help)}</p>
+                  {#snippet help()}<p>{$_(option.help)}</p>{/snippet}
                 </Field>
               </div>
             {/each}

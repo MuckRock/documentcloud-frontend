@@ -5,9 +5,17 @@
 -->
 
 <script lang="ts">
+  import type { Snippet } from "svelte";
+
   import Flex from "$lib/components/common/Flex.svelte";
 
-  export let inline = false;
+  interface Props {
+    inline?: boolean;
+    children: Snippet;
+    help?: Snippet;
+  }
+
+  let { inline = false, children, help }: Props = $props();
 </script>
 
 <Flex
@@ -16,8 +24,8 @@
   wrap={inline}
   gap={0.375}
 >
-  <slot />
-  {#if $$slots.help}<div class="help"><slot name="help" /></div>{/if}
+  {@render children()}
+  {#if help}<div class="help">{@render help?.()}</div>{/if}
 </Flex>
 
 <style>

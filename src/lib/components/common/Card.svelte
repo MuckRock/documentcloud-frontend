@@ -1,7 +1,12 @@
 <!-- @component Wraps its content in a presentational card -->
+<script lang="ts">
+  import type { Snippet } from "svelte";
+
+  let { children }: { children: Snippet } = $props();
+</script>
 
 <div class="card">
-  <slot />
+  {@render children()}
 </div>
 
 <style>

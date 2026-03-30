@@ -1,10 +1,14 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
+
   import { Alert24 } from "svelte-octicons";
+
+  let { children }: { children: Snippet } = $props();
 </script>
 
 <div class="container">
   <Alert24 height={32} width={32} />
-  <slot />
+  {@render children()}
 </div>
 
 <style>

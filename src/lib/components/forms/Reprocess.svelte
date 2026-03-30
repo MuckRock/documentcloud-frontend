@@ -202,9 +202,9 @@ This will mostly be used inside a modal but isn't dependent on one.
           bind:value={ocrEngine}
           valueAsObject
         />
-        <p slot="help">
-          {@html ocrEngine?.help}
-        </p>
+        {#snippet help()}<p>
+            {@html ocrEngine?.help}
+          </p>{/snippet}
       </Field>
       <Field inline>
         <input type="checkbox" name="force_ocr" bind:checked={force_ocr} />
