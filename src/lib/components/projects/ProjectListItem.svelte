@@ -42,7 +42,7 @@
       {/if}
     </div>
     {#if project.description}
-      <div class="description">{@html renderMarkdown(project.description ?? "", { allowedTags: listItemTags })}</div>
+      <div class="description">{@html renderMarkdown(project.description, { allowedTags: listItemTags })}</div>
     {/if}
   </div>
 </a>
