@@ -421,6 +421,10 @@
       "access": {
         "title": "Acc\u00e8s",
         "description": "Modifiant les param\u00e8tres d'acc\u00e8s modifie le traitement de votre document."
+      },
+      "publish_at": {
+        "title": "Planifier la publication",
+        "description": "Ce document sera rendu public \u00e0 la date et l'heure indiqu\u00e9es ({timezone})."
       }
     },
     "nodocs": "Aucun document s\u00e9lectionn\u00e9. Fermer cette fen\u00eatre et s\u00e9lectionner au moins un document en premier.",

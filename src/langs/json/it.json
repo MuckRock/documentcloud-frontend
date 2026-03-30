@@ -421,6 +421,10 @@
       "access": {
         "title": "Accesso",
         "description": "Cambiando la impostazione di accesso si riprocesser\u00e0 il documento."
+      },
+      "publish_at": {
+        "title": "Programma pubblicazione",
+        "description": "Questo documento sar\u00e0 reso pubblico alla data e all'ora indicate ({timezone})."
       }
     },
     "nodocs": "No documenti selezionati. Chiusa questa finestra e seleziona almeno un documento per prima.",

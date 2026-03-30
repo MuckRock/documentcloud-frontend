@@ -496,7 +496,7 @@
       },
       "publish_at": {
         "title": "Schedule publication",
-        "description": "This document will be made public at the given date and time."
+        "description": "This document will be made public at the given date and time ({timezone})."
       }
     },
     "nodocs": "No documents selected. Close this form and select at least one document first.",
