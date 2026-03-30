@@ -51,13 +51,13 @@ Invite a new collaborator to a project
     description={$_("collaborators.invite.message")}
   >
     <Text name="email" placeholder={$_("common.emailAddress")} required />
-    <svelte:fragment slot="error">
+    {#snippet error()}
       {#if errors.email}
         <p class="error">
           {@html errors.email.join("\n")}
         </p>
       {/if}
-    </svelte:fragment>
+    {/snippet}
   </Field>
 
   <ProjectAccess name="access" />

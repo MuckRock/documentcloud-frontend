@@ -25,12 +25,17 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
 
   import { canonicalUrl, edited } from "$lib/api/documents";
 
-  export let document: Document;
-  export let error: Maybe<APIError<ValidationError>> = undefined;
+  interface Props {
+    document: Document;
+    error?: Maybe<APIError<ValidationError>>;
+    children?: import("svelte").Snippet;
+  }
+
+  let { document, error = $bindable(undefined), children }: Props = $props();
 
   const dispatch = createEventDispatcher();
 
-  $: action = new URL("?/edit", canonicalUrl(document)).href;
+  let action = $derived(new URL("?/edit", canonicalUrl(document)).href);
 
   /**
    * @type {import('@sveltejs/kit').SubmitFunction}
@@ -62,7 +67,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
 <form {action} method="post" use:enhance={onSubmit}>
   <Flex direction="column" gap={1}>
     <!-- Add any header and messaging using this slot -->
-    <slot />
+    {@render children?.()}
 
     {#if error}
       <Tip mode="error">

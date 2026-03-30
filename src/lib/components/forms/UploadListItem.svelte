@@ -69,7 +69,7 @@
           disabled={loading || Boolean(status?.error)}
           required
         />
-        <svelte:fragment slot="error">
+        {#snippet error()}
           {#if status?.error}
             <p class="error">
               {status?.error.message}
@@ -82,7 +82,7 @@
               </Button>
             </p>
           {/if}
-        </svelte:fragment>
+        {/snippet}
       </Field>
     {/if}
   </div>

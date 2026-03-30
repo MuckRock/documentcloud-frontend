@@ -1,8 +1,8 @@
-<script context="module" lang="ts">
+<script module lang="ts">
+  import type { ComponentProps } from "svelte";
   import type { APIError, Document, ValidationError } from "$lib/api/types";
 
-  import { _ } from "svelte-i18n";
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
 
   import EditAccess from "../EditAccess.svelte";
 
@@ -10,11 +10,11 @@
 
   const document = doc as Document;
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Forms / Edit Access",
     component: EditAccess,
     parameters: { layout: "centered" },
-  };
+  });
 
   const error: APIError<ValidationError> = {
     status: 400,
@@ -25,27 +25,21 @@
   };
 </script>
 
-<Story name="Default">
+{#snippet template(args: ComponentProps<typeof EditAccess>)}
   <div style="min-width: 600px;">
-    <EditAccess {document}>
+    <EditAccess {...args}>
       <header>
-        <h2>{$_("edit.fields.access.title")}</h2>
+        <h2>Change document access</h2>
       </header>
     </EditAccess>
   </div>
-</Story>
+{/snippet}
 
-<Story name="With error">
-  <div style="min-width: 600px;">
-    <EditAccess {document} {error}>
-      <header>
-        <h2>{$_("edit.fields.access.title")}</h2>
-      </header>
-    </EditAccess>
-  </div>
-</Story>
+<Story name="Default" args={{ document }} {template} />
 
-<Story name="Private document">
+<Story name="With error" args={{ document, error }} {template} />
+
+<Story name="Private document" asChild>
   <div style="min-width: 600px;">
     <EditAccess document={{ ...document, access: "private" }}>
       <header>
@@ -56,7 +50,7 @@
   </div>
 </Story>
 
-<Story name="Organization document">
+<Story name="Organization document" asChild>
   <div style="min-width: 600px;">
     <EditAccess document={{ ...document, access: "organization" }}>
       <header>
@@ -67,7 +61,7 @@
   </div>
 </Story>
 
-<Story name="Public document">
+<Story name="Public document" asChild>
   <div style="min-width: 600px;">
     <EditAccess document={{ ...document, access: "public" }}>
       <header>

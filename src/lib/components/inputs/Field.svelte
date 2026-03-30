@@ -1,11 +1,25 @@
 <script lang="ts">
   import { clean } from "$lib/utils/markup";
 
-  export let title: string = "";
-  export let description: string = "";
-  export let inline = false;
-  export let required = false;
-  export let sronly = false;
+  interface Props {
+    title?: string;
+    description?: string;
+    inline?: boolean;
+    required?: boolean;
+    sronly?: boolean;
+    children?: import("svelte").Snippet;
+    error?: import("svelte").Snippet;
+  }
+
+  let {
+    title = "",
+    description = "",
+    inline = false,
+    required = false,
+    sronly = false,
+    children,
+    error,
+  }: Props = $props();
 
   const ALLOWED_TAGS = ["a", "strong", "em", "code"];
   const ALLOWED_ATTR = { a: ["href"] };
@@ -16,7 +30,7 @@
     {#if title}
       <span class="title" class:sr-only={sronly}>{title}</span>
     {/if}
-    <slot />
+    {@render children?.()}
   </label>
   {#if description}
     <p class="help">
@@ -26,7 +40,7 @@
       })}
     </p>
   {/if}
-  <slot name="error" />
+  {@render error?.()}
 </div>
 
 <style>
