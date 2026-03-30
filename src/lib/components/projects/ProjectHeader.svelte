@@ -47,7 +47,7 @@
     {/if}
   </Flex>
   {#if project.description}
-    <div class="description">{@html renderMarkdown(project.description ?? "")}</div>
+    <div class="description">{@html renderMarkdown(project.description)}</div>
   {/if}
 </div>
 
