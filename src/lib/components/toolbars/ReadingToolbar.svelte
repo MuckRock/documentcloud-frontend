@@ -127,11 +127,11 @@ Assumes it's a child of a ViewerContext
                 selected={$mode === value}
                 href={getViewerHref({ document, mode: value, embed, query })}
                 preserveQS
-                on:click={close}
+                onclick={close}
               >
                 {@const ReadModeIcon = icons[value]}
                 {#if ReadModeIcon}
-                  <ReadModeIcon slot="icon" />
+                  {#snippet icon()}<ReadModeIcon />{/snippet}
                 {/if}
                 {name}
               </MenuItem>
@@ -141,11 +141,11 @@ Assumes it's a child of a ViewerContext
                 <MenuItem
                   selected={$mode === value}
                   href={getViewerHref({ document, mode: value, embed })}
-                  on:click={close}
+                  onclick={close}
                 >
                   {@const WriteModeIcon = icons[value]}
                   {#if WriteModeIcon}
-                    <WriteModeIcon slot="icon" />
+                    {#snippet icon()}<WriteModeIcon />{/snippet}
                   {/if}
                   {name}
                 </MenuItem>

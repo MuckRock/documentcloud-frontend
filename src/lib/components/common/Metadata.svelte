@@ -1,12 +1,21 @@
 <script lang="ts">
-  export let key: string;
+  import type { Component } from "svelte";
+  import type { SvgComponent } from "svelte-octicons";
+
+  interface Props {
+    key: string;
+    icon?: Component | typeof SvgComponent;
+    children?: import("svelte").Snippet;
+  }
+
+  let { key, icon: Icon, children }: Props = $props();
 </script>
 
 <div class="metadata">
-  <slot name="icon" />
+  {#if Icon}<Icon />{/if}
   <dl class="text">
     <dt>{key}</dt>
-    <dd><slot /></dd>
+    <dd>{@render children?.()}</dd>
   </dl>
 </div>
 

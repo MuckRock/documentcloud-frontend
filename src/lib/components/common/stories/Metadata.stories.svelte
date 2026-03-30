@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import { Tag16 } from "svelte-octicons";
 
@@ -17,8 +17,5 @@
 </Story>
 
 <Story name="icon" asChild>
-  <Metadata key="Last Updated">
-    March 21, 2024
-    <Tag16 slot="icon" />
-  </Metadata>
+  <Metadata key="Last Updated" icon={Tag16}>March 21, 2024</Metadata>
 </Story>

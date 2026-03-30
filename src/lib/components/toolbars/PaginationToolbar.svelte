@@ -91,7 +91,7 @@
           <Menu>
             {#each sections as section}
               <MenuItem
-                on:click={() => {
+                onclick={() => {
                   gotoPage(section.page_number + 1);
                   close();
                 }}

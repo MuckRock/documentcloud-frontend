@@ -67,32 +67,32 @@
       {#snippet inner({ close })}
         <Menu>
           <MenuItem
-            on:click={() => {
+            onclick={() => {
               close();
               pageShareOpen = true;
             }}
           >
-            <Share16 slot="icon" />
+            {#snippet icon()}<Share16 />{/snippet}
             {$_("dialog.share")}
           </MenuItem>
           {#if document.edit_access}
             <MenuItem
-              on:click={() => {
+              onclick={() => {
                 close();
                 pageNote = true;
               }}
             >
-              <Comment16 slot="icon" />
+              {#snippet icon()}<Comment16 />{/snippet}
               {$_("annotate.cta.add-note")}
             </MenuItem>
 
             <MenuItem
-              on:click={() => {
+              onclick={() => {
                 close();
                 editSection = true;
               }}
             >
-              <ListOrdered16 slot="icon" />
+              {#snippet icon()}<ListOrdered16 />{/snippet}
               {#if section}
                 {$_("annotate.cta.edit-section")}
               {:else}

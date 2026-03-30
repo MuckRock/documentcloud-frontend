@@ -23,11 +23,11 @@
         <ChevronDown12 slot="end" />
       </NavItem>
     {/snippet}
-    {#snippet inner(close)}
+    {#snippet inner({ close })}
       <Menu>
-        <MenuItem on:click={close}>Item 1</MenuItem>
-        <MenuItem on:click={close}>Item 2</MenuItem>
-        <MenuItem on:click={close}>Item 3</MenuItem>
+        <MenuItem onclick={close}>Item 1</MenuItem>
+        <MenuItem onclick={close}>Item 2</MenuItem>
+        <MenuItem onclick={close}>Item 3</MenuItem>
       </Menu>
     {/snippet}
   </Dropdown>
@@ -42,11 +42,11 @@
         <ChevronDown12 slot="end" />
       </NavItem>
     {/snippet}
-    {#snippet inner(close)}
+    {#snippet inner({ close })}
       <Menu>
-        <MenuItem on:click={close}>Item 1</MenuItem>
-        <MenuItem on:click={close}>Item 2</MenuItem>
-        <MenuItem on:click={close}>Item 3</MenuItem>
+        <MenuItem onclick={close}>Item 1</MenuItem>
+        <MenuItem onclick={close}>Item 2</MenuItem>
+        <MenuItem onclick={close}>Item 3</MenuItem>
       </Menu>
     {/snippet}
   </Dropdown>
@@ -61,11 +61,11 @@
         <ChevronDown12 slot="end" />
       </NavItem>
     {/snippet}
-    {#snippet inner(close)}
+    {#snippet inner({ close })}
       <Menu>
-        <MenuItem on:click={close}>Item 1</MenuItem>
-        <MenuItem on:click={close}>Item 2</MenuItem>
-        <MenuItem on:click={close}>Item 3</MenuItem>
+        <MenuItem onclick={close}>Item 1</MenuItem>
+        <MenuItem onclick={close}>Item 2</MenuItem>
+        <MenuItem onclick={close}>Item 3</MenuItem>
       </Menu>
     {/snippet}
   </Dropdown>
@@ -80,11 +80,11 @@
         <ChevronRight12 slot="end" />
       </NavItem>
     {/snippet}
-    {#snippet inner(close)}
+    {#snippet inner({ close })}
       <Menu>
-        <MenuItem on:click={close}>Item 1</MenuItem>
-        <MenuItem on:click={close}>Item 2</MenuItem>
-        <MenuItem on:click={close}>Item 3</MenuItem>
+        <MenuItem onclick={close}>Item 1</MenuItem>
+        <MenuItem onclick={close}>Item 2</MenuItem>
+        <MenuItem onclick={close}>Item 3</MenuItem>
       </Menu>
     {/snippet}
   </Dropdown>
@@ -99,7 +99,7 @@
         <ChevronRight12 slot="end" />
       </NavItem>
     {/snippet}
-    {#snippet inner(close)}
+    {#snippet inner({ close })}
       <Menu>
         <NavItem on:click={close}>Item 1</NavItem>
         <NavItem on:click={close}>Item 2</NavItem>
@@ -132,11 +132,11 @@
           <ChevronDown12 slot="end" />
         </NavItem>
       {/snippet}
-      {#snippet inner(close)}
+      {#snippet inner({ close })}
         <Menu>
-          <MenuItem on:click={close}>First Item 1</MenuItem>
-          <MenuItem on:click={close}>First Item 2</MenuItem>
-          <MenuItem on:click={close}>First Item 3</MenuItem>
+          <MenuItem onclick={close}>First Item 1</MenuItem>
+          <MenuItem onclick={close}>First Item 2</MenuItem>
+          <MenuItem onclick={close}>First Item 3</MenuItem>
         </Menu>
       {/snippet}
     </Dropdown>
@@ -149,11 +149,11 @@
           <ChevronDown12 slot="end" />
         </NavItem>
       {/snippet}
-      {#snippet inner(close)}
+      {#snippet inner({ close })}
         <Menu>
-          <MenuItem on:click={close}>Second Item 1</MenuItem>
-          <MenuItem on:click={close}>Second Item 2</MenuItem>
-          <MenuItem on:click={close}>Second Item 3</MenuItem>
+          <MenuItem onclick={close}>Second Item 1</MenuItem>
+          <MenuItem onclick={close}>Second Item 2</MenuItem>
+          <MenuItem onclick={close}>Second Item 3</MenuItem>
         </Menu>
       {/snippet}
     </Dropdown>
@@ -166,11 +166,11 @@
           <ChevronDown12 slot="end" />
         </NavItem>
       {/snippet}
-      {#snippet inner(close)}
+      {#snippet inner({ close })}
         <Menu>
-          <MenuItem on:click={close}>Third Item 1</MenuItem>
-          <MenuItem on:click={close}>Third Item 2</MenuItem>
-          <MenuItem on:click={close}>Third Item 3</MenuItem>
+          <MenuItem onclick={close}>Third Item 1</MenuItem>
+          <MenuItem onclick={close}>Third Item 2</MenuItem>
+          <MenuItem onclick={close}>Third Item 3</MenuItem>
         </Menu>
       {/snippet}
     </Dropdown>
@@ -187,11 +187,11 @@
           <ChevronDown12 slot="end" />
         </NavItem>
       {/snippet}
-      {#snippet inner(close)}
+      {#snippet inner({ close })}
         <Menu>
-          <MenuItem on:click={close}>Item 1</MenuItem>
-          <MenuItem on:click={close}>Item 2</MenuItem>
-          <MenuItem on:click={close}>Item 3</MenuItem>
+          <MenuItem onclick={close}>Item 1</MenuItem>
+          <MenuItem onclick={close}>Item 2</MenuItem>
+          <MenuItem onclick={close}>Item 3</MenuItem>
         </Menu>
       {/snippet}
     </Dropdown>
@@ -204,10 +204,10 @@
           <ChevronDown12 slot="end" />
         </NavItem>
       {/snippet}
-      {#snippet inner(close)}
+      {#snippet inner({ close })}
         <Menu>
-          <MenuItem on:click={close}>Item 1</MenuItem>
-          <MenuItem on:click={close}>Item 2</MenuItem>
+          <MenuItem onclick={close}>Item 1</MenuItem>
+          <MenuItem onclick={close}>Item 2</MenuItem>
           <Dropdown position="right">
             {#snippet anchor()}
               <NavItem>
@@ -223,7 +223,7 @@
               </Menu>
             {/snippet}
           </Dropdown>
-          <MenuItem on:click={close}>Item 4</MenuItem>
+          <MenuItem onclick={close}>Item 4</MenuItem>
         </Menu>
       {/snippet}
     </Dropdown>
