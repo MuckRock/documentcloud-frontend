@@ -113,7 +113,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
         <input
           type="datetime-local"
           name="publish_at"
-          min={new Date()}
+          min={toDatetimeLocal(new Date())}
           value={publish_at}
         />
       </Field>

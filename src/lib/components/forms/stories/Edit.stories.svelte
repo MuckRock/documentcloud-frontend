@@ -29,7 +29,7 @@
   <div style="min-width: 600px;">
     <EditForm {document}>
       <header>
-        <h2>Edit document</h2>
+        <h2>Edit Document Metadata</h2>
       </header>
     </EditForm>
   </div>
@@ -52,7 +52,7 @@
   <div style="min-width: 600px;">
     <EditMany {documents} error={bulkError}>
       <header>
-        <h2>Edit document</h2>
+        <h2>Edit Document Metadata</h2>
         <p>
           This will edit all documents to have the same data. Use carefully.
         </p>
