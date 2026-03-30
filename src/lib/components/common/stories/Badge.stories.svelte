@@ -9,23 +9,20 @@
     tags: ["autodocs"],
     parameters: { layout: "centered" },
     component: Badge,
-    argTypes: { selected: { control: "boolean" } },
-    render: template,
+    argTypes: { small: { control: "boolean" } },
   });
 </script>
 
-{#snippet template(args)}
-  <Badge {...args}>
-    <Star slot="icon" />
-  </Badge>
-{/snippet}
-
-<Story name="Light Color" args={{ label: "Featured", badgeColor: "yellow" }} />
+<Story
+  name="Light Color"
+  args={{ label: "Featured", badgeColor: "yellow", icon: Star }}
+/>
 <Story
   name="Dark Color"
   args={{
     label: "Pinned",
     badgeColor: "purple",
     labelColor: "white",
+    icon: Star,
   }}
 />

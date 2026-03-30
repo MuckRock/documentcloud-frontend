@@ -42,7 +42,7 @@
   {/snippet}
   {#snippet action()}
     {#if document.edit_access}
-      <Action on:click={() => (edit = true)} icon={Pencil16}>
+      <Action onclick={() => (edit = true)} icon={Pencil16}>
         {$_("common.edit")}
       </Action>
     {/if}

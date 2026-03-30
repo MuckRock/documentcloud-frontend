@@ -38,7 +38,7 @@
   {/snippet}
   {#snippet action()}
     {#if document.edit_access}
-      <Action on:click={() => (edit = true)} icon={Pencil16}>
+      <Action onclick={() => (edit = true)} icon={Pencil16}>
         {$_("common.edit", { values: { n: 1 } })}
       </Action>
     {/if}
@@ -51,7 +51,7 @@
   {:else}
     <Empty icon={FileDirectory24}>
       {#if document.edit_access}
-        <Action on:click={() => (edit = true)}>
+        <Action onclick={() => (edit = true)}>
           {$_("projects.add", { values: { n: 1 } })}
         </Action>
       {/if}

@@ -38,16 +38,16 @@
 <div class="page-actions">
   {#if pageWidth > remToPx(32) || !document.edit_access}
     <Flex align="center">
-      <Action icon={Share16} on:click={() => (pageShareOpen = true)}>
+      <Action icon={Share16} onclick={() => (pageShareOpen = true)}>
         {$_("dialog.share")}
       </Action>
       {#if document.edit_access}
         <div>
-          <Action icon={Comment16} on:click={() => (pageNote = true)}>
+          <Action icon={Comment16} onclick={() => (pageNote = true)}>
             {$_("annotate.cta.add-note")}
           </Action>
 
-          <Action icon={ListOrdered16} on:click={() => (editSection = true)}>
+          <Action icon={ListOrdered16} onclick={() => (editSection = true)}>
             {#if section}
               {$_("annotate.cta.edit-section")}
             {:else}
