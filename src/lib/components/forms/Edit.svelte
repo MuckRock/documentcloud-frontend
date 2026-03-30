@@ -28,6 +28,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
   import Tip from "../common/Tip.svelte";
 
   import { canonicalUrl, edited } from "$lib/api/documents";
+  import { toDatetimeLocal } from "$lib/utils/date";
 
   interface Props {
     document: Document;
@@ -45,17 +46,11 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
 
   let action = $derived(new URL("?/edit", canonicalUrl(document)).href);
 
-  let publish_at: string | undefined = $derived.by(() => {
-    if (!document.publish_at) return undefined;
-    const d = new Date(document.publish_at);
-    // datetime-local expects YYYY-MM-DDThh:mm in local time
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
-    const hours = String(d.getHours()).padStart(2, "0");
-    const minutes = String(d.getMinutes()).padStart(2, "0");
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
-  });
+  let publish_at: string | undefined = $derived(
+    document.publish_at
+      ? toDatetimeLocal(new Date(document.publish_at))
+      : undefined,
+  );
 
   /**
    * @type {import('@sveltejs/kit').SubmitFunction}
