@@ -1,33 +1,20 @@
 <script context="module" lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
-  import FieldLabel from "../FieldLabel.svelte";
+
   import { Infinity16 } from "svelte-octicons";
+  import FieldLabel from "../FieldLabel.svelte";
 
   const { Story } = defineMeta({
     title: "Common / Field Label",
     component: FieldLabel,
     tags: ["autodocs"],
     parameters: { layout: "centered" },
-    render: template,
   });
-
-  let args = {
-    required: false,
-    premium: false,
-  };
 </script>
 
-{#snippet template(args)}
-  <FieldLabel {...args}>Input Label</FieldLabel>
-{/snippet}
+{#snippet children()}Input Label{/snippet}
 
-<Story name="Default" {args} />
-<Story name="With Icon" {args}>
-  {#snippet template(args)}
-    <FieldLabel {...args}
-      ><Infinity16 slot="icon" />Never-Ending Salad & Breadsticks</FieldLabel
-    >
-  {/snippet}
-</Story>
-<Story name="Required" args={{ ...args, required: true }} />
-<Story name="Premium" args={{ ...args, premium: true }} />
+<Story name="Default" args={{ children }} />
+<Story name="With Icon" args={{ children, icon: Infinity16 }} />
+<Story name="Required" args={{ children, required: true }} />
+<Story name="Premium" args={{ children, premium: true }} />

@@ -4,28 +4,43 @@
 -->
 
 <script lang="ts">
+  import type { Component, Snippet } from "svelte";
+  import type { SvgComponent } from "svelte-octicons";
   import { _ } from "svelte-i18n";
   import PremiumBadge from "$lib/components/premium-credits/PremiumBadge.svelte";
   import Flex from "./Flex.svelte";
 
-  export let required = false;
-  export let premium = false;
+  interface Props {
+    required?: boolean;
+    premium?: boolean;
+    icon?: Component | typeof SvgComponent;
+    children: Snippet;
+    action?: Snippet;
+  }
+
+  let {
+    required = false,
+    premium = false,
+    icon: Icon,
+    children,
+    action,
+  }: Props = $props();
 </script>
 
 <div class="label">
   <Flex justify="between" align="center">
     <Flex align="baseline">
-      {#if $$slots.icon}
-        <div class="icon"><slot name="icon" /></div>
+      {#if Icon}
+        <div class="icon"><Icon /></div>
       {/if}
-      <slot />
+      {@render children()}
       {#if required}
         <span class="required">{$_("inputs.required")}</span>
       {/if}
     </Flex>
     <Flex align="baseline">
       {#if premium}<PremiumBadge />{/if}
-      <slot name="action" />
+      {@render action?.()}
     </Flex>
   </Flex>
 </div>
