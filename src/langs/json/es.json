@@ -421,6 +421,10 @@
       "access": {
         "title": "Acceso",
         "description": "Cambiar la configuraci\u00f3n de acceso provoca reporprocesar tu documento."
+      },
+      "publish_at": {
+        "title": "Programar publicaci\u00f3n",
+        "description": "Este documento se har\u00e1 p\u00fablico en la fecha y hora indicadas ({timezone})."
       }
     },
     "nodocs": "No documentos seleccionados. Cierre esta forma y seleccione al menos un documento antes.",

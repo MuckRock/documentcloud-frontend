@@ -73,7 +73,7 @@
           {$_("access.edit")}
         </h2>
       {/snippet}
-      <EditAccess {document} on:close={close} />
+      <EditAccess {document} onclose={close} />
     </Modal>
   </Portal>
 {/if}
