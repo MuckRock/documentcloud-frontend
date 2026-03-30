@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import { action } from "@storybook/addon-actions";
   import {
     Comment16,
@@ -11,12 +11,12 @@
   import NavItem from "../NavItem.svelte";
   import Flex from "../../common/Flex.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Navigation / Item",
     component: NavItem,
     tags: ["autodocs"],
     parameters: { layout: "centered" },
-  };
+  });
 
   const click = action("Click");
   const keydown = action("Keydown");

@@ -1,5 +1,5 @@
-<script lang="ts" context="module">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+<script context="module" lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import { action } from "@storybook/addon-actions";
 
   import Pin from "../Pin.svelte";
@@ -11,17 +11,18 @@
 
   const onClick = action("Click");
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Common / Pin",
     tags: ["autodocs"],
     component: Pin,
     parameters: { layout: "centered" },
-  };
+    render: template,
+  });
 </script>
 
-<Template let:args>
+{#snippet template(args)}
   <Pin {...args} on:click={onClick} />
-</Template>
+{/snippet}
 
 <Story name="Default" {args} />
 <Story name="Active" args={{ ...args, active: true }} />

@@ -1,14 +1,14 @@
 <script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import { Pencil16 } from "svelte-octicons";
   import Action from "../Action.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Common / Action",
     component: Action,
     parameters: { layout: "centered" },
     tags: ["autodocs"],
-  };
+  });
 </script>
 
 <Story name="Text Only">

@@ -1,11 +1,11 @@
 <script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import Card from "../Card.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Common / Card",
     component: Card,
-  };
+  });
 </script>
 
 <Story name="default">
@@ -42,7 +42,7 @@
       some things you would think them but a few hours old. Look there! that
       chap strutting round the corner. He wears a beaver hat and swallow-tailed
       coat, girdled with a sailor-belt and sheath-knife. Here comes another with
-      a sou’-wester and a bombazine cloak.
+      a sou'-wester and a bombazine cloak.
     </p>
   </Card>
 </Story>

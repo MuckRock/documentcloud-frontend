@@ -1,21 +1,17 @@
 <script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import Menu from "$lib/components/common/Menu.svelte";
   import MenuItem from "$lib/components/common/MenuItem.svelte";
   import Dropdown from "$lib/components/common/Dropdown.svelte";
   import NavItem from "$lib/components/common/NavItem.svelte";
   import { ChevronDown12, ChevronRight12, Globe16 } from "svelte-octicons";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Common / Dropdown",
     component: Dropdown,
     tags: ["autodocs"],
     parameters: { layout: "centered" },
-  };
-
-  let args = {
-    mode: "normal",
-  };
+  });
 </script>
 
 <Story name="Basic">

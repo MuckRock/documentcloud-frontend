@@ -1,23 +1,15 @@
 <script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import Access, { levels } from "../Access.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Common / Access",
     component: Access,
     tags: ["autodocs"],
     parameters: { layout: "centered" },
-  };
+  });
 </script>
 
-<Story name="Private">
-  <Access level={levels[0]} />
-</Story>
-
-<Story name="Organization">
-  <Access level={levels[1]} />
-</Story>
-
-<Story name="Public">
-  <Access level={levels[2]} />
-</Story>
+<Story name="Private" args={{ level: levels[0] }} />
+<Story name="Organization" args={{ level: levels[1] }} />
+<Story name="Public" args={{ level: levels[2] }} />

@@ -1,13 +1,13 @@
 <script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import KV from "../KV.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Common / KV",
     component: KV,
     tags: ["autodocs"],
     parameters: { layout: "centered" },
-  };
+  });
 </script>
 
 <Story name="default">
