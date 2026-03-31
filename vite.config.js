@@ -35,6 +35,7 @@ export default defineConfig(({ mode }) => ({
     "process.env.DEPLOY_PRIME_URL": JSON.stringify(
       process.env.DEPLOY_PRIME_URL,
     ),
+    "process.env.APP_URL": JSON.stringify(process.env.APP_URL),
   },
 
   plugins: [sveltekit(), svelteTesting()],

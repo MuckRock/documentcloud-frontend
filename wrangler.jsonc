@@ -7,6 +7,24 @@
     "binding": "ASSETS",
     "directory": ".svelte-kit/cloudflare"
   },
+  "vars": {
+    "PUBLIC_EMBED_MAX_AGE": "400",
+    "PUBLIC_PAGE_MAX_AGE": "401",
+    "PUBLIC_VIEWER_MAX_AGE": "402"
+  },
+  "env": {
+    "production": {
+      "vars": {
+        "NODE_ENV": "production"
+      }
+    },
+    "preview": {
+      "vars": {
+        "NODE_ENV": "staging",
+        "APP_URL": "https://muckcloud.com/"
+      }
+    }
+  },
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1,
