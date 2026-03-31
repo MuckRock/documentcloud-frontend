@@ -70,7 +70,6 @@ exports[`Mailkey 1`] = `
             </a>
             .
           </p>
-          <!---->
         </div>
          
         <!---->
@@ -109,7 +108,6 @@ exports[`Mailkey 1`] = `
       </main>
     </div>
   </div>
-  
   
 </div>
 `;
@@ -184,14 +182,12 @@ exports[`Mailkey 2`] = `
             </a>
             .
           </p>
-          <!---->
         </div>
          
         <p
           class="message svelte-ifcgmn"
         >
           Something happened
-          <!---->
         </p>
         <!---->
          
@@ -229,7 +225,6 @@ exports[`Mailkey 2`] = `
       </main>
     </div>
   </div>
-  
   
 </div>
 `;

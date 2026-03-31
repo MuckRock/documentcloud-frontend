@@ -73,11 +73,9 @@ exports[`AddOnListItem 1`] = `
       class="description svelte-155gb3"
     >
       This will update document information for all documents in your current search.  Please be sure you have edit access to these documents before running this add-on.
-      <!---->
     </div>
     <!---->
   </div>
-  
   
 </div>
 `;
@@ -200,11 +198,9 @@ exports[`AddOnListItem 2`] = `
       <p>
         This Add-On uses Azure’s Document Intelligence API to OCR documents. The document(s) must be public to be processed. This Add-On uses 1 AI Credit per page.
       </p>
-      <!---->
     </div>
     <!---->
   </div>
-  
   
 </div>
 `;
