@@ -16,39 +16,28 @@
   }
 </script>
 
-<Story name="Active">
-  {#snippet template(args)}
-    <Tab active {...args} on:click={handleClick}><Note16 /> Note</Tab>
-  {/snippet}
-</Story>
+{#snippet withIcon()}<Note16 /> Note{/snippet}
+{#snippet withoutIcon()}Note{/snippet}
+{#snippet withHref()}<Note16 /> Notes{/snippet}
 
-<Story name="Disabled">
-  {#snippet template(args)}
-    <Tab disabled {...args} on:click={handleClick}><Note16 /> Note</Tab>
-  {/snippet}
-</Story>
-
-<Story name="Without Icon">
-  {#snippet template(args)}
-    <Tab {...args} on:click={handleClick}>Note</Tab>
-  {/snippet}
-</Story>
-
-<Story name="Custom colors">
+<Story name="Active" args={{ active: true, onclick: handleClick, children: withIcon }} />
+<Story name="Disabled" args={{ disabled: true, onclick: handleClick, children: withIcon }} />
+<Story name="Without Icon" args={{ onclick: handleClick, children: withoutIcon }} />
+<Story
+  name="Custom colors"
+  args={{
+    active: true,
+    onclick: handleClick,
+    children: withIcon,
+  }}
+>
   {#snippet template(args)}
     <Tab
-      active
       {...args}
-      on:click={handleClick}
       --text-color="var(--green-4)"
       --icon-color="var(--green-3)"
-      --active-color="var(--orange-3)"><Note16 /> Note</Tab
-    >
+      --active-color="var(--orange-3)"
+    />
   {/snippet}
 </Story>
-
-<Story name="With Href">
-  {#snippet template(args)}
-    <Tab {...args} href="#note"><Note16 /> Notes</Tab>
-  {/snippet}
-</Story>
+<Story name="With Href" args={{ href: "#note", children: withHref }} />

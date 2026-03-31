@@ -1,7 +1,11 @@
 <script lang="ts">
   import { locale } from "svelte-i18n";
 
-  export let date: Date;
+  interface Props {
+    date: Date;
+  }
+
+  let { date }: Props = $props();
 
   const relativeFormatter = new Intl.RelativeTimeFormat($locale ?? "en", {
     style: "long",

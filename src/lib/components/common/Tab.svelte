@@ -3,21 +3,35 @@ A tab component for navigating within a page.
 Note that links will preserve querystrings where possible.
 -->
 <script lang="ts">
+  import type { Snippet } from "svelte";
+
   import { qs } from "$lib/utils/navigation";
 
-  export let active = false;
-  export let disabled = false;
-  export let href: string = "";
+  interface Props {
+    active?: boolean;
+    disabled?: boolean;
+    href?: string;
+    children: Snippet;
+    onclick?: () => void;
+  }
+
+  let {
+    active = false,
+    disabled = false,
+    href = "",
+    children,
+    onclick,
+  }: Props = $props();
 </script>
 
 <div class="tab" role="tab" class:active class:disabled>
   {#if href}
     <a {href} class:disabled use:qs>
-      <slot />
+      {@render children()}
     </a>
   {:else}
-    <button on:click {disabled}>
-      <slot />
+    <button onclick={() => onclick?.()} {disabled}>
+      {@render children()}
     </button>
   {/if}
 </div>

@@ -4,13 +4,22 @@
   The "signedOut" slot is available as a fallback.
 -->
 <script lang="ts">
+  import type { Snippet } from "svelte";
+
   import { getCurrentUser, isSignedIn } from "$lib/utils/permissions";
+
+  interface Props {
+    children: Snippet;
+    signedOut?: Snippet;
+  }
+
+  let { children, signedOut }: Props = $props();
 
   const me = getCurrentUser();
 </script>
 
 {#if isSignedIn($me)}
-  <slot />
+  {@render children?.()}
 {:else}
-  <slot name="signedOut" />
+  {@render signedOut?.()}
 {/if}

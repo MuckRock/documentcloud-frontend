@@ -65,9 +65,11 @@
             <UserMenu user={$me} />
           </Flex>
         {/if}
-        <Button slot="signedOut" mode="primary" href={sign_in_url.href}>
-          {$_("authSection.user.signIn")}
-        </Button>
+        {#snippet signedOut()}
+          <Button mode="primary" href={sign_in_url.href}>
+            {$_("authSection.user.signIn")}
+          </Button>
+        {/snippet}
       </SignedIn>
       <LanguageMenu />
       <HelpMenu />
@@ -107,9 +109,11 @@
           <UserMenu position="top-start" user={$me} />
         </Flex>
       {/if}
-      <Button slot="signedOut" mode="primary" href={SIGN_IN_URL}>
-        {$_("authSection.user.signIn")}
-      </Button>
+      {#snippet signedOut()}
+        <Button mode="primary" href={SIGN_IN_URL}>
+          {$_("authSection.user.signIn")}
+        </Button>
+      {/snippet}
     </SignedIn>
     <Flex>
       <LanguageMenu position="top-end" />

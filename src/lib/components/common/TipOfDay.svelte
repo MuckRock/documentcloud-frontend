@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
   import { writable } from "svelte/store";
 
   import { StorageManager } from "$lib/utils/storage";
@@ -25,7 +25,11 @@
   import { onMount } from "svelte";
   import { X12 } from "svelte-octicons";
 
-  export let message: string;
+  interface Props {
+    message: string;
+  }
+
+  let { message }: Props = $props();
 
   onMount(() => {
     $show = showTip(message);
@@ -37,7 +41,7 @@
     <div class="message">
       {@html clean(message ?? "")}
     </div>
-    <button class="close" title="Hide Tip" on:click={() => hideTip(message)}>
+    <button class="close" title="Hide Tip" onclick={() => hideTip(message)}>
       <X12 />
     </button>
   </div>

@@ -149,21 +149,21 @@
   <div class="left">
     <div class="tabs" role="tablist">
       <Tab
-        on:click={() => (currentTab = "document")}
+        onclick={() => (currentTab = "document")}
         active={currentTab === "document"}
       >
         <File16 />
         {$_("share.document")}
       </Tab>
       <Tab
-        on:click={() => (currentTab = "page")}
+        onclick={() => (currentTab = "page")}
         active={currentTab === "page"}
       >
         <Hash16 />
         {$_("share.page")}
       </Tab>
       <Tab
-        on:click={() => (currentTab = "note")}
+        onclick={() => (currentTab = "note")}
         active={currentTab === "note"}
         disabled={!document.notes || document.notes.length === 0}
       >

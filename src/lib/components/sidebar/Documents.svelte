@@ -201,10 +201,12 @@
       </Tooltip>
     </div>
   </SidebarGroup>
-  <NavItem slot="signedOut" href={searchUrl("").href}>
-    <File16 slot="start" />
-    {$_("documents.publicDocuments")}
-  </NavItem>
+  {#snippet signedOut()}
+    <NavItem href={searchUrl("").href}>
+      <File16 slot="start" />
+      {$_("documents.publicDocuments")}
+    </NavItem>
+  {/snippet}
 </SignedIn>
 
 {#if editing}
