@@ -64,4 +64,6 @@ storybook-static/
 CLAUDE.md
 # plans/
 
+.wrangler
+
 .claude/skills/migrate-storybook-csf
