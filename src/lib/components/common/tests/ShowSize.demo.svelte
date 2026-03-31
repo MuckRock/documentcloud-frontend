@@ -8,6 +8,6 @@
 
 <ShowSize {size}>
   <p>{size} items</p>
-  <Empty slot="empty">Zero items</Empty>
-  <Error slot="oversize">Too many items!</Error>
+  {#snippet empty()}<Empty>Zero items</Empty>{/snippet}
+  {#snippet oversize()}<Error>Too many items!</Error>{/snippet}
 </ShowSize>

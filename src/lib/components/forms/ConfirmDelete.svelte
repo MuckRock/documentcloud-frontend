@@ -88,11 +88,13 @@ Confirm deletion or one or more documents.
         <p>{$_("delete.really", { values: { n: count } })}</p>
         <p>{$_("delete.continue", { values: { n: count } })}</p>
       </div>
-      <Tip mode="danger" slot="oversize">
-        <Alert24 slot="icon" />
-        {$_("delete.toomany", { values: { n: MAX_EDIT_BATCH } })}
-      </Tip>
-      <p slot="empty">{$_("delete.none")}</p>
+      {#snippet oversize()}
+        <Tip mode="danger">
+          <Alert24 slot="icon" />
+          {$_("delete.toomany", { values: { n: MAX_EDIT_BATCH } })}
+        </Tip>
+      {/snippet}
+      {#snippet empty()}<p>{$_("delete.none")}</p>{/snippet}
     </ShowSize>
 
     {#if error}

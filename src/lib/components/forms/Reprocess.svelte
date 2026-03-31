@@ -222,14 +222,14 @@ This will mostly be used inside a modal but isn't dependent on one.
             values: { n: documents.length },
           })}
 
-          <svelte:fragment slot="oversize">
+          {#snippet oversize()}
             <Tip mode="danger">
               <Alert24 slot="icon" />
               {$_("dialogReprocessDialog.toomany", {
                 values: { max: MAX_EDIT_BATCH, n: documents.length },
               })}
             </Tip>
-          </svelte:fragment>
+          {/snippet}
         </ShowSize>
       {/if}
       <ul class="documents">

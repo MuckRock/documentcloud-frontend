@@ -180,11 +180,13 @@ Change owner of one or more documents.
           {$_("change_owner.continue", { values: { n: count } })}
         </Tip>
       </Flex>
-      <Tip mode="danger" slot="oversize">
-        <Alert24 slot="icon" />
-        {$_("change_owner.toomany", { values: { n: MAX_EDIT_BATCH } })}
-      </Tip>
-      <p slot="empty">{$_("change_owner.none")}</p>
+      {#snippet oversize()}
+        <Tip mode="danger">
+          <Alert24 slot="icon" />
+          {$_("change_owner.toomany", { values: { n: MAX_EDIT_BATCH } })}
+        </Tip>
+      {/snippet}
+      {#snippet empty()}<p>{$_("change_owner.none")}</p>{/snippet}
     </ShowSize>
 
     {#if loading}
