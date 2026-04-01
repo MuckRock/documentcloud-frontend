@@ -12,7 +12,7 @@ let SQUARELET_BASE = "https://dev.squarelet.com";
 let STAFF_ONLY_S3_URL =
   "http://minio.documentcloud.org:9000/minio/documents/documents/$$ID$$/";
 
-if (process.env.NODE_ENV === "remote") {
+if (env.PUBLIC_ENV === "remote") {
   DC_BASE = remote.DC_BASE;
   APP_URL = remote.APP_URL;
   EMBED_URL = remote.EMBED_URL;
@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === "remote") {
   STAFF_ONLY_S3_URL = remote.STAFF_ONLY_S3_URL;
 }
 
-if (process.env.NODE_ENV === "staging") {
+if (env.PUBLIC_ENV === "staging") {
   DC_BASE = staging.DC_BASE;
   APP_URL = staging.APP_URL;
   EMBED_URL = staging.EMBED_URL;
@@ -28,7 +28,7 @@ if (process.env.NODE_ENV === "staging") {
   STAFF_ONLY_S3_URL = staging.STAFF_ONLY_S3_URL;
 }
 
-if (process.env.NODE_ENV === "production") {
+if (env.PUBLIC_ENV === "production") {
   DC_BASE = production.DC_BASE;
   APP_URL = production.APP_URL;
   EMBED_URL = production.EMBED_URL;

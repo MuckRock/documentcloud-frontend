@@ -16,20 +16,16 @@
   },
   "env": {
     "production": {
-      "build": {
-        "command": "npm run build"
-      },
       "vars": {
-        "NODE_ENV": "production"
+        "NODE_ENV": "production",
+        "PUBLIC_ENV": "production"
       }
     },
     "preview": {
-      "build": {
-        "command": "npm run build:staging"
-      },
       "vars": {
         "NODE_ENV": "staging",
-        "APP_URL": "https://muckcloud.com/"
+        "APP_URL": "https://muckcloud.com/",
+        "PUBLIC_ENV": "staging"
       }
     }
   },
