@@ -16,13 +16,16 @@
   },
   "env": {
     "production": {
+      "build": {
+        "command": "npm run build -- --mode production"
+      },
       "vars": {
         "NODE_ENV": "production"
       }
     },
     "preview": {
       "build": {
-        "command": "NODE_ENV=staging npm run build"
+        "command": "npm run build -- --mode staging"
       },
       "vars": {
         "NODE_ENV": "staging",
