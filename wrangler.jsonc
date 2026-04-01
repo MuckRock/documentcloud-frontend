@@ -17,7 +17,7 @@
   "env": {
     "production": {
       "build": {
-        "command": "npm run build -- --mode production"
+        "command": "npm run build"
       },
       "vars": {
         "NODE_ENV": "production"
@@ -25,7 +25,7 @@
     },
     "preview": {
       "build": {
-        "command": "npm run build -- --mode staging"
+        "command": "npm run build:staging"
       },
       "vars": {
         "NODE_ENV": "staging",
