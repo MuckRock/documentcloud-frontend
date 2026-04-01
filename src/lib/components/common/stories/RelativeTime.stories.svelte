@@ -1,22 +1,23 @@
-<script lang="ts" context="module">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+<script context="module" lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
 
   import RelativeTime from "../RelativeTime.svelte";
 
   const today = new Date().getDate();
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Common / Relative Time",
     component: RelativeTime,
     parameters: {
       layout: "centered",
     },
-  };
+    render: template,
+  });
 </script>
 
-<Template let:args>
+{#snippet template(args)}
   <RelativeTime {...args} />
-</Template>
+{/snippet}
 
 <Story name="Day" args={{ date: new Date(new Date().setDate(today - 1)) }} />
 <Story name="Week" args={{ date: new Date(new Date().setDate(today - 7)) }} />

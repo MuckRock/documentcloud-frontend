@@ -1,19 +1,20 @@
 <script context="module" lang="ts">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import { PlusCircle16 } from "svelte-octicons";
   import Button from "../Button.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Common / Button",
     component: Button,
     tags: ["autodocs"],
     parameters: { layout: "centered" },
-  };
+    render: template,
+  });
 </script>
 
-<Template let:args>
+{#snippet template(args)}
   <Button {...args}></Button>
-</Template>
+{/snippet}
 
 <Story name="default" />
 
@@ -29,19 +30,19 @@
 
 <Story name="small" args={{ size: "small" }} />
 
-<Story name="slotted">
+<Story name="slotted" asChild>
   <Button>
     <PlusCircle16 /> Upload
   </Button>
 </Story>
 
-<Story name="slotted ghost">
+<Story name="slotted ghost" asChild>
   <Button ghost mode="primary">
     <PlusCircle16 /> Upload
   </Button>
 </Story>
 
-<Story name="disabled ghost">
+<Story name="disabled ghost" asChild>
   <Button ghost mode="primary" disabled>
     <PlusCircle16 /> Upload
   </Button>

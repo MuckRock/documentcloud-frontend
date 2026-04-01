@@ -149,21 +149,21 @@
   <div class="left">
     <div class="tabs" role="tablist">
       <Tab
-        on:click={() => (currentTab = "document")}
+        onclick={() => (currentTab = "document")}
         active={currentTab === "document"}
       >
         <File16 />
         {$_("share.document")}
       </Tab>
       <Tab
-        on:click={() => (currentTab = "page")}
+        onclick={() => (currentTab = "page")}
         active={currentTab === "page"}
       >
         <Hash16 />
         {$_("share.page")}
       </Tab>
       <Tab
-        on:click={() => (currentTab = "note")}
+        onclick={() => (currentTab = "note")}
         active={currentTab === "note"}
         disabled={!document.notes || document.notes.length === 0}
       >
@@ -197,7 +197,7 @@
       <Field>
         <FieldLabel>
           {$_("share.permalink")}
-          <Copy slot="action" text={permalink?.href} />
+          {#snippet action()}<Copy text={permalink?.href} />{/snippet}
         </FieldLabel>
         <Text
           value={permalink?.href}
@@ -209,7 +209,7 @@
       <Field>
         <FieldLabel>
           {$_("share.embed")}
-          <Copy slot="action" text={embedSrc?.href} />
+          {#snippet action()}<Copy text={embedSrc?.href} />{/snippet}
         </FieldLabel>
         <Text
           value={embedSrc?.href}
@@ -221,7 +221,7 @@
       <Field>
         <FieldLabel>
           {$_("share.iframe")}
-          <Copy slot="action" text={iframe} />
+          {#snippet action()}<Copy text={iframe} />{/snippet}
         </FieldLabel>
         <TextArea
           value={iframe}
@@ -236,30 +236,32 @@
     <header>
       <FieldLabel>
         {$_("share.preview")}
-        <div slot="action">
-          {#if customizeEmbedOpen}
-            <Button
-              size="small"
-              ghost
-              mode="primary"
-              on:click={() => (customizeEmbedOpen = false)}
-            >
-              <Check16 />
-              {$_("share.save")}
-            </Button>
-          {:else}
-            <Button
-              size="small"
-              ghost
-              mode="primary"
-              on:click={() => (customizeEmbedOpen = true)}
-              disabled={currentTab !== "document"}
-            >
-              <Sliders16 />
-              {$_("share.customize")}
-            </Button>
-          {/if}
-        </div>
+        {#snippet action()}
+          <div>
+            {#if customizeEmbedOpen}
+              <Button
+                size="small"
+                ghost
+                mode="primary"
+                on:click={() => (customizeEmbedOpen = false)}
+              >
+                <Check16 />
+                {$_("share.save")}
+              </Button>
+            {:else}
+              <Button
+                size="small"
+                ghost
+                mode="primary"
+                on:click={() => (customizeEmbedOpen = true)}
+                disabled={currentTab !== "document"}
+              >
+                <Sliders16 />
+                {$_("share.customize")}
+              </Button>
+            {/if}
+          </div>
+        {/snippet}
       </FieldLabel>
     </header>
     <main>

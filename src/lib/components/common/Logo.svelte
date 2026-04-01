@@ -1,3 +1,5 @@
+<svelte:options runes />
+
 <svg
   viewBox="0 0 182 32"
   fill="none"

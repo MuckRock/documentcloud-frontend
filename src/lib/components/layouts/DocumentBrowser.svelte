@@ -161,19 +161,21 @@
                   </label>
                 </NavItem>
                 <Dropdown position="top-start">
-                  <NavItem
-                    slot="anchor"
-                    disabled={!$me ||
-                      search.selected.length < 1 ||
-                      !search.editable}
-                  >
-                    {$_("bulk.title")}
-                    <ChevronUp12 slot="end" />
-                  </NavItem>
-
-                  <Menu slot="inner" let:close>
-                    <DocumentActions afterClick={() => close()} />
-                  </Menu>
+                  {#snippet anchor()}
+                    <NavItem
+                      disabled={!$me ||
+                        search.selected.length < 1 ||
+                        !search.editable}
+                    >
+                      {$_("bulk.title")}
+                      <ChevronUp12 slot="end" />
+                    </NavItem>
+                  {/snippet}
+                  {#snippet inner({ close })}
+                    <Menu>
+                      <DocumentActions afterClick={() => close()} />
+                    </Menu>
+                  {/snippet}
                 </Dropdown>
               </Flex>
               {#if !BREAKPOINTS.HIDE_COUNT && search.visible && search.total}

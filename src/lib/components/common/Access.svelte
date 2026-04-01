@@ -1,4 +1,7 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
+  import type { Access, Maybe } from "$lib/api/types";
+  import type { Level } from "$lib/components/inputs/AccessLevel.svelte";
+
   import { Globe24, Lock24, Organization24 } from "svelte-octicons";
 
   export const levels: Level[] = [
@@ -30,15 +33,16 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
 
-  import type { Access, Maybe } from "$lib/api/types";
-  import type { Level } from "$lib/components/inputs/AccessLevel.svelte";
+  interface Props {
+    level?: Maybe<Level>;
+  }
 
-  export let level: Maybe<Level> = undefined;
+  let { level }: Props = $props();
 </script>
 
 {#if level}
   <div class="access {level.value}">
-    <svelte:component this={level.icon} height="1em" width="1em" />
+    <level.icon height="1em" width="1em" />
     {$_(level.title)}
   </div>
 {/if}

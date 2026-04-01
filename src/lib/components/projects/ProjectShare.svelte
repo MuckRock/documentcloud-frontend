@@ -64,7 +64,7 @@
     <Field>
       <FieldLabel>
         {$_("share.permalink")}
-        <Copy text={permalink.href} slot="action" />
+        {#snippet action()}<Copy text={permalink.href} />{/snippet}
       </FieldLabel>
       <Text
         value={permalink.href}
@@ -76,7 +76,7 @@
     <Field>
       <FieldLabel>
         {$_("share.embed")}
-        <Copy text={embedSrc.href} slot="action" />
+        {#snippet action()}<Copy text={embedSrc.href} />{/snippet}
       </FieldLabel>
       <Text
         value={embedSrc.href}
@@ -88,7 +88,7 @@
     <Field>
       <FieldLabel>
         {$_("share.iframe")}
-        <Copy text={iframe} slot="action" />
+        {#snippet action()}<Copy text={iframe} />{/snippet}
       </FieldLabel>
       <TextArea
         value={iframe}

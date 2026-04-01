@@ -1,5 +1,5 @@
-<script lang="ts" context="module">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+<script context="module" lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import { action } from "@storybook/addon-actions";
 
   import Paginator from "../Paginator.svelte";
@@ -9,17 +9,18 @@
     has_previous: true,
   };
 
-  export const meta = {
+  const { Story } = defineMeta({
     component: Paginator,
     title: "Common / Paginator",
     tags: ["autodocs"],
     parameters: {
       layout: "centered",
     },
-  };
+    render: template,
+  });
 </script>
 
-<Template let:args>
+{#snippet template(args)}
   <div class="container">
     <Paginator
       {...args}
@@ -28,7 +29,7 @@
       on:previous={action("Previous")}
     />
   </div>
-</Template>
+{/snippet}
 
 <Story name="Default" {args} />
 <Story name="Only Page" args={{ has_next: false, has_previous: false }} />

@@ -110,45 +110,49 @@ Assumes it's a child of a ViewerContext
       </div>
     {:else}
       <Dropdown position="bottom-start">
-        <NavItem slot="anchor">
-          {@const CurrentModeIcon = icons[$mode]}
-          {#if CurrentModeIcon}
-            <CurrentModeIcon slot="start" />
-          {/if}
-          {current}
-          <ChevronDown12 slot="end" />
-        </NavItem>
-        <Menu slot="inner" let:close>
-          {#each readModeDropdownItems.entries() as [value, name]}
-            <MenuItem
-              selected={$mode === value}
-              href={getViewerHref({ document, mode: value, embed, query })}
-              preserveQS
-              on:click={close}
-            >
-              {@const ReadModeIcon = icons[value]}
-              {#if ReadModeIcon}
-                <ReadModeIcon slot="icon" />
-              {/if}
-              {name}
-            </MenuItem>
-          {/each}
-          {#if BREAKPOINTS.WRITE_MENU && canWrite}
-            {#each writeModes as [value, name]}
+        {#snippet anchor()}
+          <NavItem>
+            {@const CurrentModeIcon = icons[$mode]}
+            {#if CurrentModeIcon}
+              <CurrentModeIcon slot="start" />
+            {/if}
+            {current}
+            <ChevronDown12 slot="end" />
+          </NavItem>
+        {/snippet}
+        {#snippet inner({ close })}
+          <Menu>
+            {#each readModeDropdownItems.entries() as [value, name]}
               <MenuItem
                 selected={$mode === value}
-                href={getViewerHref({ document, mode: value, embed })}
-                on:click={close}
+                href={getViewerHref({ document, mode: value, embed, query })}
+                preserveQS
+                onclick={close}
               >
-                {@const WriteModeIcon = icons[value]}
-                {#if WriteModeIcon}
-                  <WriteModeIcon slot="icon" />
+                {@const ReadModeIcon = icons[value]}
+                {#if ReadModeIcon}
+                  {#snippet icon()}<ReadModeIcon />{/snippet}
                 {/if}
                 {name}
               </MenuItem>
             {/each}
-          {/if}
-        </Menu>
+            {#if BREAKPOINTS.WRITE_MENU && canWrite}
+              {#each writeModes as [value, name]}
+                <MenuItem
+                  selected={$mode === value}
+                  href={getViewerHref({ document, mode: value, embed })}
+                  onclick={close}
+                >
+                  {@const WriteModeIcon = icons[value]}
+                  {#if WriteModeIcon}
+                    {#snippet icon()}<WriteModeIcon />{/snippet}
+                  {/if}
+                  {name}
+                </MenuItem>
+              {/each}
+            {/if}
+          </Menu>
+        {/snippet}
       </Dropdown>
     {/if}
   {/snippet}
@@ -170,13 +174,17 @@ Assumes it's a child of a ViewerContext
       {/if}
       {#if BREAKPOINTS.SEARCH_MENU}
         <Dropdown position="bottom-end">
-          <Button slot="anchor" minW={false} ghost>
-            <Search16 />
-            {$_("common.search")}
-          </Button>
-          <Menu slot="inner">
-            <Search name="q" {query} otherParams={{ mode: "search" }} />
-          </Menu>
+          {#snippet anchor()}
+            <Button minW={false} ghost>
+              <Search16 />
+              {$_("common.search")}
+            </Button>
+          {/snippet}
+          {#snippet inner()}
+            <Menu>
+              <Search name="q" {query} otherParams={{ mode: "search" }} />
+            </Menu>
+          {/snippet}
         </Dropdown>
       {:else}
         <Search name="q" {query} otherParams={{ mode: "search" }} />

@@ -4,7 +4,7 @@
 
   interface Props {
     icon?: null | typeof SvgComponent;
-    children?: Snippet;
+    children: Snippet;
   }
 
   let { icon: Icon = null, children }: Props = $props();
@@ -14,7 +14,7 @@
   {#if Icon}
     <Icon height="32" width="32" />
   {/if}
-  {@render children?.()}
+  {@render children()}
 </div>
 
 <style>

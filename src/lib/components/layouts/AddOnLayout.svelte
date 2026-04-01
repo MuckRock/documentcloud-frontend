@@ -141,7 +141,7 @@
         <div class="tabs" role="tablist">
           <Tab
             active={currentTab === "dispatch"}
-            on:click={() => (currentTab = "dispatch")}
+            onclick={() => (currentTab = "dispatch")}
           >
             <Play16 />
             {$_("addonDispatchDialog.dispatch")}
@@ -149,7 +149,7 @@
 
           <Tab
             active={currentTab === "history"}
-            on:click={() => (currentTab = "history")}
+            onclick={() => (currentTab = "history")}
           >
             <History16 />
             {$_("addonDispatchDialog.history")}
@@ -158,7 +158,7 @@
           {#if canSchedule}
             <Tab
               active={currentTab === "scheduled"}
-              on:click={() => (currentTab = "scheduled")}
+              onclick={() => (currentTab = "scheduled")}
             >
               <Clock16 />
               {$_("addonDispatchDialog.scheduled")}

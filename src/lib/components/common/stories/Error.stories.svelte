@@ -1,14 +1,14 @@
 <script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import { default as ErrorComponent } from "../Error.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Common / Error",
     component: ErrorComponent,
     parameters: { layout: "centered" },
-  };
+  });
 </script>
 
-<Story name="Error">
+<Story name="Error" asChild>
   <ErrorComponent>Something has gone terribly wrong!</ErrorComponent>
 </Story>

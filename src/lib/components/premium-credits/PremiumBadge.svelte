@@ -8,6 +8,5 @@
   label={$_("premium.badge")}
   badgeColor="transparent"
   labelColor="var(--premium)"
->
-  <Premium slot="icon" />
-</Badge>
+  icon={Premium}
+/>

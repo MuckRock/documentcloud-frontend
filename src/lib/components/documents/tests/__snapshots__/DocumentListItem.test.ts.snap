@@ -108,6 +108,5 @@ exports[`DocumentListItem > renders 1`] = `
     </div>
   </div>
   
-  
 </div>
 `;

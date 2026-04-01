@@ -62,12 +62,16 @@
 
 {#if total > 0}
   <Dropdown>
-    <NavItem slot="anchor">
-      <ProcessSummary counts={totalCounts} />
-    </NavItem>
-    <Menu slot="inner">
-      <AddOns />
-      <Documents />
-    </Menu>
+    {#snippet anchor()}
+      <NavItem>
+        <ProcessSummary counts={totalCounts} />
+      </NavItem>
+    {/snippet}
+    {#snippet inner()}
+      <Menu>
+        <AddOns />
+        <Documents />
+      </Menu>
+    {/snippet}
   </Dropdown>
 {/if}

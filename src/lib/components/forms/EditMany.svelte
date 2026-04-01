@@ -86,14 +86,18 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
     <!-- Add any header and messaging using this slot -->
     {@render children?.()}
     <ShowSize size={documents.length}>
-      <Tip mode="error" slot="empty">
-        <Alert24 slot="icon" />
-        {$_("edit.nodocs")}
-      </Tip>
-      <Tip mode="danger" slot="oversize">
-        <Alert24 slot="icon" />
-        {$_("edit.toomany", { values: { n: MAX_EDIT_BATCH } })}
-      </Tip>
+      {#snippet empty()}
+        <Tip mode="error">
+          <Alert24 slot="icon" />
+          {$_("edit.nodocs")}
+        </Tip>
+      {/snippet}
+      {#snippet oversize()}
+        <Tip mode="danger">
+          <Alert24 slot="icon" />
+          {$_("edit.toomany", { values: { n: MAX_EDIT_BATCH } })}
+        </Tip>
+      {/snippet}
     </ShowSize>
 
     {#if error}

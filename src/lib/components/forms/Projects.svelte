@@ -104,14 +104,18 @@ and we don't want to do that everywhere.
 <div class="container">
   <ShowSize size={documents.length}>
     <p>{$_("edit.many", { values: { n: documents.length } })}</p>
-    <Tip mode="error" slot="empty">
-      <Alert24 slot="icon" />
-      {$_("edit.nodocs")}
-    </Tip>
-    <Tip mode="danger" slot="oversize">
-      <Alert24 slot="icon" />
-      {$_("edit.toomany", { values: { n: MAX_EDIT_BATCH } })}
-    </Tip>
+    {#snippet empty()}
+      <Tip mode="error">
+        <Alert24 slot="icon" />
+        {$_("edit.nodocs")}
+      </Tip>
+    {/snippet}
+    {#snippet oversize()}
+      <Tip mode="danger">
+        <Alert24 slot="icon" />
+        {$_("edit.toomany", { values: { n: MAX_EDIT_BATCH } })}
+      </Tip>
+    {/snippet}
   </ShowSize>
 
   <div class="projects">

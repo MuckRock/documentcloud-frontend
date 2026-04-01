@@ -249,13 +249,15 @@
         {$_("dialog.reset")}
       </Button>
     </div>
-    <div class="controls" slot="signedOut">
-      <p>
-        {@html $_("addonDispatchDialog.signedOut", {
-          values: { href: sign_in_url.href },
-        })}
-      </p>
-    </div>
+    {#snippet signedOut()}
+      <div class="controls">
+        <p>
+          {@html $_("addonDispatchDialog.signedOut", {
+            values: { href: sign_in_url.href },
+          })}
+        </p>
+      </div>
+    {/snippet}
   </SignedIn>
 </form>
 

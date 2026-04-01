@@ -110,7 +110,9 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
     {#if document.access !== "public"}
       <Field
         title={$_("edit.fields.publish_at.title")}
-        description={$_("edit.fields.publish_at.description", { values: { timezone } })}
+        description={$_("edit.fields.publish_at.description", {
+          values: { timezone },
+        })}
       >
         <input
           type="datetime-local"

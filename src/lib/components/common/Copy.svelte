@@ -6,8 +6,12 @@
 
   import copy from "$lib/utils/copy";
 
-  export let text: string;
-  export let hideLabel = false;
+  interface Props {
+    text: string;
+    hideLabel?: boolean;
+  }
+
+  let { text, hideLabel = false }: Props = $props();
 </script>
 
 <Button

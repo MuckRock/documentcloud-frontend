@@ -173,7 +173,7 @@
       <Empty>
         {$_("projects.collaborators.empty")}
         {#if project.add_remove_access}
-          <Action title={actions.invite} on:click={() => (show = "invite")}>
+          <Action title={actions.invite} onclick={() => (show = "invite")}>
             {$_("projects.collaborators.add")}
           </Action>
         {/if}

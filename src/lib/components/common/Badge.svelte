@@ -1,8 +1,20 @@
 <script lang="ts">
-  export let badgeColor = "var(--light-gray)";
-  export let labelColor = "var(--darkgray)";
-  export let label: string;
-  export let small = false;
+  import type { Component } from "svelte";
+  interface Props {
+    badgeColor?: string;
+    labelColor?: string;
+    label: string;
+    small?: boolean;
+    icon?: Component;
+  }
+
+  let {
+    badgeColor = "var(--light-gray)",
+    labelColor = "var(--darkgray)",
+    label,
+    small = false,
+    icon: Icon,
+  }: Props = $props();
 </script>
 
 <div
@@ -10,7 +22,7 @@
   class:small
   style="--badge-color: {badgeColor}; --label-color: {labelColor};"
 >
-  {#if $$slots.icon}<span class="icon"><slot name="icon" /></span>{/if}
+  {#if Icon}<span class="icon"><Icon /></span>{/if}
   <span class="label">{label}</span>
 </div>
 

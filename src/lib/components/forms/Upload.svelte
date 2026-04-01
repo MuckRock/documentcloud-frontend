@@ -411,9 +411,9 @@ progress through the three-part upload process.
                 bind:value={ocrEngine}
                 valueAsObject
               />
-              <p slot="help">
-                {@html ocrEngine.help}
-              </p>
+              {#snippet help()}<p>
+                  {@html ocrEngine?.help}
+                </p>{/snippet}
             </Field>
           {/if}
           <Field inline>
@@ -428,18 +428,18 @@ progress through the three-part upload process.
               <FieldLabel premium>
                 {$_("uploadDialog.revisionControl")}
               </FieldLabel>
-              <p slot="help">
-                {$_("uploadDialog.revisionControlHelp")}
-              </p>
+              {#snippet help()}<p>
+                  {$_("uploadDialog.revisionControlHelp")}
+                </p>{/snippet}
             </Field>
             <Field inline slot="basic">
               <Switch name="revision_control" disabled />
               <FieldLabel premium>
                 {$_("uploadDialog.revisionControl")}
               </FieldLabel>
-              <p slot="help">
-                {$_("uploadDialog.revisionControlHelp")}
-              </p>
+              {#snippet help()}<p>
+                  {$_("uploadDialog.revisionControlHelp")}
+                </p>{/snippet}
             </Field>
           </Premium>
         </Flex>

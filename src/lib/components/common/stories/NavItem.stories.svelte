@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import { action } from "@storybook/addon-actions";
   import {
     Comment16,
@@ -11,40 +11,40 @@
   import NavItem from "../NavItem.svelte";
   import Flex from "../../common/Flex.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Navigation / Item",
     component: NavItem,
     tags: ["autodocs"],
     parameters: { layout: "centered" },
-  };
+  });
 
   const click = action("Click");
   const keydown = action("Keydown");
 </script>
 
-<Story name="Text Only">
+<Story name="Text Only" asChild>
   <NavItem>Example</NavItem>
 </Story>
 
-<Story name="Text and Icon">
+<Story name="Text and Icon" asChild>
   <NavItem>
     <Comment16 slot="start" /> Add a note…
   </NavItem>
 </Story>
 
-<Story name="Link">
+<Story name="Link" asChild>
   <NavItem href="/" on:click={click} on:keydown={keydown}>
     <Home16 slot="start" /> Go Home
   </NavItem>
 </Story>
 
-<Story name="Hover">
+<Story name="Hover" asChild>
   <NavItem hover>
     <Home16 slot="start" /> Go Home
   </NavItem>
 </Story>
 
-<Story name="Active">
+<Story name="Active" asChild>
   <Flex>
     <NavItem active>Static</NavItem>
     <NavItem active href="#">
@@ -61,19 +61,19 @@
   </Flex>
 </Story>
 
-<Story name="Small">
+<Story name="Small" asChild>
   <NavItem small>
     <Comment16 slot="start" /> Add a note…
   </NavItem>
 </Story>
 
-<Story name="Disabled">
+<Story name="Disabled" asChild>
   <NavItem disabled>
     <Comment16 slot="start" /> Add a note…
   </NavItem>
 </Story>
 
-<Story name="With Overflow">
+<Story name="With Overflow" asChild>
   <div class="maxW-16">
     <NavItem disabled>
       <FileDirectory16 slot="start" /> A very long sidebar item maybe a project
@@ -81,7 +81,7 @@
   </div>
 </Story>
 
-<Story name="Absurdly long name">
+<Story name="Absurdly long name" asChild>
   <div class="maxW-32">
     <NavItem>
       The International Consortium for the Real-Time Dissemination of Verified,

@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import { action } from "@storybook/addon-actions";
   import Toast from "../Toast.svelte";
   import Flex from "../Flex.svelte";
@@ -8,27 +8,28 @@
   const cancel = action("cancel");
   const reset = action("reset");
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Common / Toast",
     component: Toast,
     tags: ["autodocs"],
     parameters: { layout: "centered" },
-  };
+    render: template,
+  });
 </script>
 
-<Template let:args>
+{#snippet template(args)}
   <Toast {...args} onclose={close} oncancel={cancel} onreset={reset}>
     <p>{args.content}</p>
   </Toast>
-</Template>
+{/snippet}
 
-<Story name="Default">
+<Story name="Default" asChild>
   <Toast lifespan={0} onclose={close} oncancel={cancel} onreset={reset}>
     <p>Default toast contains a message</p>
   </Toast>
 </Story>
 
-<Story name="Multiple">
+<Story name="Multiple" asChild>
   <Flex direction="column">
     <Toast lifespan={0} onclose={close} oncancel={cancel} onreset={reset}>
       <p>First message</p>
