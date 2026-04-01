@@ -7,6 +7,8 @@
     "binding": "ASSETS",
     "directory": ".svelte-kit/cloudflare"
   },
+  "preview_urls": true,
+  "keep_vars": true,
   "vars": {
     "PUBLIC_EMBED_MAX_AGE": "400",
     "PUBLIC_PAGE_MAX_AGE": "401",
@@ -19,6 +21,9 @@
       }
     },
     "preview": {
+      "build": {
+        "command": "NODE_ENV=staging npm run build"
+      },
       "vars": {
         "NODE_ENV": "staging",
         "APP_URL": "https://muckcloud.com/"
