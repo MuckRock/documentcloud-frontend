@@ -1,8 +1,10 @@
 {
+  "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "documentcloud-frontend",
   "main": ".svelte-kit/cloudflare/_worker.js",
   "compatibility_flags": ["nodejs_als", "nodejs_compat"],
   "compatibility_date": "2026-03-31",
+  "send_metrics": false,
   "assets": {
     "binding": "ASSETS",
     "directory": ".svelte-kit/cloudflare"
@@ -11,27 +13,10 @@
   "keep_vars": true,
   "env": {
     "production": {
-      "build": {
-        "environment": {
-          "NODE_ENV": "production",
-          "PUBLIC_ENV": "production",
-          "PUBLIC_EMBED_MAX_AGE": "400",
-          "PUBLIC_PAGE_MAX_AGE": "401",
-          "PUBLIC_VIEWER_MAX_AGE": "402"
-        }
-      }
+      "build": { "command": "scripts/build.sh production" }
     },
     "preview": {
-      "build": {
-        "environment": {
-          "NODE_ENV": "staging",
-          "PUBLIC_ENV": "staging",
-          "APP_URL": "https://muckcloud.com/",
-          "PUBLIC_EMBED_MAX_AGE": "400",
-          "PUBLIC_PAGE_MAX_AGE": "401",
-          "PUBLIC_VIEWER_MAX_AGE": "402"
-        }
-      }
+      "build": { "command": "scripts/build.sh preview" }
     }
   },
   "observability": {

@@ -32,6 +32,7 @@ static/viewer/*
 
 # Local test env file
 .env
+.env.secret
 .env.*
 .envrc
 playwright-report
