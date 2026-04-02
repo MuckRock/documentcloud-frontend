@@ -22,6 +22,9 @@ on:
       - "static/**"
       - "!src/**/*.ts.snap"
 
+env:
+  PUBLIC_ENV: production
+
 jobs:
   chromatic-deployment:
     runs-on: ubuntu-latest
