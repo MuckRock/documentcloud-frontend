@@ -9,24 +9,36 @@
   },
   "preview_urls": true,
   "keep_vars": true,
-  "vars": {
-    "PUBLIC_EMBED_MAX_AGE": "400",
-    "PUBLIC_PAGE_MAX_AGE": "401",
-    "PUBLIC_VIEWER_MAX_AGE": "402",
-    "PUBLIC_ENV": "production"
+  "build": {
+    "environment": {
+      "PUBLIC_EMBED_MAX_AGE": "400",
+      "PUBLIC_PAGE_MAX_AGE": "401",
+      "PUBLIC_VIEWER_MAX_AGE": "402",
+      "PUBLIC_ENV": "production"
+    }
   },
   "env": {
     "production": {
-      "vars": {
-        "NODE_ENV": "production",
-        "PUBLIC_ENV": "production"
+      "build": {
+        "environment": {
+          "NODE_ENV": "production",
+          "PUBLIC_ENV": "production",
+          "PUBLIC_EMBED_MAX_AGE": "400",
+          "PUBLIC_PAGE_MAX_AGE": "401",
+          "PUBLIC_VIEWER_MAX_AGE": "402"
+        }
       }
     },
     "preview": {
-      "vars": {
-        "NODE_ENV": "staging",
-        "APP_URL": "https://muckcloud.com/",
-        "PUBLIC_ENV": "staging"
+      "build": {
+        "environment": {
+          "NODE_ENV": "staging",
+          "PUBLIC_ENV": "staging",
+          "APP_URL": "https://muckcloud.com/",
+          "PUBLIC_EMBED_MAX_AGE": "400",
+          "PUBLIC_PAGE_MAX_AGE": "401",
+          "PUBLIC_VIEWER_MAX_AGE": "402"
+        }
       }
     }
   },

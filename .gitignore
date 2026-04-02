@@ -67,3 +67,4 @@ CLAUDE.md
 .wrangler
 
 .claude/skills/migrate-storybook-csf
+.agents/
