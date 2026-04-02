@@ -141,6 +141,7 @@ So this layer is only showing unsaved redactions.
 <div
   class="redactions"
   class:active
+  role="application"
   bind:this={container}
   on:pointerdown={startDrawingBox}
   on:pointermove={continueDrawingBox}

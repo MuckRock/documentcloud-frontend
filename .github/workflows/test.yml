@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22.x"
-      - run: npm ci
+      - run: npm ci --include=dev
       - run: npm run sync
       - run: npm run build
       - run: npm run test:coverage
@@ -36,7 +36,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22.x"
-      - run: npm ci
+      - run: npm ci --include=dev
       - run: npm run sync
       - run: npm run build
       - run: npm run check
