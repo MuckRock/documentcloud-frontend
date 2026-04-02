@@ -9,14 +9,6 @@
   },
   "preview_urls": true,
   "keep_vars": true,
-  "build": {
-    "environment": {
-      "PUBLIC_EMBED_MAX_AGE": "400",
-      "PUBLIC_PAGE_MAX_AGE": "401",
-      "PUBLIC_VIEWER_MAX_AGE": "402",
-      "PUBLIC_ENV": "production"
-    }
-  },
   "env": {
     "production": {
       "build": {
