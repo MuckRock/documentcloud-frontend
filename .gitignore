@@ -61,11 +61,15 @@ storybook-static/
 # Sentry Config File
 .sentryclirc
 
-# Claude Code
-CLAUDE.md
-# plans/
-
 .wrangler
 
+# Claude Code
+CLAUDE.md
+
+# ignoring these skills until I'm sure we want them
 .claude/skills/migrate-storybook-csf
+.claude/skills/cloudflare
+.claude/skills/wrangler
+.claude/skills/workers-best-practices
 .agents/
+skills-lock.json
