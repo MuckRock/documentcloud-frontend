@@ -61,7 +61,9 @@ storybook-static/
 # Sentry Config File
 .sentryclirc
 
+# generated files
 .wrangler
+wrangler.preview.jsonc
 
 # Claude Code
 CLAUDE.md

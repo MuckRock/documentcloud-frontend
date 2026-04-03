@@ -12,8 +12,8 @@
   "preview_urls": true,
   "keep_vars": true,
   "routes": [
-    { "custom_domain": true, "pattern": "staging.documentcloud.org" },
-    { "custom_domain": true, "pattern": "*.staging.documentcloud.org" }
+    { "custom_domain": true, "pattern": "*.staging.documentcloud.org" },
+    { "custom_domain": true, "pattern": "staging.documentcloud.org" }
   ],
   "env": {
     "production": {
