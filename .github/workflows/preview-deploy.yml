@@ -8,6 +8,13 @@ concurrency:
   group: preview-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
+env:
+  NODE_ENV: staging
+  PUBLIC_ENV: staging
+  PUBLIC_EMBED_MAX_AGE: "400"
+  PUBLIC_PAGE_MAX_AGE: "401"
+  PUBLIC_VIEWER_MAX_AGE: "402"
+
 jobs:
   deploy:
     if: github.event.action != 'closed'
