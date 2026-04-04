@@ -1,4 +1,4 @@
-export const DC_BASE = "https://api.staging.documentcloud.org/";
+export const DC_BASE = "https://api.staging.documentcloud.org";
 export const APP_URL =
   process.env.APP_URL || "https://staging.documentcloud.org";
 export const EMBED_URL = APP_URL;
