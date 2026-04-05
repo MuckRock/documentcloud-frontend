@@ -8,7 +8,9 @@ Migrating off Netlify to Cloudflare Workers. The goal is per-PR preview URLs at 
 
 Deploy each PR as a **separate Cloudflare Worker** with its own custom domain route. A GitHub Actions workflow manages the full lifecycle: build → deploy → comment URL → cleanup on close.
 
-**Why separate workers?** Cloudflare Workers doesn't support custom-domain preview URLs natively. Workers Builds generates `.workers.dev` preview URLs, but not custom domain ones. Deploying each PR as its own worker (`dc-preview-<branch>`) with an explicit route is the cleanest way to get `<branch>.staging.documentcloud.org`.
+**Naming scheme:** Preview URLs use the PR number: `preview-<number>.staging.documentcloud.org` (e.g. `preview-1311.staging.documentcloud.org`). Worker names follow the same pattern: `dc-preview-<number>`. This avoids branch name sanitization issues and keeps URLs short and predictable.
+
+**Why separate workers?** Cloudflare Workers doesn't support custom-domain preview URLs natively. Workers Builds generates `.workers.dev` preview URLs, but not custom domain ones. Deploying each PR as its own worker with an explicit route is the cleanest way to get custom domain previews.
 
 ## No existing files need modification
 
@@ -40,18 +42,15 @@ GitHub Actions workflow triggered on `pull_request` events (opened, synchronize,
 **Deploy job** (runs when PR is not closed):
 
 1. Checkout, setup Node 22, `npm ci`
-2. Sanitize branch name for subdomain use:
-   ```bash
-   echo "$BRANCH" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]/-/g' | sed 's/--*/-/g' | sed 's/^-//' | sed 's/-$//' | cut -c1-63
-   ```
-3. Run `scripts/generate-preview-wrangler.sh dc-preview-<branch> <branch>`
-4. Build: `APP_URL=https://<branch>.staging.documentcloud.org/ bash scripts/build.sh preview`
+2. Derive subdomain and worker name from PR number: `preview-${{ github.event.pull_request.number }}`
+3. Run `scripts/generate-preview-wrangler.sh dc-preview-<number> preview-<number>`
+4. Build: `APP_URL=https://preview-<number>.staging.documentcloud.org/ bash scripts/build.sh preview`
 5. Deploy: `npx wrangler deploy --config wrangler.preview.jsonc`
 6. Comment preview URL on the PR (create or update existing comment)
 
 **Cleanup job** (runs when PR is closed):
 
-1. Delete the preview worker: `npx wrangler delete --name dc-preview-<branch> --force`
+1. Delete the preview worker: `npx wrangler delete --name dc-preview-<number> --force`
 2. Comment that preview was removed
 
 Uses `concurrency` group per PR number to prevent parallel deploys.

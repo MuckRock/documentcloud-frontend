@@ -14,6 +14,7 @@ env:
   PUBLIC_EMBED_MAX_AGE: "400"
   PUBLIC_PAGE_MAX_AGE: "401"
   PUBLIC_VIEWER_MAX_AGE: "402"
+  PR_NUMBER: ${{ github.event.pull_request.number }}
 
 jobs:
   deploy:
@@ -25,14 +26,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Sanitize branch name
-        id: branch
-        run: |
-          BRANCH="${{ github.head_ref }}"
-          SUBDOMAIN=$(echo "$BRANCH" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]/-/g' | sed 's/--*/-/g' | sed 's/^-//' | sed 's/-$//' | cut -c1-63)
-          echo "subdomain=${SUBDOMAIN}" >> "$GITHUB_OUTPUT"
-          echo "worker_name=dc-preview-${SUBDOMAIN}" >> "$GITHUB_OUTPUT"
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -41,12 +34,12 @@ jobs:
       - run: npm ci
 
       - name: Generate preview wrangler config
-        run: bash scripts/generate-preview-wrangler.sh "${{ steps.branch.outputs.worker_name }}" "${{ steps.branch.outputs.subdomain }}"
+        run: bash scripts/generate-preview-wrangler.sh "dc-preview-${PR_NUMBER}" "preview-${PR_NUMBER}"
 
       - name: Build
         run: bash scripts/build.sh preview
         env:
-          APP_URL: https://${{ steps.branch.outputs.subdomain }}.staging.documentcloud.org/
+          APP_URL: https://preview-${{ env.PR_NUMBER }}.staging.documentcloud.org/
 
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
@@ -59,8 +52,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const subdomain = '${{ steps.branch.outputs.subdomain }}';
-            const previewUrl = `https://${subdomain}.staging.documentcloud.org`;
+            const previewUrl = `https://preview-${process.env.PR_NUMBER}.staging.documentcloud.org`;
             const body = `Preview deployed: ${previewUrl}`;
 
             const { data: comments } = await github.rest.issues.listComments({
@@ -97,20 +89,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Sanitize branch name
-        id: branch
-        run: |
-          BRANCH="${{ github.head_ref }}"
-          SUBDOMAIN=$(echo "$BRANCH" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]/-/g' | sed 's/--*/-/g' | sed 's/^-//' | sed 's/-$//' | cut -c1-63)
-          echo "subdomain=${SUBDOMAIN}" >> "$GITHUB_OUTPUT"
-          echo "worker_name=dc-preview-${SUBDOMAIN}" >> "$GITHUB_OUTPUT"
-
       - name: Delete preview worker
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: delete --name ${{ steps.branch.outputs.worker_name }} --force
+          command: delete --name dc-preview-${{ env.PR_NUMBER }} --force
 
       - name: Comment cleanup
         uses: actions/github-script@v7
