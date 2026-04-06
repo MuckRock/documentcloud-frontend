@@ -6,8 +6,8 @@ Three deployment environments, all using Cloudflare Workers:
 
 | Environment | Domain                                    | `NODE_ENV`   | `PUBLIC_ENV` | Branch    | Deployed by                                             |
 | ----------- | ----------------------------------------- | ------------ | ------------ | --------- | ------------------------------------------------------- |
-| Production  | `www.documentcloud.org`                   | `production` | `production` | `main`    | Workers Builds (`wrangler/production.jsonc`)            |
-| Staging     | `staging.documentcloud.org`               | `staging`    | `staging`    | `main`    | Workers Builds (`wrangler/staging.jsonc`)               |
+| Production  | `www.documentcloud.org`                   | `production` | `production` | `main`    | Workers Builds (`wrangler.production.jsonc`)            |
+| Staging     | `staging.documentcloud.org`               | `staging`    | `staging`    | `main`    | Workers Builds (`wrangler.staging.jsonc`)               |
 | Preview     | `preview-<PR#>.staging.documentcloud.org` | `staging`    | `staging`    | PR branch | GitHub Actions (`.github/workflows/preview-deploy.yml`) |
 
 ## Preview Deploys
@@ -23,9 +23,9 @@ Each PR gets its own Cloudflare Worker with a custom domain route. A GitHub Acti
 **Deploy job** (on PR open/sync/reopen):
 
 1. Checkout, setup Node 22, `npm ci`
-2. Generate `wrangler/preview.jsonc` via `scripts/generate-preview-wrangler.sh`
+2. Generate `wrangler.preview.jsonc` via `scripts/generate-preview-wrangler.sh`
 3. Build with `APP_URL` set to the preview domain
-4. Deploy with `wrangler deploy --config wrangler/preview.jsonc`
+4. Deploy with `wrangler deploy --config wrangler.preview.jsonc`
 5. Comment preview URL on the PR (create or update)
 
 **Cleanup job** (on PR close):
@@ -35,9 +35,9 @@ Each PR gets its own Cloudflare Worker with a custom domain route. A GitHub Acti
 
 ### Key files
 
-- `wrangler/production.jsonc` — production Workers Builds config
-- `wrangler/staging.jsonc` — staging Workers Builds config
-- `wrangler/preview.jsonc` — generated at CI time, not checked in
+- `wrangler.production.jsonc` — production Workers Builds config
+- `wrangler.staging.jsonc` — staging Workers Builds config
+- `wrangler.preview.jsonc` — generated at CI time, not checked in
 - `scripts/generate-preview-wrangler.sh` — generates preview config from PR number
 - `.github/workflows/preview-deploy.yml` — GitHub Actions workflow for preview lifecycle
 
