@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
   // schedules and eventValues are the inverse of each other, so store them together
 
   // TODO: i18n
@@ -27,12 +27,16 @@
   import { isAddon } from "$lib/api/addons";
   import NavItem from "$lib/components/common/NavItem.svelte";
 
-  export let event: Event;
+  interface Props {
+    event: Event;
+  }
 
-  $: addon = isAddon(event.addon) ? event.addon : undefined;
-  $: disabled = event.event === 0;
-  $: key = addon?.parameters?.eventOptions?.name;
-  $: target = key ? event.parameters[key] : undefined;
+  let { event }: Props = $props();
+
+  let addon = $derived(isAddon(event.addon) ? event.addon : undefined);
+  let disabled = $derived(event.event === 0);
+  let key = $derived(addon?.parameters?.eventOptions?.name);
+  let target = $derived(key ? event.parameters[key] : undefined);
 
   function url(event: Event) {
     if (!isAddon(event.addon)) return "";

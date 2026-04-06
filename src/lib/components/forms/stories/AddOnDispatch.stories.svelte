@@ -1,5 +1,5 @@
-<script lang="ts" context="module">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
 
   import AddOnDispatch, { values } from "../AddOnDispatch.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
@@ -9,31 +9,24 @@
 
   const addons = addonsList.results;
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Forms / Add-On Dispatch",
     component: AddOnDispatch,
     parameters: { layout: "centered" },
-  };
+    render: template,
+  });
 </script>
 
-<Template let:args>
+{#snippet template(args)}
   {@const addon = args}
   <Flex direction="column" style="width: 50vw">
     <AddOnDispatch
-      on:input
-      on:change
-      on:submit
-      on:reset
-      properties={addon.parameters.properties}
-      required={addon.parameters.required}
-      eventOptions={addon.parameters.eventOptions}
+      properties={addon.properties}
+      required={addon.required}
+      eventOptions={addon.eventOptions}
     />
-    <div class="values" style="max-width: 88ch" data-chromatic="ignore">
-      <h2><code>$values</code></h2>
-      <pre><code>{JSON.stringify($values, null, 2)}</code></pre>
-    </div>
   </Flex>
-</Template>
+{/snippet}
 
 <Story name="PDF Exporter" args={addons[0]} />
 

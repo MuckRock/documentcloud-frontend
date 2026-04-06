@@ -12,13 +12,21 @@
 
   import { getApiResponse } from "$lib/utils/api";
 
-  export let events: Event[];
-  export let previous: Maybe<Nullable<string>> = undefined;
-  export let next: Maybe<Nullable<string>> = undefined;
+  interface Props {
+    events: Event[];
+    previous?: Maybe<Nullable<string>>;
+    next?: Maybe<Nullable<string>>;
+    loading?: boolean;
+  }
 
-  export let loading = false;
+  let {
+    events = $bindable(),
+    previous = $bindable(undefined),
+    next = $bindable(undefined),
+    loading = $bindable(false),
+  }: Props = $props();
 
-  let error: string = "";
+  let error: string = $state("");
 
   // load the next set of results
   async function load(url: URL) {

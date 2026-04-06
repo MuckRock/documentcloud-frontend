@@ -9,7 +9,11 @@
 
   import { CATEGORIES } from "$lib/api/addons";
 
-  export let active: string = "all";
+  interface Props {
+    active?: string;
+  }
+
+  let { active = "all" }: Props = $props();
 </script>
 
 <Flex direction="column" gap={1}>

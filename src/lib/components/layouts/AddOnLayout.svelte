@@ -95,12 +95,12 @@
   const load = getProcessLoader();
 
   // go to the correct tab after submitting
-  function onDispatch({ detail }) {
-    if (detail.type === "event") {
+  function onDispatch(data: { type: string }) {
+    if (data.type === "event") {
       currentTab = "scheduled";
     }
 
-    if (detail.type === "run") {
+    if (data.type === "run") {
       currentTab = "history";
       // load processing data
       load?.();
@@ -203,9 +203,9 @@
               required={addon.parameters.required}
               eventOptions={addon.parameters.eventOptions}
               {disablePremium}
-              on:dispatch={onDispatch}
+              ondispatch={onDispatch}
             >
-              <svelte:fragment slot="selection">
+              {#snippet selection()}
                 {#if addon.parameters.documents && clientWidth <= SMALL_BREAKPOINT}
                   <Flex justify="center">
                     <Button
@@ -223,7 +223,7 @@
                   resultsCount={search.total}
                   {query}
                 />
-              </svelte:fragment>
+              {/snippet}
             </AddOnDispatch>
           {/if}
         </main>

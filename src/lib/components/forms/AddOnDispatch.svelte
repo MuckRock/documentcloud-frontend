@@ -1,13 +1,11 @@
 <script module lang="ts">
+  import type { Snippet } from "svelte";
   import { writable } from "svelte/store";
 
   export const values = writable({ event: "disabled", selection: null });
 </script>
 
 <script lang="ts">
-  import { createBubbler } from "svelte/legacy";
-
-  const bubble = createBubbler();
   import type {
     Maybe,
     Nullable,
@@ -17,12 +15,11 @@
   } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import { afterNavigate } from "$app/navigation";
 
   import Ajv, { type ValidateFunction } from "ajv";
   import addFormats from "ajv-formats";
-  import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
   import { Pencil24, Sync24 } from "svelte-octicons";
 
@@ -44,9 +41,10 @@
     event?: Maybe<Nullable<Event>>;
     action?: string;
     disablePremium?: boolean;
-    before?: import("svelte").Snippet;
-    selection?: import("svelte").Snippet;
-    premium?: import("svelte").Snippet;
+    ondispatch?: (data: { type: string; event?: Event; run?: Run }) => void;
+    before?: Snippet;
+    selection?: Snippet;
+    premium?: Snippet;
   }
 
   let {
@@ -56,6 +54,7 @@
     event = null,
     action = "",
     disablePremium = false,
+    ondispatch,
     before,
     selection,
     premium,
@@ -63,8 +62,6 @@
 
   const ajv = new Ajv();
   addFormats(ajv);
-
-  const dispatch = createEventDispatcher();
   const me = getCurrentUser();
 
   let form: HTMLFormElement | undefined = $state();
@@ -105,7 +102,7 @@
       };
     }
     // prefill values from search params
-    new URLSearchParams($page.url.searchParams).forEach((v, k) => {
+    new URLSearchParams(page.url.searchParams).forEach((v, k) => {
       if (k in properties) {
         $values[k] = v;
       }
@@ -161,7 +158,7 @@
       const { type, data } = result;
       if (type === "success") {
         created = data.type === "event" ? data.event : data.run;
-        dispatch("dispatch", data);
+        ondispatch?.(data);
       }
       update(result);
       submitter.disabled = false;
@@ -177,17 +174,10 @@
   });
   let hasEvents = $derived(eventOptions && eventOptions.events.length > 0);
   let hasFields = $derived(Object.keys(properties).length > 0);
-  let sign_in_url = $derived(buildSignInUrl($page.url.href, $values));
+  let sign_in_url = $derived(buildSignInUrl(page.url.href, $values));
 </script>
 
-<form
-  method="post"
-  {action}
-  bind:this={form}
-  onsubmit={bubble("submit")}
-  onreset={bubble("reset")}
-  use:enhance={onSubmit}
->
+<form method="post" {action} bind:this={form} use:enhance={onSubmit}>
   {@render before?.()}
   {#if event}
     <div class="tip">
