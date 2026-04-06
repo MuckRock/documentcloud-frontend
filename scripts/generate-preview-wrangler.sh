@@ -8,7 +8,7 @@ set -euo pipefail
 WORKER_NAME="${1:?Usage: generate-preview-wrangler.sh <worker-name> <subdomain>}"
 SUBDOMAIN="${2:?Usage: generate-preview-wrangler.sh <worker-name> <subdomain>}"
 
-cat > wrangler.preview.jsonc <<EOF
+cat > wrangler/preview.jsonc <<EOF
 {
   "name": "${WORKER_NAME}",
   "main": ".svelte-kit/cloudflare/_worker.js",
@@ -40,4 +40,4 @@ cat > wrangler.preview.jsonc <<EOF
 }
 EOF
 
-echo "Generated wrangler.preview.jsonc for ${WORKER_NAME} at ${SUBDOMAIN}.staging.documentcloud.org"
+echo "Generated wrangler/preview.jsonc for ${WORKER_NAME} at ${SUBDOMAIN}.staging.documentcloud.org"
