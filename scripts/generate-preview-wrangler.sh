@@ -11,7 +11,7 @@ SUBDOMAIN="${2:?Usage: generate-preview-wrangler.sh <worker-name> <subdomain>}"
 cat > wrangler/preview.jsonc <<EOF
 {
   "name": "${WORKER_NAME}",
-  "$schema": "../node_modules/wrangler/config-schema.json",
+  "\$schema": "../node_modules/wrangler/config-schema.json",
   "main": "../.svelte-kit/cloudflare/_worker.js",
   "compatibility_flags": ["nodejs_als", "nodejs_compat"],
   "compatibility_date": "2026-03-31",
