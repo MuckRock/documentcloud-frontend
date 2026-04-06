@@ -18,8 +18,7 @@
   import { page } from "$app/state";
   import { afterNavigate } from "$app/navigation";
 
-  import Ajv, { type ValidateFunction } from "ajv";
-  import addFormats from "ajv-formats";
+  import { Validator, type Schema } from "@cfworker/json-schema";
   import { _ } from "svelte-i18n";
   import { Pencil24, Sync24 } from "svelte-octicons";
 
@@ -60,8 +59,6 @@
     premium,
   }: Props = $props();
 
-  const ajv = new Ajv();
-  addFormats(ajv);
   const me = getCurrentUser();
 
   let form: HTMLFormElement | undefined = $state();
@@ -129,9 +126,9 @@
     if (!validator) return { valid: false, errors: undefined };
 
     $values = noNulls($values);
-    const valid = validator($values);
+    const result = validator.validate($values);
 
-    return { valid, errors: validator.errors };
+    return { valid: result.valid, errors: result.errors };
   }
 
   function noNulls<T extends Record<string, unknown> | ArrayLike<unknown>>(
@@ -164,9 +161,9 @@
       submitter.disabled = false;
     };
   }
-  let validator: ValidateFunction | undefined = $derived.by(() => {
+  let validator: Validator | undefined = $derived.by(() => {
     try {
-      return ajv.compile({ type: "object", properties, required });
+      return new Validator({ type: "object", properties, required } as Schema);
     } catch (e) {
       console.warn("Error compiling JSON schema");
       console.warn(e);
