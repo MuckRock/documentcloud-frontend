@@ -39,7 +39,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          APP_URL: https://preview-${{ env.PR_NUMBER }}.staging.documentcloud.org/
+          APP_URL: https://preview-${{ env.PR_NUMBER }}.staging.documentcloud.org
 
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
