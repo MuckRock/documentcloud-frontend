@@ -20,9 +20,18 @@
 {#snippet withoutIcon()}Note{/snippet}
 {#snippet withHref()}<Note16 /> Notes{/snippet}
 
-<Story name="Active" args={{ active: true, onclick: handleClick, children: withIcon }} />
-<Story name="Disabled" args={{ disabled: true, onclick: handleClick, children: withIcon }} />
-<Story name="Without Icon" args={{ onclick: handleClick, children: withoutIcon }} />
+<Story
+  name="Active"
+  args={{ active: true, onclick: handleClick, children: withIcon }}
+/>
+<Story
+  name="Disabled"
+  args={{ disabled: true, onclick: handleClick, children: withIcon }}
+/>
+<Story
+  name="Without Icon"
+  args={{ onclick: handleClick, children: withoutIcon }}
+/>
 <Story
   name="Custom colors"
   args={{

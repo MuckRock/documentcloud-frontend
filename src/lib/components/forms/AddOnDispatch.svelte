@@ -1,10 +1,13 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import { writable } from "svelte/store";
 
   export const values = writable({ event: "disabled", selection: null });
 </script>
 
 <script lang="ts">
+  import { createBubbler } from "svelte/legacy";
+
+  const bubble = createBubbler();
   import type {
     Maybe,
     Nullable,
@@ -17,7 +20,7 @@
   import { page } from "$app/stores";
   import { afterNavigate } from "$app/navigation";
 
-  import Ajv from "ajv";
+  import Ajv, { type ValidateFunction } from "ajv";
   import addFormats from "ajv-formats";
   import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
@@ -34,12 +37,29 @@
   import { getCurrentUser } from "$lib/utils/permissions";
   import { SIGN_IN_URL } from "@/config/config";
 
-  export let properties: any = {};
-  export let required: string[] = [];
-  export let eventOptions: Maybe<EventOptions>;
-  export let event: Maybe<Nullable<Event>> = null;
-  export let action: string = "";
-  export let disablePremium = false;
+  interface Props {
+    properties?: any;
+    required?: string[];
+    eventOptions: Maybe<EventOptions>;
+    event?: Maybe<Nullable<Event>>;
+    action?: string;
+    disablePremium?: boolean;
+    before?: import("svelte").Snippet;
+    selection?: import("svelte").Snippet;
+    premium?: import("svelte").Snippet;
+  }
+
+  let {
+    properties = {},
+    required = [],
+    eventOptions,
+    event = null,
+    action = "",
+    disablePremium = false,
+    before,
+    selection,
+    premium,
+  }: Props = $props();
 
   const ajv = new Ajv();
   addFormats(ajv);
@@ -47,14 +67,9 @@
   const dispatch = createEventDispatcher();
   const me = getCurrentUser();
 
-  let form: HTMLFormElement;
+  let form: HTMLFormElement | undefined = $state();
   let created: Nullable<Event | Run> = null;
-  let running = false;
-
-  $: validator = ajv.compile({ type: "object", properties, required });
-  $: hasEvents = eventOptions && eventOptions.events.length > 0;
-  $: hasFields = Object.keys(properties).length > 0;
-  $: sign_in_url = buildSignInUrl($page.url.href, $values);
+  let running = $state(false);
 
   function buildSignInUrl(pageUrl: string, formValues: Record<string, any>) {
     let nextUrl: URL;
@@ -114,6 +129,8 @@
   }
 
   export function validate() {
+    if (!validator) return { valid: false, errors: undefined };
+
     $values = noNulls($values);
     const valid = validator($values);
 
@@ -150,17 +167,28 @@
       submitter.disabled = false;
     };
   }
+  let validator: ValidateFunction | undefined = $derived.by(() => {
+    try {
+      return ajv.compile({ type: "object", properties, required });
+    } catch (e) {
+      console.warn("Error compiling JSON schema");
+      console.warn(e);
+    }
+  });
+  let hasEvents = $derived(eventOptions && eventOptions.events.length > 0);
+  let hasFields = $derived(Object.keys(properties).length > 0);
+  let sign_in_url = $derived(buildSignInUrl($page.url.href, $values));
 </script>
 
 <form
   method="post"
   {action}
   bind:this={form}
-  on:submit
-  on:reset
+  onsubmit={bubble("submit")}
+  onreset={bubble("reset")}
   use:enhance={onSubmit}
 >
-  <slot name="before" />
+  {@render before?.()}
   {#if event}
     <div class="tip">
       <Tip mode="normal">
@@ -189,8 +217,8 @@
             description={params.description}
             required={required?.includes(name)}
           >
-            <svelte:component
-              this={autofield(params)}
+            {@const Input = autofield(params)}
+            <Input
               {...params}
               {name}
               required={required?.includes(name)}
@@ -222,9 +250,9 @@
     </fieldset>
   {/if}
 
-  <slot name="selection" />
+  {@render selection?.()}
 
-  <slot name="premium" />
+  {@render premium?.()}
 
   <SignedIn>
     <div class="controls">

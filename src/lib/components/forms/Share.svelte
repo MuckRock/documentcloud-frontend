@@ -155,10 +155,7 @@
         <File16 />
         {$_("share.document")}
       </Tab>
-      <Tab
-        onclick={() => (currentTab = "page")}
-        active={currentTab === "page"}
-      >
+      <Tab onclick={() => (currentTab = "page")} active={currentTab === "page"}>
         <Hash16 />
         {$_("share.page")}
       </Tab>
