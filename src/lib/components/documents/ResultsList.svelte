@@ -29,7 +29,7 @@
 </script>
 
 <script lang="ts">
-  import { getContext, onMount, setContext, type Snippet } from "svelte";
+  import { getContext, setContext, type Snippet } from "svelte";
   import { _ } from "svelte-i18n";
   import { Search24 } from "svelte-octicons";
 
