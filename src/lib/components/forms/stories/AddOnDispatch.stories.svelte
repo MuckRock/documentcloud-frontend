@@ -1,7 +1,7 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
 
-  import AddOnDispatch, { values } from "../AddOnDispatch.svelte";
+  import AddOnDispatch from "../AddOnDispatch.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
 
   import { addonsList } from "@/test/fixtures/addons";
@@ -17,7 +17,9 @@
 </script>
 
 <script lang="ts">
-  // instance script needed for $values store auto-subscription
+  import { values } from "../AddOnDispatch.svelte";
+  let currentValues = $state({});
+  values.subscribe((v: any) => (currentValues = v));
 </script>
 
 {#snippet template(args: {
@@ -32,8 +34,8 @@
       eventOptions={args.eventOptions}
     />
     <div class="values" style="max-width: 88ch" data-chromatic="ignore">
-      <h2><code>$values</code></h2>
-      <pre><code>{JSON.stringify($values, null, 2)}</code></pre>
+      <h2><code>values</code></h2>
+      <pre><code>{JSON.stringify(currentValues, null, 2)}</code></pre>
     </div>
   </Flex>
 {/snippet}
