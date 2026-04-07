@@ -17,9 +17,9 @@
 </script>
 
 <script lang="ts">
+  import { fromStore } from "svelte/store";
   import { values } from "../AddOnDispatch.svelte";
-  let currentValues = $state({});
-  values.subscribe((v: any) => (currentValues = v));
+  const currentValues = fromStore(values);
 </script>
 
 {#snippet template(args: {
@@ -35,7 +35,7 @@
     />
     <div class="values" style="max-width: 88ch" data-chromatic="ignore">
       <h2><code>values</code></h2>
-      <pre><code>{JSON.stringify(currentValues, null, 2)}</code></pre>
+      <pre><code>{JSON.stringify(currentValues.current, null, 2)}</code></pre>
     </div>
   </Flex>
 {/snippet}
