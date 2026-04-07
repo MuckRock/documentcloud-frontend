@@ -34,13 +34,13 @@
     };
 
     // optimistic update
-    addon.active = !addon.active;
+    addon = { ...addon, active: !addon.active };
 
     const resp = await fetch(endpoint, {
       ...options,
       body: JSON.stringify({ active: addon.active }),
     }).catch((err) => {
-      addon.active = !addon.active;
+      addon = { ...addon, active: !addon.active };
       return {
         ok: false,
         statusText: String(err),
@@ -49,7 +49,7 @@
 
     if (!resp.ok) {
       // reset active state
-      addon.active = !addon.active;
+      addon = { ...addon, active: !addon.active };
       console.warn(`Problem updating add-on: ${resp.statusText}`);
     }
 
