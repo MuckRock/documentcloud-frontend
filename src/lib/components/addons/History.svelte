@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Event, Maybe, Nullable, Page, Run } from "$lib/api/types";
 
+  import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
   import { Alert24, History16, History24, Hourglass24 } from "svelte-octicons";
 
@@ -43,7 +44,7 @@
     ),
   );
 
-  $effect(() => {
+  onMount(() => {
     if ($addons?.length && running) {
       runs = runs.map((r) => running[r.uuid] || r);
     }
