@@ -13,38 +13,109 @@
     title: "Forms / Add-On Dispatch",
     component: AddOnDispatch,
     parameters: { layout: "centered" },
-    render: template,
   });
 </script>
 
-{#snippet template(args)}
-  {@const addon = args}
+<script lang="ts">
+  // instance script needed for $values store auto-subscription
+</script>
+
+{#snippet template(args: {
+  properties?: any;
+  required?: string[];
+  eventOptions?: any;
+})}
   <Flex direction="column" style="width: 50vw">
     <AddOnDispatch
-      properties={addon.properties}
-      required={addon.required}
-      eventOptions={addon.eventOptions}
+      properties={args.properties}
+      required={args.required}
+      eventOptions={args.eventOptions}
     />
+    <div class="values" style="max-width: 88ch" data-chromatic="ignore">
+      <h2><code>$values</code></h2>
+      <pre><code>{JSON.stringify($values, null, 2)}</code></pre>
+    </div>
   </Flex>
 {/snippet}
 
-<Story name="PDF Exporter" args={addons[0]} />
+<Story
+  name="PDF Exporter"
+  args={{
+    properties: addons[0]?.parameters?.properties,
+    required: addons[0]?.parameters?.required,
+    eventOptions: addons[0]?.parameters?.eventOptions,
+  }}
+  {template}
+/>
 
-<Story name="Scraper" args={addons[1]} />
+<Story
+  name="Scraper"
+  args={{
+    properties: addons[1]?.parameters?.properties,
+    required: addons[1]?.parameters?.required,
+    eventOptions: addons[1]?.parameters?.eventOptions,
+  }}
+  {template}
+/>
 
-<Story name="Tabula Spreadsheet Extraction" args={addons[2]} />
+<Story
+  name="Tabula Spreadsheet Extraction"
+  args={{
+    properties: addons[2]?.parameters?.properties,
+    required: addons[2]?.parameters?.required,
+    eventOptions: addons[2]?.parameters?.eventOptions,
+  }}
+  {template}
+/>
 
-<Story name="Transcribe Audio, powered by Whisper" args={addons[3]} />
+<Story
+  name="Transcribe Audio, powered by Whisper"
+  args={{
+    properties: addons[3]?.parameters?.properties,
+    required: addons[3]?.parameters?.required,
+    eventOptions: addons[3]?.parameters?.eventOptions,
+  }}
+  {template}
+/>
 
-<Story name="Import Documents" args={addons[4]} />
+<Story
+  name="Import Documents"
+  args={{
+    properties: addons[4]?.parameters?.properties,
+    required: addons[4]?.parameters?.required,
+    eventOptions: addons[4]?.parameters?.eventOptions,
+  }}
+  {template}
+/>
 
-<Story name="Bad Redactions" args={addons[5]} />
+<Story
+  name="Bad Redactions"
+  args={{
+    properties: addons[5]?.parameters?.properties,
+    required: addons[5]?.parameters?.required,
+    eventOptions: addons[5]?.parameters?.eventOptions,
+  }}
+  {template}
+/>
 
-<Story name="Site Snapshot" args={addons[6]} />
+<Story
+  name="Site Snapshot"
+  args={{
+    properties: addons[6]?.parameters?.properties,
+    required: addons[6]?.parameters?.required,
+    eventOptions: addons[6]?.parameters?.eventOptions,
+  }}
+  {template}
+/>
 
 <Story
   name="Prefill Fields (Scraper)"
-  args={addons[1]}
+  args={{
+    properties: addons[1]?.parameters?.properties,
+    required: addons[1]?.parameters?.required,
+    eventOptions: addons[1]?.parameters?.eventOptions,
+  }}
+  {template}
   parameters={{
     sveltekit_experimental: {
       stores: {
@@ -59,4 +130,13 @@
   }}
 />
 
-<Story name="Signed Out" args={addons[4]} parameters={{ signedOut: true }} />
+<Story
+  name="Signed Out"
+  args={{
+    properties: addons[4]?.parameters?.properties,
+    required: addons[4]?.parameters?.required,
+    eventOptions: addons[4]?.parameters?.eventOptions,
+  }}
+  {template}
+  parameters={{ signedOut: true }}
+/>
