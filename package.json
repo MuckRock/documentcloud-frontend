@@ -71,7 +71,7 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development vite dev",
-    "dev:remote": "NODE_ENV=remote vite dev --host local.staging.documentcloud.org",
+    "dev:remote": "NODE_ENV=remote PUBLIC_ENV=remote vite dev --host local.staging.documentcloud.org",
     "build": "vite build && node embeds.js",
     "build:staging": "NODE_ENV=staging vite build && node embeds.js",
     "preview": "vite preview",
