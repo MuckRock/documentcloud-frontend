@@ -7,8 +7,8 @@ on:
     branches: [master]
 
 env:
-  URL: "https://deploy-preview-${{ github.event.number }}.muckcloud.com"
-  PLAYWRIGHT_TEST_BASE_URL: "https://deploy-preview-${{ github.event.number }}.muckcloud.com"
+  URL: "https://preview-${{ github.event.number }}.staging.documentcloud.org"
+  PLAYWRIGHT_TEST_BASE_URL: "https://preview-${{ github.event.number }}.staging.documentcloud.org"
   NODE_ENV: staging
 
 jobs:

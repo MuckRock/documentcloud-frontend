@@ -1,5 +1,5 @@
-export const DC_BASE = "https://api.muckcloud.com";
-export const APP_URL = "https://local.muckcloud.com:5173";
+export const DC_BASE = "https://api.staging.documentcloud.org";
+export const APP_URL = "https://local.staging.documentcloud.org:5173";
 export const EMBED_URL = APP_URL;
 export const SQUARELET_BASE = "https://squarelet-staging.herokuapp.com";
 export const STAFF_ONLY_S3_URL =
