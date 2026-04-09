@@ -1,12 +1,9 @@
 <script lang="ts">
-  import { createBubbler } from "svelte/legacy";
-
-  const bubble = createBubbler();
   import type { Snippet } from "svelte";
   import type { Maybe } from "$lib/api/types";
 
   import { goto } from "$app/navigation";
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 
   import { _ } from "svelte-i18n";
   import { Search16, XCircleFill24 } from "svelte-octicons";
@@ -40,7 +37,7 @@
     query = "";
     input?.focus();
 
-    const url = new URL($page.url);
+    const url = new URL(page.url);
     url.searchParams.delete(name);
     return goto(url);
   }
@@ -50,7 +47,7 @@
     const form = e.target as HTMLFormElement;
     const fd = new FormData(form);
     const q = fd.get(name) as string;
-    const url = new URL($page.url);
+    const url = new URL(page.url);
 
     if (q) {
       url.searchParams.set(name, query);
@@ -85,8 +82,6 @@
       {placeholder}
       bind:value={query}
       bind:this={input}
-      onchange={bubble("change")}
-      oninput={bubble("input")}
     />
     <button
       title={$_("search.reset")}
