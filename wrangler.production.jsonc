@@ -11,7 +11,10 @@
   },
   "preview_urls": false,
   "keep_vars": true,
-  "routes": [{ "custom_domain": true, "pattern": "www.documentcloud.org" }],
+  "routes": [
+    { "custom_domain": true, "pattern": "www.documentcloud.org" },
+    { "custom_domain": true, "pattern": "embed.documentcloud.org" }
+  ],
   "build": { "command": "npm run build" },
   "observability": {
     "enabled": true,
