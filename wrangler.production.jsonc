@@ -10,6 +10,7 @@
     "directory": ".svelte-kit/cloudflare"
   },
   "preview_urls": false,
+  "workers_dev": false,
   "keep_vars": true,
   "routes": [
     { "custom_domain": true, "pattern": "www.documentcloud.org" },

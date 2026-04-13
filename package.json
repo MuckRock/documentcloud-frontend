@@ -67,7 +67,8 @@
     "storybook-addon-cookie": "^4.0.1",
     "svelte-check": "^4.3.4",
     "typescript": "^5.8.3",
-    "vitest": "^4.0.16"
+    "vitest": "^4.0.16",
+    "wrangler": "^4.81.1"
   },
   "scripts": {
     "dev": "NODE_ENV=development vite dev",
