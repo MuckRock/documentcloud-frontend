@@ -24,4 +24,4 @@ clean:
 	rm -f public/index.html public/[0-9]*.*.* public/bundle.*.js public/bundle.*.css public/bundle.*.txt public/*.map public/*.*.js
 	rm -rf public/assets public/notes public/viewer public/embed
 	@echo deleting built files
-	rm -rf build .svelte-kit .netlify playwright-report
+	rm -rf build .svelte-kit playwright-report

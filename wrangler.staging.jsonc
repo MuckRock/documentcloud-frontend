@@ -1,0 +1,34 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "documentcloud-frontend-staging",
+  "main": ".svelte-kit/cloudflare/_worker.js",
+  "compatibility_flags": ["nodejs_als", "nodejs_compat"],
+  "compatibility_date": "2026-03-31",
+  "send_metrics": false,
+  "assets": {
+    "binding": "ASSETS",
+    "directory": ".svelte-kit/cloudflare"
+  },
+  "preview_urls": false,
+  "keep_vars": true,
+  "routes": [
+    { "custom_domain": true, "pattern": "www.staging.documentcloud.org" },
+    { "custom_domain": true, "pattern": "staging.documentcloud.org" }
+  ],
+  "build": { "command": "npm run build" },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "persist": true,
+      "invocation_logs": true
+    },
+    "traces": {
+      "enabled": true,
+      "persist": true,
+      "head_sampling_rate": 1
+    }
+  }
+}

@@ -3,7 +3,6 @@
   "compilerOptions": {
     "resolveJsonModule": true,
     "allowJs": true,
-    "downlevelIteration": true,
     "noUncheckedIndexedAccess": true,
     "strictNullChecks": true,
     "types": ["vitest/globals", "@testing-library/jest-dom"]

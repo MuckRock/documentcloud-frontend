@@ -8,8 +8,7 @@ import type {
 } from "$lib/api/types";
 import type { APIResponse, ValidationError } from "./types";
 
-import Ajv, { type DefinedError } from "ajv";
-import addFormats from "ajv-formats";
+import { Validator, type Schema } from "@cfworker/json-schema";
 import { APP_URL, BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
 import { getApiResponse } from "../utils/api";
 
@@ -26,7 +25,7 @@ export const CATEGORIES = [
 
 // schedules and eventValues are the inverse of each other, so store them together
 export const schedules = ["disabled", "hourly", "daily", "weekly", "upload"];
-export const eventValues = {
+export const eventValues: Record<string, number> = {
   disabled: 0,
   hourly: 1,
   daily: 2,
@@ -290,7 +289,7 @@ export function buildPayload(
   formData: FormData,
   validate = false,
 ): AddOnPayload {
-  const parameters = {};
+  const parameters: Record<string, any> = {};
 
   for (const [field, params] of Object.entries(
     addon.parameters?.properties ?? {},
@@ -298,9 +297,15 @@ export function buildPayload(
     let value =
       params.type === "array" ? formData.getAll(field) : formData.get(field);
 
-    // checkbox values are "on"
+    // coerce types from FormData strings to match schema expectations
     if (params.type === "boolean") {
       parameters[field] = value === "on";
+    } else if (
+      (params.type === "integer" || params.type === "number") &&
+      typeof value === "string" &&
+      value !== ""
+    ) {
+      parameters[field] = Number(value);
     } else {
       parameters[field] = value;
     }
@@ -327,34 +332,34 @@ export function buildPayload(
   if (validate) {
     const { valid, errors } = validatePayload(addon, payload);
     payload.valid = valid;
-    payload.errors = errors as DefinedError[];
+    payload.errors = errors;
   }
 
   return payload;
 }
 
 function validatePayload(addon: AddOn, payload: AddOnPayload) {
-  // todo: investigate whether there's any benefit to creating a global ajv instance
-  const ajv = new Ajv({ coerceTypes: true, useDefaults: true });
-  addFormats(ajv);
-
   const { properties, required } = addon.parameters;
-  const validator = ajv.compile({ type: "object", properties, required });
+  const validator = new Validator({
+    type: "object",
+    properties,
+    required,
+  } as Schema);
 
   payload.parameters = noNulls(payload.parameters);
-  const valid = validator(payload.parameters);
+  const result = validator.validate(payload.parameters);
 
-  return { valid, errors: validator.errors };
+  return { valid: result.valid, errors: result.errors };
 }
 
 function noNulls<T extends Record<string, any>>(values: T): Partial<T> {
   const nulls = new Set([null, undefined, ""]);
   return Object.entries(values).reduce((m, [k, v]) => {
     if (!nulls.has(v)) {
-      m[k] = v;
+      (m as Record<string, any>)[k] = v;
     }
     return m;
-  }, {});
+  }, {} as Partial<T>);
 }
 
 // type utils

@@ -1,8 +1,6 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
-  import { createBubbler, stopPropagation } from "svelte/legacy";
 
-  const bubble = createBubbler();
   import { browser } from "$app/environment";
   import { onMount } from "svelte";
   import { ChevronDown16 } from "svelte-octicons";
@@ -61,12 +59,7 @@
       </span>
       {#if title}<span class="title">{@render title?.()}</span>{/if}
       {#if action}
-        <span
-          role="button"
-          tabindex="0"
-          onclick={stopPropagation(bubble("click"))}
-          onkeydown={stopPropagation(bubble("keydown"))}
-        >
+        <span role="button" tabindex="0">
           {@render action?.()}
         </span>{/if}
     </header>

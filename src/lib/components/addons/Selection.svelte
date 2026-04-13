@@ -75,7 +75,7 @@
   </fieldset>
   <p class="help">
     {$_("addonDispatchDialog.selectionHelp")}
-    <a data-sveltekit-preload-data="none" href="/help/add-ons/">
+    <a data-sveltekit-preload-data="off" href="/help/add-ons/">
       {$_("addonDispatchDialog.selectionLearnMore")}
     </a>
   </p>

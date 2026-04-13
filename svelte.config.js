@@ -1,5 +1,5 @@
-import adapter from "@sveltejs/adapter-netlify";
-import sveltePreprocess from "svelte-preprocess";
+import adapter from "@sveltejs/adapter-cloudflare";
+import { sveltePreprocess } from "svelte-preprocess";
 import autoprefixer from "autoprefixer";
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -24,7 +24,7 @@ export default {
     },
   },
 
-  // Consult https://svelte.dev/docs#compile-time-svelte-preprocess
+  // Consult https://svelte.dev/docs/svelte/svelte-compiler#preprocess
   // for more information about preprocessors
   preprocess: [
     sveltePreprocess({

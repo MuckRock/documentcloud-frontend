@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  NODE_ENV: production
+  PUBLIC_ENV: development # match local tests
+
 jobs:
   unit-test:
     runs-on: ubuntu-latest
@@ -16,11 +20,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22.x"
-      - run: npm ci
+      - run: npm ci --include=dev
       - run: npm run sync
       - run: npm run build
-        env:
-          NODE_ENV: production
       - run: npm run test:coverage
       - name: Report Coverage
         uses: davelosert/vitest-coverage-report-action@v2
@@ -34,9 +36,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22.x"
-      - run: npm ci
+      - run: npm ci --include=dev
       - run: npm run sync
       - run: npm run build
-        env:
-          NODE_ENV: production
       - run: npm run check

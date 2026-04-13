@@ -1,4 +1,5 @@
-<script context="module" lang="ts">
+<script module lang="ts">
+  import type { Snippet } from "svelte";
   import { writable } from "svelte/store";
 
   export const values = writable({ event: "disabled", selection: null });
@@ -14,12 +15,10 @@
   } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import { afterNavigate } from "$app/navigation";
 
-  import Ajv from "ajv";
-  import addFormats from "ajv-formats";
-  import { createEventDispatcher } from "svelte";
+  import { Validator, type Schema } from "@cfworker/json-schema";
   import { _ } from "svelte-i18n";
   import { Pencil24, Sync24 } from "svelte-octicons";
 
@@ -34,27 +33,37 @@
   import { getCurrentUser } from "$lib/utils/permissions";
   import { SIGN_IN_URL } from "@/config/config";
 
-  export let properties: any = {};
-  export let required: string[] = [];
-  export let eventOptions: Maybe<EventOptions>;
-  export let event: Maybe<Nullable<Event>> = null;
-  export let action: string = "";
-  export let disablePremium = false;
+  interface Props {
+    properties?: any;
+    required?: string[];
+    eventOptions: Maybe<EventOptions>;
+    event?: Maybe<Nullable<Event>>;
+    action?: string;
+    disablePremium?: boolean;
+    ondispatch?: (data: { type: string; event?: Event; run?: Run }) => void;
+    before?: Snippet;
+    selection?: Snippet;
+    premium?: Snippet;
+  }
 
-  const ajv = new Ajv();
-  addFormats(ajv);
+  let {
+    properties = {},
+    required = [],
+    eventOptions,
+    event = null,
+    action = "",
+    disablePremium = false,
+    ondispatch,
+    before,
+    selection,
+    premium,
+  }: Props = $props();
 
-  const dispatch = createEventDispatcher();
   const me = getCurrentUser();
 
-  let form: HTMLFormElement;
+  let form: HTMLFormElement | undefined = $state();
   let created: Nullable<Event | Run> = null;
-  let running = false;
-
-  $: validator = ajv.compile({ type: "object", properties, required });
-  $: hasEvents = eventOptions && eventOptions.events.length > 0;
-  $: hasFields = Object.keys(properties).length > 0;
-  $: sign_in_url = buildSignInUrl($page.url.href, $values);
+  let running = $state(false);
 
   function buildSignInUrl(pageUrl: string, formValues: Record<string, any>) {
     let nextUrl: URL;
@@ -90,7 +99,7 @@
       };
     }
     // prefill values from search params
-    new URLSearchParams($page.url.searchParams).forEach((v, k) => {
+    new URLSearchParams(page.url.searchParams).forEach((v, k) => {
       if (k in properties) {
         $values[k] = v;
       }
@@ -114,10 +123,12 @@
   }
 
   export function validate() {
-    $values = noNulls($values);
-    const valid = validator($values);
+    if (!validator) return { valid: false, errors: undefined };
 
-    return { valid, errors: validator.errors };
+    $values = noNulls($values);
+    const result = validator.validate($values);
+
+    return { valid: result.valid, errors: result.errors };
   }
 
   function noNulls<T extends Record<string, unknown> | ArrayLike<unknown>>(
@@ -144,23 +155,27 @@
       const { type, data } = result;
       if (type === "success") {
         created = data.type === "event" ? data.event : data.run;
-        dispatch("dispatch", data);
+        ondispatch?.(data);
       }
       update(result);
       submitter.disabled = false;
     };
   }
+  let validator: Validator | undefined = $derived.by(() => {
+    try {
+      return new Validator({ type: "object", properties, required } as Schema);
+    } catch (e) {
+      console.warn("Error compiling JSON schema");
+      console.warn(e);
+    }
+  });
+  let hasEvents = $derived(eventOptions && eventOptions.events.length > 0);
+  let hasFields = $derived(Object.keys(properties).length > 0);
+  let sign_in_url = $derived(buildSignInUrl(page.url.href, $values));
 </script>
 
-<form
-  method="post"
-  {action}
-  bind:this={form}
-  on:submit
-  on:reset
-  use:enhance={onSubmit}
->
-  <slot name="before" />
+<form method="post" {action} bind:this={form} use:enhance={onSubmit}>
+  {@render before?.()}
   {#if event}
     <div class="tip">
       <Tip mode="normal">
@@ -189,8 +204,8 @@
             description={params.description}
             required={required?.includes(name)}
           >
-            <svelte:component
-              this={autofield(params)}
+            {@const Input = autofield(params)}
+            <Input
               {...params}
               {name}
               required={required?.includes(name)}
@@ -222,9 +237,9 @@
     </fieldset>
   {/if}
 
-  <slot name="selection" />
+  {@render selection?.()}
 
-  <slot name="premium" />
+  {@render premium?.()}
 
   <SignedIn>
     <div class="controls">

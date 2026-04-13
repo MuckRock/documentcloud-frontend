@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Org, User } from "$lib/api/types";
-  import { setContext } from "svelte";
+  import { setContext, untrack } from "svelte";
   import { writable } from "svelte/store";
 
   import Documents from "../Documents.svelte";
@@ -12,8 +12,10 @@
 
   const props: Props = $props();
 
-  setContext("me", writable(props.user));
-  setContext("org", writable(props.org));
+  untrack(() => {
+    setContext("me", writable(props.user));
+    setContext("org", writable(props.org));
+  });
 </script>
 
 <Documents />

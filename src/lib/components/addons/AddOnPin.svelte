@@ -1,19 +1,23 @@
-<script lang="ts" context="module">
-  import { writable, type Writable } from "svelte/store";
+<script lang="ts" module>
   import type { AddOn } from "$lib/api/types";
+  import { writable, type Writable } from "svelte/store";
 
   export const pinned: Writable<AddOn[]> = writable([]);
 </script>
 
 <script lang="ts">
+  import Pin from "../common/Pin.svelte";
   import { getCsrfToken } from "$lib/utils/api";
   import { BASE_API_URL } from "@/config/config";
-  import Pin from "../common/Pin.svelte";
 
-  export let addon: AddOn;
-  export let size = 1;
+  interface Props {
+    addon: AddOn;
+    size?: number;
+  }
 
-  $: endpoint = new URL(`/api/addons/${addon.id}/`, BASE_API_URL);
+  let { addon = $bindable(), size = 1 }: Props = $props();
+
+  let endpoint = $derived(new URL(`/api/addons/${addon.id}/`, BASE_API_URL));
 
   async function toggle(event) {
     event.preventDefault();
@@ -30,13 +34,13 @@
     };
 
     // optimistic update
-    addon.active = !addon.active;
+    addon = { ...addon, active: !addon.active };
 
     const resp = await fetch(endpoint, {
       ...options,
       body: JSON.stringify({ active: addon.active }),
     }).catch((err) => {
-      addon.active = !addon.active;
+      addon = { ...addon, active: !addon.active };
       return {
         ok: false,
         statusText: String(err),
@@ -45,7 +49,7 @@
 
     if (!resp.ok) {
       // reset active state
-      addon.active = !addon.active;
+      addon = { ...addon, active: !addon.active };
       console.warn(`Problem updating add-on: ${resp.statusText}`);
     }
 

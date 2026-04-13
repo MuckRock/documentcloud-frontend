@@ -17,10 +17,13 @@ const localServer = {
 const remoteServer = {
   host: "0.0.0.0",
   port: 5173,
-  origin: "https://local.muckcloud.com:5173",
+  origin: "https://local.staging.documentcloud.org:5173",
   https: {
-    key: path.resolve(__dirname, "certs/local.muckcloud.com-key.pem"),
-    cert: path.resolve(__dirname, "certs/local.muckcloud.com.pem"),
+    key: path.resolve(
+      __dirname,
+      "certs/local.staging.documentcloud.org-key.pem",
+    ),
+    cert: path.resolve(__dirname, "certs/local.staging.documentcloud.org.pem"),
   },
 };
 
@@ -31,10 +34,11 @@ export default defineConfig(({ mode }) => ({
   },
 
   define: {
-    "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
+    "process.env.NODE_ENV": JSON.stringify(mode),
     "process.env.DEPLOY_PRIME_URL": JSON.stringify(
       process.env.DEPLOY_PRIME_URL,
     ),
+    "process.env.APP_URL": JSON.stringify(process.env.APP_URL),
   },
 
   plugins: [sveltekit(), svelteTesting()],

@@ -2,7 +2,7 @@
  * API response types
  */
 
-import type { DefinedError } from "ajv";
+import type { OutputUnit } from "@cfworker/json-schema";
 
 export type Access = "public" | "private" | "organization"; // https://www.documentcloud.org/help/api#access-levels
 
@@ -433,6 +433,6 @@ export interface AddOnPayload {
   event?: number;
   documents?: number[] | string[];
   query?: string;
-  errors?: DefinedError[];
+  errors?: OutputUnit[];
   valid?: boolean;
 }

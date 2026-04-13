@@ -32,6 +32,7 @@ static/viewer/*
 
 # Local test env file
 .env
+.env.secret
 .env.*
 .envrc
 playwright-report
@@ -60,8 +61,17 @@ storybook-static/
 # Sentry Config File
 .sentryclirc
 
+# generated files
+.wrangler
+wrangler.preview.jsonc
+
 # Claude Code
 CLAUDE.md
-# plans/
 
+# ignoring these skills until I'm sure we want them
 .claude/skills/migrate-storybook-csf
+.claude/skills/cloudflare
+.claude/skills/wrangler
+.claude/skills/workers-best-practices
+.agents/
+skills-lock.json

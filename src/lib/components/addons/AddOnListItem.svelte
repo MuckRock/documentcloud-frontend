@@ -7,12 +7,18 @@
   import PremiumBadge from "$lib/components/premium-credits/PremiumBadge.svelte";
   import { clean } from "$lib/utils/markup";
 
-  export let addon: AddOn;
+  interface Props {
+    addon: AddOn;
+  }
 
-  $: url = `/add-ons/${addon?.repository}/`;
-  $: description = clean(addon?.parameters?.description ?? "");
-  $: author = { name: addon?.repository?.split("/")[0] };
-  $: isPremium = addon?.parameters?.categories?.includes("premium") ?? false;
+  let { addon }: Props = $props();
+
+  let url = $derived(`/add-ons/${addon?.repository}/`);
+  let description = $derived(clean(addon?.parameters?.description ?? ""));
+  let author = $derived({ name: addon?.repository?.split("/")[0] });
+  let isPremium = $derived(
+    addon?.parameters?.categories?.includes("premium") ?? false,
+  );
 </script>
 
 <div class="container addon-link" id={addon.repository}>

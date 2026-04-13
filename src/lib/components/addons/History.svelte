@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Event, Maybe, Nullable, Page, Run } from "$lib/api/types";
 
+  import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
   import { Alert24, History16, History24, Hourglass24 } from "svelte-octicons";
 
@@ -13,28 +14,41 @@
   import { getRunningAddons } from "$lib/components/processing/ProcessContext.svelte";
   import { getApiResponse } from "$lib/utils/api";
 
-  export let runs: Run[];
-  export let event: Maybe<Event> = undefined;
-  export let previous: Maybe<Nullable<string>> = undefined;
-  export let next: Maybe<Nullable<string>> = undefined;
+  interface Props {
+    runs: Run[];
+    event?: Maybe<Event>;
+    previous?: Maybe<Nullable<string>>;
+    next?: Maybe<Nullable<string>>;
+    loading?: boolean;
+  }
 
-  export let loading = false;
+  let {
+    runs = $bindable(),
+    event = undefined,
+    previous = $bindable(undefined),
+    next = $bindable(undefined),
+    loading = $bindable(false),
+  }: Props = $props();
 
   const addons = getRunningAddons();
-  let error: string = "";
+  let error: string = $state("");
 
-  $: empty = runs.length === 0;
-  $: running = $addons?.reduce(
-    (m, run) => {
-      m[run.uuid] = run;
-      return m;
-    },
-    {} as Record<string, Run>,
+  let empty = $derived(runs.length === 0);
+  let running = $derived(
+    $addons?.reduce(
+      (m, run) => {
+        m[run.uuid] = run;
+        return m;
+      },
+      {} as Record<string, Run>,
+    ),
   );
 
-  $: if ($addons?.length && running) {
-    runs = runs.map((r) => running[r.uuid] || r);
-  }
+  onMount(() => {
+    if ($addons?.length && running) {
+      runs = runs.map((r) => running[r.uuid] || r);
+    }
+  });
 
   // load the next set of results
   async function load(url: URL) {

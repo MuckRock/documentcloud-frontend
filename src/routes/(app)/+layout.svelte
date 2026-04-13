@@ -14,6 +14,13 @@
   const user_orgs: Writable<Promise<Org[]>> = writable(props.data.user_orgs);
   const org_users: Writable<Promise<User[]>> = writable(props.data.org_users);
 
+  // update context so other components can access and update
+  setContext("me", me);
+  setContext("org", org);
+  setContext("user_orgs", user_orgs);
+  setContext("org_users", org_users);
+  setContext("tipOfDay", props.data.tipOfDay);
+
   // set the $me and $org store whenever we load user data
   $effect(() => {
     me.set(props.data.me);
@@ -21,13 +28,6 @@
     user_orgs.set(props.data.user_orgs);
     org_users.set(props.data.org_users);
   });
-
-  // update context so other components can access and update
-  setContext("me", me);
-  setContext("org", org);
-  setContext("user_orgs", user_orgs);
-  setContext("org_users", org_users);
-  setContext("tipOfDay", props.data.tipOfDay);
 
   onMount(async () => {
     if (props.data.me) {

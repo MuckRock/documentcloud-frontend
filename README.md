@@ -32,19 +32,19 @@ Once everything is up and running, you should be able to see the website live at
 
 ### Remote Stack
 
-It's possible to run the frontend against the staging API, instead of a locally running API server, providing a lightweight solution for local development. The frontend needs to run on a custom localhost, `https://local.muckcloud.com`, and is exposed on the standard `5173` port used by Vite dev servers.
+It's possible to run the frontend against the staging API, instead of a locally running API server, providing a lightweight solution for local development. The frontend needs to run on a custom localhost, `https://local.staging.documentcloud.org`, and is exposed on the standard `5173` port used by Vite dev servers.
 
 To run the dev server locally against the staging API, take the following steps:
 
 1. Update your hosts file
    ```bash
-   echo "127.0.0.1 local.muckcloud.com" | sudo tee -a /etc/hosts
+   echo "127.0.0.1 local.staging.documentcloud.org" | sudo tee -a /etc/hosts
    ```
 2. Make a local certificate in a `certs` directory
    ```bash
    mkdir certs && cd certs
    mkcert -install
-   mkcert local.muckcloud.com
+   mkcert local.staging.documentcloud.org
    ```
 3. Use NPM to install and run the `dev:remote` script
    ```bash
@@ -52,7 +52,7 @@ To run the dev server locally against the staging API, take the following steps:
    npm run dev:remote
    ```
 
-Now, you should have a dev server accessible at `https://local.muckcloud.com:5173` that connects to the staging DocumentCloud API (https://api.muckcloud.com) and staging authentication service (https://squarelet-staging.herokuapp.com).
+Now, you should have a dev server accessible at `https://local.staging.documentcloud.org:5173` that connects to the staging DocumentCloud API (https://api.staging.documentcloud.org) and staging authentication service (https://squarelet-staging.herokuapp.com).
 
 ## Building for production
 

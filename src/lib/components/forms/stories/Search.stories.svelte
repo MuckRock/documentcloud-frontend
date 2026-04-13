@@ -1,35 +1,40 @@
 <script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+  import type { ComponentProps } from "svelte";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import { action } from "@storybook/addon-actions";
   import Search from "../Search.svelte";
 
-  export const meta = {
+  type Args = ComponentProps<typeof Search>;
+
+  const { Story } = defineMeta({
     title: "Forms / Search",
     component: Search,
     parameters: { layout: "centered" },
-  };
+  });
 
-  const change = action("Change");
-  const submit = action("Submit");
+  const onchange = action("Change");
+  const onsubmit = action("Submit");
 
   const query = '"steve jobs" macintosh';
 </script>
 
-<Story name="With Query">
+{#snippet template(args: Args)}
   <div style="width: 24rem">
-    <Search {query} onsubmit={submit} onchange={change} />
+    <Search {...args} />
   </div>
-</Story>
+{/snippet}
 
-<Story name="Without Query">
-  <div style="width: 24rem">
-    <Search query="" onsubmit={submit} onchange={change} />
-  </div>
-</Story>
+<Story name="With Query" {template} args={{ onsubmit, onchange, query }} />
 
-<Story name="With help">
+<Story
+  name="Without Query"
+  {template}
+  args={{ onsubmit, onchange, query: "" }}
+/>
+
+<Story name="With help" asChild>
   <div style="width: 60ch">
-    <Search {query} onsubmit={submit} onchange={change}>
+    <Search {query} {onsubmit} {onchange}>
       {#snippet help()}
         <span>
           Search tips: add filters by typing <code>user:</code>,

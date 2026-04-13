@@ -181,6 +181,7 @@ Assumes it's a child of a ViewerContext
   class:writing
   class:drawing
   class:activeNote
+  role="application"
   on:pointerdown|self={startDrawingBox}
   on:pointermove|self={continueDrawingBox}
   on:pointerup|self={finishDrawingBox}
