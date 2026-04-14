@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import type { AriaRole } from "svelte/elements";
 
   /* Based on https://github.com/himynameisdave/svelte-flex */
@@ -7,44 +8,108 @@
   type Justify = "around" | "between" | "center" | "end" | "evenly" | "start";
   type Direction = "column" | "row";
 
-  export let direction: Direction = "row";
-  export let align: Align = "stretch";
-  export let justify: Justify = "start";
-  export let reverse = false;
-  export let gap: number = 0.5;
-  export let wrap: boolean = false;
-  export let role: null | AriaRole = null;
+  interface Props {
+    direction?: Direction;
+    align?: Align;
+    justify?: Justify;
+    reverse?: boolean;
+    gap?: number;
+    wrap?: boolean;
+    role?: null | AriaRole;
+    children: Snippet;
+    [key: string]: any;
+  }
 
-  const alignMap: Record<Align, string> = {
-    start: "flex-start",
-    center: "center",
-    end: "flex-end",
-    stretch: "stretch",
-    baseline: "baseline",
-  };
+  let {
+    direction = "row",
+    align = "stretch",
+    justify = "start",
+    reverse = false,
+    gap = 0.5,
+    wrap = false,
+    role = null,
+    children,
+    ...rest
+  }: Props = $props();
 
-  const justifyMap: Record<Justify, string> = {
-    start: "flex-start",
-    center: "center",
-    end: "flex-end",
-    around: "space-around",
-    between: "space-between",
-    evenly: "space-evenly",
-  };
-
-  $: directionWithReverse = reverse ? `${direction}-reverse` : direction;
+  let directionClass = $derived(
+    reverse ? `${direction}-reverse` : direction,
+  );
 </script>
 
 <div
-  {...$$restProps}
-  style:display="flex"
-  style:flex-direction={directionWithReverse}
-  style:flex-wrap={wrap ? "wrap" : "nowrap"}
-  style:align-items={alignMap[align]}
-  style:justify-content={justifyMap[justify]}
-  style:gap={`${gap}rem`}
-  class={$$restProps.class}
+  {...rest}
+  class="{directionClass} align-{align} justify-{justify} {wrap
+    ? 'wrap'
+    : 'nowrap'} {rest.class ?? ''}"
+  style:--gap="{gap}rem"
   {role}
 >
-  <slot />
+  {@render children()}
 </div>
+
+<style>
+  div {
+    display: flex;
+    gap: var(--gap);
+  }
+
+  /* direction */
+  div.row {
+    flex-direction: row;
+  }
+  div.row-reverse {
+    flex-direction: row-reverse;
+  }
+  div.column {
+    flex-direction: column;
+  }
+  div.column-reverse {
+    flex-direction: column-reverse;
+  }
+
+  /* align-items */
+  div.align-start {
+    align-items: flex-start;
+  }
+  div.align-center {
+    align-items: center;
+  }
+  div.align-end {
+    align-items: flex-end;
+  }
+  div.align-stretch {
+    align-items: stretch;
+  }
+  div.align-baseline {
+    align-items: baseline;
+  }
+
+  /* justify-content */
+  div.justify-start {
+    justify-content: flex-start;
+  }
+  div.justify-center {
+    justify-content: center;
+  }
+  div.justify-end {
+    justify-content: flex-end;
+  }
+  div.justify-around {
+    justify-content: space-around;
+  }
+  div.justify-between {
+    justify-content: space-between;
+  }
+  div.justify-evenly {
+    justify-content: space-evenly;
+  }
+
+  /* wrap */
+  div.wrap {
+    flex-wrap: wrap;
+  }
+  div.nowrap {
+    flex-wrap: nowrap;
+  }
+</style>
