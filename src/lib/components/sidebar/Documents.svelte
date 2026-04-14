@@ -95,7 +95,9 @@
   <SidebarGroup name="documents">
     {#snippet title()}
       <NavItem>
-        <File16 slot="start" />
+        {#snippet start()}
+          <File16 />
+        {/snippet}
         {$_("documents.documents")}
       </NavItem>
     {/snippet}
@@ -108,7 +110,9 @@
     {/snippet}
 
     <NavItem small hover href={searchUrl(mine).href} active={query === mine}>
-      <Person16 height={14} width={14} slot="start" />
+      {#snippet start()}
+        <Person16 height={14} width={14} />
+      {/snippet}
       {$_("documents.yourDocuments")}
     </NavItem>
     <NavItem
@@ -117,7 +121,9 @@
       href={searchUrl(minePrivate).href}
       active={query === minePrivate}
     >
-      <Lock16 height={14} width={14} slot="start" />
+      {#snippet start()}
+        <Lock16 height={14} width={14} />
+      {/snippet}
       {$_("documents.accessDocuments", {
         values: { access: "Private " },
       })}
@@ -128,7 +134,9 @@
       href={searchUrl(minePublic).href}
       active={query === minePublic}
     >
-      <Globe16 height={14} width={14} slot="start" />
+      {#snippet start()}
+        <Globe16 height={14} width={14} />
+      {/snippet}
       {$_("documents.accessDocuments", {
         values: { access: "Public " },
       })}
@@ -140,7 +148,9 @@
         href={searchUrl(orgDocs).href}
         active={query === orgDocs}
       >
-        <Organization16 height={14} width={14} slot="start" />
+        {#snippet start()}
+          <Organization16 height={14} width={14} />
+        {/snippet}
         {$_("documents.nameDocuments", {
           values: { name: $org.name, access: "" },
         })}
@@ -160,23 +170,27 @@
             href={searchUrl(savedSearch.query).href}
             active={query === savedSearch.query}
           >
-            <Bookmark16 height={14} width={14} slot="start" />
+            {#snippet start()}
+              <Bookmark16 height={14} width={14} />
+            {/snippet}
             {savedSearch.name}
-            <span slot="end">
-              <Button
-                ghost
-                minW={false}
-                size="small"
-                title={$_("documents.savedSearches.edit")}
-                on:click={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  editing = savedSearch;
-                }}
-              >
-                <Pencil16 height={12} width={12} />
-              </Button>
-            </span>
+            {#snippet end()}
+              <span>
+                <Button
+                  ghost
+                  minW={false}
+                  size="small"
+                  title={$_("documents.savedSearches.edit")}
+                  on:click={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    editing = savedSearch;
+                  }}
+                >
+                  <Pencil16 height={12} width={12} />
+                </Button>
+              </span>
+            {/snippet}
           </NavItem>
         {:else}
           <p class="help">
@@ -203,7 +217,9 @@
   </SidebarGroup>
   {#snippet signedOut()}
     <NavItem href={searchUrl("").href}>
-      <File16 slot="start" />
+      {#snippet start()}
+        <File16 />
+      {/snippet}
       {$_("documents.publicDocuments")}
     </NavItem>
   {/snippet}

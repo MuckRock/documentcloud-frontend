@@ -77,7 +77,9 @@
 <SidebarGroup>
   {#snippet title()}
     <NavItem>
-      <History16 slot="start" />
+      {#snippet start()}
+        <History16 />
+      {/snippet}
       {$_("addonRuns.previous")}
     </NavItem>
   {/snippet}

@@ -114,10 +114,14 @@ Assumes it's a child of a ViewerContext
           <NavItem>
             {@const CurrentModeIcon = icons[$mode]}
             {#if CurrentModeIcon}
-              <CurrentModeIcon slot="start" />
+              {#snippet start()}
+                <CurrentModeIcon />
+              {/snippet}
             {/if}
             {current}
-            <ChevronDown12 slot="end" />
+            {#snippet end()}
+              <ChevronDown12 />
+            {/snippet}
           </NavItem>
         {/snippet}
         {#snippet inner({ close })}

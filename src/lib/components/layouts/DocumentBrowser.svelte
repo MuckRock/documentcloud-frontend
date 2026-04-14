@@ -168,7 +168,9 @@
                         !search.editable}
                     >
                       {$_("bulk.title")}
-                      <ChevronUp12 slot="end" />
+                      {#snippet end()}
+                        <ChevronUp12 />
+                      {/snippet}
                     </NavItem>
                   {/snippet}
                   {#snippet inner({ close })}

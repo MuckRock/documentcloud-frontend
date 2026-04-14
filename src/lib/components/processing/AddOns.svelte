@@ -53,7 +53,9 @@ This component should update on a timer.
   <SidebarGroup name="processing.addons">
     {#snippet title()}
       <NavItem>
-        <Plug16 slot="start" />
+        {#snippet start()}
+          <Plug16 />
+        {/snippet}
         {$_("processing.addons")}
       </NavItem>
     {/snippet}

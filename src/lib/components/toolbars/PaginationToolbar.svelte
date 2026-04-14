@@ -81,9 +81,13 @@
         {#snippet anchor()}
           <div class="toolbarItem">
             <NavItem>
-              <ListOrdered16 slot="start" />
+              {#snippet start()}
+                <ListOrdered16 />
+              {/snippet}
               Sections
-              <ChevronUp12 slot="end" />
+              {#snippet end()}
+                <ChevronUp12 />
+              {/snippet}
             </NavItem>
           </div>
         {/snippet}
