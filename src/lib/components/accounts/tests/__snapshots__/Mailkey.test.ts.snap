@@ -75,7 +75,8 @@ exports[`Mailkey 1`] = `
         <!---->
          
         <div
-          style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 1rem;"
+          class="row align-stretch justify-center wrap  svelte-vh2qhd"
+          style="--gap: 1rem;"
         >
           <!---->
           <!---->
@@ -192,7 +193,8 @@ exports[`Mailkey 2`] = `
         <!---->
          
         <div
-          style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 1rem;"
+          class="row align-stretch justify-center wrap  svelte-vh2qhd"
+          style="--gap: 1rem;"
         >
           <!---->
           <!---->

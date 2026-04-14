@@ -46,7 +46,6 @@ exports[`UserMenu 1`] = `
        
       <div
         class="dropdownArrow svelte-13wiold"
-        slot="end"
       >
         <svg
           class="octicon octicon-chevron-down"
@@ -87,7 +86,6 @@ exports[`UserMenu 1`] = `
         <svg
           class="octicon octicon-gear"
           height="16"
-          slot="start"
           viewBox="0 0 16 16"
           width="16"
           xmlns="http://www.w3.org/2000/svg"
@@ -120,7 +118,6 @@ exports[`UserMenu 1`] = `
         <svg
           class="octicon octicon-sign-out"
           height="16"
-          slot="start"
           viewBox="0 0 16 16"
           width="16"
           xmlns="http://www.w3.org/2000/svg"
