@@ -116,7 +116,7 @@
   {#if access === "private"}
     <div class="banner">
       <Tip mode="danger">
-        <ShieldLock24 slot="icon" />
+        {#snippet icon()}<ShieldLock24 />{/snippet}
         <div class="privateWarning">
           <div style:flex="1 1 auto">
             {$_("share.privateWarning", { values: { type: "document" } })}
@@ -132,7 +132,7 @@
   {:else if access === "organization"}
     <div class="banner">
       <Tip mode="premium">
-        <Organization24 slot="icon" />
+        {#snippet icon()}<Organization24 />{/snippet}
         <div class="privateWarning">
           <div style:flex="1 1 auto">
             {$_("share.orgWarning", { values: { type: "document" } })}

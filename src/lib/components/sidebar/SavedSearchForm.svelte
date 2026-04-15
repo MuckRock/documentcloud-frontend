@@ -103,7 +103,7 @@ Renders inside a modal.
 
     {#if error}
       <Tip mode="error">
-        <Alert24 slot="icon" />
+        {#snippet icon()}<Alert24 />{/snippet}
         {error}
       </Tip>
     {/if}

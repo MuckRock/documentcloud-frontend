@@ -32,9 +32,7 @@
     ...rest
   }: Props = $props();
 
-  let directionClass = $derived(
-    reverse ? `${direction}-reverse` : direction,
-  );
+  let directionClass = $derived(reverse ? `${direction}-reverse` : direction);
 </script>
 
 <div

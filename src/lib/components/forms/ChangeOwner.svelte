@@ -176,13 +176,13 @@ Change owner of one or more documents.
       <Flex direction="column">
         <h2>{$_("change_owner.really", { values: { n: count } })}</h2>
         <Tip mode="danger">
-          <Alert24 slot="icon" />
+          {#snippet icon()}<Alert24 />{/snippet}
           {$_("change_owner.continue", { values: { n: count } })}
         </Tip>
       </Flex>
       {#snippet oversize()}
         <Tip mode="danger">
-          <Alert24 slot="icon" />
+          {#snippet icon()}<Alert24 />{/snippet}
           {$_("change_owner.toomany", { values: { n: MAX_EDIT_BATCH } })}
         </Tip>
       {/snippet}

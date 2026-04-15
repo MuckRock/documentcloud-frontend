@@ -179,7 +179,7 @@
   {#if event}
     <div class="tip">
       <Tip mode="normal">
-        <Pencil24 slot="icon" />
+        {#snippet icon()}<Pencil24 />{/snippet}
         {$_("addonDispatchDialog.editing")}
       </Tip>
     </div>

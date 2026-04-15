@@ -106,13 +106,13 @@ and we don't want to do that everywhere.
     <p>{$_("edit.many", { values: { n: documents.length } })}</p>
     {#snippet empty()}
       <Tip mode="error">
-        <Alert24 slot="icon" />
+        {#snippet icon()}<Alert24 />{/snippet}
         {$_("edit.nodocs")}
       </Tip>
     {/snippet}
     {#snippet oversize()}
       <Tip mode="danger">
-        <Alert24 slot="icon" />
+        {#snippet icon()}<Alert24 />{/snippet}
         {$_("edit.toomany", { values: { n: MAX_EDIT_BATCH } })}
       </Tip>
     {/snippet}

@@ -146,7 +146,9 @@
 
       {#if processing}
         <Tip>
-          <span slot="icon"></span>
+          {#snippet icon()}
+            <span></span>
+          {/snippet}
           {$_("processing.document")}
         </Tip>
       {/if}

@@ -432,15 +432,17 @@ progress through the three-part upload process.
                   {$_("uploadDialog.revisionControlHelp")}
                 </p>{/snippet}
             </Field>
-            <Field inline slot="basic">
-              <Switch name="revision_control" disabled />
-              <FieldLabel premium>
-                {$_("uploadDialog.revisionControl")}
-              </FieldLabel>
-              {#snippet help()}<p>
-                  {$_("uploadDialog.revisionControlHelp")}
-                </p>{/snippet}
-            </Field>
+            {#snippet basic()}
+              <Field inline>
+                <Switch name="revision_control" disabled />
+                <FieldLabel premium>
+                  {$_("uploadDialog.revisionControl")}
+                </FieldLabel>
+                {#snippet help()}<p>
+                    {$_("uploadDialog.revisionControlHelp")}
+                  </p>{/snippet}
+              </Field>
+            {/snippet}
           </Premium>
         </Flex>
       </div>
