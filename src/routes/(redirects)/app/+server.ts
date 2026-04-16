@@ -2,7 +2,7 @@
 
 import { redirect } from "@sveltejs/kit";
 
-export function load({ url }) {
+export function GET({ url }) {
   const u = new URL(url);
 
   // change the path but preserve other parts of the URL
