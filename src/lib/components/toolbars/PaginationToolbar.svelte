@@ -112,7 +112,7 @@
                 <Button
                   ghost
                   mode="primary"
-                  on:click={() => (sectionsOpen = true)}
+                  onclick={() => (sectionsOpen = true)}
                 >
                   {$_("sidebar.toc.cta")}
                 </Button>
@@ -120,7 +120,7 @@
                 <Button
                   ghost
                   mode="primary"
-                  on:click={() => (sectionsOpen = true)}
+                  onclick={() => (sectionsOpen = true)}
                 >
                   {$_("sections.edit")}
                 </Button>

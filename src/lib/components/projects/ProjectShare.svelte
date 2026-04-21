@@ -52,7 +52,7 @@
               {$_("share.privateWarning", { values: { type: "project" } })}
             </div>
             {#if project.edit_access}
-              <Button mode="danger" size="small" on:click={openEditing}>
+              <Button mode="danger" size="small" onclick={openEditing}>
                 {$_("share.privateFix")}
               </Button>
             {/if}

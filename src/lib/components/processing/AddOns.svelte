@@ -61,7 +61,7 @@ This component should update on a timer.
     {/snippet}
 
     {#snippet action()}
-      <Button ghost on:click={dismissAll} {disabled}>
+      <Button ghost onclick={dismissAll} {disabled}>
         {$_("dialog.dismissAll")}
       </Button>
     {/snippet}

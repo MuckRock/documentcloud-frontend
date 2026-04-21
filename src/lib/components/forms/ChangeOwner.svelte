@@ -235,7 +235,7 @@ Change owner of one or more documents.
       <Button type="submit" mode="primary" {disabled}>
         {$_("change_owner.confirm")}
       </Button>
-      <Button on:click={() => onclose?.()}>
+      <Button onclick={() => onclose?.()}>
         {$_("change_owner.cancel")}
       </Button>
     </Flex>

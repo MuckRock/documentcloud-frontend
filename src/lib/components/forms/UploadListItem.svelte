@@ -76,7 +76,7 @@
               <Button
                 ghost
                 minW={false}
-                on:click={() => dispatch("remove", id)}
+                onclick={() => dispatch("remove", id)}
               >
                 {$_("dialog.remove")}?
               </Button>
@@ -116,7 +116,7 @@
       minW={false}
       ghost
       title={$_("dialog.remove")}
-      on:click={() => dispatch("remove", id)}
+      onclick={() => dispatch("remove", id)}
     >
       <XCircleFill24 />
     </Button>

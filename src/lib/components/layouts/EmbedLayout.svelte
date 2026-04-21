@@ -73,7 +73,7 @@
             isFullscreen ? "embed.exitFullscreen" : "embed.enterFullscreen",
           )}
         >
-          <Button size="small" ghost minW={false} on:click={toggleFullscreen}>
+          <Button size="small" ghost minW={false} onclick={toggleFullscreen}>
             {#if isFullscreen}
               <ScreenNormal16 />
             {:else}

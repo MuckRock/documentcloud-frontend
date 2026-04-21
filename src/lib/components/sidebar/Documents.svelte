@@ -181,7 +181,7 @@
                   minW={false}
                   size="small"
                   title={$_("documents.savedSearches.edit")}
-                  on:click={(e) => {
+                  onclick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     editing = savedSearch;
@@ -207,7 +207,7 @@
           size="small"
           disabled={isCurrentSearchSaved}
           title={$_("documents.savedSearches.saveTitle")}
-          on:click={() => (editing = "create")}
+          onclick={() => (editing = "create")}
         >
           <Plus16 height={14} width={14} />
           {$_("documents.savedSearches.save")}

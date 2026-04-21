@@ -164,7 +164,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
 
     <Flex class="buttons">
       <Button type="submit" mode="primary" full>{$_("edit.save")}</Button>
-      <Button full on:click={(e) => onclose?.()}>
+      <Button full onclick={(e) => onclose?.()}>
         {$_("edit.cancel")}
       </Button>
     </Flex>

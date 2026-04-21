@@ -113,7 +113,7 @@ Confirm deletion or one or more documents.
         <Trash16 />
         {$_("delete.confirm")}
       </Button>
-      <Button on:click={() => onclose?.()}>
+      <Button onclick={() => onclose?.()}>
         {$_("delete.cancel")}
       </Button>
     </Flex>

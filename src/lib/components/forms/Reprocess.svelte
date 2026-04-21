@@ -250,7 +250,7 @@ This will mostly be used inside a modal but isn't dependent on one.
       <Button {disabled} type="submit" full mode="danger">
         <IssueReopened16 />{$_("dialogReprocessDialog.confirm")}
       </Button>
-      <Button full on:click={() => onclose?.()}>
+      <Button full onclick={() => onclose?.()}>
         {$_("edit.cancel")}
       </Button>
     </Flex>

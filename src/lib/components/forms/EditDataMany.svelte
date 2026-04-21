@@ -307,7 +307,7 @@ This will mostly merge with existing data.
   />
 
   <Flex class="buttons" align="center" gap={1}>
-    <Button on:click={close}>{$_("dialog.done")}</Button>
+    <Button onclick={close}>{$_("dialog.done")}</Button>
     {#if total_edited > 0}
       <p class="unsaved" transition:fade>
         {$_("data.total_edited", { values: { n: total_edited } })}

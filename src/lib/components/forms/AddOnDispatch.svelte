@@ -260,7 +260,7 @@
           {/if}
         </Button>
       {/if}
-      <Button type="button" ghost mode="primary" on:click={reset}>
+      <Button type="button" ghost mode="primary" onclick={reset}>
         {$_("dialog.reset")}
       </Button>
     </div>

@@ -48,7 +48,7 @@ Remove a collaborator from a project
   <input type="hidden" name="user" value={user.user.id} />
   <Flex class="buttons">
     <Button type="submit" mode="danger">{$_("dialog.remove")}</Button>
-    <Button on:click={() => dispatch("close")}>{$_("dialog.cancel")}</Button>
+    <Button onclick={() => dispatch("close")}>{$_("dialog.cancel")}</Button>
   </Flex>
 </form>
 

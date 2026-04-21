@@ -112,7 +112,7 @@ Renders inside a modal.
       <Button type="submit" mode="primary" full disabled={loading}>
         {$_("edit.save")}
       </Button>
-      <Button full on:click={onclose} disabled={loading}>
+      <Button full onclick={onclose} disabled={loading}>
         {$_("edit.cancel")}
       </Button>
     </Flex>
@@ -120,12 +120,12 @@ Renders inside a modal.
     {#if savedSearch}
       {#if confirmDelete}
         <Flex>
-          <Button mode="danger" full on:click={handleDelete} disabled={loading}>
+          <Button mode="danger" full onclick={handleDelete} disabled={loading}>
             {$_("documents.savedSearches.confirmDelete")}
           </Button>
           <Button
             full
-            on:click={() => (confirmDelete = false)}
+            onclick={() => (confirmDelete = false)}
             disabled={loading}
           >
             {$_("edit.cancel")}
@@ -135,7 +135,7 @@ Renders inside a modal.
         <Button
           ghost
           mode="danger"
-          on:click={() => (confirmDelete = true)}
+          onclick={() => (confirmDelete = true)}
           disabled={loading}
         >
           {$_("documents.savedSearches.delete")}

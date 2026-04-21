@@ -109,7 +109,7 @@
             mode="primary"
             size="small"
             minW={false}
-            on:click={() => (show = "invite")}
+            onclick={() => (show = "invite")}
           >
             <PlusCircle16 height={14} width={14} />
             {$_("projects.collaborators.add")}
@@ -141,7 +141,7 @@
                       minW={false}
                       size="small"
                       title={actions.update}
-                      on:click={() => {
+                      onclick={() => {
                         user_to_update = user;
                         show = "update";
                       }}
@@ -156,7 +156,7 @@
                       minW={false}
                       size="small"
                       title={actions.remove}
-                      on:click={() => {
+                      onclick={() => {
                         user_to_update = user;
                         show = "remove";
                       }}

@@ -132,7 +132,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
       >
         {$_("edit.save")}
       </Button>
-      <Button full on:click={() => onclose?.()}>
+      <Button full onclick={() => onclose?.()}>
         {$_("edit.cancel")}
       </Button>
     </Flex>
