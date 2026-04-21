@@ -28,17 +28,17 @@
   },
   "access": {
     "private": {
-      "value": "Privato",
+      "value": "private",
       "title": "Privato",
       "description": "Documenti solo saranno visibili per te"
     },
     "organization": {
-      "value": "Organizzazione",
+      "value": "organization",
       "title": "Organizzazione",
       "description": "Documenti visibili solo per la tua organizzazione"
     },
     "public": {
-      "value": "pubblico",
+      "value": "public",
       "title": "Pubblico",
       "description": "Documenti saranno visibili pubblicamente a tutti"
     }

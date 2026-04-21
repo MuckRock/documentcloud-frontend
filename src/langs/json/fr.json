@@ -43,12 +43,12 @@
   },
   "access": {
     "private": {
-      "value": "priv\u00e9",
+      "value": "private",
       "title": "Priv\u00e9",
       "description": "Les documents seront accessibles uniquement \u00e0 vous"
     },
     "organization": {
-      "value": "organisation",
+      "value": "organization",
       "title": "Organisation",
       "description": "Documents seront accessibles uniquement \u00e0 votre organisation."
     },

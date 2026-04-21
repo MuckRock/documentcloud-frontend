@@ -33,7 +33,7 @@
       "description": "Los documentos solo estar\u00e1n visibles para ti"
     },
     "organization": {
-      "value": "organizaci\u00f3n",
+      "value": "organization",
       "title": "Organizaci\u00f3n",
       "description": "Los documentos solo ser\u00e1n visibles para tu organizaci\u00f3n."
     },
