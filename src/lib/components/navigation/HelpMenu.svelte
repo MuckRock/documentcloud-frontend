@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 
   import { _ } from "svelte-i18n";
   import {
@@ -25,68 +25,92 @@
 
   import { startTour, isTourAvailable } from "../onboarding/GuidedTour.svelte";
 
-  export let position: Placement = "bottom-end";
+  interface Props {
+    position?: Placement;
+  }
+
+  let { position = "bottom-end" }: Props = $props();
 
   function onTourClick() {
     close();
     startTour();
   }
 
-  $: showTour = isTourAvailable($page?.route?.id);
+  let showTour = $derived(isTourAvailable(page.route.id));
 </script>
 
 <!-- Help Menu -->
 <Dropdown {position}>
   {#snippet anchor()}
     <NavItem>
-      <Question24 slot="start" />
-      <div class="dropdownArrow" slot="end">
-        {#if position.includes("bottom")}
-          <ChevronDown12 />
-        {:else}
-          <ChevronUp12 />
-        {/if}
-      </div>
+      {#snippet start()}
+        <Question24 />
+      {/snippet}
+      {#snippet end()}
+        <div class="dropdownArrow">
+          {#if position.includes("bottom")}
+            <ChevronDown12 />
+          {:else}
+            <ChevronUp12 />
+          {/if}
+        </div>
+      {/snippet}
     </NavItem>
   {/snippet}
   {#snippet inner(close)}
     <Menu>
       {#if showTour}
-        <NavItem hover on:click={onTourClick}>
-          <Milestone16 slot="start" />
+        <NavItem hover onclick={onTourClick}>
+          {#snippet start()}
+            <Milestone16 />
+          {/snippet}
           Guided Tour
         </NavItem>
       {/if}
-      <NavItem href="/help/faq/" on:click={close}>
-        <CommentDiscussion16 slot="start" />
+      <NavItem href="/help/faq/" onclick={close}>
+        {#snippet start()}
+          <CommentDiscussion16 />
+        {/snippet}
         {$_("authSection.help.faq")}
       </NavItem>
-      <NavItem href="/help/search/" on:click={close}>
-        <Search16 slot="start" />
+      <NavItem href="/help/search/" onclick={close}>
+        {#snippet start()}
+          <Search16 />
+        {/snippet}
         {$_("authSection.help.searchDocs")}
       </NavItem>
-      <NavItem href="/help/api/" on:click={close}>
-        <Code16 slot="start" />
+      <NavItem href="/help/api/" onclick={close}>
+        {#snippet start()}
+          <Code16 />
+        {/snippet}
         {$_("authSection.help.apiDocs")}
       </NavItem>
-      <NavItem href="/help/add-ons/" on:click={close}>
-        <Plug16 slot="start" />
+      <NavItem href="/help/add-ons/" onclick={close}>
+        {#snippet start()}
+          <Plug16 />
+        {/snippet}
         {$_("authSection.help.addOns")}
       </NavItem>
-      <NavItem href="/help/premium/" on:click={close}>
-        <Premium slot="start" />
+      <NavItem href="/help/premium/" onclick={close}>
+        {#snippet start()}
+          <Premium />
+        {/snippet}
         {$_("authSection.help.premium")}
       </NavItem>
-      <NavItem href="https://www.muckrock.com/donate/" on:click={close}>
-        <Gift16 slot="start" />
+      <NavItem href="https://www.muckrock.com/donate/" onclick={close}>
+        {#snippet start()}
+          <Gift16 />
+        {/snippet}
         {$_("authSection.help.donate")}
       </NavItem>
       <NavItem
         href="mailto:info@documentcloud.org"
         target="_blank"
-        on:click={close}
+        onclick={close}
       >
-        <Mail16 slot="start" />
+        {#snippet start()}
+          <Mail16 />
+        {/snippet}
         {$_("authSection.help.emailUs")}
       </NavItem>
     </Menu>

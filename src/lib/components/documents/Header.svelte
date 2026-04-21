@@ -49,7 +49,7 @@
   {#if $me && access}
     <div class="access">
       {#if document.edit_access}
-        <Button ghost minW={false} on:click={() => (edit = true)}>
+        <Button ghost minW={false} onclick={() => (edit = true)}>
           <Access level={access} />
         </Button>
       {:else}

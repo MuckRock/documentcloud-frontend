@@ -55,7 +55,7 @@ Update permissions for a single collaborator on a project
 
   <Flex class="buttons">
     <Button type="submit" mode="primary">{$_("dialog.update")}</Button>
-    <Button on:click={() => dispatch("close")}>{$_("dialog.cancel")}</Button>
+    <Button onclick={() => dispatch("close")}>{$_("dialog.cancel")}</Button>
   </Flex>
 </form>
 

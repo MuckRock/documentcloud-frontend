@@ -52,7 +52,7 @@
     </Button>
   {/if}
   {#if canShare}
-    <Button ghost minW={false} mode="primary" size="small" on:click={onShare}>
+    <Button ghost minW={false} mode="primary" size="small" onclick={onShare}>
       <Share16 />
       {$_("dialog.share")}
     </Button>

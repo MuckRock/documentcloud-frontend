@@ -94,7 +94,9 @@
   <SidebarGroup name="collaborators">
     {#snippet title()}
       <NavItem>
-        <People16 slot="start" />
+        {#snippet start()}
+          <People16 />
+        {/snippet}
         {$_("projects.collaborators.title")}
       </NavItem>
     {/snippet}
@@ -107,7 +109,7 @@
             mode="primary"
             size="small"
             minW={false}
-            on:click={() => (show = "invite")}
+            onclick={() => (show = "invite")}
           >
             <PlusCircle16 height={14} width={14} />
             {$_("projects.collaborators.add")}
@@ -125,46 +127,52 @@
       {#each members as user}
         {#if isProjectUser || project.edit_access}
           <NavItem small>
-            <Avatar user={user.user} slot="start" />
+            {#snippet start()}
+              <Avatar user={user.user} />
+            {/snippet}
             {getUserName(user.user)}
-            <Flex gap={0} slot="end">
-              {#if project.add_remove_access && !isMe(user, $me)}
-                <Tooltip caption={actions.update}>
-                  <Button
-                    ghost
-                    mode="primary"
-                    minW={false}
-                    size="small"
-                    title={actions.update}
-                    on:click={() => {
-                      user_to_update = user;
-                      show = "update";
-                    }}
-                  >
-                    <Pencil16 height={14} width={14} />
-                  </Button>
-                </Tooltip>
-                <Tooltip caption={actions.remove}>
-                  <Button
-                    ghost
-                    mode="danger"
-                    minW={false}
-                    size="small"
-                    title={actions.remove}
-                    on:click={() => {
-                      user_to_update = user;
-                      show = "remove";
-                    }}
-                  >
-                    <XCircle16 height={14} width={14} />
-                  </Button>
-                </Tooltip>
-              {/if}
-            </Flex>
+            {#snippet end()}
+              <Flex gap={0}>
+                {#if project.add_remove_access && !isMe(user, $me)}
+                  <Tooltip caption={actions.update}>
+                    <Button
+                      ghost
+                      mode="primary"
+                      minW={false}
+                      size="small"
+                      title={actions.update}
+                      onclick={() => {
+                        user_to_update = user;
+                        show = "update";
+                      }}
+                    >
+                      <Pencil16 height={14} width={14} />
+                    </Button>
+                  </Tooltip>
+                  <Tooltip caption={actions.remove}>
+                    <Button
+                      ghost
+                      mode="danger"
+                      minW={false}
+                      size="small"
+                      title={actions.remove}
+                      onclick={() => {
+                        user_to_update = user;
+                        show = "remove";
+                      }}
+                    >
+                      <XCircle16 height={14} width={14} />
+                    </Button>
+                  </Tooltip>
+                {/if}
+              </Flex>
+            {/snippet}
           </NavItem>
         {:else}
           <NavItem small>
-            <Avatar user={user.user} slot="start" />
+            {#snippet start()}
+              <Avatar user={user.user} />
+            {/snippet}
             {getUserName(user.user)}
           </NavItem>
         {/if}

@@ -179,7 +179,7 @@
   {#if event}
     <div class="tip">
       <Tip mode="normal">
-        <Pencil24 slot="icon" />
+        {#snippet icon()}<Pencil24 />{/snippet}
         {$_("addonDispatchDialog.editing")}
       </Tip>
     </div>
@@ -260,7 +260,7 @@
           {/if}
         </Button>
       {/if}
-      <Button type="button" ghost mode="primary" on:click={reset}>
+      <Button type="button" ghost mode="primary" onclick={reset}>
         {$_("dialog.reset")}
       </Button>
     </div>

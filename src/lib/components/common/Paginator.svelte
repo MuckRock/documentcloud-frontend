@@ -70,7 +70,7 @@
       mode="primary"
       minW={false}
       disabled={page === 1}
-      on:click={() => goTo(1)}
+      onclick={() => goTo(1)}
       title={$_("paginator.first")}
     >
       <MoveToStart16 />
@@ -82,7 +82,7 @@
     mode="primary"
     minW={false}
     disabled={!has_previous}
-    on:click={previous}
+    onclick={previous}
     title={$_("paginator.previous")}
   >
     <ArrowLeft16 />
@@ -123,7 +123,7 @@
     mode="primary"
     minW={false}
     disabled={!has_next}
-    on:click={next}
+    onclick={next}
     title={$_("paginator.next")}
   >
     <ArrowRight16 />
@@ -135,7 +135,7 @@
       mode="primary"
       minW={false}
       disabled={page === totalPages}
-      on:click={() => goTo(totalPages)}
+      onclick={() => goTo(totalPages)}
       title={$_("paginator.last")}
     >
       <MoveToEnd16 />

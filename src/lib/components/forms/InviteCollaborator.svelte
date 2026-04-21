@@ -64,7 +64,7 @@ Invite a new collaborator to a project
 
   <Flex class="buttons">
     <Button type="submit" mode="primary">{$_("collaborators.add")}</Button>
-    <Button on:click={() => dispatch("close")}>{$_("dialog.cancel")}</Button>
+    <Button onclick={() => dispatch("close")}>{$_("dialog.cancel")}</Button>
   </Flex>
 </form>
 

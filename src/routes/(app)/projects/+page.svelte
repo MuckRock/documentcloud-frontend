@@ -67,7 +67,7 @@
             <Button
               ghost
               minW={false}
-              on:click={() => ($sidebars["navigation"] = true)}
+              onclick={() => ($sidebars["navigation"] = true)}
             >
               <span class="flipV">
                 <SidebarExpand16 />
@@ -89,7 +89,7 @@
             <Button
               ghost
               minW={false}
-              on:click={() => ($sidebars["action"] = true)}
+              onclick={() => ($sidebars["action"] = true)}
             >
               <SidebarExpand16 />
             </Button>
@@ -120,7 +120,7 @@
 
   <svelte:fragment slot="action">
     {#if $me}
-      <Button mode="primary" on:click={() => (create = true)}>
+      <Button mode="primary" onclick={() => (create = true)}>
         {$_("projects.create")}
       </Button>
     {/if}

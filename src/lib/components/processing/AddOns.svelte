@@ -53,13 +53,15 @@ This component should update on a timer.
   <SidebarGroup name="processing.addons">
     {#snippet title()}
       <NavItem>
-        <Plug16 slot="start" />
+        {#snippet start()}
+          <Plug16 />
+        {/snippet}
         {$_("processing.addons")}
       </NavItem>
     {/snippet}
 
     {#snippet action()}
-      <Button ghost on:click={dismissAll} {disabled}>
+      <Button ghost onclick={dismissAll} {disabled}>
         {$_("dialog.dismissAll")}
       </Button>
     {/snippet}

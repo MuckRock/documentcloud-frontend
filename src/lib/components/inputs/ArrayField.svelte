@@ -65,13 +65,13 @@
       </Field>
 
       {#if numItems > 1}
-        <Button minW={false} on:click={(e) => remove(e, i)}><X16 /></Button>
+        <Button minW={false} onclick={(e) => remove(e, i)}><X16 /></Button>
       {/if}
     </div>
   {/each}
 
   <div class="array-controls">
-    <Button on:click={push}><Plus16 fill="white" /></Button>
+    <Button onclick={push}><Plus16 fill="white" /></Button>
   </div>
 </fieldset>
 

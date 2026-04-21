@@ -1,32 +1,58 @@
 <script lang="ts">
-  export let mode:
-    | "standard"
-    | "success"
-    | "failure"
-    | "primary"
-    | "danger"
-    | "premium" = "standard";
-  export let ghost = false;
-  export let full = false;
-  export let size: "small" | "normal" = "normal";
-  export let minW = true;
+  import type { Snippet } from "svelte";
+  import type { HTMLButtonAttributes } from "svelte/elements";
 
-  export let disabled = false;
-  export let hover = false; // force hover state
+  interface Props extends HTMLButtonAttributes {
+    mode?:
+      | "standard"
+      | "success"
+      | "failure"
+      | "primary"
+      | "danger"
+      | "premium";
+    ghost?: boolean;
+    full?: boolean;
+    size?: "small" | "normal";
+    minW?: boolean;
+    disabled?: boolean;
+    hover?: boolean; // force hover state
+    title?: string;
+    type?: "submit" | "reset" | "button";
+    label?: string;
+    // anchor-specific properties
+    href?: undefined | string;
+    target?: undefined | string;
+    download?: undefined | boolean | string;
+    rel?: undefined | string;
+    // button-specific properties
+    name?: undefined | string;
+    value?: any;
+    formaction?: undefined | string;
+    children?: Snippet;
+    [key: string]: any;
+  }
 
-  export let title: string = "";
-  export let type: "submit" | "reset" | "button" = "button";
-  export let label = "Submit";
-  // anchor-specific properties
-  export let href: undefined | string = undefined;
-  export let target: undefined | string = undefined;
-  export let download: undefined | boolean | string = undefined;
-  export let rel: undefined | string =
-    target === "_blank" ? "noopener noreferrer" : undefined;
-  // button-specific properties
-  export let name: undefined | string = undefined;
-  export let value: any = undefined;
-  export let formaction: undefined | string = undefined;
+  let {
+    mode = "standard",
+    ghost = false,
+    full = false,
+    size = "normal",
+    minW = true,
+    disabled = false,
+    hover = false,
+    title = "",
+    type = "button",
+    label = "Submit",
+    href = undefined,
+    target = undefined,
+    download = undefined,
+    rel = target === "_blank" ? "noopener noreferrer" : undefined,
+    name = undefined,
+    value = undefined,
+    formaction = undefined,
+    children,
+    ...rest
+  }: Props = $props();
 </script>
 
 {#if href}
@@ -36,20 +62,18 @@
     {target}
     {rel}
     {download}
-    on:click
     class="{mode} {size}"
     class:ghost
     class:full
     class:minW
     class:hover
-    {...$$restProps}
+    {...rest}
   >
-    <slot>{label}</slot>
+    {#if children}{@render children()}{:else}{label}{/if}
   </a>
 {:else}
   <button
     {title}
-    on:click
     class="{mode} {size}"
     {disabled}
     {type}
@@ -60,9 +84,9 @@
     class:full
     class:minW
     class:hover
-    {...$$restProps}
+    {...rest}
   >
-    <slot>{label}</slot>
+    {#if children}{@render children()}{:else}{label}{/if}
   </button>
 {/if}
 

@@ -55,7 +55,9 @@
 <SidebarGroup>
   {#snippet title()}
     <NavItem>
-      <Clock16 slot="start" />
+      {#snippet start()}
+        <Clock16 />
+      {/snippet}
       {$_("addonRuns.scheduled")}
     </NavItem>
   {/snippet}

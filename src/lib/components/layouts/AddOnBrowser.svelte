@@ -25,11 +25,15 @@
   import AddOns from "$lib/components/sidebar/AddOns.svelte";
   import SidebarLayout from "./SidebarLayout.svelte";
 
-  export let addons: Promise<APIResponse<Page<AddOn>>>;
-  export let events: Promise<APIResponse<Page<Event>>>;
-  export let runs: Promise<APIResponse<Page<Run>>>;
-  export let active: string = "all";
-  export let query: string = "";
+  interface Props {
+    addons: Promise<APIResponse<Page<AddOn>>>;
+    events: Promise<APIResponse<Page<Event>>>;
+    runs: Promise<APIResponse<Page<Run>>>;
+    active?: string;
+    query?: string;
+  }
+
+  let { addons, events, runs, active = "all", query = "" }: Props = $props();
 
   // TODO: Improve cursor handling in page data responses
   /** The pagination URL provided in the reponse corresponds to an API query.
@@ -44,7 +48,7 @@
     goto(url);
   }
 
-  $: showTip = ["active", "featured", "premium"].includes(active);
+  let showTip = $derived(["active", "featured", "premium"].includes(active));
 </script>
 
 <SidebarLayout>
@@ -53,105 +57,110 @@
     <Projects />
     <AddOns />
   </svelte:fragment>
-  <div class="container" slot="content">
-    <main>
-      <ContentLayout>
-        {#snippet header()}
-          <PageToolbar>
-            {#snippet center()}
-              <Search name="query" {query} />
-            {/snippet}
-          </PageToolbar>
-        {/snippet}
-
-        {#if showTip}
-          <div class="tip">
-            {#if active === "active"}
-              <Tip
-                --background-color="var(--orange-1)"
-                --border-color="var(--orange)"
-                --fill="var(--orange-4)"
-              >
-                <Pin size={1.75} slot="icon" />
-                {$_("addonBrowserDialog.pinnedTip")}
-              </Tip>
-            {:else if active === "featured"}
-              <Tip
-                --background-color="var(--yellow-1)"
-                --border-color="var(--yellow)"
-                --fill="var(--yellow-4)"
-              >
-                <Star size={1.75} slot="icon" />
-                {$_("addonBrowserDialog.featuredTip")}
-              </Tip>
-            {:else if active === "premium"}
-              <Tip
-                --background-color="var(--green-1)"
-                --border-color="var(--green)"
-                --fill="var(--green-4)"
-              >
-                <Premium size={1.75} slot="icon" />
-                {$_("addonBrowserDialog.premiumTip")}
-              </Tip>
-            {/if}
-          </div>
-        {/if}
-        {#await addons}
+  <svelte:fragment slot="content">
+    <div class="container">
+      <main>
+        <ContentLayout>
+          {#snippet header()}
+            <PageToolbar>
+              {#snippet center()}
+                <Search name="query" {query} />
+              {/snippet}
+            </PageToolbar>
+          {/snippet}
+          {#if showTip}
+            <div class="tip">
+              {#if active === "active"}
+                <Tip
+                  --background-color="var(--orange-1)"
+                  --border-color="var(--orange)"
+                  --fill="var(--orange-4)"
+                >
+                  {#snippet icon()}
+                    <Pin size={1.75} />
+                  {/snippet}
+                  {$_("addonBrowserDialog.pinnedTip")}
+                </Tip>
+              {:else if active === "featured"}
+                <Tip
+                  --background-color="var(--yellow-1)"
+                  --border-color="var(--yellow)"
+                  --fill="var(--yellow-4)"
+                >
+                  {#snippet icon()}
+                    <Star size={1.75} />
+                  {/snippet}
+                  {$_("addonBrowserDialog.featuredTip")}
+                </Tip>
+              {:else if active === "premium"}
+                <Tip
+                  --background-color="var(--green-1)"
+                  --border-color="var(--green)"
+                  --fill="var(--green-4)"
+                >
+                  {#snippet icon()}
+                    <Premium size={1.75} />
+                  {/snippet}
+                  {$_("addonBrowserDialog.premiumTip")}
+                </Tip>
+              {/if}
+            </div>
+          {/if}
+          {#await addons}
+            <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
+          {:then { data: page }}
+            {#each page?.results ?? [] as addon}
+              <ListItem {addon} />
+            {:else}
+              <Empty icon={Plug24}>{$_("addonBrowserDialog.empty")}</Empty>
+            {/each}
+          {:catch error}
+            <Error>{String(error)}</Error>
+          {/await}
+          {#snippet footer()}
+            <PageToolbar>
+              {#snippet center()}
+                {#await addons}
+                  <Paginator />
+                {:then { data: page }}
+                  <Paginator
+                    has_next={Boolean(page?.next)}
+                    has_previous={Boolean(page?.previous)}
+                    on:next={() => {
+                      if (page?.next) paginate(page.next);
+                    }}
+                    on:previous={() => {
+                      if (page?.previous) paginate(page.previous);
+                    }}
+                  />
+                {/await}
+              {/snippet}
+            </PageToolbar>
+          {/snippet}
+        </ContentLayout>
+      </main>
+      <aside class="history">
+        {#await events}
           <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
-        {:then { data: page }}
-          {#each page?.results ?? [] as addon}
-            <ListItem {addon} />
-          {:else}
-            <Empty icon={Plug24}>{$_("addonBrowserDialog.empty")}</Empty>
-          {/each}
-        {:catch error}
-          <Error>{String(error)}</Error>
+        {:then { data: events }}
+          <Scheduled
+            events={events?.results ?? []}
+            next={events?.next}
+            previous={events?.previous}
+          />
         {/await}
-
-        {#snippet footer()}
-          <PageToolbar>
-            {#snippet center()}
-              {#await addons}
-                <Paginator />
-              {:then { data: page }}
-                <Paginator
-                  has_next={Boolean(page?.next)}
-                  has_previous={Boolean(page?.previous)}
-                  on:next={() => {
-                    if (page?.next) paginate(page.next);
-                  }}
-                  on:previous={() => {
-                    if (page?.previous) paginate(page.previous);
-                  }}
-                />
-              {/await}
-            {/snippet}
-          </PageToolbar>
-        {/snippet}
-      </ContentLayout>
-    </main>
-    <aside class="history">
-      {#await events}
-        <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
-      {:then { data: events }}
-        <Scheduled
-          events={events?.results ?? []}
-          next={events?.next}
-          previous={events?.previous}
-        />
-      {/await}
-
-      {#await runs}
-        <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
-      {:then { data: runs }}
-        <History
-          runs={runs?.results ?? []}
-          next={runs?.next}
-          previous={runs?.previous}
-        />
-      {/await}
-    </aside>
-  </div>
+        {#await runs}
+          <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
+        {:then { data: runs }}
+          <History
+            runs={runs?.results ?? []}
+            next={runs?.next}
+            previous={runs?.previous}
+          />
+        {/await}
+      </aside>
+    </div>
+  </svelte:fragment>
 </SidebarLayout>
 
 <style>
