@@ -3,7 +3,7 @@ import { APP_URL } from "../config/embed.js";
 
 const enhanced = "DC-embed-enhanced";
 
-function loadNote(src) {
+function loadNote(src, opts) {
   const parts = src.split("/").slice(-3);
   if (parts.length != 3) return;
   const slugId = parts[0];
@@ -23,7 +23,7 @@ function loadNote(src) {
     const iframe = document.createElement("iframe");
     iframe.style = "border: none; width: 100%;";
     iframe.src = new URL(`documents/${id}/annotations/${noteId}`, APP_URL).href;
-    setupResizeEvent(iframe);
+    setupResizeEvent(iframe, opts && opts.afterLoad ? opts.afterLoad : null);
 
     noteElem.appendChild(iframe);
   });

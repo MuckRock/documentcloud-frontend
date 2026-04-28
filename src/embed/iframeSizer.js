@@ -32,7 +32,7 @@ export function informSize(
   update();
 }
 
-export function setupResizeEvent(iframe) {
+export function setupResizeEvent(iframe, cb) {
   window.addEventListener("message", (event) => {
     if (event.source == iframe.contentWindow) {
       const { width, height, updateStyleProps } = event.data;
@@ -67,6 +67,7 @@ export function setupResizeEvent(iframe) {
             iframe.style.minHeight = "" + height + "px";
           }
         }
+        if (cb) cb({ el: iframe });
       }
     }
   });
