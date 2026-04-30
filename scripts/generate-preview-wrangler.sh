@@ -37,6 +37,9 @@ cat > wrangler.preview.jsonc <<EOF
       "persist": true,
       "head_sampling_rate": 1
     }
+  },
+  "placement": {
+    "mode": "smart"
   }
 }
 EOF
