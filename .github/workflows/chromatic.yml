@@ -16,7 +16,7 @@ on:
       - synchronize
       - ready_for_review
   push:
-    branches: [main]
+    branches: [ main ]
     paths:
       - "src/**"
       - "static/**"
@@ -24,6 +24,7 @@ on:
 
 env:
   PUBLIC_ENV: production
+  NODE_ENV: production
 
 jobs:
   chromatic-deployment:
@@ -43,7 +44,7 @@ jobs:
       - run: npm run sync
       - run: npm run build
       - name: Publish to Chromatic
-        uses: chromaui/action@v1
+        uses: chromaui/action@v16.6.3
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           exitOnceUploaded: true
