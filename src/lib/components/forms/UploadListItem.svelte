@@ -73,11 +73,7 @@
           {#if status?.error}
             <p class="error">
               {status?.error.message}
-              <Button
-                ghost
-                minW={false}
-                onclick={() => dispatch("remove", id)}
-              >
+              <Button ghost minW={false} onclick={() => dispatch("remove", id)}>
                 {$_("dialog.remove")}?
               </Button>
             </p>

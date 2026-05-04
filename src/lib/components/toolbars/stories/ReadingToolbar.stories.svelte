@@ -7,9 +7,6 @@
     component: ReadingToolbar,
     parameters: {
       layout: "fullscreen",
-      chromatic: {
-        delay: 300,
-      },
     },
   });
 </script>

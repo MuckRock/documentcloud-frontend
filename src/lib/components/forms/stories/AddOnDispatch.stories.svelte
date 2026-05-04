@@ -12,7 +12,7 @@
   const { Story } = defineMeta({
     title: "Forms / Add-On Dispatch",
     component: AddOnDispatch,
-    parameters: { layout: "centered", chromatic: { delay: 300 } },
+    parameters: { layout: "centered" },
   });
 </script>
 
