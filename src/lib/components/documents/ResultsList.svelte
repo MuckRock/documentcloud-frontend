@@ -195,7 +195,7 @@
         ghost
         mode="primary"
         disabled={search.loading}
-        on:click={async () => {
+        onclick={async () => {
           error = await onNext();
         }}
       >

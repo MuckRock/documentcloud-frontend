@@ -67,7 +67,7 @@ Assumes it's a child of a ViewerContext
       mode="danger"
       title={$_("redact.cancel")}
       minW={false}
-      on:click={onCancel}
+      onclick={onCancel}
     >
       <X16 />
       {#if BREAKPOINTS.SHOW_LABELS}
@@ -80,7 +80,7 @@ Assumes it's a child of a ViewerContext
       disabled={!hasRedactions}
       title={$_("redact.undo")}
       minW={false}
-      on:click={(e) => undo()}
+      onclick={(e) => undo()}
     >
       <Undo16 />
       {#if BREAKPOINTS.SHOW_LABELS}
@@ -92,7 +92,7 @@ Assumes it's a child of a ViewerContext
       mode="primary"
       title={$_("redact.confirm")}
       minW={!BREAKPOINTS.X_SMALL}
-      on:click={() => (confirmOpen = true)}
+      onclick={() => (confirmOpen = true)}
     >
       <Check16 />
       {#if BREAKPOINTS.SHOW_LABELS}

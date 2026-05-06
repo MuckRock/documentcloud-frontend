@@ -28,7 +28,7 @@ Confirm project deletion.
       <Trash16 />
       {$_("delete.confirm")}
     </Button>
-    <Button on:click={() => dispatch("close")}>
+    <Button onclick={() => dispatch("close")}>
       {$_("delete.cancel")}
     </Button>
   </Flex>

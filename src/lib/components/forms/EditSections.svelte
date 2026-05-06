@@ -83,7 +83,7 @@ This form is entirely client-side.
     </tfoot>
   </table>
   <div class="buttons">
-    <Button mode="primary" on:click={() => dispatch("close")}>
+    <Button mode="primary" onclick={() => dispatch("close")}>
       {$_("dialog.done")}
     </Button>
   </div>

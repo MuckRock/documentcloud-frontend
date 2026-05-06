@@ -1,42 +1,44 @@
-<script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
+
   import Breadcrumbs from "../Breadcrumbs.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Navigation / Breadcrumbs",
     component: Breadcrumbs,
     parameters: { layout: "fullscreen" },
-  };
+  });
 </script>
 
-<Story name="Root">
-  <Breadcrumbs />
-</Story>
+<Story name="Root" />
 
-<Story name="One Crumb">
-  <Breadcrumbs trail={[{ href: "/documents", title: "Documents" }]} />
-</Story>
+<Story
+  name="One Crumb"
+  args={{ trail: [{ href: "/documents", title: "Documents" }] }}
+/>
 
-<Story name="Two Crumbs">
-  <Breadcrumbs
-    trail={[
+<Story
+  name="Two Crumbs"
+  args={{
+    trail: [
       { href: "/documents", title: "Documents" },
       { href: "/documents/[id]", title: "The Santa Anas" },
-    ]}
-  />
-</Story>
+    ],
+  }}
+/>
 
-<Story name="Three Crumbs">
-  <Breadcrumbs
-    trail={[
+<Story
+  name="Three Crumbs"
+  args={{
+    trail: [
       { title: "Documents" },
       { href: "/documents/[id]", title: "The Santa Anas" },
       { href: "/documents/[id]/organize", title: "Organize" },
-    ]}
-  />
-</Story>
+    ],
+  }}
+/>
 
-<Story name="Long Crumb">
+<Story name="Long Crumb" asChild>
   <div style="width: 100%;">
     <Breadcrumbs
       trail={[
@@ -50,7 +52,7 @@
   </div>
 </Story>
 
-<Story name="Custom Root">
+<Story name="Custom Root" asChild>
   <Breadcrumbs
     trail={[
       { href: "/documents", title: "Documents" },
@@ -58,6 +60,8 @@
       { href: "/documents/[id]/organize", title: "Organize" },
     ]}
   >
-    <p slot="root">DocumentCloud</p>
+    {#snippet root()}
+      <p>DocumentCloud</p>
+    {/snippet}
   </Breadcrumbs>
 </Story>

@@ -56,9 +56,13 @@
         <Dropdown>
           {#snippet anchor()}
             <NavItem>
-              <Eye16 slot="start" />
+              {#snippet start()}
+                <Eye16 />
+              {/snippet}
               {$_("documentBrowser.fieldsAnchor")}
-              <ChevronDown12 slot="end" />
+              {#snippet end()}
+                <ChevronDown12 />
+              {/snippet}
             </NavItem>
           {/snippet}
           {#snippet inner()}

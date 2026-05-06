@@ -27,7 +27,9 @@
       href="/add-ons/"
       --hover-background="var(--blue-2)"
     >
-      <Infinity16 fill="var(--blue-3)" slot="start" />
+      {#snippet start()}
+        <Infinity16 fill="var(--blue-3)" />
+      {/snippet}
       All
     </NavItem>
     <NavItem
@@ -35,7 +37,9 @@
       href="/add-ons/?active=true"
       --hover-background="var(--orange-2)"
     >
-      <Pin --fill="var(--orange-3)" slot="start" />
+      {#snippet start()}
+        <Pin --fill="var(--orange-3)" />
+      {/snippet}
       Pinned
     </NavItem>
     <NavItem
@@ -43,7 +47,9 @@
       href="/add-ons/?featured=true"
       --hover-background="var(--yellow-2)"
     >
-      <StarFill16 fill="var(--yellow-3)" slot="start" />
+      {#snippet start()}
+        <StarFill16 fill="var(--yellow-3)" />
+      {/snippet}
       Featured
     </NavItem>
     <NavItem
@@ -51,7 +57,9 @@
       href="/add-ons/?premium=true"
       --hover-background="var(--green-2)"
     >
-      <Premium --fill="var(--green-3)" slot="start" />
+      {#snippet start()}
+        <Premium --fill="var(--green-3)" />
+      {/snippet}
       Premium
     </NavItem>
   </Flex>

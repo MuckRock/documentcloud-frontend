@@ -81,9 +81,13 @@
         {#snippet anchor()}
           <div class="toolbarItem">
             <NavItem>
-              <ListOrdered16 slot="start" />
+              {#snippet start()}
+                <ListOrdered16 />
+              {/snippet}
               Sections
-              <ChevronUp12 slot="end" />
+              {#snippet end()}
+                <ChevronUp12 />
+              {/snippet}
             </NavItem>
           </div>
         {/snippet}
@@ -108,7 +112,7 @@
                 <Button
                   ghost
                   mode="primary"
-                  on:click={() => (sectionsOpen = true)}
+                  onclick={() => (sectionsOpen = true)}
                 >
                   {$_("sidebar.toc.cta")}
                 </Button>
@@ -116,7 +120,7 @@
                 <Button
                   ghost
                   mode="primary"
-                  on:click={() => (sectionsOpen = true)}
+                  onclick={() => (sectionsOpen = true)}
                 >
                   {$_("sections.edit")}
                 </Button>
@@ -132,9 +136,9 @@
     <div class="paginator">
       <Paginator
         goToNav
-        on:goTo={(e) => gotoPage(e.detail)}
-        on:next={next}
-        on:previous={previous}
+        ongoto={(n) => gotoPage(n)}
+        onnext={next}
+        onprevious={previous}
         bind:page={$currentPage}
         {totalPages}
         has_next={$currentPage < totalPages}

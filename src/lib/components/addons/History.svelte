@@ -77,7 +77,9 @@
 <SidebarGroup>
   {#snippet title()}
     <NavItem>
-      <History16 slot="start" />
+      {#snippet start()}
+        <History16 />
+      {/snippet}
       {$_("addonRuns.previous")}
     </NavItem>
   {/snippet}
@@ -100,10 +102,10 @@
     <Paginator
       has_next={Boolean(next)}
       has_previous={Boolean(previous)}
-      on:next={() => {
+      onnext={() => {
         if (next) load(new URL(next));
       }}
-      on:previous={() => {
+      onprevious={() => {
         if (previous) load(new URL(previous));
       }}
     />

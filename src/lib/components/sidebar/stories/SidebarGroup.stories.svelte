@@ -26,7 +26,9 @@
   <SidebarGroup>
     {#snippet title()}
       <NavItem>
-        <FileDirectory16 slot="start" />
+        {#snippet start()}
+          <FileDirectory16 />
+        {/snippet}
         Project
       </NavItem>
     {/snippet}
@@ -35,15 +37,21 @@
     {/snippet}
     <Flex direction="column" gap={0}>
       <NavItem small href="/project/1">
-        <Pin active slot="start" />
+        {#snippet start()}
+          <Pin active />
+        {/snippet}
         Oldest Computer
       </NavItem>
       <NavItem small href="/project/2">
-        <Pin active slot="start" />
+        {#snippet start()}
+          <Pin active />
+        {/snippet}
         FBI Files
       </NavItem>
       <NavItem small href="/project/3">
-        <Pin active slot="start" />
+        {#snippet start()}
+          <Pin active />
+        {/snippet}
         1033 Project
       </NavItem>
     </Flex>
@@ -55,7 +63,9 @@
     <SidebarGroup>
       {#snippet title()}
         <NavItem>
-          <ListOrdered16 slot="start" />
+          {#snippet start()}
+            <ListOrdered16 />
+          {/snippet}
           Sections
         </NavItem>
       {/snippet}
@@ -74,7 +84,9 @@
   <SidebarGroup name="storybook-files">
     {#snippet title()}
       <NavItem>
-        <FileDirectory16 slot="start" />
+        {#snippet start()}
+          <FileDirectory16 />
+        {/snippet}
         Project
       </NavItem>
     {/snippet}
@@ -83,15 +95,21 @@
     {/snippet}
     <Flex direction="column" gap={0}>
       <NavItem small href="/project/1">
-        <Pin active slot="start" />
+        {#snippet start()}
+          <Pin active />
+        {/snippet}
         Oldest Computer
       </NavItem>
       <NavItem small href="/project/2">
-        <Pin active slot="start" />
+        {#snippet start()}
+          <Pin active />
+        {/snippet}
         FBI Files
       </NavItem>
       <NavItem small href="/project/3">
-        <Pin active slot="start" />
+        {#snippet start()}
+          <Pin active />
+        {/snippet}
         1033 Project
       </NavItem>
     </Flex>

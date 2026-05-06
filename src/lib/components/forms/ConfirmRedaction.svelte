@@ -81,7 +81,7 @@ This almost certainly lives in a modal.
         <Check16 />
         {$_("redact.confirm")}
       </Button>
-      <Button on:click={() => dispatch("close")}>
+      <Button onclick={() => dispatch("close")}>
         {$_("redact.cancel")}
       </Button>
     </Flex>

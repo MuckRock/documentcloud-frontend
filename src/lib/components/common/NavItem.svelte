@@ -1,17 +1,43 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import type { Maybe } from "$lib/api/types";
 
-  export let active = false;
-  export let disabled = false;
-  export let small = false;
-  export let hover = false;
-  export let title = "";
-  export let inline = false;
-  // handling link behavior
-  export let href: Maybe<string> = undefined;
-  export let target: Maybe<string> = undefined;
-  export let rel: Maybe<string> = undefined;
-  export let download: Maybe<boolean | string> = undefined;
+  interface Props {
+    active?: boolean;
+    disabled?: boolean;
+    small?: boolean;
+    hover?: boolean;
+    title?: string;
+    inline?: boolean;
+    // handling link behavior
+    href?: Maybe<string>;
+    target?: Maybe<string>;
+    rel?: Maybe<string>;
+    download?: Maybe<boolean | string>;
+    start?: Snippet;
+    children?: Snippet;
+    end?: Snippet;
+    onclick?: (e: MouseEvent) => void;
+    onkeydown?: (e: KeyboardEvent) => void;
+  }
+
+  let {
+    active = false,
+    disabled = false,
+    small = false,
+    hover = false,
+    title = "",
+    inline = false,
+    href = undefined,
+    target = undefined,
+    rel = undefined,
+    download = undefined,
+    start,
+    children,
+    end,
+    onclick,
+    onkeydown,
+  }: Props = $props();
 </script>
 
 {#if href}
@@ -26,12 +52,12 @@
     class:disabled
     class:small
     class:inline
-    on:click
-    on:keydown
+    onclick={(e) => onclick?.(e)}
+    onkeydown={(e) => onkeydown?.(e)}
   >
-    <slot name="start" />
-    <span class="label"><slot /></span>
-    <slot name="end" />
+    {@render start?.()}
+    <span class="label">{@render children?.()}</span>
+    {@render end?.()}
   </a>
 {:else}
   <span
@@ -42,14 +68,14 @@
     class:disabled
     class:small
     class:inline
-    on:click
-    on:keydown
+    onclick={(e) => onclick?.(e)}
+    onkeydown={(e) => onkeydown?.(e)}
     role="button"
     tabindex={0}
   >
-    <slot name="start" />
-    <span class="label"><slot /></span>
-    <slot name="end" />
+    {@render start?.()}
+    <span class="label">{@render children?.()}</span>
+    {@render end?.()}
   </span>
 {/if}
 

@@ -50,7 +50,9 @@
 <SidebarGroup name="addons">
   {#snippet title()}
     <NavItem>
-      <Plug16 slot="start" />
+      {#snippet start()}
+        <Plug16 />
+      {/snippet}
       {$_("sidebar.addons.title")}
     </NavItem>
   {/snippet}
@@ -68,11 +70,15 @@
   {/snippet}
 
   <NavItem small href="/add-ons/?featured=true">
-    <Star16 width={14} height={14} slot="start" />
+    {#snippet start()}
+      <Star16 width={14} height={14} />
+    {/snippet}
     Featured
   </NavItem>
   <NavItem small href="/add-ons/?premium=true">
-    <Zap16 width={14} height={14} slot="start" />
+    {#snippet start()}
+      <Zap16 width={14} height={14} />
+    {/snippet}
     Premium
   </NavItem>
   <SignedIn>
@@ -84,12 +90,16 @@
       {:else}
         {#each data?.results ?? [] as addon}
           <NavItem small href={getHref(query, addon)}>
-            <Pin size={0.875} active={addon.active} slot="start" />
+            {#snippet start()}
+              <Pin size={0.875} active={addon.active} />
+            {/snippet}
             {addon.name}
           </NavItem>
         {:else}
           <NavItem small disabled>
-            <Pin16 slot="start" />
+            {#snippet start()}
+              <Pin16 />
+            {/snippet}
             {$_("sidebar.addons.pinned")}
           </NavItem>
         {/each}

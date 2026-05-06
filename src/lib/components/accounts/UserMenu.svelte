@@ -36,28 +36,36 @@
 <Dropdown {position}>
   {#snippet anchor()}
     <NavItem title="Open Menu">
-      <Avatar {user} slot="start" />
+      {#snippet start()}
+        <Avatar {user} />
+      {/snippet}
       {#if width && width > remToPx(48)}
         <span class="name">{getUserName(user)}</span>
       {/if}
-      <div class="dropdownArrow" slot="end">
-        {#if position.includes("bottom")}
-          <ChevronDown12 />
-        {:else}
-          <ChevronUp12 />
-        {/if}
-      </div>
+      {#snippet end()}
+        <div class="dropdownArrow">
+          {#if position.includes("bottom")}
+            <ChevronDown12 />
+          {:else}
+            <ChevronUp12 />
+          {/if}
+        </div>
+      {/snippet}
     </NavItem>
   {/snippet}
   {#snippet inner(close)}
     <Menu>
-      <NavItem href={SQUARELET_BASE} target="_blank" on:click={close}>
-        <Gear16 slot="start" />
+      <NavItem href={SQUARELET_BASE} target="_blank" onclick={close}>
+        {#snippet start()}
+          <Gear16 />
+        {/snippet}
         {$_("authSection.user.acctSettings")}
       </NavItem>
 
-      <NavItem href={SIGN_OUT_URL} on:click={close}>
-        <SignOut16 slot="start" />
+      <NavItem href={SIGN_OUT_URL} onclick={close}>
+        {#snippet start()}
+          <SignOut16 />
+        {/snippet}
         {$_("authSection.user.signOut")}
       </NavItem>
     </Menu>

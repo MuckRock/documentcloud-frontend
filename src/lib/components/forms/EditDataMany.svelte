@@ -213,13 +213,13 @@ This will mostly merge with existing data.
       <p>{$_("data.many", { values: { n: documents.length } })}</p>
       {#snippet empty()}
         <Tip mode="error">
-          <Alert24 slot="icon" />
+          {#snippet icon()}<Alert24 />{/snippet}
           {$_("edit.nodocs")}
         </Tip>
       {/snippet}
       {#snippet oversize()}
         <Tip mode="danger">
-          <Alert24 slot="icon" />
+          {#snippet icon()}<Alert24 />{/snippet}
           {$_("edit.toomany", { values: { n: MAX_EDIT_BATCH } })}
         </Tip>
       {/snippet}
@@ -228,7 +228,7 @@ This will mostly merge with existing data.
 
   {#if error}
     <Tip mode="error">
-      <Alert24 slot="icon" />
+      {#snippet icon()}<Alert24 />{/snippet}
       <p>{error.message}</p>
       {#if Object.keys(error.errors ?? {}).length}
         <ul>
@@ -307,7 +307,7 @@ This will mostly merge with existing data.
   />
 
   <Flex class="buttons" align="center" gap={1}>
-    <Button on:click={close}>{$_("dialog.done")}</Button>
+    <Button onclick={close}>{$_("dialog.done")}</Button>
     {#if total_edited > 0}
       <p class="unsaved" transition:fade>
         {$_("data.total_edited", { values: { n: total_edited } })}

@@ -29,9 +29,10 @@
 
   interface Props {
     event: Event;
+    onclick?: () => void;
   }
 
-  let { event }: Props = $props();
+  let { event, onclick }: Props = $props();
 
   let addon = $derived(isAddon(event.addon) ? event.addon : undefined);
   let disabled = $derived(event.event === 0);
@@ -44,7 +45,7 @@
   }
 </script>
 
-<NavItem href={url(event)} on:click>
+<NavItem href={url(event)} {onclick}>
   <div class="info" class:disabled>
     <p class="name">
       {addon?.name}

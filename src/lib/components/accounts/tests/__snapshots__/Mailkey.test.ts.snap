@@ -17,6 +17,7 @@ exports[`Mailkey 1`] = `
           title=""
           type="button"
         >
+          <!---->
           <svg
             class="octicon octicon-x-circle"
             height="24"
@@ -32,6 +33,7 @@ exports[`Mailkey 1`] = `
               d="M12 1c6.075 0 11 4.925 11 11s-4.925 11-11 11S1 18.075 1 12 5.925 1 12 1ZM2.5 12a9.5 9.5 0 0 0 9.5 9.5 9.5 9.5 0 0 0 9.5-9.5A9.5 9.5 0 0 0 12 2.5 9.5 9.5 0 0 0 2.5 12Z"
             />
           </svg>
+          
           <!---->
         </button>
         
@@ -75,7 +77,8 @@ exports[`Mailkey 1`] = `
         <!---->
          
         <div
-          style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 1rem;"
+          class="row align-stretch justify-center wrap  svelte-vh2qhd"
+          style="--gap: 1rem;"
         >
           <!---->
           <!---->
@@ -84,7 +87,9 @@ exports[`Mailkey 1`] = `
             title=""
             type="button"
           >
+            <!---->
             Create New Email Address
+            
             <!---->
           </button>
           
@@ -96,7 +101,9 @@ exports[`Mailkey 1`] = `
             title=""
             type="button"
           >
+            <!---->
             Delete Existing Address
+            
             <!---->
           </button>
           
@@ -129,6 +136,7 @@ exports[`Mailkey 2`] = `
           title=""
           type="button"
         >
+          <!---->
           <svg
             class="octicon octicon-x-circle"
             height="24"
@@ -144,6 +152,7 @@ exports[`Mailkey 2`] = `
               d="M12 1c6.075 0 11 4.925 11 11s-4.925 11-11 11S1 18.075 1 12 5.925 1 12 1ZM2.5 12a9.5 9.5 0 0 0 9.5 9.5 9.5 9.5 0 0 0 9.5-9.5A9.5 9.5 0 0 0 12 2.5 9.5 9.5 0 0 0 2.5 12Z"
             />
           </svg>
+          
           <!---->
         </button>
         
@@ -192,7 +201,8 @@ exports[`Mailkey 2`] = `
         <!---->
          
         <div
-          style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 1rem;"
+          class="row align-stretch justify-center wrap  svelte-vh2qhd"
+          style="--gap: 1rem;"
         >
           <!---->
           <!---->
@@ -201,7 +211,9 @@ exports[`Mailkey 2`] = `
             title=""
             type="button"
           >
+            <!---->
             Create New Email Address
+            
             <!---->
           </button>
           
@@ -213,7 +225,9 @@ exports[`Mailkey 2`] = `
             title=""
             type="button"
           >
+            <!---->
             Delete Existing Address
+            
             <!---->
           </button>
           

@@ -3,7 +3,8 @@
 exports[`AddOnsNavigation 1`] = `
 <div>
   <div
-    style="display: flex; flex-direction: column; flex-wrap: nowrap; align-items: stretch; justify-content: flex-start; gap: 1rem;"
+    class="column align-stretch justify-start nowrap  svelte-vh2qhd"
+    style="--gap: 1rem;"
   >
     <header
       class="header"
@@ -18,7 +19,8 @@ exports[`AddOnsNavigation 1`] = `
     </header>
      
     <div
-      style="display: flex; flex-direction: column; flex-wrap: nowrap; align-items: stretch; justify-content: flex-start; gap: 0.5rem;"
+      class="column align-stretch justify-start nowrap  svelte-vh2qhd"
+      style="--gap: 0.5rem;"
     >
       <svelte-css-wrapper
         style="display: contents; --hover-background: var(--blue-2);"
@@ -33,7 +35,6 @@ exports[`AddOnsNavigation 1`] = `
             class="octicon octicon-infinity"
             fill="var(--blue-3)"
             height="16"
-            slot="start"
             viewBox="0 0 16 16"
             width="16"
             xmlns="http://www.w3.org/2000/svg"
@@ -114,7 +115,6 @@ exports[`AddOnsNavigation 1`] = `
             class="octicon octicon-star-fill"
             fill="var(--yellow-3)"
             height="16"
-            slot="start"
             viewBox="0 0 16 16"
             width="16"
             xmlns="http://www.w3.org/2000/svg"
@@ -192,7 +192,8 @@ exports[`AddOnsNavigation 1`] = `
     <!---->
      
     <div
-      style="display: flex; flex-direction: column; flex-wrap: nowrap; align-items: stretch; justify-content: flex-start; gap: 0.5rem;"
+      class="column align-stretch justify-start nowrap  svelte-vh2qhd"
+      style="--gap: 0.5rem;"
     >
       <svelte-css-wrapper
         style="display: contents; --color: var(--gray-4);"

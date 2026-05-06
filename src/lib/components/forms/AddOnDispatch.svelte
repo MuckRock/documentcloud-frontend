@@ -15,7 +15,7 @@
   } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
-  import { page } from "$app/state";
+  import { page } from "$app/stores"; // until storybook supports it
   import { afterNavigate } from "$app/navigation";
 
   import { Validator, type Schema } from "@cfworker/json-schema";
@@ -99,7 +99,7 @@
       };
     }
     // prefill values from search params
-    new URLSearchParams(page.url.searchParams).forEach((v, k) => {
+    new URLSearchParams($page.url.searchParams).forEach((v, k) => {
       if (k in properties) {
         $values[k] = v;
       }
@@ -171,7 +171,7 @@
   });
   let hasEvents = $derived(eventOptions && eventOptions.events.length > 0);
   let hasFields = $derived(Object.keys(properties).length > 0);
-  let sign_in_url = $derived(buildSignInUrl(page.url.href, $values));
+  let sign_in_url = $derived(buildSignInUrl($page.url.href, $values));
 </script>
 
 <form method="post" {action} bind:this={form} use:enhance={onSubmit}>
@@ -179,7 +179,7 @@
   {#if event}
     <div class="tip">
       <Tip mode="normal">
-        <Pencil24 slot="icon" />
+        {#snippet icon()}<Pencil24 />{/snippet}
         {$_("addonDispatchDialog.editing")}
       </Tip>
     </div>
@@ -260,7 +260,7 @@
           {/if}
         </Button>
       {/if}
-      <Button type="button" ghost mode="primary" on:click={reset}>
+      <Button type="button" ghost mode="primary" onclick={reset}>
         {$_("dialog.reset")}
       </Button>
     </div>

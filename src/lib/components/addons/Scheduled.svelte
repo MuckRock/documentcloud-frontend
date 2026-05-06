@@ -55,7 +55,9 @@
 <SidebarGroup>
   {#snippet title()}
     <NavItem>
-      <Clock16 slot="start" />
+      {#snippet start()}
+        <Clock16 />
+      {/snippet}
       {$_("addonRuns.scheduled")}
     </NavItem>
   {/snippet}
@@ -80,12 +82,12 @@
     <Paginator
       has_next={Boolean(next)}
       has_previous={Boolean(previous)}
-      on:next={() => {
+      onnext={() => {
         if (next) {
           load(new URL(next));
         }
       }}
-      on:previous={() => {
+      onprevious={() => {
         if (previous) {
           load(new URL(previous));
         }

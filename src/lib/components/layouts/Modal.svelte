@@ -54,7 +54,7 @@ of the $modal store. These are used to set the active modal on any given page.
         minW={false}
         ghost
         mode="primary"
-        on:click={() => dispatch("close")}
+        onclick={() => dispatch("close")}
       >
         <XCircle24 />
       </Button>
