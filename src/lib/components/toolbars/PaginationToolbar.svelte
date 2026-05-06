@@ -136,9 +136,9 @@
     <div class="paginator">
       <Paginator
         goToNav
-        on:goTo={(e) => gotoPage(e.detail)}
-        on:next={next}
-        on:previous={previous}
+        ongoto={(n) => gotoPage(n)}
+        onnext={next}
+        onprevious={previous}
         bind:page={$currentPage}
         {totalPages}
         has_next={$currentPage < totalPages}

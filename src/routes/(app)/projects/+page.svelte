@@ -110,8 +110,8 @@
           <Paginator
             has_next={Boolean(next)}
             has_previous={Boolean(previous)}
-            on:next={() => paginate(next)}
-            on:previous={() => paginate(previous)}
+            onnext={() => paginate(next)}
+            onprevious={() => paginate(previous)}
           />
         {/snippet}
       </PageToolbar>

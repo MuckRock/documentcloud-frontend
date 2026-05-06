@@ -126,10 +126,10 @@
                   <Paginator
                     has_next={Boolean(page?.next)}
                     has_previous={Boolean(page?.previous)}
-                    on:next={() => {
+                    onnext={() => {
                       if (page?.next) paginate(page.next);
                     }}
-                    on:previous={() => {
+                    onprevious={() => {
                       if (page?.previous) paginate(page.previous);
                     }}
                   />

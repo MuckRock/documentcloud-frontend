@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
   import Button from "$lib/components/common/Button.svelte";
   import {
@@ -9,37 +8,54 @@
     MoveToStart16,
   } from "svelte-octicons";
 
-  export let page: number | undefined = undefined;
-  export let totalPages: number | undefined = undefined;
-  export let has_next = false;
-  export let has_previous = false;
-  export let goToNav = false;
+  interface Props {
+    page?: number | undefined;
+    totalPages?: number | undefined;
+    has_next?: boolean;
+    has_previous?: boolean;
+    goToNav?: boolean;
+    onnext?: (n: number) => void;
+    onprevious?: (n: number) => void;
+    ongoto?: (n: number) => void;
+  }
+
+  let {
+    page = $bindable(undefined),
+    totalPages = undefined,
+    has_next = false,
+    has_previous = false,
+    goToNav = false,
+    onnext,
+    onprevious,
+    ongoto,
+  }: Props = $props();
 
   var isInt = /^[0-9]+$/;
 
-  const dispatch = createEventDispatcher();
-  let input: HTMLInputElement;
+  let input: HTMLInputElement | undefined = $state();
   // proxy the page value so we can reset it if needed
-  let inputValue = page;
-  $: inputWidth = String(inputValue ?? 0).length;
-  $: invalidValue =
+  let inputValue = $state(page);
+  let inputWidth = $derived(String(inputValue ?? 0).length);
+  let invalidValue = $derived(
     (inputValue && totalPages && inputValue > totalPages) ||
-    !inputValue ||
-    !isInt.test(inputValue.toString());
-  $: {
+      !inputValue ||
+      !isInt.test(inputValue.toString()),
+  );
+  $effect(() => {
+    // stash the in-flight value
     inputValue = page;
-  }
+  });
 
   function previous() {
-    if (has_previous) dispatch("previous", (page ?? 0) - 1);
+    if (has_previous) onprevious?.((page ?? 0) - 1);
   }
 
   function next() {
-    if (has_next) dispatch("next", (page ?? 0) + 1);
+    if (has_next) onnext?.((page ?? 0) + 1);
   }
 
   function goTo(page: number) {
-    dispatch("goTo", page);
+    ongoto?.(page);
   }
 
   function handleChange(event: Event) {
@@ -102,8 +118,8 @@
           max={totalPages}
           bind:this={input}
           bind:value={inputValue}
-          on:change={handleChange}
-          on:keyup={handleKeyup}
+          onchange={handleChange}
+          onkeyup={handleKeyup}
           style={`min-width: ${inputWidth}ch`}
         />
       {:else}
