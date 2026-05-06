@@ -33,7 +33,8 @@
 
   const me = getCurrentUser();
 
-  async function toggle() {
+  async function toggle(e: MouseEvent) {
+    e.preventDefault();
     const csrf_token = getCsrfToken();
     if (!csrf_token) {
       console.error("No CSRF token found");

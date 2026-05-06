@@ -5,7 +5,7 @@
     size?: number;
     active?: boolean;
     disabled?: boolean;
-    onclick?: () => void;
+    onclick?: (e: MouseEvent) => void;
   }
 
   let { size = 1, active = false, disabled = false, onclick }: Props = $props();
@@ -29,7 +29,11 @@
   class:active
   class:disabled
   style={cssVarStyles}
-  {onclick}
+  onclick={(e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    onclick?.(e);
+  }}
 >
   <Pin {title} {size} />
 </button>
