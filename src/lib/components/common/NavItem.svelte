@@ -17,7 +17,8 @@
     start?: Snippet;
     children?: Snippet;
     end?: Snippet;
-    onclick?: () => void;
+    onclick?: (e: MouseEvent) => void;
+    onkeydown?: (e: KeyboardEvent) => void;
   }
 
   let {
@@ -35,6 +36,7 @@
     children,
     end,
     onclick,
+    onkeydown,
   }: Props = $props();
 </script>
 
@@ -50,8 +52,8 @@
     class:disabled
     class:small
     class:inline
-    onclick={() => onclick?.()}
-    onkeydown={() => onclick?.()}
+    onclick={(e) => onclick?.(e)}
+    onkeydown={(e) => onkeydown?.(e)}
   >
     {@render start?.()}
     <span class="label">{@render children?.()}</span>
@@ -66,8 +68,8 @@
     class:disabled
     class:small
     class:inline
-    onclick={() => onclick?.()}
-    onkeydown={() => onclick?.()}
+    onclick={(e) => onclick?.(e)}
+    onkeydown={(e) => onkeydown?.(e)}
     role="button"
     tabindex={0}
   >
