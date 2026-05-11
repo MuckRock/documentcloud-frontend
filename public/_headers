@@ -3,10 +3,10 @@
 # cached forever
 
 /assets/*.css
-  Cache-Control: public, max-age=604800, immutable
+  cache-control: public, max-age=604800, immutable
 
 /assets/*.js
-  Cache-Control: public, max-age=604800, immutable
+  cache-control: public, max-age=604800, immutable
 
 
 # favicon.png and global.css are checked into the repo and change infrequently
@@ -14,5 +14,5 @@
 # will set to cache for one day in the browser
 
 /favicon.png
-  Cache-Control: public, max-age=86400, s-maxage=604800, immutable
+  cache-control: public, max-age=86400, s-maxage=604800, immutable
 

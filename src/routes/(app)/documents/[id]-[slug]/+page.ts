@@ -48,7 +48,7 @@ export async function load({
 
   if (!me) {
     setHeaders({
-      "Cache-Control": `public, max-age=${VIEWER_MAX_AGE}`,
+      "cache-control": `public, max-age=${VIEWER_MAX_AGE}`,
       "last-modified": new Date(document.updated_at).toUTCString(),
     });
   }

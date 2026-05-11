@@ -19,7 +19,7 @@ export async function load({ fetch, params, setHeaders }) {
   }
 
   setHeaders({
-    "Cache-Control": `public, max-age=${PAGE_MAX_AGE}`,
+    "cache-control": `public, max-age=${PAGE_MAX_AGE}`,
   });
 
   return data;

@@ -26,7 +26,7 @@ export async function load({ fetch, cookies, setHeaders }) {
 
   if (!me) {
     setHeaders({
-      "Cache-Control": `public, max-age=${PAGE_MAX_AGE}`,
+      "cache-control": `public, max-age=${PAGE_MAX_AGE}`,
     });
   }
 

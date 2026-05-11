@@ -17,7 +17,7 @@ export async function load({ params, fetch, setHeaders }) {
   }
 
   setHeaders({
-    "Cache-Control": `public, max-age=${EMBED_MAX_AGE}`,
+    "cache-control": `public, max-age=${EMBED_MAX_AGE}`,
     "last-modified": new Date(document.data.updated_at).toUTCString(),
   });
 
