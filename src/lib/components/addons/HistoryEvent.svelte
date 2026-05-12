@@ -156,7 +156,7 @@
           minW={false}
           ghost
           disabled={!csrftoken}
-          on:click={() => dismissRun()}
+          onclick={() => dismissRun()}
         >
           {$_("dialog.dismiss")}
         </Button>
@@ -168,7 +168,7 @@
           mode="danger"
           ghost
           disabled={!csrftoken}
-          on:click={() => cancelRun()}
+          onclick={() => cancelRun()}
           title={$_("dialog.cancel")}
         >
           {$_("dialog.cancel")}

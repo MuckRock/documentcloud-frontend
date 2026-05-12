@@ -128,7 +128,7 @@
               <Button
                 ghost
                 minW={false}
-                on:click={() => ($sidebars["navigation"] = true)}
+                onclick={() => ($sidebars["navigation"] = true)}
               >
                 <span class="flipV">
                   <SidebarExpand16 />
@@ -211,7 +211,7 @@
                     <Button
                       ghost
                       mode="primary"
-                      on:click={() => (docSelectModalOpen = true)}
+                      onclick={() => (docSelectModalOpen = true)}
                     >
                       {$_("addonDispatchDialog.selectDocuments")}
                     </Button>
@@ -241,7 +241,7 @@
               <Button
                 mode="primary"
                 ghost
-                on:click={() => (docSelectModalOpen = false)}
+                onclick={() => (docSelectModalOpen = false)}
                 minW={false}
               >
                 {$_("dialog.done")}

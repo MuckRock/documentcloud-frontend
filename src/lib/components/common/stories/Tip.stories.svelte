@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import { Info24, Alert24 } from "svelte-octicons";
 
@@ -20,7 +20,9 @@
 
 <Story name="With Icon" asChild>
   <Tip>
-    <Pin size={1.5} slot="icon" />
+    {#snippet icon()}
+      <Pin size={1.5} />
+    {/snippet}
     Pinned items will appear here.
   </Tip>
 </Story>
@@ -29,32 +31,32 @@
   <Flex direction="column" gap={2}>
     <Tip mode="normal">This is a helpful tip.</Tip>
     <Tip mode="primary">
-      <Info24 slot="icon" />
+      {#snippet icon()}<Info24 />{/snippet}
       I am important!
     </Tip>
     <Tip mode="premium">
-      <Premium size={1.75} slot="icon" />
+      {#snippet icon()}<Premium />{/snippet}
       This feature is for premium users.
     </Tip>
     <Tip mode="danger">
-      <Alert24 slot="icon" />
+      {#snippet icon()}<Alert24 />{/snippet}
       Watch out ahead!
     </Tip>
     <Tip mode="error">
-      <Alert24 slot="icon" />
+      {#snippet icon()}<Alert24 />{/snippet}
       Something went wrong!
     </Tip>
   </Flex>
 </Story>
 
-<Story name="With Large Icon" asChild>
+<Story name="Custom Styles" asChild>
   <Tip
     --color="var(--blue-5)"
     --fill="var(--blue-4)"
     --background-color="var(--blue-1)"
     --border-color="var(--blue-3)"
   >
-    <Info24 height="32" width="32" slot="icon" />
+    {#snippet icon()}<Info24 />{/snippet}
     Learn about all the interesting facts
   </Tip>
 </Story>

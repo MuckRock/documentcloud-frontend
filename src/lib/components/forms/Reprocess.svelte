@@ -158,7 +158,7 @@ This will mostly be used inside a modal but isn't dependent on one.
     {/if}
     {#if errors}
       <Tip mode="error">
-        <Alert24 slot="icon" />
+        {#snippet icon()}<Alert24 />{/snippet}
         <p>{errors.message}</p>
         {#if errors.errors}
           <ul>
@@ -172,7 +172,7 @@ This will mostly be used inside a modal but isn't dependent on one.
 
     {#if pending.length > 0}
       <Tip mode="error">
-        <Alert24 slot="icon" />
+        {#snippet icon()}<Alert24 />{/snippet}
         <p>{$_("dialogReprocessDialog.pending")}</p>
         <ul>
           {#each pending as document}
@@ -184,7 +184,7 @@ This will mostly be used inside a modal but isn't dependent on one.
 
     {#if multilingual}
       <Tip mode="danger">
-        <Alert24 slot="icon" />
+        {#snippet icon()}<Alert24 />{/snippet}
         <p>{$_("dialogReprocessDialog.multilingual")}</p>
       </Tip>
     {/if}
@@ -224,7 +224,7 @@ This will mostly be used inside a modal but isn't dependent on one.
 
           {#snippet oversize()}
             <Tip mode="danger">
-              <Alert24 slot="icon" />
+              {#snippet icon()}<Alert24 />{/snippet}
               {$_("dialogReprocessDialog.toomany", {
                 values: { max: MAX_EDIT_BATCH, n: documents.length },
               })}
@@ -250,7 +250,7 @@ This will mostly be used inside a modal but isn't dependent on one.
       <Button {disabled} type="submit" full mode="danger">
         <IssueReopened16 />{$_("dialogReprocessDialog.confirm")}
       </Button>
-      <Button full on:click={() => onclose?.()}>
+      <Button full onclick={() => onclose?.()}>
         {$_("edit.cancel")}
       </Button>
     </Flex>

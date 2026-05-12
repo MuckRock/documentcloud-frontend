@@ -106,13 +106,13 @@ and we don't want to do that everywhere.
     <p>{$_("edit.many", { values: { n: documents.length } })}</p>
     {#snippet empty()}
       <Tip mode="error">
-        <Alert24 slot="icon" />
+        {#snippet icon()}<Alert24 />{/snippet}
         {$_("edit.nodocs")}
       </Tip>
     {/snippet}
     {#snippet oversize()}
       <Tip mode="danger">
-        <Alert24 slot="icon" />
+        {#snippet icon()}<Alert24 />{/snippet}
         {$_("edit.toomany", { values: { n: MAX_EDIT_BATCH } })}
       </Tip>
     {/snippet}
@@ -136,7 +136,7 @@ and we don't want to do that everywhere.
     {/each}
   </div>
   <footer>
-    <Button ghost mode="primary" on:click={() => (createProjectOpen = true)}>
+    <Button ghost mode="primary" onclick={() => (createProjectOpen = true)}>
       <PlusCircle16 />
       {$_("projects.create")}
     </Button>
@@ -145,7 +145,7 @@ and we don't want to do that everywhere.
       name="documents"
       value={documents.map((d) => d.id).join(",")}
     />
-    <Button on:click={() => dispatch("close")}>{$_("dialog.done")}</Button>
+    <Button onclick={() => dispatch("close")}>{$_("dialog.done")}</Button>
   </footer>
 </div>
 

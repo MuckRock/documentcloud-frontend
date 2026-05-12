@@ -54,7 +54,7 @@
       ghost
       size="small"
       mode="primary"
-      on:click={() => (feedbackOpen = true)}
+      onclick={() => (feedbackOpen = true)}
     >
       {$_("error.report")}
     </Button>

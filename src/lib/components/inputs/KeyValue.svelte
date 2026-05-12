@@ -199,7 +199,7 @@ This uses `svelecte` to let users more easily choose existing keys.
           minW={false}
           value="add"
           disabled={!key || !value || !onadd || disabled}
-          on:click={handleAdd}
+          onclick={handleAdd}
           aria-label={$_("data.update")}
         >
           <PlusCircle24 />
@@ -213,7 +213,7 @@ This uses `svelecte` to let users more easily choose existing keys.
           mode="primary"
           disabled={!edited || !onedit || !value.trim() || disabled}
           value="edit"
-          on:click={handleEdit}
+          onclick={handleEdit}
           aria-label={$_("dialog.update")}
         >
           <CheckCircle24 />
@@ -227,7 +227,7 @@ This uses `svelecte` to let users more easily choose existing keys.
           minW={false}
           value="delete"
           disabled={!ondelete || disabled}
-          on:click={handleDelete}
+          onclick={handleDelete}
           aria-label={$_("data.delete")}
           --fill="var(--caution)"
           --background="var(--orange-2)"

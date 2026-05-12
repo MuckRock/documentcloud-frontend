@@ -90,14 +90,14 @@
       <Download16 />
       {$_("sidebar.download")}
     </Button>
-    <Button ghost on:click={() => show("share")}>
+    <Button ghost onclick={() => show("share")}>
       <Share16 />
       {$_("sidebar.shareEmbed")}
     </Button>
   </div>
   {#if document.edit_access}
     <div class="actions">
-      <Button ghost mode="primary" minW={false} on:click={() => show("edit")}>
+      <Button ghost mode="primary" minW={false} onclick={() => show("edit")}>
         <Pencil16 />
         {$_("sidebar.edit")}
       </Button>
@@ -105,7 +105,7 @@
         ghost
         mode="premium"
         minW={false}
-        on:click={() => show("revisions")}
+        onclick={() => show("revisions")}
       >
         <History16 />
         {$_("sidebar.revisions")}
@@ -117,7 +117,7 @@
         ghost
         mode="danger"
         disabled={document.status === "nofile"}
-        on:click={() => show("reprocess")}
+        onclick={() => show("reprocess")}
       >
         {#if processing}
           <IssueReopened16 class="spin" />
@@ -127,7 +127,7 @@
           {$_("sidebar.reprocess")}
         {/if}
       </Button>
-      <Button ghost mode="danger" on:click={() => show("delete")}>
+      <Button ghost mode="danger" onclick={() => show("delete")}>
         <Trash16 />
         {$_("sidebar.delete")}
       </Button>
@@ -136,7 +136,7 @@
         <Button
           ghost
           mode="danger"
-          on:click={() => show("change_owner")}
+          onclick={() => show("change_owner")}
           disabled={!canChangeOwner(user, [document])}
         >
           <Person16 />
@@ -146,7 +146,9 @@
 
       {#if processing}
         <Tip>
-          <span slot="icon"></span>
+          {#snippet icon()}
+            <span></span>
+          {/snippet}
           {$_("processing.document")}
         </Tip>
       {/if}

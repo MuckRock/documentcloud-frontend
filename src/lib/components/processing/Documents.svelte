@@ -73,7 +73,9 @@ Invalidation of finished documents is handled by ProcessContext.
   <SidebarGroup name="processing.documents">
     {#snippet title()}
       <NavItem>
-        <File16 slot="start" />
+        {#snippet start()}
+          <File16 />
+        {/snippet}
         {$_("processing.documents")}
       </NavItem>
     {/snippet}
@@ -112,7 +114,9 @@ Invalidation of finished documents is handled by ProcessContext.
 {#if reprocess}
   <Portal>
     <Modal on:close={() => (reprocess = null)}>
-      <h1 slot="title">{$_("dialogReprocessDialog.title")}</h1>
+      {#snippet title()}
+        <h1>{$_("dialogReprocessDialog.title")}</h1>
+      {/snippet}
       <Reprocess documents={[reprocess]} onclose={() => (reprocess = null)} />
     </Modal>
   </Portal>

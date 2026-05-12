@@ -1,14 +1,26 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import { LightBulb24 } from "svelte-octicons";
 
-  export let mode: "normal" | "primary" | "premium" | "danger" | "error" =
-    "normal";
+  interface Props {
+    mode?: "normal" | "primary" | "premium" | "danger" | "error";
+    icon?: Snippet;
+    children?: Snippet;
+  }
+
+  let { mode = "normal", icon, children }: Props = $props();
 </script>
 
 <aside class="tip {mode}">
-  <div class="icon"><slot name="icon"><LightBulb24 /></slot></div>
+  <div class="icon">
+    {#if icon}
+      {@render icon()}
+    {:else}
+      <LightBulb24 />
+    {/if}
+  </div>
   <div class="inner">
-    <slot />
+    {@render children?.()}
   </div>
 </aside>
 

@@ -68,10 +68,10 @@
     </p>
   {/if}
   <Flex gap={1} wrap justify="center">
-    <Button mode="primary" on:click={create}>
+    <Button mode="primary" onclick={create}>
       {$_("mailkey.create.button")}
     </Button>
-    <Button mode="danger" on:click={destroy}>
+    <Button mode="danger" onclick={destroy}>
       {$_("mailkey.destroy.button")}
     </Button>
   </Flex>

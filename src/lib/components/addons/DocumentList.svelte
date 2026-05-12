@@ -51,7 +51,7 @@
             <Button
               ghost
               minW={false}
-              on:click={() => ($sidebars["navigation"] = true)}
+              onclick={() => ($sidebars["navigation"] = true)}
             >
               <span class="flipV">
                 <SidebarExpand16 />

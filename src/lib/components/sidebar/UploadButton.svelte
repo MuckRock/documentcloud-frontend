@@ -35,7 +35,7 @@
     <Button
       full
       mode="primary"
-      on:click={onUploadClick}
+      onclick={onUploadClick}
       disabled={!project.edit_access}
     >
       <PlusCircle16 />

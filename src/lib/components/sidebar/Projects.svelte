@@ -36,7 +36,9 @@
   <SidebarGroup name="projects">
     {#snippet title()}
       <NavItem>
-        <FileDirectory16 slot="start" />
+        {#snippet start()}
+          <FileDirectory16 />
+        {/snippet}
         {$_("sidebar.projects.title")}
       </NavItem>
     {/snippet}
@@ -57,7 +59,9 @@
       active={$page.url.searchParams?.get("list") === "owned"}
       href="/projects?list=owned"
     >
-      <Person16 height={14} width={14} slot="start" />
+      {#snippet start()}
+        <Person16 height={14} width={14} />
+      {/snippet}
       {$_("projects.yours")}
     </NavItem>
     <NavItem
@@ -65,7 +69,9 @@
       active={$page.url.searchParams?.get("list") === "shared"}
       href="/projects?list=shared"
     >
-      <People16 height={14} width={14} slot="start" />
+      {#snippet start()}
+        <People16 height={14} width={14} />
+      {/snippet}
       {$_("projects.shared")}
     </NavItem>
     {#await pinned}
@@ -73,12 +79,16 @@
     {:then projects}
       {#each sort(projects) as project}
         <NavItem small href={canonicalUrl(project).href}>
-          <Pin size={0.875} active={project.pinned} slot="start" />
+          {#snippet start()}
+            <Pin size={0.875} active={project.pinned} />
+          {/snippet}
           {project.title}
         </NavItem>
       {:else}
         <NavItem small disabled>
-          <Pin16 slot="start" />
+          {#snippet start()}
+            <Pin16 />
+          {/snippet}
           {$_("sidebar.projects.pinned")}
         </NavItem>
       {/each}

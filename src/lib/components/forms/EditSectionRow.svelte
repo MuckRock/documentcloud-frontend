@@ -71,7 +71,7 @@ One row of the `EditSections.svelte` form, to encapsulate logic.
         name="action"
         value="update"
         {disabled}
-        on:click={async () => {
+        onclick={async () => {
           const section = { id, page_number, title };
           await update(document.id, id, section, csrftoken);
           await invalidate(`document:${document.id}`);
@@ -86,7 +86,7 @@ One row of the `EditSections.svelte` form, to encapsulate logic.
         minW={false}
         name="action"
         value="delete"
-        on:click={async () => {
+        onclick={async () => {
           await remove(document.id, id, csrftoken);
           await invalidate(`document:${document.id}`);
         }}
@@ -102,7 +102,7 @@ One row of the `EditSections.svelte` form, to encapsulate logic.
         name="action"
         value="add"
         {disabled}
-        on:click={async (e) => {
+        onclick={async (e) => {
           await create(document.id, { title, page_number }, csrftoken);
           await invalidate(`document:${document.id}`);
           reset();
@@ -116,7 +116,7 @@ One row of the `EditSections.svelte` form, to encapsulate logic.
         mode="primary"
         title={$_("sections.clear")}
         minW={false}
-        on:click={reset}
+        onclick={reset}
       >
         <XCircle16 />
       </Button>

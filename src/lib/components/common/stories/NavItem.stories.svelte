@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import { action } from "@storybook/addon-actions";
   import {
@@ -19,7 +19,6 @@
   });
 
   const click = action("Click");
-  const keydown = action("Keydown");
 </script>
 
 <Story name="Text Only" asChild>
@@ -28,19 +27,25 @@
 
 <Story name="Text and Icon" asChild>
   <NavItem>
-    <Comment16 slot="start" /> Add a note…
+    {#snippet start()}
+      <Comment16 />
+    {/snippet} Add a note…
   </NavItem>
 </Story>
 
 <Story name="Link" asChild>
-  <NavItem href="/" on:click={click} on:keydown={keydown}>
-    <Home16 slot="start" /> Go Home
+  <NavItem href="/" onclick={click}>
+    {#snippet start()}
+      <Home16 />
+    {/snippet} Go Home
   </NavItem>
 </Story>
 
 <Story name="Hover" asChild>
   <NavItem hover>
-    <Home16 slot="start" /> Go Home
+    {#snippet start()}
+      <Home16 />
+    {/snippet} Go Home
   </NavItem>
 </Story>
 
@@ -48,7 +53,9 @@
   <Flex>
     <NavItem active>Static</NavItem>
     <NavItem active href="#">
-      <Link16 slot="start" /> Link
+      {#snippet start()}
+        <Link16 />
+      {/snippet} Link
     </NavItem>
     <NavItem
       active
@@ -56,27 +63,35 @@
       --active-color="var(--orange-4)"
       --active-fill="var(--orange-3)"
     >
-      <Paintbrush16 slot="start" /> Custom Active Colors
+      {#snippet start()}
+        <Paintbrush16 />
+      {/snippet} Custom Active Colors
     </NavItem>
   </Flex>
 </Story>
 
 <Story name="Small" asChild>
   <NavItem small>
-    <Comment16 slot="start" /> Add a note…
+    {#snippet start()}
+      <Comment16 />
+    {/snippet} Add a note…
   </NavItem>
 </Story>
 
 <Story name="Disabled" asChild>
   <NavItem disabled>
-    <Comment16 slot="start" /> Add a note…
+    {#snippet start()}
+      <Comment16 />
+    {/snippet} Add a note…
   </NavItem>
 </Story>
 
 <Story name="With Overflow" asChild>
   <div class="maxW-16">
     <NavItem disabled>
-      <FileDirectory16 slot="start" /> A very long sidebar item maybe a project
+      {#snippet start()}
+        <FileDirectory16 />
+      {/snippet} A very long sidebar item maybe a project
     </NavItem>
   </div>
 </Story>

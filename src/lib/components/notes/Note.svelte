@@ -78,7 +78,7 @@
   <header>
     <NoteTitle {doc} {note} {embed} />
     {#if canClose}
-      <Button minW={false} ghost on:click={closeNote}>
+      <Button minW={false} ghost onclick={closeNote}>
         <XCircle16 />
       </Button>
     {/if}

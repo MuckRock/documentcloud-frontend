@@ -17,7 +17,7 @@
 <Button
   size="small"
   ghost
-  on:click={() => copy(text)}
+  onclick={() => copy(text)}
   disabled={!navigator.clipboard}
 >
   <Copy16 height={14} width={14} />

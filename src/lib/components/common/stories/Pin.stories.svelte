@@ -21,7 +21,7 @@
 </script>
 
 {#snippet template(args)}
-  <Pin {...args} on:click={onClick} />
+  <Pin {...args} onclick={onClick} />
 {/snippet}
 
 <Story name="Default" {args} />

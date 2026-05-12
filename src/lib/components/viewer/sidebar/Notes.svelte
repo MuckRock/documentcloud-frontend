@@ -12,16 +12,24 @@
   import { canonicalUrl, pageUrl } from "$lib/api/documents";
   import { noteUrl, isPageLevel } from "$lib/api/notes";
 
-  export let document: Document;
+  interface Props {
+    document: Document;
+  }
 
-  $: notes = document.notes ?? [];
-  $: annotate = new URL("?mode=annotating", canonicalUrl(document)).href;
+  let { document }: Props = $props();
+
+  let notes = $derived(document.notes ?? []);
+  let annotate = $derived(
+    new URL("?mode=annotating", canonicalUrl(document)).href,
+  );
 </script>
 
 <SidebarGroup name="notes">
   {#snippet title()}
     <NavItem>
-      <Note16 slot="start" />
+      {#snippet start()}
+        <Note16 />
+      {/snippet}
       {$_("sidebar.toc.notes")}
     </NavItem>
   {/snippet}
@@ -34,10 +42,12 @@
       <li>
         <NavItem {href} small>
           <span class="note_title">{note.title}</span>
-          <span class="page_number" slot="start">
-            {$_("sidebar.toc.pageAbbrev")}
-            {note.page_number + 1}
-          </span>
+          {#snippet start()}
+            <span class="page_number">
+              {$_("sidebar.toc.pageAbbrev")}
+              {note.page_number + 1}
+            </span>
+          {/snippet}
         </NavItem>
       </li>
     {:else}

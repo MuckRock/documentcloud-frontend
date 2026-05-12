@@ -64,7 +64,7 @@
       {#if $$slots.title}
         <span class="title"><slot name="title" /></span>
       {/if}
-      <Button ghost minW={false} on:click={close}>
+      <Button ghost minW={false} onclick={close}>
         <span class="icon" class:flipV={position === "left"}>
           <SidebarCollapse16 />
         </span>

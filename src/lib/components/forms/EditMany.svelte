@@ -88,13 +88,13 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
     <ShowSize size={documents.length}>
       {#snippet empty()}
         <Tip mode="error">
-          <Alert24 slot="icon" />
+          {#snippet icon()}<Alert24 />{/snippet}
           {$_("edit.nodocs")}
         </Tip>
       {/snippet}
       {#snippet oversize()}
         <Tip mode="danger">
-          <Alert24 slot="icon" />
+          {#snippet icon()}<Alert24 />{/snippet}
           {$_("edit.toomany", { values: { n: MAX_EDIT_BATCH } })}
         </Tip>
       {/snippet}
@@ -102,7 +102,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
 
     {#if error}
       <Tip mode="error">
-        <Alert24 slot="icon" />
+        {#snippet icon()}<Alert24 />{/snippet}
         <p>{error.message}</p>
         {#if Object.keys(error.errors ?? {}).length}
           <ul>
@@ -154,7 +154,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
       <Button type="submit" mode="primary" full {disabled}>
         {$_("edit.save")}
       </Button>
-      <Button full on:click={() => onclose?.()}>
+      <Button full onclick={() => onclose?.()}>
         {$_("edit.cancel")}
       </Button>
     </Flex>

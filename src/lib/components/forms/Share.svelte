@@ -116,13 +116,13 @@
   {#if access === "private"}
     <div class="banner">
       <Tip mode="danger">
-        <ShieldLock24 slot="icon" />
+        {#snippet icon()}<ShieldLock24 />{/snippet}
         <div class="privateWarning">
           <div style:flex="1 1 auto">
             {$_("share.privateWarning", { values: { type: "document" } })}
           </div>
           {#if document.edit_access}
-            <Button mode="danger" size="small" on:click={openEditing}>
+            <Button mode="danger" size="small" onclick={openEditing}>
               {$_("share.privateFix")}
             </Button>
           {/if}
@@ -132,13 +132,13 @@
   {:else if access === "organization"}
     <div class="banner">
       <Tip mode="premium">
-        <Organization24 slot="icon" />
+        {#snippet icon()}<Organization24 />{/snippet}
         <div class="privateWarning">
           <div style:flex="1 1 auto">
             {$_("share.orgWarning", { values: { type: "document" } })}
           </div>
           {#if document.edit_access}
-            <Button mode="danger" size="small" on:click={openEditing}>
+            <Button mode="danger" size="small" onclick={openEditing}>
               {$_("share.privateFix")}
             </Button>
           {/if}
@@ -240,7 +240,7 @@
                 size="small"
                 ghost
                 mode="primary"
-                on:click={() => (customizeEmbedOpen = false)}
+                onclick={() => (customizeEmbedOpen = false)}
               >
                 <Check16 />
                 {$_("share.save")}
@@ -250,7 +250,7 @@
                 size="small"
                 ghost
                 mode="primary"
-                on:click={() => (customizeEmbedOpen = true)}
+                onclick={() => (customizeEmbedOpen = true)}
                 disabled={currentTab !== "document"}
               >
                 <Sliders16 />

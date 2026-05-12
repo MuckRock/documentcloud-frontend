@@ -36,7 +36,9 @@
 <SidebarGroup name="projects:viewer">
   {#snippet title()}
     <NavItem>
-      <Tag16 slot="start" />
+      {#snippet start()}
+        <Tag16 />
+      {/snippet}
       {$_("sidebar.data.title")}
     </NavItem>
   {/snippet}

@@ -14,27 +14,27 @@
 
 <Story name="With Title">
   <Flex direction="column">
-    <Button on:click={() => toast("A standard message")}>Send Toast</Button>
-    <Button on:click={() => toast("Did you know?", { status: "info" })}
+    <Button onclick={() => toast("A standard message")}>Send Toast</Button>
+    <Button onclick={() => toast("Did you know?", { status: "info" })}
       >Send Info</Button
     >
-    <Button on:click={() => toast("Great job!", { status: "success" })}
+    <Button onclick={() => toast("Great job!", { status: "success" })}
       >Send Success</Button
     >
-    <Button on:click={() => toast("Look out ahead!", { status: "warning" })}
+    <Button onclick={() => toast("Look out ahead!", { status: "warning" })}
       >Send Warning</Button
     >
-    <Button on:click={() => toast("Bad things happen", { status: "error" })}
+    <Button onclick={() => toast("Bad things happen", { status: "error" })}
       >Send Error</Button
     >
     <Button
-      on:click={() =>
+      onclick={() =>
         toast("I won't go away on my own", { status: "info", lifespan: null })}
     >
       Permanent Toast
     </Button>
     <Button
-      on:click={() => toast(Kv, { props: { key: "Type", value: "Component" } })}
+      onclick={() => toast(Kv, { props: { key: "Type", value: "Component" } })}
     >
       Component Toast
     </Button>

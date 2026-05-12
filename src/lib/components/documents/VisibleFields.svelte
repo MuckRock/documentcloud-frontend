@@ -100,9 +100,11 @@
         <NavItem
           active={deepEqual(view.fields, $visibleFields)}
           hover
-          on:click={() => visibleFields?.set(view.fields)}
+          onclick={() => visibleFields?.set(view.fields)}
         >
-          <view.icon slot="start" />
+          {#snippet start()}
+            <view.icon />
+          {/snippet}
           {$_(view.label)}
         </NavItem>
       </div>
@@ -112,7 +114,9 @@
     <fieldset class="fields">
       <legend>
         <NavItem small>
-          <Paintbrush16 height={14} width={14} slot="start" />
+          {#snippet start()}
+            <Paintbrush16 height={14} width={14} />
+          {/snippet}
           {$_("documentBrowser.fields.customize")}
         </NavItem>
       </legend>

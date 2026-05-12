@@ -46,13 +46,13 @@
     {#if isPrivate}
       <div class="banner">
         <Tip mode="danger">
-          <ShieldLock24 slot="icon" />
+          {#snippet icon()}<ShieldLock24 />{/snippet}
           <div class="privateWarning">
             <div style:flex="1 1 auto">
               {$_("share.privateWarning", { values: { type: "project" } })}
             </div>
             {#if project.edit_access}
-              <Button mode="danger" size="small" on:click={openEditing}>
+              <Button mode="danger" size="small" onclick={openEditing}>
                 {$_("share.privateFix")}
               </Button>
             {/if}
@@ -102,7 +102,9 @@
 {#if editing}
   <Portal>
     <Modal on:close={closeEditing}>
-      <h1 slot="title">{$_("projects.edit")}</h1>
+      {#snippet title()}
+        <h1>{$_("projects.edit")}</h1>
+      {/snippet}
       <EditProject {project} on:close={closeEditing} />
     </Modal>
   </Portal>

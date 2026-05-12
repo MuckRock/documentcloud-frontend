@@ -128,6 +128,15 @@
           ),
         },
       },
+      // not yet supported
+      state: {
+        page: {
+          url: new URL(
+            "/?site=https://example.com&project=123&keywords=foo,bar&notAfield=hahagotya",
+            APP_URL,
+          ),
+        },
+      },
     },
   }}
 />

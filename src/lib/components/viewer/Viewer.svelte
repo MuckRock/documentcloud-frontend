@@ -61,7 +61,7 @@ Assumes it's a child of a ViewerContext
             <Button
               ghost
               minW={false}
-              on:click={() => ($sidebars["navigation"] = true)}
+              onclick={() => ($sidebars["navigation"] = true)}
             >
               <span class="flipV">
                 <SidebarExpand16 />
@@ -83,7 +83,7 @@ Assumes it's a child of a ViewerContext
             <Button
               ghost
               minW={false}
-              on:click={() => ($sidebars["action"] = true)}
+              onclick={() => ($sidebars["action"] = true)}
             >
               <SidebarExpand16 />
             </Button>

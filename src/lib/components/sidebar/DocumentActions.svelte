@@ -97,7 +97,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 <Flex direction="column" align="start">
   <Button
     ghost
-    on:click={() => show("share")}
+    onclick={() => show("share")}
     disabled={search.selected?.length !== 1}
   >
     <Share16 />
@@ -107,7 +107,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   <Button
     ghost
     mode="primary"
-    on:click={() => show("edit")}
+    onclick={() => show("edit")}
     disabled={!search.editable}
   >
     <Pencil16 />
@@ -117,7 +117,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   <Button
     ghost
     mode="primary"
-    on:click={() => show("data")}
+    onclick={() => show("data")}
     disabled={!search.editable}
   >
     <Tag16 />
@@ -127,7 +127,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   <Button
     ghost
     mode="primary"
-    on:click={() => show("project")}
+    onclick={() => show("project")}
     disabled={!search.selected || search.selected?.length < 1}
   >
     <FileDirectory16 />
@@ -137,7 +137,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   <Button
     ghost
     mode="danger"
-    on:click={() => show("reprocess")}
+    onclick={() => show("reprocess")}
     disabled={!search.editable}
   >
     <IssueReopened16 />
@@ -149,7 +149,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   <Button
     ghost
     mode="danger"
-    on:click={() => show("delete")}
+    onclick={() => show("delete")}
     disabled={!search.editable}
   >
     <Alert16 />
@@ -159,7 +159,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   <Button
     ghost
     mode="danger"
-    on:click={() => show("change_owner")}
+    onclick={() => show("change_owner")}
     disabled={!canChangeOwner($me, search.selected)}
   >
     <Person16 />

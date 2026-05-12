@@ -51,7 +51,7 @@ a user who is logged in but has `verified_journalist = false`.
 </script>
 
 <Tip>
-  <Unverified24 slot="icon" />
+  {#snippet icon()}<Unverified24 />{/snippet}
   <p>{$_("unverified.verify")}</p>
   <Flex class="buttons" gap={1}>
     <Button mode="primary" href={SQUARELET_ORGS_URL} target="_blank">

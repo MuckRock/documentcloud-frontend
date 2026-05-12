@@ -1,19 +1,26 @@
 <script lang="ts">
   import Pin from "../icons/Pin.svelte";
 
-  export let size: number = 1;
-  export let active: boolean = false;
-  export let disabled: boolean = false;
+  interface Props {
+    size?: number;
+    active?: boolean;
+    disabled?: boolean;
+    onclick?: (e: MouseEvent) => void;
+  }
 
-  $: title = disabled
-    ? "Pinning is disabled"
-    : active
-      ? "Click to Unpin"
-      : "Click to Pin";
+  let { size = 1, active = false, disabled = false, onclick }: Props = $props();
 
-  $: cssVarStyles = `--padding:${size * 0.25}em; --border-radius:${
-    size * 4
-  }px;`;
+  let title = $derived(
+    disabled
+      ? "Pinning is disabled"
+      : active
+        ? "Click to Unpin"
+        : "Click to Pin",
+  );
+
+  let cssVarStyles = $derived(
+    `--padding:${size * 0.25}em; --border-radius:${size * 4}px;`,
+  );
 </script>
 
 <button
@@ -22,7 +29,11 @@
   class:active
   class:disabled
   style={cssVarStyles}
-  on:click|stopPropagation|preventDefault
+  onclick={(e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    onclick?.(e);
+  }}
 >
   <Pin {title} {size} />
 </button>

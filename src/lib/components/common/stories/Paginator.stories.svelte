@@ -1,4 +1,5 @@
 <script context="module" lang="ts">
+  import type { ComponentProps } from "svelte";
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import { action } from "@storybook/addon-actions";
 
@@ -18,15 +19,17 @@
     },
     render: template,
   });
+
+  type Args = ComponentProps<typeof Paginator>;
 </script>
 
-{#snippet template(args)}
+{#snippet template(args: Args)}
   <div class="container">
     <Paginator
       {...args}
-      on:goTo={action("Go To")}
-      on:next={action("Next")}
-      on:previous={action("Previous")}
+      ongoto={action("Go To")}
+      onnext={action("Next")}
+      onprevious={action("Previous")}
     />
   </div>
 {/snippet}

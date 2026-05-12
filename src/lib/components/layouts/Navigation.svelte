@@ -80,7 +80,7 @@
         minW={false}
         ghost
         mode="primary"
-        on:click={() => (feedbackOpen = true)}
+        onclick={() => (feedbackOpen = true)}
         id="feedback"
       >
         {$_("common.feedback")}

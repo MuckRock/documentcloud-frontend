@@ -213,7 +213,7 @@
 
   <hr class="atom-editor-separator" />
 
-  <Button mode="danger" size="small" ghost full on:click={handleDelete}>
+  <Button mode="danger" size="small" ghost full onclick={handleDelete}>
     Remove
   </Button>
 </div>

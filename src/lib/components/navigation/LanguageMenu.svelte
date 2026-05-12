@@ -11,10 +11,15 @@
 
   import { LANGUAGES } from "@/config/config.js";
 
-  export let position: Placement = "bottom-end";
+  interface Props {
+    position?: Placement;
+  }
 
-  $: currentLang =
-    LANGUAGES.find(([_, code]) => code === $locale) ?? LANGUAGES[0];
+  let { position = "bottom-end" }: Props = $props();
+
+  let currentLang = $derived(
+    LANGUAGES.find(([_, code]) => code === $locale) ?? LANGUAGES[0],
+  );
 
   function updateLanguage(code: string) {
     $locale = code;
@@ -29,22 +34,26 @@
   <Dropdown {position}>
     {#snippet anchor()}
       <NavItem>
-        <span class="flag" slot="start">{currentLang?.[2]}</span>
+        {#snippet start()}
+          <span class="flag">{currentLang?.[2]}</span>
+        {/snippet}
         <!-- <span class="lang">{currentLang[0]}</span> -->
-        <div class="dropdownArrow" slot="end">
-          {#if position.includes("bottom")}
-            <ChevronDown12 />
-          {:else}
-            <ChevronUp12 />
-          {/if}
-        </div>
+        {#snippet end()}
+          <div class="dropdownArrow">
+            {#if position.includes("bottom")}
+              <ChevronDown12 />
+            {:else}
+              <ChevronUp12 />
+            {/if}
+          </div>
+        {/snippet}
       </NavItem>
     {/snippet}
     {#snippet inner(close)}
       <Menu>
         {#each LANGUAGES as [name, code, flag]}
           <NavItem
-            on:click={() => {
+            onclick={() => {
               updateLanguage(code ?? "");
               close();
             }}

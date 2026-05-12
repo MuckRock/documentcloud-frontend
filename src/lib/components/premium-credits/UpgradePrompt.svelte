@@ -19,7 +19,7 @@
   </div>
   {#if callToAction}
     <div class="action">
-      <Button premium label={callToAction} {href} on:click />
+      <Button premium label={callToAction} {href} />
     </div>
   {/if}
 </div>

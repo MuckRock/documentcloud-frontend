@@ -71,7 +71,7 @@ Edit project metadata
           {$_("projects.create")}
         </Button>
       {/if}
-      <Button full on:click={(e) => dispatch("close")}>
+      <Button full onclick={(e) => dispatch("close")}>
         {$_("edit.cancel")}
       </Button>
     </Flex>

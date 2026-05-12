@@ -107,7 +107,7 @@
                   <Button
                     ghost
                     minW={false}
-                    on:click={() => ($sidebars["navigation"] = true)}
+                    onclick={() => ($sidebars["navigation"] = true)}
                   >
                     <span class="flipV">
                       <SidebarExpand16 />
@@ -121,7 +121,7 @@
                   <Button
                     ghost
                     minW={false}
-                    on:click={() => ($sidebars["action"] = true)}
+                    onclick={() => ($sidebars["action"] = true)}
                   >
                     <SidebarExpand16 />
                   </Button>
@@ -168,7 +168,9 @@
                         !search.editable}
                     >
                       {$_("bulk.title")}
-                      <ChevronUp12 slot="end" />
+                      {#snippet end()}
+                        <ChevronUp12 />
+                      {/snippet}
                     </NavItem>
                   {/snippet}
                   {#snippet inner({ close })}

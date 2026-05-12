@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
   export interface Breadcrumb {
     title: string;
     href?: string;
@@ -13,18 +13,23 @@
 
   import { remToPx } from "$lib/utils/layout";
 
-  export let trail: Breadcrumb[] = [];
+  interface Props {
+    trail?: Breadcrumb[];
+    root?: import("svelte").Snippet;
+  }
 
-  let width: number = 1000;
+  let { trail = [], root }: Props = $props();
 
-  $: SHOW_BREADCRUMBS = width > remToPx(32);
+  let width: number = $state(1000);
+
+  let SHOW_BREADCRUMBS = $derived(width > remToPx(32));
 </script>
 
 <div class="breadcrumbs" bind:clientWidth={width}>
   <Flex gap={0.375} align="center">
-    <slot name="root">
+    {#if root}{@render root()}{:else}
       <a href="/" class="logo crumb"><Logo /></a>
-    </slot>
+    {/if}
     {#if SHOW_BREADCRUMBS}
       {#each trail as { href, title }}
         <span class="divider"><TriangleRight16 fill="var(--gray-3)" /></span>

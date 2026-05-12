@@ -75,7 +75,7 @@ Positioning and generating coordinates should happen outside of this form.
     <Flex class="buttons" justify="between">
       <Flex>
         <Button type="submit" mode="primary">{$_("annotate.save")}</Button>
-        <Button type="reset" on:click={() => dispatch("close")}
+        <Button type="reset" onclick={() => dispatch("close")}
           >{$_("annotate.cancel")}
         </Button>
       </Flex>

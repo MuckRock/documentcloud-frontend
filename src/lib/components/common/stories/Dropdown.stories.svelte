@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import Menu from "$lib/components/common/Menu.svelte";
   import MenuItem from "$lib/components/common/MenuItem.svelte";
@@ -18,9 +18,13 @@
   <Dropdown>
     {#snippet anchor()}
       <NavItem>
-        <Globe16 slot="start" />
+        {#snippet start()}
+          <Globe16 />
+        {/snippet}
         Open Dropdown
-        <ChevronDown12 slot="end" />
+        {#snippet end()}
+          <ChevronDown12 />
+        {/snippet}
       </NavItem>
     {/snippet}
     {#snippet inner({ close })}
@@ -37,9 +41,13 @@
   <Dropdown border>
     {#snippet anchor()}
       <NavItem>
-        <Globe16 slot="start" />
+        {#snippet start()}
+          <Globe16 />
+        {/snippet}
         Open Dropdown
-        <ChevronDown12 slot="end" />
+        {#snippet end()}
+          <ChevronDown12 />
+        {/snippet}
       </NavItem>
     {/snippet}
     {#snippet inner({ close })}
@@ -56,9 +64,13 @@
   <Dropdown overlay>
     {#snippet anchor()}
       <NavItem>
-        <Globe16 slot="start" />
+        {#snippet start()}
+          <Globe16 />
+        {/snippet}
         Open Dropdown
-        <ChevronDown12 slot="end" />
+        {#snippet end()}
+          <ChevronDown12 />
+        {/snippet}
       </NavItem>
     {/snippet}
     {#snippet inner({ close })}
@@ -75,9 +87,13 @@
   <Dropdown position="right">
     {#snippet anchor()}
       <NavItem>
-        <Globe16 slot="start" />
+        {#snippet start()}
+          <Globe16 />
+        {/snippet}
         Open Dropdown
-        <ChevronRight12 slot="end" />
+        {#snippet end()}
+          <ChevronRight12 />
+        {/snippet}
       </NavItem>
     {/snippet}
     {#snippet inner({ close })}
@@ -94,20 +110,26 @@
   <Dropdown position="right">
     {#snippet anchor()}
       <NavItem>
-        <Globe16 slot="start" />
+        {#snippet start()}
+          <Globe16 />
+        {/snippet}
         Open Dropdown
-        <ChevronRight12 slot="end" />
+        {#snippet end()}
+          <ChevronRight12 />
+        {/snippet}
       </NavItem>
     {/snippet}
     {#snippet inner({ close })}
       <Menu>
-        <NavItem on:click={close}>Item 1</NavItem>
-        <NavItem on:click={close}>Item 2</NavItem>
+        <NavItem onclick={close}>Item 1</NavItem>
+        <NavItem onclick={close}>Item 2</NavItem>
         <Dropdown position="right">
           {#snippet anchor()}
             <NavItem>
               Item 3
-              <ChevronRight12 slot="end" />
+              {#snippet end()}
+                <ChevronRight12 />
+              {/snippet}
             </NavItem>
           {/snippet}
           {#snippet inner()}
@@ -127,9 +149,13 @@
     <Dropdown>
       {#snippet anchor()}
         <NavItem>
-          <Globe16 slot="start" />
+          {#snippet start()}
+            <Globe16 />
+          {/snippet}
           First Dropdown
-          <ChevronDown12 slot="end" />
+          {#snippet end()}
+            <ChevronDown12 />
+          {/snippet}
         </NavItem>
       {/snippet}
       {#snippet inner({ close })}
@@ -144,9 +170,13 @@
     <Dropdown>
       {#snippet anchor()}
         <NavItem>
-          <Globe16 slot="start" />
+          {#snippet start()}
+            <Globe16 />
+          {/snippet}
           Second Dropdown
-          <ChevronDown12 slot="end" />
+          {#snippet end()}
+            <ChevronDown12 />
+          {/snippet}
         </NavItem>
       {/snippet}
       {#snippet inner({ close })}
@@ -161,9 +191,13 @@
     <Dropdown border>
       {#snippet anchor()}
         <NavItem>
-          <Globe16 slot="start" />
+          {#snippet start()}
+            <Globe16 />
+          {/snippet}
           Third Dropdown
-          <ChevronDown12 slot="end" />
+          {#snippet end()}
+            <ChevronDown12 />
+          {/snippet}
         </NavItem>
       {/snippet}
       {#snippet inner({ close })}
@@ -182,9 +216,13 @@
     <Dropdown>
       {#snippet anchor()}
         <NavItem>
-          <Globe16 slot="start" />
+          {#snippet start()}
+            <Globe16 />
+          {/snippet}
           Simple Dropdown
-          <ChevronDown12 slot="end" />
+          {#snippet end()}
+            <ChevronDown12 />
+          {/snippet}
         </NavItem>
       {/snippet}
       {#snippet inner({ close })}
@@ -199,9 +237,13 @@
     <Dropdown position="bottom-start">
       {#snippet anchor()}
         <NavItem>
-          <Globe16 slot="start" />
+          {#snippet start()}
+            <Globe16 />
+          {/snippet}
           Dropdown With Nested
-          <ChevronDown12 slot="end" />
+          {#snippet end()}
+            <ChevronDown12 />
+          {/snippet}
         </NavItem>
       {/snippet}
       {#snippet inner({ close })}
@@ -212,7 +254,9 @@
             {#snippet anchor()}
               <NavItem>
                 Nested Item
-                <ChevronRight12 slot="end" />
+                {#snippet end()}
+                  <ChevronRight12 />
+                {/snippet}
               </NavItem>
             {/snippet}
             {#snippet inner()}

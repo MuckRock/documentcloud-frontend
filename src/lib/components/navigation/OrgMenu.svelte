@@ -82,38 +82,46 @@
   {#snippet anchor()}
     {#if active_org.individual}
       <NavItem --fill="var(--green-3)" --color="var(--green-5)">
-        <PremiumIcon slot="start" />
+        {#snippet start()}
+          <PremiumIcon />
+        {/snippet}
         {isPro
           ? $_("authSection.pro.title")
           : $_("authSection.premiumUpgrade.title")}
-        <div class="dropdownArrow" slot="end">
-          {#if position.includes("bottom")}
-            <ChevronDown12 />
-          {:else}
-            <ChevronUp12 />
-          {/if}
-        </div>
+        {#snippet end()}
+          <div class="dropdownArrow">
+            {#if position.includes("bottom")}
+              <ChevronDown12 />
+            {:else}
+              <ChevronUp12 />
+            {/if}
+          </div>
+        {/snippet}
       </NavItem>
     {:else}
       <NavItem>
-        <div class="avatar" slot="start">
-          <img
-            alt={$_("authSection.org.avatar", {
-              values: { name: active_org.name },
-            })}
-            src={active_org.avatar_url}
-          />
-        </div>
+        {#snippet start()}
+          <div class="avatar">
+            <img
+              alt={$_("authSection.org.avatar", {
+                values: { name: active_org.name },
+              })}
+              src={active_org.avatar_url}
+            />
+          </div>
+        {/snippet}
         {#if width && width > remToPx(48)}<p class="orgname hide-sm">
             {active_org.name}
           </p>{/if}
-        <div class="dropdownArrow" slot="end">
-          {#if position.includes("bottom")}
-            <ChevronDown12 />
-          {:else}
-            <ChevronUp12 />
-          {/if}
-        </div>
+        {#snippet end()}
+          <div class="dropdownArrow">
+            {#if position.includes("bottom")}
+              <ChevronDown12 />
+            {:else}
+              <ChevronUp12 />
+            {/if}
+          </div>
+        {/snippet}
       </NavItem>
     {/if}
   {/snippet}
@@ -157,7 +165,9 @@
           <SidebarGroup>
             {#snippet title()}
               <NavItem>
-                <People16 slot="start" />
+                {#snippet start()}
+                  <People16 />
+                {/snippet}
                 {$_("authSection.org.userCount", {
                   values: { n: users.length },
                 })}
@@ -167,14 +177,14 @@
               {#each users as user}
                 {@const href = searchUrl(userDocs(user)).href}
                 <li>
-                  <NavItem {href} on:click={close}>
-                    <svelte:fragment slot="start">
+                  <NavItem {href} onclick={close}>
+                    {#snippet start()}
                       {#if user.avatar_url}
                         <img src={user.avatar_url} class="avatar" alt="" />
                       {:else}
                         <span class="icon"><Person16 /></span>
                       {/if}
-                    </svelte:fragment>
+                    {/snippet}
                     <span class="username">{getUserName(user)}</span>
                     {#if user.admin_organizations.includes(active_org.id)}
                       <span class="badge">
@@ -194,16 +204,20 @@
           <Dropdown>
             {#snippet anchor()}
               <NavItem>
-                <div class="avatar" slot="start">
-                  <img
-                    alt={$_("authSection.org.avatar", {
-                      values: { name: active_org.name },
-                    })}
-                    src={active_org.avatar_url}
-                  />
-                </div>
+                {#snippet start()}
+                  <div class="avatar">
+                    <img
+                      alt={$_("authSection.org.avatar", {
+                        values: { name: active_org.name },
+                      })}
+                      src={active_org.avatar_url}
+                    />
+                  </div>
+                {/snippet}
                 <p class="orgname">{active_org.name}</p>
-                <span class="arrow" slot="end"><ChevronDown12 /></span>
+                {#snippet end()}
+                  <span class="arrow"><ChevronDown12 /></span>
+                {/snippet}
               </NavItem>
             {/snippet}
             {#snippet inner()}
@@ -211,7 +225,7 @@
                 {#each otherOrgs as otherOrg}
                   <NavItem
                     hover
-                    on:click={(e) => {
+                    onclick={() => {
                       switchOrg(otherOrg);
                       close();
                     }}

@@ -39,20 +39,20 @@
 
 <Flex direction="column" align="start">
   <!-- Viewer Actions -->
-  <Button ghost on:click={() => (show = "share")}>
+  <Button ghost onclick={() => (show = "share")}>
     <Share16 />{$_("sidebar.shareEmbedProject")}
   </Button>
   {#if project.edit_access || project.add_remove_access}
     <!-- Admin & Editor Actions -->
     {#if project.edit_access}
-      <Button ghost mode="primary" on:click={() => (show = "edit")}>
+      <Button ghost mode="primary" onclick={() => (show = "edit")}>
         <Pencil16 />
         {$_("sidebar.editProject")}
       </Button>
     {/if}
 
     {#if project.edit_access}
-      <Button ghost mode="danger" on:click={() => (show = "delete")}>
+      <Button ghost mode="danger" onclick={() => (show = "delete")}>
         <Trash16 />
         {$_("sidebar.deleteProject")}
       </Button>

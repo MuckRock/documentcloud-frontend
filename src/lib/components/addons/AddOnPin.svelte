@@ -19,9 +19,7 @@
 
   let endpoint = $derived(new URL(`/api/addons/${addon.id}/`, BASE_API_URL));
 
-  async function toggle(event) {
-    event.preventDefault();
-
+  async function toggle() {
     const csrftoken = getCsrfToken();
     if (!csrftoken) {
       console.error("No CSRF token found");
@@ -62,7 +60,7 @@
 
 <Pin
   active={addon.active}
-  on:click={toggle}
+  onclick={toggle}
   {size}
   --fill={addon.active ? "var(--orange)" : "var(--gray-3)"}
 />

@@ -90,7 +90,7 @@ Confirm deletion or one or more documents.
       </div>
       {#snippet oversize()}
         <Tip mode="danger">
-          <Alert24 slot="icon" />
+          {#snippet icon()}<Alert24 />{/snippet}
           {$_("delete.toomany", { values: { n: MAX_EDIT_BATCH } })}
         </Tip>
       {/snippet}
@@ -113,7 +113,7 @@ Confirm deletion or one or more documents.
         <Trash16 />
         {$_("delete.confirm")}
       </Button>
-      <Button on:click={() => onclose?.()}>
+      <Button onclick={() => onclose?.()}>
         {$_("delete.cancel")}
       </Button>
     </Flex>

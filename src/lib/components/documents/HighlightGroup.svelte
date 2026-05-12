@@ -68,7 +68,7 @@
               minW={false}
               size="small"
               ghost
-              on:click={collapseAll}
+              onclick={collapseAll}
               title={$_("search.collapseAll")}
             >
               <Fold16 height={14} width={14} />
@@ -79,7 +79,7 @@
               minW={false}
               size="small"
               ghost
-              on:click={expandAll}
+              onclick={expandAll}
               title={$_("search.expandAll")}
             >
               <Unfold16 height={14} width={14} />

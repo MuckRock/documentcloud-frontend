@@ -20,7 +20,7 @@
     --gap="0.75rem"
     --padding="0.5rem 0.75rem"
   >
-    <Sync24 slot="icon" />
+    {#snippet icon()}<Sync24 />{/snippet}
     <h4>{$_("processingBar.processing")}</h4>
     <p>
       {$_("processingBar.processingDocuments", {

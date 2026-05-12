@@ -4,22 +4,30 @@
   The "basic" slot is available as a fallback.
 -->
 <script lang="ts">
-  import { getContext } from "svelte";
-  import type { Writable } from "svelte/store";
-  import type { User } from "$lib/api/types";
+  import type { Snippet } from "svelte";
+
   import { isOrg } from "$lib/api/accounts";
+  import { getCurrentUser } from "$lib/utils/permissions";
 
-  const me = getContext<Writable<User>>("me");
+  interface Props {
+    children?: Snippet;
+    basic?: Snippet;
+  }
 
-  $: org = $me?.organization;
-  $: isPremium =
+  let { children, basic }: Props = $props();
+
+  const me = getCurrentUser();
+
+  let org = $derived($me?.organization);
+  let isPremium = $derived(
     isOrg(org) && org.plan
       ? ["Organization", "Professional"].includes(org.plan)
-      : false;
+      : false,
+  );
 </script>
 
 {#if isPremium}
-  <slot />
+  {@render children?.()}
 {:else}
-  <slot name="basic" />
+  {@render basic?.()}
 {/if}

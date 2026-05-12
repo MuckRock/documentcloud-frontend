@@ -32,7 +32,9 @@
 <SidebarGroup name="projects:viewer">
   {#snippet title()}
     <NavItem>
-      <FileDirectory16 slot="start" />
+      {#snippet start()}
+        <FileDirectory16 />
+      {/snippet}
       {$_("projects.header")}
     </NavItem>
   {/snippet}
@@ -62,9 +64,7 @@
 {#if edit}
   <Portal>
     <Modal on:close={hide}>
-      {#snippet title()}
-        <h1>{$_("projects.header")}</h1>
-      {/snippet}
+      <h1 slot="title">{$_("projects.header")}</h1>
       <Projects documents={[document]} on:close={hide} />
     </Modal>
   </Portal>

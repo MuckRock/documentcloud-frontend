@@ -112,12 +112,16 @@ Assumes it's a child of a ViewerContext
       <Dropdown position="bottom-start">
         {#snippet anchor()}
           <NavItem>
-            {@const CurrentModeIcon = icons[$mode]}
-            {#if CurrentModeIcon}
-              <CurrentModeIcon slot="start" />
-            {/if}
+            {#snippet start()}
+              {@const CurrentModeIcon = icons[$mode]}
+              {#if CurrentModeIcon}
+                <CurrentModeIcon />
+              {/if}
+            {/snippet}
             {current}
-            <ChevronDown12 slot="end" />
+            {#snippet end()}
+              <ChevronDown12 />
+            {/snippet}
           </NavItem>
         {/snippet}
         {#snippet inner({ close })}

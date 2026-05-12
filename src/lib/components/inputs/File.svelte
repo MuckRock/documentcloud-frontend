@@ -4,38 +4,51 @@
 -->
 
 <script lang="ts">
-  import type { ComponentProps } from "svelte";
+  import type { ComponentProps, Snippet } from "svelte";
   import { DOCUMENT_TYPES } from "@/config/config.js";
   import Button from "$lib/components/common/Button.svelte";
 
-  export let name: null | string = null;
-  export let onFileSelect: (files: FileList) => void;
-  export let multiple = false;
-  export let buttonMode: ComponentProps<Button>["mode"] = "primary";
-  export let files: null | FileList = null;
-  export let disabled = false;
+  interface Props {
+    name?: null | string;
+    onFileSelect: (files: File[]) => void;
+    multiple?: boolean;
+    buttonMode?: ComponentProps<typeof Button>["mode"];
+    files?: null | FileList;
+    disabled?: boolean;
+    children?: Snippet;
+  }
+
+  let {
+    name = null,
+    onFileSelect,
+    multiple = false,
+    buttonMode = "primary",
+    files = $bindable(null),
+    disabled = false,
+    children,
+  }: Props = $props();
 
   // Bound to the file picker input
-  let picker: HTMLInputElement;
+  let picker: HTMLInputElement | undefined = $state();
 
   function openFilePicker() {
-    picker.click();
+    picker?.click();
   }
 
   function handleFiles() {
+    if (!picker) return;
     const fileList = picker.files;
     if (fileList && fileList.length > 0) {
       // Clone the file list so the input can be safely cleared
-      const listCopy: FileList = Object.assign([], fileList);
-      onFileSelect(listCopy);
+      onFileSelect(Array.from(fileList));
     }
     picker.value = "";
   }
 </script>
 
 <span class="container" class:disabled>
-  <Button mode={buttonMode} on:click={openFilePicker} {disabled}>
-    <slot />
+  <Button mode={buttonMode} onclick={openFilePicker} {disabled}>
+    {@render children?.()}
   </Button>
   <input
     type="file"
@@ -45,7 +58,7 @@
     {disabled}
     bind:files
     bind:this={picker}
-    on:change={handleFiles}
+    onchange={handleFiles}
     class="picker"
   />
 </span>
