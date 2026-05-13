@@ -24,6 +24,7 @@ export async function handleFetch({ event, request, fetch }) {
       "x-bypass-rate-limit",
       env.BYPASS_RATE_LIMIT_SECRET ?? "",
     );
+    request.headers.append("user-agent", "MuckRock/documentcloud-frontend");
   }
 
   return fetch(request);
