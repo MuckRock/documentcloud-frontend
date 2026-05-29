@@ -13,13 +13,25 @@
   import Button from "../common/Button.svelte";
   import { getViewerHref } from "$lib/utils/viewer";
 
-  export let doc: Document;
-  export let note: Note;
-  export let canEdit: boolean = false;
-  export let canShare: boolean = true;
-  export let onShare: () => void;
+  interface Props {
+    doc: Document;
+    note: Note;
+    canEdit?: boolean;
+    canShare?: boolean;
+    onShare: () => void;
+  }
 
-  $: edit_link = getViewerHref({ document: doc, note, mode: "annotating" });
+  let {
+    doc,
+    note,
+    canEdit = false,
+    canShare = true,
+    onShare,
+  }: Props = $props();
+
+  let edit_link = $derived(
+    getViewerHref({ document: doc, note, mode: "annotating" }),
+  );
 
   const access = {
     private: {
@@ -38,11 +50,13 @@
       icon: Globe16,
     },
   };
+
+  const Icon = $derived(access[note.access].icon);
 </script>
 
 <div class="actions">
   <span class="access {note.access}">
-    <svelte:component this={access[note.access].icon} />
+    <Icon />
     {$_(`access.${access[note.access].value}.title`)}
   </span>
   {#if canEdit}

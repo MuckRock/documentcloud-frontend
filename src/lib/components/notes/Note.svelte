@@ -19,7 +19,6 @@
 <script lang="ts">
   import type { Note } from "$lib/api/types";
 
-  import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
   import { XCircle16 } from "svelte-octicons";
 
@@ -43,26 +42,31 @@
   const embed = isEmbedded();
   const mode = getCurrentMode();
 
-  const dispatch = createEventDispatcher();
+  interface Props {
+    document?: any;
+    note: Note;
+    scale?: number;
+    showExcerpt?: boolean;
+    onclose?: () => void;
+  }
 
-  export let document = getDocument();
-  export let note: Note;
-  export let scale = 2;
-  export let showExcerpt = true;
+  let {
+    document = getDocument(),
+    note,
+    scale = 2,
+    showExcerpt = true,
+    onclose,
+  }: Props = $props();
 
   // We may want to move the share modal into
   // the viewer, then set its visibility through context.
-  let shareNoteOpen = false;
+  let shareNoteOpen = $state(false);
 
-  $: doc = $document;
-  $: page_level = isPageLevel(note);
-  $: canEdit = note.edit_access && !embed;
-  $: canShare = !embed;
-  $: canClose = !embed && !page_level && $mode === "document";
-
-  function closeNote() {
-    dispatch("close");
-  }
+  let doc = $derived($document);
+  let page_level = $derived(isPageLevel(note));
+  let canEdit = $derived(note.edit_access && !embed);
+  let canShare = $derived(!embed);
+  let canClose = $derived(!embed && !page_level && $mode === "document");
 </script>
 
 <div
@@ -78,7 +82,7 @@
   <header>
     <NoteTitle {doc} {note} {embed} />
     {#if canClose}
-      <Button minW={false} ghost onclick={closeNote}>
+      <Button minW={false} ghost onclick={() => onclose?.()}>
         <XCircle16 />
       </Button>
     {/if}

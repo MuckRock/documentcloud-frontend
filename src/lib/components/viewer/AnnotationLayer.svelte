@@ -232,7 +232,7 @@ Assumes it's a child of a ViewerContext
             note={$currentNote}
             showExcerpt={false}
             {scale}
-            on:close={closeNote}
+            onclose={closeNote}
           />
         {/key}
       {/if}

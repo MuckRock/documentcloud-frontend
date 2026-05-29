@@ -6,19 +6,25 @@
   import { getViewerHref } from "$lib/utils/viewer";
   import { renderImage, renderPDF } from "$lib/utils/notes";
 
-  export let document: Document;
-  export let note: Note;
-  export let scale = 2;
+  interface Props {
+    document: Document;
+    note: Note;
+    scale?: number;
+  }
+
+  type AsyncPDF = typeof $pdf;
+
+  let { document, note, scale = 2 }: Props = $props();
 
   const pdf = getPDF();
 
-  let canvas: HTMLCanvasElement;
-  let rendering: Promise<any>;
-  type AsyncPDF = typeof $pdf;
+  let canvas: HTMLCanvasElement | undefined = $state();
 
-  $: page_number = note.page_number + 1; // note pages are 0-indexed
-  $: rendering = render(canvas, document, $pdf); // avoid re-using the same canvas
-  $: page_url = getViewerHref({ document: document, page: page_number });
+  // avoid re-using the same canvas
+  let rendering: Promise<any> = $derived.by(() => {
+    if (!canvas) return Promise.resolve(false);
+    return render(canvas, document, $pdf);
+  });
 
   async function render(
     canvas: HTMLCanvasElement,
@@ -43,6 +49,11 @@
     console.error(`Can't render note ${note.id} on page ${page_number}.`);
     console.error({ document, pdf });
   }
+
+  let page_number = $derived(note.page_number + 1); // note pages are 0-indexed
+  let page_url = $derived(
+    getViewerHref({ document: document, page: page_number }),
+  );
 </script>
 
 <div class="note-excerpt">

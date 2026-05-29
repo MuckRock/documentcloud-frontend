@@ -1,11 +1,15 @@
 <script lang="ts">
-  import type { Note, User } from "$lib/api/types";
+  import type { Note } from "$lib/api/types";
   import { _ } from "svelte-i18n";
-  import { getUserName } from "$lib/api/accounts";
+  import { getUserName, isUser } from "$lib/api/accounts";
 
-  export let note: Note;
+  interface Props {
+    note: Note;
+  }
 
-  $: user = typeof note.user === "object" ? (note.user as User) : null;
+  let { note }: Props = $props();
+
+  let user = $derived(isUser(note.user) ? note.user : null);
 </script>
 
 <div class="note-metadata">
