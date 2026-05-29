@@ -1,5 +1,5 @@
-<script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import OrgMenu from "../OrgMenu.svelte";
 
   import {
@@ -12,13 +12,13 @@
   } from "@/test/fixtures/accounts";
   import { inMyOrg } from "$lib/api/accounts";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Navigation / Org Menu",
     component: OrgMenu,
-  };
+  });
 </script>
 
-<Story name="Full organization">
+<Story name="Full organization" asChild>
   <div>
     <OrgMenu
       active_org={organization}
@@ -28,19 +28,19 @@
   </div>
 </Story>
 
-<Story name="Free org">
+<Story name="Free org" asChild>
   <div>
     <OrgMenu active_org={freeOrg} orgs={organizationsList.results} />
   </div>
 </Story>
 
-<Story name="No other orgs">
+<Story name="No other orgs" asChild>
   <div>
     <OrgMenu active_org={freeOrg} orgs={[freeOrg]} />
   </div>
 </Story>
 
-<Story name="Pro org">
+<Story name="Pro org" asChild>
   <div>
     <OrgMenu active_org={proOrg} orgs={organizationsList.results} />
   </div>
