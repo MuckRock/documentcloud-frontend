@@ -20,10 +20,13 @@
 
   let canvas: HTMLCanvasElement | undefined = $state();
 
-  // avoid re-using the same canvas
-  let rendering: Promise<any> = $derived.by(() => {
-    if (!canvas) return Promise.resolve(false);
-    return render(canvas, document, $pdf);
+  // tracks the in-flight render so we don't re-use the same canvas
+  // (plain variable, not $state, to avoid a reactive loop in the effect below)
+  let rendering: Promise<any> = Promise.resolve(false);
+
+  $effect(() => {
+    if (!canvas) return;
+    rendering = render(canvas, document, $pdf);
   });
 
   async function render(
