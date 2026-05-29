@@ -20,31 +20,37 @@
 
   let canvas: HTMLCanvasElement | undefined = $state();
 
-  // tracks the in-flight render so we don't re-use the same canvas
-  // (plain variable, not $state, to avoid a reactive loop in the effect below)
-  let rendering: Promise<any> = Promise.resolve(false);
-
   $effect(() => {
     if (!canvas) return;
-    rendering = render(canvas, document, $pdf);
+    // The PDF store starts as a never-resolving placeholder, so re-run on
+    // each change. Latest-wins: cleanup marks a stale run so it won't draw
+    // over a newer one (we can't await the previous render — it may hang).
+    const targetCanvas = canvas;
+    const targetDoc = document;
+    const targetPdf = $pdf;
+
+    let cancelled = false;
+    render(targetCanvas, targetDoc, targetPdf, () => cancelled).catch(
+      console.error,
+    );
+    return () => {
+      cancelled = true;
+    };
   });
 
   async function render(
     canvas: HTMLCanvasElement,
     document: Document,
     pdf: AsyncPDF,
+    isCancelled: () => boolean,
   ) {
-    if (!canvas) return;
-    if (rendering) {
-      await rendering.catch(console.error);
-    }
-
     if (pdf) {
       const resolvedPdf = await pdf;
+      if (isCancelled()) return;
       return renderPDF(note, scale, canvas, resolvedPdf);
     }
 
-    if (document && !pdf) {
+    if (document) {
       return renderImage(note, canvas, document);
     }
 
