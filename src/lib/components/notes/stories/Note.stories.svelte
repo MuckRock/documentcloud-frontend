@@ -2,9 +2,9 @@
   import type { Document, Note as NoteType } from "$lib/api/types";
   import type { ComponentProps } from "svelte";
 
-  import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
+  import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
   pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-    "pdfjs-dist/build/pdf.worker.mjs",
+    "pdfjs-dist/legacy/build/pdf.worker.mjs",
     import.meta.url,
   ).href;
 

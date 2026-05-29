@@ -9,7 +9,7 @@
 
   import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
   pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-    "pdfjs-dist/build/pdf.worker.mjs",
+    "pdfjs-dist/legacy/build/pdf.worker.mjs",
     import.meta.url,
   ).href;
   import { pageSizes } from "$lib/utils/pageSize";
