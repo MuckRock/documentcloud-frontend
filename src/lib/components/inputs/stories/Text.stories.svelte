@@ -1,22 +1,18 @@
-<script context="module" lang="ts">
-  import { Template, Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import Text from "../Text.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Forms / Inputs /Text",
     component: Text,
     tags: ["autodocs"],
     parameters: { layout: "centered" },
-  };
+  });
 
-  let args = {
+  const args = {
     name: "textInput",
   };
 </script>
-
-<Template let:args>
-  <Text {...args} />
-</Template>
 
 <Story name="Empty" {args} />
 

@@ -1,28 +1,28 @@
-<script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import Language from "../Language.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Forms / Inputs /Language",
     component: Language,
     tags: ["autodocs"],
     parameters: { layout: "centered" },
-  };
+  });
 </script>
 
-<Story name="default">
+<Story name="default" asChild>
   <div>
     <Language placeholder="Language" />
   </div>
 </Story>
 
-<Story name="Required">
+<Story name="Required" asChild>
   <div>
     <Language placeholder="Select a language" required />
   </div>
 </Story>
 
-<Story name="With Pre-selected Value">
+<Story name="With Pre-selected Value" asChild>
   <div>
     <Language
       placeholder="Language"
@@ -31,19 +31,19 @@
   </div>
 </Story>
 
-<Story name="Custom Name Attribute">
+<Story name="Custom Name Attribute" asChild>
   <div>
     <Language name="document_language" placeholder="Document Language" />
   </div>
 </Story>
 
-<Story name="Custom Placeholder">
+<Story name="Custom Placeholder" asChild>
   <div>
     <Language placeholder="Choose document language..." />
   </div>
 </Story>
 
-<Story name="Required With French Pre-selected">
+<Story name="Required With French Pre-selected" asChild>
   <div>
     <Language
       placeholder="Language"
