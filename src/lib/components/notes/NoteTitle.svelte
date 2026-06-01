@@ -5,12 +5,16 @@
   import { getViewerHref } from "$lib/utils/viewer";
   import { isPageLevel } from "$lib/api/notes";
 
-  export let doc: Document;
-  export let note: Note;
-  export let embed: boolean = false;
+  interface Props {
+    doc: Document;
+    note: Note;
+    embed?: boolean;
+  }
 
-  $: page_level = isPageLevel(note);
-  $: note_url = getViewerHref({ document: doc, note });
+  let { doc, note, embed = false }: Props = $props();
+
+  let page_level = $derived(isPageLevel(note));
+  let note_url = $derived(getViewerHref({ document: doc, note }));
 </script>
 
 <h3>

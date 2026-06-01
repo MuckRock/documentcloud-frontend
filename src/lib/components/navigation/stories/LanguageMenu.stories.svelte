@@ -1,17 +1,13 @@
-<script lang="ts" context="module">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
 
   import LanguageMenu from "../LanguageMenu.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Navigation / Language Menu",
     component: LanguageMenu,
     parameters: { layout: "centered" },
-  };
+  });
 </script>
 
-<Template let:args>
-  <LanguageMenu {...args} />
-</Template>
-
-<Story name="Language" args={{}} />
+<Story name="Language" />

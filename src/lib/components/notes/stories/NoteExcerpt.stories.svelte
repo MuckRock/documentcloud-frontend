@@ -1,13 +1,14 @@
-<script lang="ts" context="module">
+<script module lang="ts">
   import type { Document, Note as NoteType } from "$lib/api/types";
+  import type { ComponentProps } from "svelte";
 
-  import * as pdfjs from "pdfjs-dist/build/pdf.mjs";
+  import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
   pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-    "pdfjs-dist/build/pdf.worker.mjs",
+    "pdfjs-dist/legacy/build/pdf.worker.mjs",
     import.meta.url,
   ).href;
 
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import ViewerContext from "../../viewer/ViewerContext.svelte";
   import NoteExcerpt from "../NoteExcerpt.svelte";
 
@@ -16,30 +17,27 @@
 
   const document = doc as Document;
   const notes = document.notes as NoteType[];
+  const note0 = notes[0]!;
+  const note1 = notes[1]!;
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Notes / Excerpt",
     component: NoteExcerpt,
     parameters: { layout: "centered" },
-  };
+    render: template,
+  });
 </script>
 
-<Template let:args>
+{#snippet template(args: ComponentProps<typeof NoteExcerpt>)}
   <ViewerContext {document} asset_url={pdfUrl(document)}>
     <NoteExcerpt {...args} />
   </ViewerContext>
-</Template>
+{/snippet}
 
-<Story name="Default" args={{ note: notes[0] }} />
-<Story
-  name="Private Access"
-  args={{ note: { ...notes[1], access: "private" } }}
-/>
+<Story name="Default" args={{ note: note0 }} />
+<Story name="Private Access" args={{ note: { ...note1, access: "private" } }} />
 <Story
   name="Organization Access"
-  args={{ note: { ...notes[1], access: "organization" } }}
+  args={{ note: { ...note1, access: "organization" } }}
 />
-<Story
-  name="Public Access"
-  args={{ note: { ...notes[1], access: "public" } }}
-/>
+<Story name="Public Access" args={{ note: { ...note1, access: "public" } }} />

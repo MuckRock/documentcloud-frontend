@@ -6,36 +6,51 @@
   import { getViewerHref } from "$lib/utils/viewer";
   import { renderImage, renderPDF } from "$lib/utils/notes";
 
-  export let document: Document;
-  export let note: Note;
-  export let scale = 2;
+  interface Props {
+    document: Document;
+    note: Note;
+    scale?: number;
+  }
+
+  type AsyncPDF = typeof $pdf;
+
+  let { document, note, scale = 2 }: Props = $props();
 
   const pdf = getPDF();
 
-  let canvas: HTMLCanvasElement;
-  let rendering: Promise<any>;
-  type AsyncPDF = typeof $pdf;
+  let canvas: HTMLCanvasElement | undefined = $state();
 
-  $: page_number = note.page_number + 1; // note pages are 0-indexed
-  $: rendering = render(canvas, document, $pdf); // avoid re-using the same canvas
-  $: page_url = getViewerHref({ document: document, page: page_number });
+  $effect(() => {
+    if (!canvas) return;
+    // The PDF store starts as a never-resolving placeholder, so re-run on
+    // each change. Latest-wins: cleanup marks a stale run so it won't draw
+    // over a newer one (we can't await the previous render — it may hang).
+    const targetCanvas = canvas;
+    const targetDoc = document;
+    const targetPdf = $pdf;
+
+    let cancelled = false;
+    render(targetCanvas, targetDoc, targetPdf, () => cancelled).catch(
+      console.error,
+    );
+    return () => {
+      cancelled = true;
+    };
+  });
 
   async function render(
     canvas: HTMLCanvasElement,
     document: Document,
     pdf: AsyncPDF,
+    isCancelled: () => boolean,
   ) {
-    if (!canvas) return;
-    if (rendering) {
-      await rendering.catch(console.error);
-    }
-
     if (pdf) {
       const resolvedPdf = await pdf;
+      if (isCancelled()) return;
       return renderPDF(note, scale, canvas, resolvedPdf);
     }
 
-    if (document && !pdf) {
+    if (document) {
       return renderImage(note, canvas, document);
     }
 
@@ -43,6 +58,11 @@
     console.error(`Can't render note ${note.id} on page ${page_number}.`);
     console.error({ document, pdf });
   }
+
+  let page_number = $derived(note.page_number + 1); // note pages are 0-indexed
+  let page_url = $derived(
+    getViewerHref({ document: document, page: page_number }),
+  );
 </script>
 
 <div class="note-excerpt">

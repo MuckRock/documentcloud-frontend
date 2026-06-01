@@ -3,7 +3,11 @@
 
   import { clean } from "$lib/utils/markup";
 
-  export let note: Note;
+  interface Props {
+    note: Note;
+  }
+
+  let { note }: Props = $props();
 </script>
 
 {#if note.content}
