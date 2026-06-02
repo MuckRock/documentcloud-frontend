@@ -140,7 +140,7 @@
       <EditNote
         {document}
         page_number={page_number - 1}
-        on:close={() => (pageNote = false)}
+        onclose={() => (pageNote = false)}
       />
     </Modal>
   </Portal>
