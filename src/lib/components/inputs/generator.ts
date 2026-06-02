@@ -1,4 +1,4 @@
-import type { ComponentType } from "svelte";
+import type { Component } from "svelte";
 
 import ArrayField from "./ArrayField.svelte";
 import Checkbox from "./Checkbox.svelte";
@@ -7,7 +7,7 @@ import Text from "./Text.svelte";
 import Choices from "./Choices.svelte";
 
 // https://json-schema.org/understanding-json-schema/reference/type.html
-const fields = {
+const fields: Record<string, Component<any> | null> = {
   string: Text,
   number: Number,
   integer: Number,
@@ -23,7 +23,7 @@ const fields = {
  * Automatically get a form field component based on the property type of a JSON schema object
  *
  */
-export function autofield(params: any, fallback = Text): ComponentType {
+export function autofield(params: any, fallback = Text): Component<any> {
   const type = String(params.type).toLowerCase();
 
   if (!fields[type]) {

@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   export interface Level {
     value: Access;
     title: string;
@@ -40,10 +40,19 @@
     },
   ];
 
-  export let name: string;
-  export let selected: Access = levels[0]!.value;
-  export let direction: "column" | "row" = "column";
-  export let required = false;
+  interface Props {
+    name: string;
+    selected?: Access | null;
+    direction?: "column" | "row";
+    required?: boolean;
+  }
+
+  let {
+    name,
+    selected = $bindable(levels[0]!.value),
+    direction = "column",
+    required = false,
+  }: Props = $props();
 </script>
 
 <Flex direction="column">
@@ -57,7 +66,7 @@
       <div class="option" class:selected={level.value === selected}>
         <label for={level.value} class="detail">
           <Flex gap={0.5}>
-            <svelte:component this={level.icon} />
+            <level.icon />
             <Flex direction="column" gap={0.125}>
               <p class="title">{level.title}</p>
               <p class="description">{level.description}</p>
