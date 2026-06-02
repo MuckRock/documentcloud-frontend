@@ -26,7 +26,7 @@
   } from "../documents/CustomizeEmbed.svelte";
   import Field from "$lib/components/common/Field.svelte";
   import FieldLabel from "$lib/components/common/FieldLabel.svelte";
-  import Number from "$lib/components/inputs/Number.svelte";
+  import NumberInput from "$lib/components/inputs/Number.svelte";
   import Select from "$lib/components/inputs/Select.svelte";
   import Tab from "$lib/components/common/Tab.svelte";
   import Text from "$lib/components/inputs/Text.svelte";
@@ -173,7 +173,7 @@
         <div class="subselection">
           <Field>
             <FieldLabel>{$_("share.fields.page")}:</FieldLabel>
-            <Number bind:value={page} min={1} max={document.page_count} />
+            <NumberInput bind:value={page} min={1} max={document.page_count} />
           </Field>
         </div>
       {:else if currentTab === "note" && noteOptions && noteOptions.length > 0}

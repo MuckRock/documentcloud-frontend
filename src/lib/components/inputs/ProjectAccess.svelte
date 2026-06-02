@@ -1,7 +1,7 @@
 <!-- @component
 Project access input
 -->
-<script context="module" lang="ts">
+<script module lang="ts">
   import type { ProjectAccess } from "$lib/api/types";
 
   export interface Level {
@@ -34,8 +34,13 @@ Project access input
     },
   ];
 
-  export let name: string = "access";
-  export let selected = levels[0]?.value;
+  interface Props {
+    name?: string;
+    selected?: any;
+  }
+
+  let { name = "access", selected = $bindable(levels[0]?.value) }: Props =
+    $props();
 </script>
 
 <Flex direction="column" gap={0.5}>

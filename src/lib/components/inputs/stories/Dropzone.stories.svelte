@@ -23,7 +23,7 @@
 
 {#snippet template(args: Args)}
   <Dropzone {...args}>
-    <svelte:fragment let:active let:disabled>
+    {#snippet children({ active, disabled })}
       <div class="dropzone" class:active class:disabled>
         <p>Drop files here</p>
         <dl>
@@ -33,7 +33,7 @@
           <dd>{String(disabled)}</dd>
         </dl>
       </div>
-    </svelte:fragment>
+    {/snippet}
   </Dropzone>
 {/snippet}
 
