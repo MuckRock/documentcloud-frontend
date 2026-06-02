@@ -9,11 +9,11 @@
   import { getCsrfToken } from "$lib/utils/api";
 
   interface Props {
-    fetch?: any;
     message?: string;
+    onclose?: () => void;
   }
 
-  let { fetch = globalThis.fetch, message = $bindable("") }: Props = $props();
+  let { message = $bindable(""), onclose }: Props = $props();
   let error = $state(false);
 
   function reset() {
@@ -29,7 +29,7 @@
       message = $_("mailkey.missing_csrf");
       return;
     }
-    const mailkey = await createMailkey(csrf_token, fetch);
+    const mailkey = await createMailkey(csrf_token);
     if (mailkey) {
       message = $_("mailkey.create.success", {
         values: { mailkey: mailkey },
@@ -48,7 +48,7 @@
       message = $_("mailkey.missing_csrf");
       return;
     }
-    if (await destroyMailkey(csrf_token, fetch)) {
+    if (await destroyMailkey(csrf_token)) {
       message = $_("mailkey.destroy.success");
     } else {
       error = true;
@@ -57,10 +57,8 @@
   }
 </script>
 
-<Modal on:close>
-  {#snippet title()}
-    <h1>{$_("mailkey.title")}</h1>
-  {/snippet}
+<Modal on:close={() => onclose?.()}>
+  <h1 slot="title">{$_("mailkey.title")}</h1>
   <div class="description">{@html $_("mailkey.description")}</div>
   {#if message}
     <p class="message" class:error>

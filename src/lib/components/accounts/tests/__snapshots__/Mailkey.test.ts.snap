@@ -39,7 +39,9 @@ exports[`Mailkey 1`] = `
         
         <!---->
          
-        <h1>
+        <h1
+          slot="title"
+        >
           Upload via Email
         </h1>
         <!---->
@@ -158,7 +160,9 @@ exports[`Mailkey 2`] = `
         
         <!---->
          
-        <h1>
+        <h1
+          slot="title"
+        >
           Upload via Email
         </h1>
         <!---->

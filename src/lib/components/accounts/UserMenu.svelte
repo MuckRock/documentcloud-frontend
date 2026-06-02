@@ -8,11 +8,14 @@
   } from "$lib/components/common/Dropdown.svelte";
 
   import Avatar from "./Avatar.svelte";
+  import Portal from "$lib/components/layouts/Portal.svelte";
+  import Mailkey from "./Mailkey.svelte";
   import NavItem from "$lib/components/common/NavItem.svelte";
   import {
     ChevronDown12,
-    Gear16,
     ChevronUp12,
+    Gear16,
+    Paperclip16,
     SignOut16,
   } from "svelte-octicons";
   import Menu from "$lib/components/common/Menu.svelte";
@@ -28,6 +31,7 @@
 
   let { user, position = "bottom-end" }: Props = $props();
 
+  let mailkeyOpen = $state(false);
   let width: number | undefined = $state();
 </script>
 
@@ -53,16 +57,27 @@
       {/snippet}
     </NavItem>
   {/snippet}
-  {#snippet inner(close)}
+  {#snippet inner({ close })}
     <Menu>
-      <NavItem href={SQUARELET_BASE} target="_blank" onclick={close}>
+      <NavItem href={SQUARELET_BASE} target="_blank" onclick={(e) => close?.()}>
         {#snippet start()}
           <Gear16 />
         {/snippet}
         {$_("authSection.user.acctSettings")}
       </NavItem>
-
-      <NavItem href={SIGN_OUT_URL} onclick={close}>
+      <NavItem
+        hover
+        onclick={() => {
+          mailkeyOpen = true;
+          close?.();
+        }}
+      >
+        {#snippet start()}
+          <Paperclip16 />
+        {/snippet}
+        {$_("authSection.user.uploadEmail")}
+      </NavItem>
+      <NavItem href={SIGN_OUT_URL} onclick={(e) => close?.()}>
         {#snippet start()}
           <SignOut16 />
         {/snippet}
@@ -71,6 +86,12 @@
     </Menu>
   {/snippet}
 </Dropdown>
+
+{#if mailkeyOpen}
+  <Portal>
+    <Mailkey onclose={() => (mailkeyOpen = false)} />
+  </Portal>
+{/if}
 
 <style>
   .dropdownArrow {
