@@ -153,12 +153,20 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
           values: { timezone },
         })}
       >
-        <input
-          type="datetime-local"
-          name="publish_at"
-          min={toDatetimeLocal(new Date())}
-          value={publish_at}
-        />
+        <Flex gap={0.5} align="center">
+          <input
+            type="datetime-local"
+            name="publish_at"
+            min={toDatetimeLocal(new Date())}
+            value={publish_at}
+            onchange={(e) => (publish_at = e.currentTarget.value)}
+          />
+          {#if publish_at}
+            <Button onclick={() => (publish_at = undefined)}>
+              {$_("edit.fields.publish_at.clear")}
+            </Button>
+          {/if}
+        </Flex>
       </Field>
     {/if}
 
