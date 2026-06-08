@@ -153,10 +153,10 @@ Assumes it's a child of a ViewerContext
   }
 
   function onEditNoteSuccess(
-    e: CustomEvent<Maybe<Nullable<NoteType>>>,
+    note: Maybe<Nullable<NoteType>>,
     oldNote: Maybe<Nullable<NoteType>>,
   ) {
-    const editedNote = e.detail;
+    const editedNote = note;
     // Make an optimistic update to the `$documentStore`,
     // which should be overwritten by invalidation.
     // Start by removing the old note from the notes array.
@@ -223,8 +223,8 @@ Assumes it's a child of a ViewerContext
           note={$currentNote}
           {document}
           {page_number}
-          on:close={closeNote}
-          on:success={(e) => onEditNoteSuccess(e, $currentNote)}
+          onclose={closeNote}
+          onsuccess={(note) => onEditNoteSuccess(note, $currentNote)}
         />
       {:else}
         {#key $currentNote.id}
@@ -257,8 +257,8 @@ Assumes it's a child of a ViewerContext
         <EditNote
           {document}
           bind:note={$newNote}
-          on:close={closeNote}
-          on:success={(e) => onEditNoteSuccess(e, undefined)}
+          onclose={closeNote}
+          onsuccess={(note) => onEditNoteSuccess(note, undefined)}
         />
       </div>
     {/if}

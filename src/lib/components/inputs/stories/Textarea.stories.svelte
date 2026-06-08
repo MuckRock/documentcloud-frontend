@@ -1,23 +1,27 @@
-<script context="module" lang="ts">
-  import { Template, Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import type { ComponentProps } from "svelte";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import TextArea from "../TextArea.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Forms / Inputs /TextArea",
     component: TextArea,
     tags: ["autodocs"],
     parameters: { layout: "centered" },
-  };
+    render: template,
+  });
 
-  let args = {
+  type Args = ComponentProps<typeof TextArea>;
+
+  const args = {
     name: "textInput",
     value: "",
   };
 </script>
 
-<Template let:args>
+{#snippet template(args: Args)}
   <div><TextArea {...args} /></div>
-</Template>
+{/snippet}
 
 <Story name="Empty" {args} />
 

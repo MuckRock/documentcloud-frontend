@@ -12,13 +12,22 @@
     value: string;
   }
 
-  export let name = "language";
-  export let value: Item = {
-    value: DEFAULT_LANGUAGE,
-    label: LANGUAGE_MAP.get(DEFAULT_LANGUAGE) ?? DEFAULT_LANGUAGE,
-  };
-  export let required = false;
-  export let placeholder: string = "Language";
+  interface Props {
+    name?: string;
+    value?: Item;
+    required?: boolean;
+    placeholder?: string;
+  }
+
+  let {
+    name = "language",
+    value = $bindable({
+      value: DEFAULT_LANGUAGE,
+      label: LANGUAGE_MAP.get(DEFAULT_LANGUAGE) ?? DEFAULT_LANGUAGE,
+    }),
+    required = false,
+    placeholder = "Language",
+  }: Props = $props();
 
   const options: Item[] = LANGUAGE_CODES.map((code, i) => ({
     value: code,

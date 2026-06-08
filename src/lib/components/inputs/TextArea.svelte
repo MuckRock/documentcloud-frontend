@@ -1,7 +1,7 @@
 <!-- @component
 A text area for writing text
 -->
-<script lang="ts" context="module">
+<script lang="ts" module>
   import { browser } from "$app/environment";
 
   /**
@@ -11,7 +11,7 @@ A text area for writing text
   export function autoResize(textarea: HTMLTextAreaElement, offset = 2) {
     if (browser && CSS.supports("field-sizing", "content")) return;
     const resize = () => {
-      textarea.style.height = "auto"; // reset the height
+      textarea.style.height = "auto";
       textarea.style.height = `${textarea.scrollHeight + offset}px`;
     };
 
@@ -33,10 +33,14 @@ A text area for writing text
 </script>
 
 <script lang="ts">
-  export let value = "";
+  import type { HTMLTextareaAttributes } from "svelte/elements";
+
+  interface Props extends HTMLTextareaAttributes {}
+
+  let { value = $bindable(""), ...rest }: Props = $props();
 </script>
 
-<textarea bind:value use:autoResize {...$$restProps}></textarea>
+<textarea bind:value use:autoResize {...rest}></textarea>
 
 <style>
   textarea {

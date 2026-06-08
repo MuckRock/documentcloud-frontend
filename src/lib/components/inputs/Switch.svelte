@@ -1,11 +1,22 @@
 <script lang="ts">
   import type { Nullable } from "$lib/api/types";
 
-  export let name: Nullable<string> = null;
-  export let checked = false;
-  export let disabled = false;
+  interface Props {
+    name?: Nullable<string>;
+    checked?: boolean;
+    disabled?: boolean;
+    onchange?: (e: Event) => void;
+  }
+
+  let {
+    name = null,
+    checked = $bindable(false),
+    disabled = false,
+    onchange,
+  }: Props = $props();
 
   function handleClick(event: MouseEvent) {
+    event.preventDefault();
     const state = (event.target as HTMLButtonElement).getAttribute(
       "aria-checked",
     );
@@ -19,9 +30,15 @@
     role="switch"
     aria-checked={checked}
     title={name}
-    on:click|preventDefault={handleClick}
+    onclick={handleClick}
   ></button>
-  <input {name} type="checkbox" bind:checked class="hidden" on:change />
+  <input
+    {name}
+    type="checkbox"
+    bind:checked
+    class="hidden"
+    onchange={(e) => onchange?.(e)}
+  />
 </div>
 
 <style>

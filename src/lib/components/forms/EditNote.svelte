@@ -9,7 +9,6 @@ Positioning and generating coordinates should happen outside of this form.
 
   import { enhance } from "$app/forms";
 
-  import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
 
   import AccessLevel from "../inputs/AccessLevel.svelte";
@@ -21,26 +20,43 @@ Positioning and generating coordinates should happen outside of this form.
 
   import { canonicalUrl } from "$lib/api/documents";
 
-  export let document: Document;
-  export let note: Partial<Note> = {}; // for updating
-  export let page_number: Maybe<number> = note.page_number;
+  interface Props {
+    document: Document;
+    note?: Partial<Note>; // for updating
+    page_number?: Maybe<number>;
+    onclose?: () => void;
+    onsuccess?: (note: Note) => void;
+  }
 
-  const dispatch = createEventDispatcher();
+  let {
+    document,
+    note = $bindable({ title: "", content: "", access: "private" }),
+    page_number = note.page_number,
+    onclose,
+    onsuccess,
+  }: Props = $props();
 
-  $: coords = [note.x1, note.x2, note.y1, note.y2] as Partial<Bounds>;
-  $: canonical = canonicalUrl(document);
-  $: action = note.id
-    ? new URL("?/updateAnnotation", canonical).href
-    : new URL("?/createAnnotation", canonical).href;
-  $: page_level = !coords || coords.every((c) => !Boolean(c));
+  let coords = $derived([
+    note.x1,
+    note.x2,
+    note.y1,
+    note.y2,
+  ] as Partial<Bounds>);
+  let canonical = $derived(canonicalUrl(document));
+  let action = $derived(
+    note.id
+      ? new URL("?/updateAnnotation", canonical).href
+      : new URL("?/createAnnotation", canonical).href,
+  );
+  let page_level = $derived(!coords || coords.every((c) => !Boolean(c)));
 
-  function onSubmit({ formData, submitter }) {
+  function onSubmit({ submitter }) {
     submitter.disabled = true;
     return ({ result, update }) => {
       if (result.type === "success") {
-        dispatch("success", result.data.note);
+        onsuccess?.(result.data.note);
         update(result);
-        dispatch("close");
+        onclose?.();
       }
     };
   }
@@ -75,7 +91,7 @@ Positioning and generating coordinates should happen outside of this form.
     <Flex class="buttons" justify="between">
       <Flex>
         <Button type="submit" mode="primary">{$_("annotate.save")}</Button>
-        <Button type="reset" onclick={() => dispatch("close")}
+        <Button type="reset" onclick={() => onclose?.()}
           >{$_("annotate.cancel")}
         </Button>
       </Flex>

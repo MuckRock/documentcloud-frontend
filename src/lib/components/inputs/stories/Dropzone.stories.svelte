@@ -1,25 +1,29 @@
-<script context="module" lang="ts">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import type { ComponentProps } from "svelte";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import { action } from "@storybook/addon-actions";
   import Dropzone from "../Dropzone.svelte";
 
-  let args = {
-    active: false,
-    disabled: false,
-    onDrop: action("Drop"),
-  };
-
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Forms / Inputs /Dropzone",
     component: Dropzone,
     tags: ["autodocs"],
     parameters: { layout: "centered" },
+    render: template,
+  });
+
+  type Args = ComponentProps<typeof Dropzone>;
+
+  const args = {
+    active: false,
+    disabled: false,
+    onDrop: action("Drop"),
   };
 </script>
 
-<Template let:args>
+{#snippet template(args: Args)}
   <Dropzone {...args}>
-    <svelte:fragment let:active let:disabled>
+    {#snippet children({ active, disabled })}
       <div class="dropzone" class:active class:disabled>
         <p>Drop files here</p>
         <dl>
@@ -29,11 +33,11 @@
           <dd>{String(disabled)}</dd>
         </dl>
       </div>
-    </svelte:fragment>
+    {/snippet}
   </Dropzone>
-</Template>
+{/snippet}
 
-<Story name="Default" />
+<Story name="Default" {args} />
 <Story name="Active" args={{ ...args, active: true }} />
 <Story name="Disabled" args={{ ...args, disabled: true }} />
 

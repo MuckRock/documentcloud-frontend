@@ -3,32 +3,15 @@
 -->
 
 <script lang="ts">
-  export let name: null | string = null;
-  export let placeholder = "";
-  export let value = "";
-  export let autofocus = false;
-  export let required = false;
-  export let disabled = false;
-  export let readonly = false;
-  export let autocomplete: string | undefined = undefined;
+  import type { HTMLInputAttributes } from "svelte/elements";
+
+  interface Props extends HTMLInputAttributes {}
+
+  let { value = $bindable(""), ...rest }: Props = $props();
 </script>
 
-<!-- svelte-ignore a11y-autofocus -->
-<input
-  type="text"
-  {name}
-  {placeholder}
-  {required}
-  {disabled}
-  {autofocus}
-  {readonly}
-  {autocomplete}
-  bind:value
-  on:change
-  on:input
-  on:focus
-  on:blur
-/>
+<!-- svelte-ignore a11y_autofocus -->
+<input type="text" {...rest} bind:value />
 
 <style>
   input {
