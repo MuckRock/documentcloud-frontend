@@ -20,13 +20,15 @@
 <ul>
   {#each projectData as project}
     <li>
-      <div class="icon">
-        <FileDirectoryFill16 />
-      </div>
-      <span class="title">{project.title}</span>
-      <span class="count">
-        {project.count.toLocaleString()} documents
-      </span>
+      <a href="/#">
+        <div class="icon">
+          <FileDirectoryFill16 />
+        </div>
+        <span class="title">{project.title}</span>
+        <span class="count">
+          {project.count.toLocaleString()} documents
+        </span>
+      </a>
     </li>
   {/each}
 </ul>
@@ -45,11 +47,20 @@
 
   li {
     list-style: none;
+    width: 100%;
+  }
+
+  a {
     display: flex;
     align-items: flex-start;
-    gap: 16px;
-    width: 100%;
-    padding: 6px 8px;
+    gap: 1rem;
+    padding: 0.375rem 0.5rem;
+    border-radius: 0.25rem;
+    text-decoration: none;
+  }
+
+  a:hover {
+    background-color: var(--blue-1);
   }
 
   .icon {
