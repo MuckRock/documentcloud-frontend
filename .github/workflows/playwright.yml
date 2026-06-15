@@ -22,10 +22,13 @@ jobs:
     steps:
       - uses: cygnetdigital/wait_for_response@v2.0.0
         with:
-          url: ${{ env.URL }}
+          # `/` redirects (307) to `/home/`; poll the page that returns 200.
+          # The preview deploy runs in parallel, so allow time for it to finish
+          # and for the Cloudflare custom domain to come up.
+          url: ${{ env.URL }}/home/
           responseCode: "200"
-          timeout: 120000
-          interval: 3000
+          timeout: 300000
+          interval: 5000
 
   test:
     timeout-minutes: 60
