@@ -8,6 +8,7 @@ Updated variables and styles for new SvelteKit routes
   /* Font Families */
   --font-sans: "Source Sans Pro", sans-serif;
   --font-mono: "Source Code Pro", monospace;
+  --font-serif: "Source Serif 4", serif;
 
   /* Font Sizes */
   --font-xs: 0.75em;
