@@ -119,6 +119,56 @@
       </div>
     </div>
   </section>
+
+  <section class="data">
+    <div class="content">
+      <div class="data-box">
+        <h2 class="data-header">
+          Turn <span class="data-header-documents">documents</span> into
+          <span class="data-header-data">data</span>
+        </h2>
+        <div class="data-info">
+          <div class="data-info-section">
+            <h3 class="data-info-header">Public API</h3>
+            <p>
+              DocumentCloud has a
+              <a href="https://www.documentcloud.org/help/api/">public API</a> that
+              you can use to manage large-volume projects.
+            </p>
+          </div>
+          <div class="data-info-section">
+            <h3 class="data-info-header">Add-ons</h3>
+            <p>
+              Use community-authored extensions and tools help you do even more
+              with your documents and data.
+            </p>
+          </div>
+          <div class="data-info-section">
+            <h3 class="data-info-header">Full-text search</h3>
+            <p>
+              Automatic OCR and search indexing make it easy to explore
+              documents.
+            </p>
+          </div>
+          <div class="data-info-section">
+            <h3 class="data-info-header">Python SDK</h3>
+            <p>
+              Get started with our Python SDK to automate document uploads,
+              analysis, and processing tasks.
+            </p>
+          </div>
+        </div>
+        <div class="data-open-source">
+          <p>
+            DocumentCloud is an open-source project.
+            <a href="https://github.com/MuckRock/documentcloud">
+              Explore the code on GitHub.
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 </article>
 
 <style>
@@ -285,5 +335,95 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+  }
+
+  /* Section: Data */
+
+  .data {
+    background-color: var(--gray-1);
+    padding-bottom: 36px;
+  }
+
+  .data-box {
+    width: 100%;
+    display: flex;
+    padding: 2rem 4rem 2rem 4.625rem;
+    flex-direction: column;
+    gap: 1.875rem;
+    border-radius: 1rem;
+    background: var(--gray-5);
+    color: var(--white);
+  }
+
+  .data-header {
+    position: relative;
+    font-size: 2.25rem;
+    font-style: normal;
+  }
+
+  .data-header::before {
+    content: ">";
+    position: absolute;
+    font-family: var(--font-mono);
+    left: -2.75rem;
+    top: 0;
+    font-weight: 600;
+    color: var(--green-3);
+  }
+
+  .data-header-documents {
+    color: var(--green-3);
+    font-weight: 600;
+    font-style: italic;
+  }
+
+  .data-header-data {
+    color: var(--green-3);
+    font-weight: 600;
+    font-family: var(--font-mono);
+    letter-spacing: -0.0625rem;
+  }
+
+  .data-info {
+    display: grid;
+    row-gap: 1rem;
+    column-gap: 2rem;
+
+    @media (min-width: 48rem) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .data-info p {
+    font-size: 0.875rem;
+    line-height: 1.286;
+  }
+
+  .data-info a {
+    color: var(--white);
+  }
+
+  .data-info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .data-info-header {
+    font-size: 1.5rem;
+    line-height: normal;
+  }
+
+  .data-open-source {
+    padding: 0.75rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    border: 1px solid var(--green-3);
+  }
+
+  .data-open-source a {
+    color: var(--green-3);
   }
 </style>
