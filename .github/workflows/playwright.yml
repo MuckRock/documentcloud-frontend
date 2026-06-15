@@ -1,15 +1,19 @@
-# this workflow still refers to the legacy codebase
-# tests need to be updated before this is useful again
 name: Playwright Tests
 
 on:
   pull_request:
-    branches: [master]
+    branches: [main]
 
 env:
+  # Run against the PR's Cloudflare preview deploy.
   URL: "https://preview-${{ github.event.number }}.staging.documentcloud.org"
-  PLAYWRIGHT_TEST_BASE_URL: "https://preview-${{ github.event.number }}.staging.documentcloud.org"
   NODE_ENV: staging
+  # Login is initiated on the staging API host, which hands off to Squarelet.
+  DC_API_URL: "https://api.staging.documentcloud.org"
+  # Credentials for the authenticated test account. If these secrets are unset,
+  # the auth setup skips and the authenticated tests don't run.
+  DC_TEST_USERNAME: ${{ secrets.DC_TEST_USERNAME }}
+  DC_TEST_PASSWORD: ${{ secrets.DC_TEST_PASSWORD }}
 
 jobs:
   wait:
@@ -39,8 +43,16 @@ jobs:
         run: npm ci
       - run: npm run sync
 
-      - name: Install Playwright
-        run: npx playwright install --with-deps
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
 
       - name: Run Playwright tests
-        run: npx playwright test
+        run: npm run test:e2e
+
+      - name: Upload report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

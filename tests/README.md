@@ -56,5 +56,4 @@ Squarelet's markup changes.
 
 ## Fixtures
 
-`fixtures/` holds sample documents (PDFs) and environment JSON used by tests.
-`fixtures/development.json` is gitignored — generate your own locally.
+`fixtures/` holds sample PDFs for use in tests (e.g. file-upload flows).
