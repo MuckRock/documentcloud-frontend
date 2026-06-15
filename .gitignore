@@ -37,6 +37,7 @@ static/viewer/*
 .envrc
 playwright-report
 test-results
+playwright/.auth
 coverage
 certs
 
