@@ -41,7 +41,7 @@
 
 <article class="page">
   <header>
-    <div class="content">
+    <div class="header-content">
       <a class="logo" aria-label="DocumentCloud homepage" href={APP_URL}>
         <Logo />
       </a>
@@ -169,7 +169,8 @@
 
   .content {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    row-gap: 3rem;
     grid-column: 2 / 3;
     align-items: center;
     justify-content: space-between;
@@ -178,22 +179,37 @@
 
   .column-narrow,
   .column-wide {
+    width: 100%;
     display: flex;
     flex-direction: column;
   }
 
-  .column-narrow {
-    width: var(--col-width, 33%);
-  }
+  @media (min-width: 48rem) {
+    .column-narrow {
+      width: var(--col-width, 33%);
+    }
 
-  .column-wide {
-    width: var(--col-width, 52%);
+    .column-wide {
+      width: var(--col-width, 52%);
+    }
+
+    .content {
+      flex-direction: row;
+    }
   }
 
   /* Section: Header */
 
   header {
     padding: 21px 1rem;
+  }
+
+  .header-content {
+    display: flex;
+    flex-direction: row;
+    grid-column: 2 / 3;
+    align-items: center;
+    justify-content: space-between;
   }
 
   .logo :global(.icon) {
