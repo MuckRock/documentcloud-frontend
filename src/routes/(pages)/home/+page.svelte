@@ -22,7 +22,7 @@
 
   let { data } = $props();
 
-  let me = $derived(data.me);
+  let { me, documentCount } = $derived(data);
   let sign_in_url = $derived(new URL(`?next=${APP_URL}`, SIGN_IN_URL));
 
   onMount(async () => {
@@ -70,7 +70,7 @@
   <section class="documents">
     <div class="content">
       <div class="column-narrow documents-info">
-        <h2>7,003,584 public documents and counting</h2>
+        <h2>{documentCount?.toLocaleString()} public documents and counting</h2>
         <p>
           Everyone is welcome to explore our public document archive and
           organize interesting documents into projects.
