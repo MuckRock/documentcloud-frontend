@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: cygnetdigital/wait_for_response@v2.0.0
+      - uses: nev7n/wait_for_response@v1.2.0
         with:
           # `/` redirects (307) to `/home/`; poll the page that returns 200.
           # The preview deploy runs in parallel, so allow time for it to finish
@@ -41,6 +41,11 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: "22.x"
+
+      - name: Set up WireGuard Connection
+        uses: niklaskeerl/easy-wireguard-action@v2
+        with:
+          WG_CONFIG_FILE: ${{ secrets.WG_CONFIG_FILE }}
 
       - name: Install dependencies
         run: npm ci

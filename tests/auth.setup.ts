@@ -39,7 +39,9 @@ setup("authenticate", async ({ page }) => {
   // New Squarelet accounts hit a one-time MFA opt-in interstitial before the
   // OAuth redirect completes. Skip it if present. `force` is needed because the
   // dev Django Debug Toolbar overlay can intercept the click.
-  await page.waitForURL(/squarelet\.com|documentcloud\.org/, { timeout: 15_000 });
+  await page.waitForURL(/squarelet\.com|documentcloud\.org/, {
+    timeout: 15_000,
+  });
   if (page.url().includes("/accounts/onboard")) {
     await page
       .getByRole("button", { name: "Skip", exact: true })
@@ -49,9 +51,9 @@ setup("authenticate", async ({ page }) => {
   // We should land back on DocumentCloud, logged in. Asserting that no sign-in
   // link remains is a reliable signal regardless of which page we land on.
   await page.waitForURL(/documentcloud\.org/, { timeout: 15_000 });
-  await expect(
-    page.getByRole("link", { name: /sign in|log in/i }),
-  ).toHaveCount(0);
+  await expect(page.getByRole("link", { name: /sign in|log in/i })).toHaveCount(
+    0,
+  );
 
   await page.context().storageState({ path: STORAGE_STATE });
 });
