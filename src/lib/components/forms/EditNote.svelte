@@ -5,9 +5,7 @@ This form deals with everything except coordinates, which should be passed in as
 Positioning and generating coordinates should happen outside of this form.
 -->
 <script lang="ts">
-  import type { Bounds, Document, Maybe, Note } from "$lib/api/types";
-
-  import { enhance } from "$app/forms";
+  import type { Bounds, Document, Maybe, Note, Nullable } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
 
@@ -18,7 +16,8 @@ Positioning and generating coordinates should happen outside of this form.
   import Text from "../inputs/Text.svelte";
   import TextArea from "../inputs/TextArea.svelte";
 
-  import { canonicalUrl } from "$lib/api/documents";
+  import * as notesApi from "$lib/api/notes";
+  import { getCsrfToken } from "$lib/utils/api";
 
   interface Props {
     document: Document;
@@ -42,27 +41,107 @@ Positioning and generating coordinates should happen outside of this form.
     note.y1,
     note.y2,
   ] as Partial<Bounds>);
-  let canonical = $derived(canonicalUrl(document));
-  let action = $derived(
-    note.id
-      ? new URL("?/updateAnnotation", canonical).href
-      : new URL("?/createAnnotation", canonical).href,
-  );
   let page_level = $derived(!coords || coords.every((c) => !Boolean(c)));
 
-  function onSubmit({ submitter }) {
-    submitter.disabled = true;
-    return ({ result, update }) => {
-      if (result.type === "success") {
-        onsuccess?.(result.data.note);
-        update(result);
-        onclose?.();
-      }
-    };
+  let loading = $state(false);
+  let error: Nullable<string> = $state(null);
+
+  /**
+   * Create a new note on this document, directly from the browser.
+   */
+  async function create(e: SubmitEvent) {
+    e.preventDefault();
+    loading = true;
+    error = null;
+
+    const csrf_token = getCsrfToken() ?? "";
+    const [x1, x2, y1, y2] = coords;
+
+    const { data, error: err } = await notesApi.create(
+      document.id,
+      {
+        title: note.title,
+        content: note.content ?? "",
+        access: note.access,
+        page_number: note.page_number ?? page_number ?? undefined,
+        x1,
+        x2,
+        y1,
+        y2,
+      },
+      csrf_token,
+    );
+
+    loading = false;
+
+    if (err) {
+      error = err.message;
+      return;
+    }
+
+    if (data) onsuccess?.(data);
+    onclose?.();
+  }
+
+  /**
+   * Update an existing note, directly from the browser.
+   */
+  async function update(e: SubmitEvent) {
+    e.preventDefault();
+    loading = true;
+    error = null;
+
+    const csrf_token = getCsrfToken() ?? "";
+
+    const { data, error: err } = await notesApi.update(
+      document.id,
+      note.id!,
+      {
+        title: note.title,
+        content: note.content ?? "",
+        access: note.access,
+      },
+      csrf_token,
+    );
+
+    loading = false;
+
+    if (err) {
+      error = err.message;
+      return;
+    }
+
+    if (data) onsuccess?.(data);
+    onclose?.();
+  }
+
+  /**
+   * Delete a note, directly from the browser.
+   */
+  async function remove() {
+    loading = true;
+    error = null;
+
+    const csrf_token = getCsrfToken() ?? "";
+
+    const { error: err } = await notesApi.remove(
+      document.id,
+      note.id!,
+      csrf_token,
+    );
+
+    loading = false;
+
+    if (err) {
+      error = err.message;
+      return;
+    }
+
+    onclose?.();
   }
 </script>
 
-<form {action} method="post" class:page_level use:enhance={onSubmit}>
+<form class:page_level onsubmit={note.id ? update : create}>
   <Flex direction="column" gap={1}>
     <Field title={$_("annotate.fields.title")} required>
       <Text
@@ -78,33 +157,33 @@ Positioning and generating coordinates should happen outside of this form.
 
     <AccessLevel name="access" bind:selected={note.access} direction="row" />
 
-    {#if note.id}
-      <input type="hidden" name="id" value={note.id} />
+    {#if error}
+      <p class="error" role="alert">{error}</p>
     {/if}
-    <input
-      type="hidden"
-      name="page_number"
-      value={note.page_number || page_number}
-    />
-    <input type="hidden" name="coords" value={JSON.stringify(coords)} />
 
     <Flex class="buttons" justify="between">
       <Flex>
-        <Button type="submit" mode="primary">{$_("annotate.save")}</Button>
-        <Button type="reset" onclick={() => onclose?.()}
-          >{$_("annotate.cancel")}
+        <Button type="submit" mode="primary" disabled={loading}>
+          {$_("annotate.save")}
+        </Button>
+        <Button type="reset" disabled={loading} onclick={() => onclose?.()}>
+          {$_("annotate.cancel")}
         </Button>
       </Flex>
 
       {#if note.id}
-        <Button
-          type="submit"
-          mode="danger"
-          formaction={new URL("?/deleteAnnotation", canonical).href}
-        >
+        <Button type="button" mode="danger" disabled={loading} onclick={remove}>
           {$_("dialog.delete")}
         </Button>
       {/if}
     </Flex>
   </Flex>
 </form>
+
+<style>
+  .error {
+    margin: 0;
+    color: var(--red-3, #cf2e2e);
+    font-size: 0.875rem;
+  }
+</style>
