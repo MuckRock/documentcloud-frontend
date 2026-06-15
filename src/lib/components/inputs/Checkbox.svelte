@@ -23,12 +23,12 @@
 
 <label>
   <input
+    {...rest}
     type="checkbox"
     {name}
     {disabled}
     bind:checked={value}
     bind:indeterminate
-    {...rest}
   />
   <span>
     {#if value}

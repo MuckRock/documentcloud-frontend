@@ -23,6 +23,7 @@
 
 <!-- svelte-ignore a11y_autofocus -->
 <input
+  {...rest}
   type="number"
   {name}
   {placeholder}
@@ -32,7 +33,6 @@
   {min}
   {max}
   {step}
-  {...rest}
   bind:value
 />
 
