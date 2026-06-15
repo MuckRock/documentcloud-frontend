@@ -31,7 +31,7 @@
   }
 
   function dragover(e: DragEvent) {
-    e.preventDefault;
+    e.preventDefault();
     active = true;
   }
 
