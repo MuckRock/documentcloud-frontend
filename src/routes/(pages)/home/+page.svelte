@@ -105,24 +105,24 @@
   }
 
   h1 {
-    font-size: 56px;
-    line-height: 72px;
+    font-size: 3.5rem;
+    line-height: 1.286;
   }
 
   h2 {
-    font-size: 28px;
-    line-height: 36px;
+    font-size: 1.75rem;
+    line-height: 1.286;
   }
 
   h3 {
-    font-size: 16px;
+    font-size: 1rem;
     line-height: normal;
   }
 
   p {
     font-feature-settings: "ss04" on;
     font-family: var(--font-sans);
-    font-size: var(--font-md, 16px);
+    font-size: 1rem;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
@@ -195,7 +195,7 @@
   .intro-info {
     display: flex;
     flex-direction: column;
-    gap: 48px;
+    gap: 3rem;
   }
 
   /* Section: Documents */
@@ -206,19 +206,19 @@
   }
 
   .documents-info {
-    gap: 30px;
+    gap: 1.875rem;
   }
 
   .documents-explore {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 1.5rem;
   }
 
   .documents-projects {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 0.5rem;
   }
 
   .documents-search {

@@ -34,12 +34,12 @@
 <style>
   ul {
     display: flex;
-    padding: 8px;
+    padding: 0.5rem;
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
+    gap: 0.5rem;
     align-self: stretch;
-    border-radius: 8px;
+    border-radius: 0.5rem;
     border: 1px solid var(--gray-2);
   }
 
@@ -53,29 +53,29 @@
   }
 
   .icon {
-    flex-basis: 16px;
-    height: 16px;
-    margin: 2px;
+    flex-basis: 1rem;
+    height: 1rem;
+    margin: 0.125rem;
     fill: var(--blue-3);
   }
 
   .title {
     color: #000;
     font-family: var(--font-sans);
-    font-size: 16px;
+    font-size: 1rem;
     font-style: normal;
     font-weight: 600;
-    line-height: 20px;
+    line-height: 1.25;
     flex-basis: 100%;
   }
 
   .count {
     color: rgba(0, 0, 0, 0.7);
     font-family: var(--font-sans);
-    font-size: 14px;
+    font-size: 0.875rem;
     font-style: normal;
     font-weight: 400;
-    line-height: 20px;
+    line-height: 1.43;
     white-space: nowrap;
   }
 </style>
