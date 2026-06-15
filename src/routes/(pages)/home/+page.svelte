@@ -16,6 +16,7 @@
     SIGN_OUT_URL,
   } from "@/config/config.js";
   import Projects from "$lib/components/home/Projects.svelte";
+  import SourceLogos from "$lib/components/home/SourceLogos/SourceLogos.svelte";
 
   // Show the login controls
   const showLogin = true;
@@ -91,6 +92,33 @@
       </div>
     </div>
   </section>
+
+  <section class="sources">
+    <div class="content">
+      <div class="column-wide">
+        <SourceLogos />
+      </div>
+      <div style:--col-width="36%" class="sources-info column-narrow">
+        <h2>Documents from trustworthy sources</h2>
+        <p>
+          Newsrooms, independent journalists, archives and academic projects can
+          upload, annotate, and publish documents.
+        </p>
+        <p>
+          To get started, create a MuckRock account and request verification.
+        </p>
+        <div class="sources-account">
+          <Button size="small" mode="primary" label="Create an account" />
+          <Button
+            size="small"
+            mode="primary"
+            ghost
+            label="Learn more about verification"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
 </article>
 
 <style>
@@ -155,11 +183,11 @@
   }
 
   .column-narrow {
-    width: 33%;
+    width: var(--col-width, 33%);
   }
 
   .column-wide {
-    width: 50%;
+    width: var(--col-width, 52%);
   }
 
   /* Section: Header */
@@ -224,5 +252,22 @@
   .documents-search {
     display: flex;
     align-items: center;
+  }
+
+  /* Section: Sources */
+
+  .sources {
+    background-color: var(--gray-1);
+    padding: 53px 0 61px;
+  }
+
+  .sources-info {
+    gap: 1.5rem;
+  }
+
+  .sources-account {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
 </style>
