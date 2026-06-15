@@ -1,12 +1,11 @@
 import type { Actions } from "./$types";
-import type { Access, Document, Note } from "$lib/api/types";
+import type { Document } from "$lib/api/types";
 
 import { fail } from "@sveltejs/kit";
 import { setFlash, redirect } from "sveltekit-flash-message/server";
 
 import { CSRF_COOKIE_NAME, EMBED_URL } from "@/config/config.js";
 import { destroy, edit, redact } from "$lib/api/documents";
-import * as notes from "$lib/api/notes";
 
 export function load({ cookies, request, url }) {
   const inIframe = request.headers.get("Sec-Fetch-Dest") === "iframe";
@@ -153,112 +152,5 @@ export const actions = {
 
     setFlash({ message: "Updated ownership", status: "success" }, cookies);
     return data;
-  },
-
-  async createAnnotation({ cookies, request, fetch, params }) {
-    const csrf_token = cookies.get(CSRF_COOKIE_NAME);
-    if (!csrf_token) {
-      return fail(403, { message: "Missing CSRF token" });
-    }
-    const form = await request.formData();
-
-    const [x1, x2, y1, y2] = JSON.parse(form.get("coords") as string);
-
-    const note: Partial<Note> = {
-      title: form.get("title") as string,
-      content: (form.get("content") as string) ?? "",
-      access: form.get("access") as Access,
-      page_number: form.get("page_number")
-        ? Number(form.get("page_number"))
-        : undefined,
-      x1,
-      x2,
-      y1,
-      y2,
-    };
-
-    const { data: created, error } = await notes.create(
-      params.id,
-      note,
-      csrf_token,
-      fetch,
-    );
-
-    if (error) {
-      setFlash({ message: error.message, status: "error" }, cookies);
-      return fail(error.status, {
-        message: error.message,
-        errors: error.errors,
-      });
-    }
-
-    setFlash({ message: "Note created", status: "success" }, cookies);
-    return {
-      success: true,
-      note: created,
-    };
-  },
-
-  async updateAnnotation({ cookies, request, fetch, params }) {
-    const csrf_token = cookies.get(CSRF_COOKIE_NAME);
-    if (!csrf_token) {
-      return fail(403, { message: "Missing CSRF token" });
-    }
-    const form = await request.formData();
-
-    const note_id = form.get("id");
-
-    // only limited update options for now
-    const note: Partial<Note> = {
-      title: form.get("title") as string,
-      content: (form.get("content") as string) ?? "",
-      access: form.get("access") as Access,
-    };
-
-    const { data: updated, error } = await notes.update(
-      params.id,
-      Number(note_id),
-      note,
-      csrf_token,
-      fetch,
-    );
-
-    if (error) {
-      setFlash({ message: error.message, status: "error" }, cookies);
-      return fail(error.status, {
-        message: error.message,
-        errors: error.errors,
-      });
-    }
-
-    setFlash({ message: "Note updated", status: "success" }, cookies);
-    return {
-      success: true,
-      note: updated,
-    };
-  },
-
-  async deleteAnnotation({ cookies, request, fetch, params }) {
-    const csrf_token = cookies.get(CSRF_COOKIE_NAME);
-    if (!csrf_token) {
-      return fail(403, { message: "Missing CSRF token" });
-    }
-    const form = await request.formData();
-
-    const note_id = Number(form.get("id"));
-
-    if (!note_id) return fail(400, { id: "missing" });
-
-    const { error } = await notes.remove(params.id, note_id, csrf_token, fetch);
-
-    if (error) {
-      setFlash({ message: error.message, status: "error" }, cookies);
-      return fail(error.status, { message: error.message });
-    }
-
-    setFlash({ message: "Note deleted", status: "success" }, cookies);
-    return {
-      success: true,
-    };
   },
 } satisfies Actions;
