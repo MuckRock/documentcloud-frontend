@@ -189,6 +189,31 @@
       </div>
     </div>
   </section>
+
+  <section class="muckrock">
+    <div class="content">
+      <div class="column" style:--width="39%" style:--gap="1.5rem">
+        <a href="https://www.muckrock.com" aria-label="MuckRock Foundation">
+          <MuckRockLogo />
+        </a>
+        <p>
+          DocumentCloud is a project of the <a href="https://www.muckrock.com">
+            MuckRock Foundation
+          </a>, a 501c3 organization that is committed to trust, transparency,
+          and civic engagement.
+        </p>
+        <p>
+          Our <a href="https://www.muckrock.com/privacy-policy/">
+            privacy policy
+          </a>
+          and
+          <a href="https://www.muckrock.com/privacy-policy/">
+            terms of service
+          </a> apply to all users on this site.
+        </p>
+      </div>
+    </div>
+  </section>
 </article>
 
 <style>
@@ -426,5 +451,16 @@
 
   .data-open-source a {
     color: var(--green-3);
+  }
+
+  /* Section: MuckRock */
+
+  .muckrock {
+    padding-block: 39px 67px;
+    color: var(--gray-5);
+  }
+
+  .muckrock a {
+    color: var(--gray-5);
   }
 </style>
