@@ -37,6 +37,7 @@
     "vite": "^6.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.60.0",
     "@storybook/addon-actions": "^8.6.14",
     "@storybook/addon-essentials": "^8.6.15",
     "@storybook/addon-interactions": "^8.6.15",
@@ -54,6 +55,7 @@
     "@types/sanitize-html": "^2.16.0",
     "@vitest/coverage-v8": "^4.0.16",
     "chromatic": "^13.3.4",
+    "dotenv": "^17.4.2",
     "jsdom": "^26.1.0",
     "knip": "^5.62.0",
     "msw": "^2.7.0",
@@ -84,6 +86,10 @@
     "test:watch": " TZ=UTC vitest watch",
     "test:coverage": "TZ=UTC vitest run --coverage",
     "test:dev": "TZ=UTC vitest watch --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:report": "playwright show-report",
     "format": "prettier --write .",
     "format:check": "prettier --check src",
     "build-storybook": "storybook build",

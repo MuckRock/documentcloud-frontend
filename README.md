@@ -91,13 +91,46 @@ Run unit tests with `npm run test:unit`. Running `npm run test:watch` will re-ru
 
 We use snapshots for testing component rendering. After updating Svelte components or styles, snapshot tests may fail if they're not updated. To update snapshots, run `npm run test:unit -- -u`.
 
-### Browser tests
+### End-to-end (browser) tests
 
-All of the browser test commands depend on the front end running, so start the app with `make dev` and start the backend and Squarelet as well.
+We use [Playwright](https://playwright.dev) for end-to-end tests that run in a real browser against a running site. They live in the `tests/` directory (separate from the unit tests under `src/`). See [`tests/README.md`](tests/README.md) for full details.
 
-### Running tests locally
+Install the browser binary once:
 
-Run `npm run test:browser` in another terminal. This will run Playwright using Chromium and Firefox.
+```sh
+npx playwright install chromium
+```
+
+Then run:
+
+```sh
+npm run test:e2e          # run all e2e tests
+npm run test:e2e:ui       # interactive UI mode (great for debugging)
+npm run test:e2e:headed   # watch the browser as tests run
+npm run test:e2e:report   # open the last HTML report
+```
+
+By default tests run against `https://www.dev.documentcloud.org`. Override the target with the `URL` environment variable. In CI this is set automatically to the PR's Cloudflare preview deploy (`https://preview-<PR_NUMBER>.staging.documentcloud.org`):
+
+```sh
+URL=https://preview-123.staging.documentcloud.org npm run test:e2e
+```
+
+#### Authenticated tests
+
+Tests are split into projects by the file name:
+
+- `*.anon.spec.ts` — logged-out tests, run in the `chromium` project.
+- any other `*.spec.ts` — logged-in tests, run in the `authenticated` project.
+
+The `authenticated` project depends on a `setup` project that logs in through Squarelet once and saves the session to `playwright/.auth/user.json` for reuse. To run these, set credentials for a dedicated dev/staging test account (never a production login) in `.env`:
+
+```sh
+DC_TEST_USERNAME=...
+DC_TEST_PASSWORD=...
+```
+
+If these are unset, the auth setup is skipped and the authenticated tests don't run.
 
 ### Development
 
