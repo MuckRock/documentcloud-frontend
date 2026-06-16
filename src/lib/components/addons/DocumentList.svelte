@@ -16,6 +16,7 @@
   import { sidebars } from "../layouts/Sidebar.svelte";
   import { remToPx } from "$lib/utils/layout";
   import { getSearchResults } from "$lib/state/search.svelte";
+  import { extractSuggestions } from "../documents/search/utils/extractSuggestions";
 
   interface Props {
     query: string;
@@ -24,6 +25,7 @@
   let { query }: Props = $props();
 
   const searchState = getSearchResults();
+  let suggestions = $derived(extractSuggestions(searchState.results));
 
   function handleSearchSubmit(detail: { q: string }) {
     const url = new URL(page.url);
@@ -61,7 +63,7 @@
         {/if}
         <PageToolbar>
           {#snippet center()}
-            <SearchEditor {query} onsubmit={handleSearchSubmit} />
+            <SearchEditor {query} {suggestions} onsubmit={handleSearchSubmit} />
           {/snippet}
         </PageToolbar>
       </Flex>
