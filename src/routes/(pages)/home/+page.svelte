@@ -44,7 +44,7 @@
 
 <article class="page">
   <header>
-    <div class="header-content">
+    <div class="content">
       <a class="logo" aria-label="DocumentCloud homepage" href={APP_URL}>
         <Logo />
       </a>
@@ -97,7 +97,10 @@
   <section class="documents">
     <div class="content">
       <div class="column" style:--width="33%" style:--gap="1.875rem">
-        <h2>{documentCount?.toLocaleString()} public documents and counting</h2>
+        <h2>
+          {documentCount?.toLocaleString() ?? "Millions of"} public documents and
+          counting
+        </h2>
         <p>
           Everyone is welcome to explore our public document archive and
           organize interesting documents into projects.
@@ -310,7 +313,8 @@
   }
 
   .content {
-    max-width: 42rem;
+    width: 100%;
+    max-width: 45rem;
     margin-inline: auto;
     display: flex;
     flex-direction: column;
@@ -341,14 +345,6 @@
 
   header {
     padding-block: 21px;
-  }
-
-  .header-content {
-    display: flex;
-    flex-direction: row;
-    grid-column: 2 / 3;
-    align-items: center;
-    justify-content: space-between;
   }
 
   .logo :global(.icon) {
