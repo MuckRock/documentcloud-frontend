@@ -120,6 +120,85 @@ describe("EditNote", () => {
     expect(onclose).toHaveBeenCalledTimes(1);
   });
 
+  it("submits edited field values when creating a note", async () => {
+    vi.mocked(notesApi.create).mockResolvedValue({ data: noteFixture });
+
+    const { container } = render(EditNote, {
+      document: mockDocument,
+      note: { title: "Original", content: "Original body", access: "private" },
+    });
+
+    const title = container.querySelector(
+      "input[name='title']",
+    ) as HTMLInputElement;
+    const content = container.querySelector(
+      "textarea[name='content']",
+    ) as HTMLTextAreaElement;
+
+    await fireEvent.input(title, { target: { value: "Edited title" } });
+    await fireEvent.input(content, { target: { value: "Edited body" } });
+
+    await fireEvent.click(screen.getByRole("button", { name: "Save" }));
+
+    expect(notesApi.create).toHaveBeenCalledWith(
+      mockDocument.id,
+      expect.objectContaining({
+        title: "Edited title",
+        content: "Edited body",
+        access: "private",
+      }),
+      "test-csrf",
+    );
+  });
+
+  it("submits edited field values when updating a note", async () => {
+    vi.mocked(notesApi.update).mockResolvedValue({ data: noteFixture });
+
+    const { container } = render(EditNote, {
+      document: mockDocument,
+      note: { ...noteFixture },
+    });
+
+    const title = container.querySelector(
+      "input[name='title']",
+    ) as HTMLInputElement;
+
+    await fireEvent.input(title, { target: { value: "Updated title" } });
+
+    await fireEvent.click(screen.getByRole("button", { name: "Save" }));
+
+    expect(notesApi.update).toHaveBeenCalledWith(
+      mockDocument.id,
+      noteFixture.id,
+      expect.objectContaining({
+        title: "Updated title",
+        content: noteFixture.content,
+        access: noteFixture.access,
+      }),
+      "test-csrf",
+    );
+  });
+
+  it("submits the selected access level", async () => {
+    vi.mocked(notesApi.create).mockResolvedValue({ data: noteFixture });
+
+    render(EditNote, {
+      document: mockDocument,
+      note: { title: "New note", content: "", access: "private" },
+    });
+
+    // AccessLevel renders a radio per level; pick a non-default one.
+    await fireEvent.click(screen.getByDisplayValue("public"));
+
+    await fireEvent.click(screen.getByRole("button", { name: "Save" }));
+
+    expect(notesApi.create).toHaveBeenCalledWith(
+      mockDocument.id,
+      expect.objectContaining({ access: "public" }),
+      "test-csrf",
+    );
+  });
+
   it("removes a note when the delete button is clicked", async () => {
     vi.mocked(notesApi.remove).mockResolvedValue({ data: null });
 

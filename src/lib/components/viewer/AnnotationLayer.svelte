@@ -256,7 +256,7 @@ Assumes it's a child of a ViewerContext
       >
         <EditNote
           {document}
-          bind:note={$newNote}
+          note={$newNote}
           onclose={closeNote}
           onsuccess={(note) => onEditNoteSuccess(note, undefined)}
         />

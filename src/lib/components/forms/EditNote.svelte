@@ -5,7 +5,14 @@ This form deals with everything except coordinates, which should be passed in as
 Positioning and generating coordinates should happen outside of this form.
 -->
 <script lang="ts">
-  import type { Bounds, Document, Maybe, Note, Nullable } from "$lib/api/types";
+  import type {
+    Access,
+    Bounds,
+    Document,
+    Maybe,
+    Note,
+    Nullable,
+  } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
 
@@ -29,11 +36,16 @@ Positioning and generating coordinates should happen outside of this form.
 
   let {
     document,
-    note = $bindable({ title: "", content: "", access: "private" }),
+    note = { title: "", content: "", access: "private" },
     page_number = note.page_number,
     onclose,
     onsuccess,
   }: Props = $props();
+
+  // Overridable deriveds seed the form from `note`
+  let title = $derived(note.title ?? "");
+  let content = $derived(note.content ?? "");
+  let access: Access = $derived(note.access ?? "private");
 
   let coords = $derived([
     note.x1,
@@ -60,9 +72,9 @@ Positioning and generating coordinates should happen outside of this form.
     const { data, error: err } = await notesApi.create(
       document.id,
       {
-        title: note.title,
-        content: note.content ?? "",
-        access: note.access,
+        title,
+        content,
+        access,
         page_number: note.page_number ?? page_number ?? undefined,
         x1,
         x2,
@@ -97,9 +109,9 @@ Positioning and generating coordinates should happen outside of this form.
       document.id,
       note.id!,
       {
-        title: note.title,
-        content: note.content ?? "",
-        access: note.access,
+        title,
+        content,
+        access,
       },
       csrf_token,
     );
@@ -147,15 +159,15 @@ Positioning and generating coordinates should happen outside of this form.
       <Text
         name="title"
         placeholder={$_("annotate.fields.title")}
-        bind:value={note.title}
+        bind:value={title}
         required
       />
     </Field>
     <Field title={$_("annotate.fields.content")}>
-      <TextArea name="content" bind:value={note.content} />
+      <TextArea name="content" bind:value={content} />
     </Field>
 
-    <AccessLevel name="access" bind:selected={note.access} direction="row" />
+    <AccessLevel name="access" bind:selected={access} direction="row" />
 
     {#if error}
       <p class="error" role="alert">{error}</p>
