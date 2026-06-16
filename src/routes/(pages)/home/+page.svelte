@@ -6,7 +6,6 @@
 
   import Button from "$lib/components/common/Button.svelte";
   import Logo from "$lib/components/common/Logo.svelte";
-  import Search from "$lib/components/forms/Search.svelte";
 
   // Authentication
   import {
@@ -15,8 +14,11 @@
     SIGN_UP_URL,
     SIGN_OUT_URL,
   } from "@/config/config.js";
+
   import Projects from "$lib/components/home/Projects.svelte";
   import SourceLogos from "$lib/components/home/SourceLogos/SourceLogos.svelte";
+  import MuckRockLogo from "$lib/components/home/MuckRockLogo.svelte";
+  import Search from "$lib/components/home/Search.svelte";
 
   // Show the login controls
   const showLogin = true;
@@ -101,10 +103,7 @@
         </p>
       </div>
       <div class="column" style:--width="52%" style:--gap="1.5rem">
-        <div class="documents-search">
-          <Search placeholder="Search public documents..." />
-          <Button size="small" mode="primary" label="Search" />
-        </div>
+        <Search />
 
         <div class="documents-projects">
           <h3>Explore some of our newsworthy projects:</h3>
@@ -320,35 +319,10 @@
     color: var(--gray-5);
   }
 
-  .documents-info {
-    gap: 1.875rem;
-  }
-
-  .documents-explore {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  .documents-info {
-    gap: 1.875rem;
-  }
-
-  .documents-explore {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
   .documents-projects {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-  }
-
-  .documents-search {
-    display: flex;
-    align-items: center;
   }
 
   /* Section: Sources */
