@@ -320,7 +320,7 @@
     position: relative;
     color: #f5f5f5;
     padding-block: 44px;
-    background-image: url("/clouds.png");
+    background-image: url("/clouds.jpg");
     background-size: cover;
     background-position: center;
   }
