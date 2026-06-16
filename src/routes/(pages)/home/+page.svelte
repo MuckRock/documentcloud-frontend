@@ -46,7 +46,28 @@
         <Logo />
       </a>
 
-      <Button size="small" mode="primary" label="Sign in with MuckRock" />
+      <div class="signin">
+        {#if me}
+          <span class="status">
+            {$_("homeTemplate.signedIn", {
+              values: { name: me?.name },
+            })}
+          </span>
+          <Button href={SIGN_OUT_URL} mode="primary" ghost size="small">
+            {$_("homeTemplate.signOut")}
+          </Button>
+          <Button href="/" size="small" mode="primary">
+            {$_("homeTemplate.goToApp")}
+          </Button>
+        {:else}
+          <Button
+            href={SIGN_UP_URL + page.url}
+            size="small"
+            mode="primary"
+            label="Sign in with MuckRock"
+          />
+        {/if}
+      </div>
     </div>
   </header>
 
@@ -265,6 +286,18 @@
   .logo :global(.icon) {
     height: 2rem;
     width: auto;
+  }
+
+  .signin {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .status {
+    font-size: 13px;
+    color: var(--gray);
   }
 
   /* Section: Intro */
