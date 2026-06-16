@@ -177,6 +177,12 @@ Selectable text can be rendered in one of two ways:
 
   // if I click on a note, pass click events through to underlying note text
   function checkForHighlightClick(click: MouseEvent) {
+    // The open note card (the read view or the edit form) and note tabs handle
+    // their own clicks. Don't forward those clicks to a highlight just because
+    // they overlap its bounds — otherwise clicking inside an open EditNote form
+    // reopens the note beneath it and editing becomes impossible.
+    if ((click.target as HTMLElement)?.closest(".note.card, .note-tab")) return;
+
     const clickX = click.clientX;
     const clickY = click.clientY;
 
