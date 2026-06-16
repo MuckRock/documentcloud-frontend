@@ -249,12 +249,12 @@
   header,
   section {
     display: flex;
-    padding-inline: 1rem;
+    padding-inline: 1.5rem;
   }
 
   .content {
     width: 100%;
-    max-width: 45rem;
+    max-width: 24rem;
     margin-inline: auto;
     display: flex;
     flex-direction: column;
@@ -262,6 +262,10 @@
     align-items: center;
     justify-content: space-between;
     z-index: 1;
+  }
+
+  header .content {
+    flex-direction: row;
   }
 
   .column {
@@ -272,12 +276,18 @@
   }
 
   @media (min-width: 48rem) {
+    header,
+    section {
+      padding-inline: 2rem;
+    }
+
     .column {
       width: var(--width);
     }
 
     .content {
       flex-direction: row;
+      max-width: 48rem;
     }
   }
 
@@ -359,9 +369,9 @@
   .data-box {
     width: 100%;
     display: flex;
-    padding: 2rem 4rem 2rem 4.625rem;
+    padding: 1.5rem 2rem;
     flex-direction: column;
-    gap: 1.875rem;
+    gap: 1.25rem;
     border-radius: 1rem;
     background: var(--gray-5);
     color: var(--white);
@@ -369,18 +379,30 @@
 
   .data-header {
     position: relative;
-    font-size: 2.25rem;
+    font-size: 1.75rem;
     font-style: normal;
   }
 
-  .data-header::before {
-    content: ">";
-    position: absolute;
-    font-family: var(--font-mono);
-    left: -2.75rem;
-    top: 0;
-    font-weight: 600;
-    color: var(--green-3);
+  @media (min-width: 48rem) {
+    .data-box {
+      gap: 1.875rem;
+
+      padding: 2rem 4rem 2rem 4.625rem;
+    }
+
+    .data-header {
+      font-size: 2.25rem;
+    }
+
+    .data-header::before {
+      content: ">";
+      position: absolute;
+      font-family: var(--font-mono);
+      left: -2.75rem;
+      top: 0;
+      font-weight: 600;
+      color: var(--green-3);
+    }
   }
 
   .data-header-documents {
