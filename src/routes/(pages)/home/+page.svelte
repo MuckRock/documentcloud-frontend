@@ -125,12 +125,14 @@
             size="small"
             mode="primary"
             label={$_("homepage.sources.createAccount")}
+            href={SIGN_UP_URL + page.url}
           />
           <Button
             size="small"
             mode="primary"
             ghost
             label={$_("homepage.sources.learnMore")}
+            href="https://help.muckrock.com/Request-verification-19ef8892696381dba944e17e14938433"
           />
         </div>
       </div>

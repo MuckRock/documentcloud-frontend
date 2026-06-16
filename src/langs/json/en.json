@@ -736,7 +736,7 @@
       "publicApi": "<h3>Public API</h3><p>DocumentCloud has a <a href=\"https://www.documentcloud.org/help/api/\" target=\"_blank\" rel=\"noopener noreferrer\">public API</a> that you can use to manage large-volume projects.</p>",
       "addOns": "<h3>Add-ons</h3><p>Use community-authored extensions and tools help you do even more with your documents and data.</p>",
       "fullText": "<h3>Full-text search</h3><p>Automatic OCR and search indexing make it easy to explore documents.</p>",
-      "pythonSdk": "<h3>Python SDK</h3><p>Get started with our Python SDK to automate document uploads, analysis, and processing tasks.</p>",
+      "pythonSdk": "<h3>Python SDK</h3><p>Get started with our <a href=\"https://documentcloud.readthedocs.io/en/latest/\" target=\"_blank\" rel=\"noopener noreferrer\">Python SDK</a> to automate document uploads, analysis, and processing tasks.</p>",
       "openSource": "<p>DocumentCloud is an open-source project. <a href=\"https://github.com/MuckRock/documentcloud\" target=\"_blank\" rel=\"noopener noreferrer\">Explore the code on GitHub.</a></p>"
     },
     "muckrock": {
