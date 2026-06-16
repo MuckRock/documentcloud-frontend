@@ -15,6 +15,13 @@ const baseURL = process.env.URL || "https://www.dev.documentcloud.org";
 // Where the logged-in browser session is persisted by the auth setup project.
 export const STORAGE_STATE = "playwright/.auth/user.json";
 
+// Identify our automated traffic so it can be allowlisted (e.g. in a Cloudflare
+// WAF rule) and told apart from real users. Appended to the real browser UA so
+// the browser still behaves normally. Override with PLAYWRIGHT_USER_AGENT.
+const userAgent =
+  process.env.PLAYWRIGHT_USER_AGENT ||
+  `${devices["Desktop Chrome"].userAgent} DocumentCloud-E2E (+https://github.com/MuckRock/documentcloud-frontend)`;
+
 export default defineConfig({
   // E2E specs and the auth setup live here, separate from the Vitest unit
   // tests under `src/`.
@@ -39,6 +46,7 @@ export default defineConfig({
   // Shared settings for all projects.
   use: {
     baseURL,
+    userAgent,
 
     // The dev server uses self-signed certs; accept them here rather than
     // disabling TLS verification process-wide.
@@ -61,7 +69,7 @@ export default defineConfig({
     // saved session.
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      use: { ...devices["Desktop Chrome"], userAgent },
       testMatch: /.*\.anon\.spec\.ts/,
     },
 
@@ -71,6 +79,7 @@ export default defineConfig({
       name: "authenticated",
       use: {
         ...devices["Desktop Chrome"],
+        userAgent,
         storageState: STORAGE_STATE,
       },
       dependencies: ["setup"],

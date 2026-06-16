@@ -55,6 +55,18 @@ jobs:
             --write-out 'Squarelet responded: HTTP %{http_code} in %{time_total}s\n' \
             "${{ secrets.SQUARELET_STAGING_URL }}"
 
+      - name: Verify staging API login is not blocked by Cloudflare
+        run: |
+          # The auth flow starts here, then redirects to Squarelet. A normal
+          # response is a 3xx redirect; a Cloudflare WAF block is a 403. Don't
+          # follow redirects (-L would chase off to Squarelet); --fail turns a
+          # 403/block into a clear, fast failure before Playwright runs.
+          curl --fail --show-error --silent \
+            --retry 5 --retry-delay 5 --retry-all-errors \
+            --output /dev/null \
+            --write-out 'API login responded: HTTP %{http_code} in %{time_total}s\n' \
+            "${DC_API_URL}/accounts/login/squarelet"
+
       - name: Install dependencies
         run: npm ci
       - run: npm run sync
