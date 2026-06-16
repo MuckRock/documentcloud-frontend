@@ -231,18 +231,16 @@
 
   header,
   section {
-    display: grid;
-    grid-template-columns: minmax(1rem, 1fr) minmax(auto, 42rem) minmax(
-        1rem,
-        1fr
-      );
+    display: flex;
+    padding-inline: 1rem;
   }
 
   .content {
+    max-width: 42rem;
+    margin-inline: auto;
     display: flex;
     flex-direction: column;
     row-gap: 3rem;
-    grid-column: 2 / 3;
     align-items: center;
     justify-content: space-between;
     z-index: 1;
@@ -268,7 +266,7 @@
   /* Section: Header */
 
   header {
-    padding: 21px 1rem;
+    padding-block: 21px;
   }
 
   .header-content {
@@ -301,7 +299,7 @@
   .intro {
     position: relative;
     color: #f5f5f5;
-    padding: 44px 0;
+    padding-block: 44px;
     background-image: url("/clouds.png");
     background-size: cover;
     background-position: center;
@@ -318,7 +316,7 @@
   /* Section: Documents */
 
   .documents {
-    padding: 44px 0 54px;
+    padding-block: 44px 54px;
     color: var(--gray-5);
   }
 
@@ -357,7 +355,7 @@
 
   .sources {
     background-color: var(--gray-1);
-    padding: 53px 0 61px;
+    padding-block: 53px 61px;
   }
 
   .sources-account {
@@ -370,7 +368,7 @@
 
   .data {
     background-color: var(--gray-1);
-    padding-bottom: 36px;
+    padding-block: 0 36px;
   }
 
   .data-box {
