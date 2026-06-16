@@ -15,6 +15,11 @@ env:
   DC_TEST_USERNAME: ${{ secrets.DC_TEST_USERNAME }}
   DC_TEST_PASSWORD: ${{ secrets.DC_TEST_PASSWORD }}
 
+# Cancel an in-progress run when the PR is updated with a new push.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   wait:
     runs-on: ubuntu-latest
@@ -41,6 +46,7 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: "22.x"
+          cache: npm
 
       - name: Set up WireGuard Connection
         uses: niklaskeerl/easy-wireguard-action@v2
@@ -71,14 +77,31 @@ jobs:
         run: npm ci
       - run: npm run sync
 
+      - name: Resolve Playwright version
+        id: playwright
+        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.playwright.outputs.version }}
+
+      # On a cache hit the browser binary is restored, but the OS-level
+      # dependencies (apt packages) are not cached and must be reinstalled.
       - name: Install Playwright browser
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium
+      - name: Install Playwright system dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
 
       - name: Run Playwright tests
         run: npm run test:e2e
 
       - name: Upload report
-        if: ${{ !cancelled() }}
+        if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
