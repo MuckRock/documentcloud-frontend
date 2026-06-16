@@ -19,6 +19,7 @@
   import SourceLogos from "$lib/components/home/SourceLogos/SourceLogos.svelte";
   import MuckRockLogo from "$lib/components/home/MuckRockLogo.svelte";
   import Search from "$lib/components/home/Search.svelte";
+  import DonationForm from "$lib/components/home/DonationForm.svelte";
 
   // Show the login controls
   const showLogin = true;
@@ -210,6 +211,55 @@
           <a href="https://www.muckrock.com/privacy-policy/">
             terms of service
           </a> apply to all users on this site.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="donate">
+    <div class="content">
+      <div class="column" style:--width="24rem">
+        <DonationForm id="g6R32g" />
+      </div>
+      <div
+        class="column"
+        style:--width="calc(100% - 26rem)"
+        style:--gap="1.5rem"
+      >
+        <h2>
+          Together, we hold power to account and shine a light on government
+          transparency
+        </h2>
+        <h3>
+          Your donation fuels vital tools such as MuckRock Requests, FOIA
+          Machine, DocumentCloud and oTranscribe that promote civic engagement.
+        </h3>
+        <ul>
+          <li>
+            To donate via Apple Pay,
+            <a href="https://www.givebutter.org/muckrock/">
+              visit our dedicated GiveButter page
+            </a>.
+          </li>
+          <li>
+            Or mailed to:<br />
+            <address>
+              MuckRock Foundation<br />
+              263 Huntington Ave<br />
+              Boston, MA 02115
+            </address>
+          </li>
+        </ul>
+        <p>
+          You can always find our most current financial statements at
+          <a href="https://www.muckrock.com/financial/">
+            MuckRock's financial transparency page
+          </a>.
+        </p>
+        <p>
+          If you'd like to support our work with a legacy, a gift of stocks or
+          crypto currency, contact
+          <a href="mailto:marcia@muckrock.com">marcia@muckrock.com </a>.
         </p>
       </div>
     </div>
@@ -462,5 +512,17 @@
 
   .muckrock a {
     color: var(--gray-5);
+  }
+
+  /* Section: Donate */
+
+  .donate {
+    padding-block: 4rem;
+    color: var(--white);
+    background-color: var(--blue-5);
+  }
+
+  .donate a {
+    color: var(--white);
   }
 </style>
