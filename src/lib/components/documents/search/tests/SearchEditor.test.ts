@@ -624,6 +624,86 @@ describe("SearchEditor", () => {
       expect(rangeFound).toBe(true);
     });
 
+    it("half-open range with only a start date leaves the upper bound open", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => typeInEditor(view, "created"));
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+
+      expect(getACState(view).stage).toBe("range");
+
+      const dropdown = document.querySelector(".search-ac-range");
+      const inputs = dropdown?.querySelectorAll(
+        "input",
+      ) as NodeListOf<HTMLInputElement>;
+      // Fill only the start (index 1); leave the end (index 2) blank.
+      inputs[1]!.value = "2024-01-01";
+
+      const insertBtns = dropdown?.querySelectorAll(
+        ".search-ac-insert-btn",
+      ) as NodeListOf<HTMLButtonElement>;
+      await act(() => {
+        insertBtns[1]?.dispatchEvent(
+          new MouseEvent("mousedown", { bubbles: true }),
+        );
+      });
+
+      let rangeFound = false;
+      view.state.doc.descendants((node) => {
+        if (node.type.name === "range" && node.attrs.field === "created_at") {
+          expect(node.attrs.lower).toBe("2024-01-01T00:00:00Z");
+          expect(node.attrs.upper).toBe("*");
+          rangeFound = true;
+        }
+      });
+      expect(rangeFound).toBe(true);
+    });
+
+    it("half-open range with only an end date leaves the lower bound open", async () => {
+      const { component, editor } = await renderEditor();
+      const view = component.getView();
+
+      await act(() => typeInEditor(view, "created"));
+      await act(() => {
+        editor.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+        );
+      });
+
+      expect(getACState(view).stage).toBe("range");
+
+      const dropdown = document.querySelector(".search-ac-range");
+      const inputs = dropdown?.querySelectorAll(
+        "input",
+      ) as NodeListOf<HTMLInputElement>;
+      // Fill only the end (index 2); leave the start (index 1) blank.
+      inputs[2]!.value = "2024-01-31";
+
+      const insertBtns = dropdown?.querySelectorAll(
+        ".search-ac-insert-btn",
+      ) as NodeListOf<HTMLButtonElement>;
+      await act(() => {
+        insertBtns[1]?.dispatchEvent(
+          new MouseEvent("mousedown", { bubbles: true }),
+        );
+      });
+
+      let rangeFound = false;
+      view.state.doc.descendants((node) => {
+        if (node.type.name === "range" && node.attrs.field === "created_at") {
+          expect(node.attrs.lower).toBe("*");
+          expect(node.attrs.upper).toBe("2024-01-31T23:59:59Z");
+          rangeFound = true;
+        }
+      });
+      expect(rangeFound).toBe(true);
+    });
+
     it("Enter in date input inserts the range atom", async () => {
       const { component, editor } = await renderEditor();
       const view = component.getView();
@@ -735,7 +815,7 @@ describe("SearchEditor", () => {
       expect(prefixChecked).toBe(true);
     });
 
-    it("fixed date value inserts a field-value atom", async () => {
+    it("fixed date value inserts a day-spanning range", async () => {
       const { component, editor } = await renderEditor();
       const view = component.getView();
 
@@ -767,17 +847,18 @@ describe("SearchEditor", () => {
         );
       });
 
-      let atomFound = false;
+      // A single day should produce a range spanning that whole day, not a
+      // single-second field-value atom (#1312).
+      let rangeFound = false;
       view.state.doc.descendants((node) => {
-        if (
-          node.type.name === "field-value" &&
-          node.attrs.field === "created_at"
-        ) {
-          expect(node.attrs.value).toBe("2024-01-15T00:00:00Z");
-          atomFound = true;
+        if (node.type.name === "range" && node.attrs.field === "created_at") {
+          expect(node.attrs.lower).toBe("2024-01-15T00:00:00Z");
+          expect(node.attrs.upper).toBe("2024-01-15T23:59:59Z");
+          rangeFound = true;
         }
+        expect(node.type.name).not.toBe("field-value");
       });
-      expect(atomFound).toBe(true);
+      expect(rangeFound).toBe(true);
     });
 
     it("fixed numeric value inserts a field-value atom for page_count", async () => {
@@ -822,7 +903,7 @@ describe("SearchEditor", () => {
       expect(atomFound).toBe(true);
     });
 
-    it("Enter in fixed input inserts a field-value atom", async () => {
+    it("Enter in fixed date input inserts a day-spanning range", async () => {
       const { component, editor } = await renderEditor();
       const view = component.getView();
 
@@ -849,17 +930,15 @@ describe("SearchEditor", () => {
         );
       });
 
-      let atomFound = false;
+      let rangeFound = false;
       view.state.doc.descendants((node) => {
-        if (
-          node.type.name === "field-value" &&
-          node.attrs.field === "created_at"
-        ) {
-          expect(node.attrs.value).toBe("2024-06-01T00:00:00Z");
-          atomFound = true;
+        if (node.type.name === "range" && node.attrs.field === "created_at") {
+          expect(node.attrs.lower).toBe("2024-06-01T00:00:00Z");
+          expect(node.attrs.upper).toBe("2024-06-01T23:59:59Z");
+          rangeFound = true;
         }
       });
-      expect(atomFound).toBe(true);
+      expect(rangeFound).toBe(true);
     });
   });
 
