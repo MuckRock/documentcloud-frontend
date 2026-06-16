@@ -11,6 +11,20 @@ export async function load({ fetch, cookies, setHeaders }) {
   const me = sessionId ? await getMe(fetch) : null;
 
   const { data } = await search("", { per_page: 1 });
+  const featuredProjects = [
+    {
+      title: "Epstein files",
+      link: "/#",
+    },
+    {
+      title: "Archive of inspector generals reports",
+      link: "/#",
+    },
+    {
+      title: "Trump pardons",
+      link: "/#",
+    },
+  ];
 
   if (!me) {
     setHeaders({
@@ -21,6 +35,7 @@ export async function load({ fetch, cookies, setHeaders }) {
   return {
     title: "Home",
     documentCount: data?.count,
+    featuredProjects,
     me,
   };
 }

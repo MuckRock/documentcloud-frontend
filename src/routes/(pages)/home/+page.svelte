@@ -25,7 +25,7 @@
 
   let { data } = $props();
 
-  let { me, documentCount } = $derived(data);
+  let { me, featuredProjects, documentCount } = $derived(data);
   let sign_in_url = $derived(new URL(`?next=${APP_URL}`, SIGN_IN_URL));
 
   onMount(async () => {
@@ -107,7 +107,7 @@
 
         <div class="documents-projects">
           <h3>Explore some of our newsworthy projects:</h3>
-          <Projects />
+          <Projects projects={featuredProjects} />
         </div>
       </div>
     </div>

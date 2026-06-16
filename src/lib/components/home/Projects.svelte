@@ -1,33 +1,22 @@
 <script lang="ts">
   import { FileDirectoryFill16 } from "svelte-octicons";
 
-  const projectData = [
-    {
-      title: "Epstein files",
-      count: 224,
-    },
-    {
-      title: "Archive of inspector generals reports",
-      count: 5840,
-    },
-    {
-      title: "Trump pardons",
-      count: 97,
-    },
-  ];
+  type Project = {
+    title: string;
+    link: string;
+  };
+
+  const { projects }: { projects: Project[] } = $props();
 </script>
 
 <ul>
-  {#each projectData as project}
+  {#each projects as { title, link }}
     <li>
-      <a href="/#">
+      <a href={link}>
         <div class="icon">
           <FileDirectoryFill16 />
         </div>
-        <span class="title">{project.title}</span>
-        <span class="count">
-          {project.count.toLocaleString()} documents
-        </span>
+        <span class="title">{title}</span>
       </a>
     </li>
   {/each}
