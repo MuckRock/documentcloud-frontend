@@ -29,6 +29,10 @@
   let { me, featuredProjects, documentCount } = $derived(data);
   let sign_in_url = $derived(new URL(`?next=${APP_URL}`, SIGN_IN_URL));
 
+  let count = $derived(
+    documentCount?.toLocaleString() ?? $_("homepage.documents.countFallback"),
+  );
+
   onMount(async () => {
     const { init } = await import("@plausible-analytics/tracker");
     init({
@@ -45,7 +49,11 @@
 <article class="page">
   <header>
     <div class="content">
-      <a class="logo" aria-label="DocumentCloud homepage" href={APP_URL}>
+      <a
+        class="logo"
+        aria-label={$_("homepage.header.logoLabel")}
+        href={APP_URL}
+      >
         <Logo />
       </a>
 
@@ -67,7 +75,7 @@
             href={SIGN_UP_URL + page.url}
             size="small"
             mode="primary"
-            label="Sign in with MuckRock"
+            label={$_("homepage.header.signIn")}
           />
         {/if}
       </div>
@@ -77,19 +85,10 @@
   <section class="intro">
     <div class="content">
       <h1 class="column" style:--width="33%">
-        Upload.<br />Analyze.<br />Embed.
+        {@html $_("homepage.intro.heading")}
       </h1>
       <div class="column" style:--width="52%" style:--gap="3rem">
-        <p>
-          <strong>DocumentCloud</strong> is an all-in-one platform used by newsrooms
-          around the world for work with primary source documents.
-        </p>
-        <p>
-          Upload and organize documents.<br />
-          Extract, analyze and search text.<br />
-          Annotate, redact and edit.<br />
-          Embed documents on your website.
-        </p>
+        {@html $_("homepage.intro.content")}
       </div>
     </div>
   </section>
@@ -98,19 +97,15 @@
     <div class="content">
       <div class="column" style:--width="33%" style:--gap="1.875rem">
         <h2>
-          {documentCount?.toLocaleString() ?? "Millions of"} public documents and
-          counting
+          {$_("homepage.documents.heading", { values: { count } })}
         </h2>
-        <p>
-          Everyone is welcome to explore our public document archive and
-          organize interesting documents into projects.
-        </p>
+        {@html $_("homepage.documents.description")}
       </div>
       <div class="column" style:--width="52%" style:--gap="1.5rem">
         <Search />
 
         <div class="documents-projects">
-          <h3>Explore some of our newsworthy projects:</h3>
+          <h3>{$_("homepage.documents.projectsHeading")}</h3>
           <Projects projects={featuredProjects} />
         </div>
       </div>
@@ -123,21 +118,19 @@
         <SourceLogos />
       </div>
       <div class="column" style:--width="36%" style:--gap="1.5rem">
-        <h2>Documents from trustworthy sources</h2>
-        <p>
-          Newsrooms, independent journalists, archives and academic projects can
-          upload, annotate, and publish documents.
-        </p>
-        <p>
-          To get started, create a MuckRock account and request verification.
-        </p>
+        <h2>{$_("homepage.sources.heading")}</h2>
+        {@html $_("homepage.sources.content")}
         <div class="sources-account">
-          <Button size="small" mode="primary" label="Create an account" />
+          <Button
+            size="small"
+            mode="primary"
+            label={$_("homepage.sources.createAccount")}
+          />
           <Button
             size="small"
             mode="primary"
             ghost
-            label="Learn more about verification"
+            label={$_("homepage.sources.learnMore")}
           />
         </div>
       </div>
@@ -148,47 +141,31 @@
     <div class="content">
       <div class="data-box">
         <h2 class="data-header">
-          Turn <span class="data-header-documents">documents</span> into
-          <span class="data-header-data">data</span>
+          {$_("homepage.data.headingPrefix")}
+          <span class="data-header-documents">
+            {$_("homepage.data.headingDocuments")}
+          </span>
+          {$_("homepage.data.headingMiddle")}
+          <span class="data-header-data">
+            {$_("homepage.data.headingData")}
+          </span>
         </h2>
         <div class="data-info">
           <div class="data-info-section">
-            <h3 class="data-info-header">Public API</h3>
-            <p>
-              DocumentCloud has a
-              <a href="https://www.documentcloud.org/help/api/">public API</a> that
-              you can use to manage large-volume projects.
-            </p>
+            {@html $_("homepage.data.publicApi")}
           </div>
           <div class="data-info-section">
-            <h3 class="data-info-header">Add-ons</h3>
-            <p>
-              Use community-authored extensions and tools help you do even more
-              with your documents and data.
-            </p>
+            {@html $_("homepage.data.addOns")}
           </div>
           <div class="data-info-section">
-            <h3 class="data-info-header">Full-text search</h3>
-            <p>
-              Automatic OCR and search indexing make it easy to explore
-              documents.
-            </p>
+            {@html $_("homepage.data.fullText")}
           </div>
           <div class="data-info-section">
-            <h3 class="data-info-header">Python SDK</h3>
-            <p>
-              Get started with our Python SDK to automate document uploads,
-              analysis, and processing tasks.
-            </p>
+            {@html $_("homepage.data.pythonSdk")}
           </div>
         </div>
         <div class="data-open-source">
-          <p>
-            DocumentCloud is an open-source project.
-            <a href="https://github.com/MuckRock/documentcloud">
-              Explore the code on GitHub.
-            </a>
-          </p>
+          {@html $_("homepage.data.openSource")}
         </div>
       </div>
     </div>
@@ -197,24 +174,15 @@
   <section class="muckrock">
     <div class="content">
       <div class="column" style:--width="39%" style:--gap="1.5rem">
-        <a href="https://www.muckrock.com" aria-label="MuckRock Foundation">
+        <a
+          href="https://www.muckrock.com"
+          aria-label={$_("homepage.muckrock.logoLabel")}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <MuckRockLogo />
         </a>
-        <p>
-          DocumentCloud is a project of the <a href="https://www.muckrock.com">
-            MuckRock Foundation
-          </a>, a 501c3 organization that is committed to trust, transparency,
-          and civic engagement.
-        </p>
-        <p>
-          Our <a href="https://www.muckrock.com/privacy-policy/">
-            privacy policy
-          </a>
-          and
-          <a href="https://www.muckrock.com/privacy-policy/">
-            terms of service
-          </a> apply to all users on this site.
-        </p>
+        {@html $_("homepage.muckrock.content")}
       </div>
     </div>
   </section>
@@ -230,40 +198,12 @@
         style:--gap="1.5rem"
       >
         <h2>
-          Together, we hold power to account and shine a light on government
-          transparency
+          {$_("homepage.donate.heading")}
         </h2>
         <h3>
-          Your donation fuels vital tools such as MuckRock Requests, FOIA
-          Machine, DocumentCloud and oTranscribe that promote civic engagement.
+          {$_("homepage.donate.subheading")}
         </h3>
-        <ul>
-          <li>
-            To donate via Apple Pay,
-            <a href="https://www.givebutter.org/muckrock/">
-              visit our dedicated GiveButter page
-            </a>.
-          </li>
-          <li>
-            Or mailed to:<br />
-            <address>
-              MuckRock Foundation<br />
-              263 Huntington Ave<br />
-              Boston, MA 02115
-            </address>
-          </li>
-        </ul>
-        <p>
-          You can always find our most current financial statements at
-          <a href="https://www.muckrock.com/financial/">
-            MuckRock's financial transparency page
-          </a>.
-        </p>
-        <p>
-          If you'd like to support our work with a legacy, a gift of stocks or
-          crypto currency, contact
-          <a href="mailto:marcia@muckrock.com">marcia@muckrock.com </a>.
-        </p>
+        {@html $_("homepage.donate.content")}
       </div>
     </div>
   </section>
@@ -272,30 +212,28 @@
 <style>
   /* Typography */
 
-  h1,
-  h2,
-  h3 {
+  :global(h1, h2, h3) {
     font-family: var(--font-serif);
     font-style: normal;
     font-weight: 400;
   }
 
-  h1 {
+  :global(h1) {
     font-size: 3.5rem;
     line-height: 1.286;
   }
 
-  h2 {
+  :global(h2) {
     font-size: 1.75rem;
     line-height: 1.286;
   }
 
-  h3 {
+  :global(h3) {
     font-size: 1rem;
     line-height: normal;
   }
 
-  p {
+  :global(p) {
     font-feature-settings: "ss04" on;
     font-family: var(--font-sans);
     font-size: 1rem;
@@ -466,22 +404,22 @@
     }
   }
 
-  .data-info p {
-    font-size: 0.875rem;
-    line-height: 1.286;
-  }
-
-  .data-info a {
-    color: var(--white);
-  }
-
   .data-info-section {
     display: flex;
     flex-direction: column;
     gap: 1rem;
   }
 
-  .data-info-header {
+  .data-info :global(p) {
+    font-size: 0.875rem;
+    line-height: 1.286;
+  }
+
+  .data-info :global(a) {
+    color: var(--white);
+  }
+
+  .data-info :global(h3) {
     font-size: 1.5rem;
     line-height: normal;
   }
@@ -495,7 +433,7 @@
     border: 1px solid var(--green-3);
   }
 
-  .data-open-source a {
+  .data-open-source :global(a) {
     color: var(--green-3);
   }
 
@@ -506,7 +444,7 @@
     color: var(--gray-5);
   }
 
-  .muckrock a {
+  .muckrock :global(a) {
     color: var(--gray-5);
   }
 
@@ -518,7 +456,7 @@
     background-color: var(--blue-5);
   }
 
-  .donate a {
+  .donate :global(a) {
     color: var(--white);
   }
 </style>
