@@ -73,8 +73,10 @@
 
   <section class="intro">
     <div class="content">
-      <h1 class="column-narrow">Upload.<br />Analyze.<br />Embed.</h1>
-      <div class="column-wide intro-info">
+      <h1 class="column" style:--width="33%">
+        Upload.<br />Analyze.<br />Embed.
+      </h1>
+      <div class="column" style:--width="52%" style:--gap="3rem">
         <p>
           <strong>DocumentCloud</strong> is an all-in-one platform used by newsrooms
           around the world for work with primary source documents.
@@ -91,24 +93,22 @@
 
   <section class="documents">
     <div class="content">
-      <div class="column-narrow documents-info">
+      <div class="column" style:--width="33%" style:--gap="1.875rem">
         <h2>{documentCount?.toLocaleString()} public documents and counting</h2>
         <p>
           Everyone is welcome to explore our public document archive and
           organize interesting documents into projects.
         </p>
       </div>
-      <div class="column-wide">
-        <div class="documents-explore">
-          <div class="documents-search">
-            <Search placeholder="Search public documents..." />
-            <Button size="small" mode="primary" label="Search" />
-          </div>
+      <div class="column" style:--width="52%" style:--gap="1.5rem">
+        <div class="documents-search">
+          <Search placeholder="Search public documents..." />
+          <Button size="small" mode="primary" label="Search" />
+        </div>
 
-          <div class="documents-projects">
-            <h3>Explore some of our newsworthy projects:</h3>
-            <Projects />
-          </div>
+        <div class="documents-projects">
+          <h3>Explore some of our newsworthy projects:</h3>
+          <Projects />
         </div>
       </div>
     </div>
@@ -116,10 +116,10 @@
 
   <section class="sources">
     <div class="content">
-      <div class="column-wide">
+      <div class="column" style:--width="52%">
         <SourceLogos />
       </div>
-      <div style:--col-width="36%" class="sources-info column-narrow">
+      <div class="column" style:--width="36%" style:--gap="1.5rem">
         <h2>Documents from trustworthy sources</h2>
         <p>
           Newsrooms, independent journalists, archives and academic projects can
@@ -248,20 +248,16 @@
     z-index: 1;
   }
 
-  .column-narrow,
-  .column-wide {
+  .column {
     width: 100%;
     display: flex;
     flex-direction: column;
+    gap: var(--gap, 0);
   }
 
   @media (min-width: 48rem) {
-    .column-narrow {
-      width: var(--col-width, 33%);
-    }
-
-    .column-wide {
-      width: var(--col-width, 52%);
+    .column {
+      width: var(--width);
     }
 
     .content {
@@ -319,17 +315,21 @@
     opacity: 75%;
   }
 
-  .intro-info {
-    display: flex;
-    flex-direction: column;
-    gap: 3rem;
-  }
-
   /* Section: Documents */
 
   .documents {
     padding: 44px 0 54px;
     color: var(--gray-5);
+  }
+
+  .documents-info {
+    gap: 1.875rem;
+  }
+
+  .documents-explore {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
   }
 
   .documents-info {
@@ -358,10 +358,6 @@
   .sources {
     background-color: var(--gray-1);
     padding: 53px 0 61px;
-  }
-
-  .sources-info {
-    gap: 1.5rem;
   }
 
   .sources-account {
