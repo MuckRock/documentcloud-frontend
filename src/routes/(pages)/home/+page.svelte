@@ -25,7 +25,7 @@
   let { data } = $props();
 
   let { me, documentCount } = $derived(data);
-  let sign_in_url = $derived(new URL(`?next=${APP_URL}`, SIGN_IN_URL));
+  let signInURL = $derived(new URL(`?next=${APP_URL}`, SIGN_IN_URL).toString());
 
   let count = $derived(
     documentCount?.toLocaleString() ?? $_("homepage.documents.countFallback"),
@@ -70,7 +70,7 @@
           </Button>
         {:else}
           <Button
-            href={SIGN_UP_URL + page.url}
+            href={signInURL}
             size="small"
             mode="primary"
             label={$_("homepage.header.signIn")}
