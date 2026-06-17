@@ -13,6 +13,7 @@ import {
 } from "./autocomplete-data";
 import { searchSchema } from "../schema";
 import { AutocompleteViewController } from "./autocomplete-view-controller.svelte";
+import { DATE_FIELDS, formatDateBound } from "../../utils/dateBounds";
 
 // PluginKey is a unique handle for reading this plugin's state from any EditorState
 export const autocompletePluginKey = new PluginKey("autocomplete");
@@ -401,20 +402,6 @@ function applyRangeShortcut(view: EditorView, suggestion: Suggestion): void {
   view.dispatch(tr);
 }
 
-const DATE_FIELDS = new Set(["created_at", "updated_at"]);
-
-/** Format a date value for Solr. Bare YYYY-MM-DD dates need time suffixes. */
-function formatDateBound(value: string, position: "lower" | "upper"): string {
-  if (value === "*" || !value) return value;
-  // Already has time component or is date math (NOW-...)
-  if (/T|NOW/.test(value)) return value;
-  // Bare date: append time
-  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    return position === "lower" ? `${value}T00:00:00Z` : `${value}T23:59:59Z`;
-  }
-  return value;
-}
-
 export function applyCustomRange(
   view: EditorView,
   lower: string,
@@ -466,21 +453,32 @@ export function applyFixedValue(view: EditorView, value: string): void {
 
   if (!value) return;
 
-  const isDateField = DATE_FIELDS.has(state.fieldName);
-  const finalValue = isDateField ? formatDateBound(value, "lower") : value;
-
   const tr = view.state.tr;
   const prefix = extractPrefix(view.state.doc, state.from, state.to);
 
-  const atomNode = searchSchema.nodes["field-value"].create({
-    field: state.fieldName,
-    value: finalValue,
-    prefix,
-    quoted: false,
-  });
+  // A single day on a date field means "anything within that day". Insert a
+  // range spanning the whole day instead of a midnight-only field-value atom.
+  const isBareDate =
+    DATE_FIELDS.has(state.fieldName) && /^\d{4}-\d{2}-\d{2}$/.test(value);
 
-  tr.replaceWith(state.from, state.to, atomNode);
-  const afterAtom = state.from + atomNode.nodeSize;
+  const node = isBareDate
+    ? searchSchema.nodes.range.create({
+        field: state.fieldName,
+        lower: formatDateBound(value, "lower"),
+        upper: formatDateBound(value, "upper"),
+        inclusiveLower: true,
+        inclusiveUpper: true,
+        prefix,
+      })
+    : searchSchema.nodes["field-value"].create({
+        field: state.fieldName,
+        value,
+        prefix,
+        quoted: false,
+      });
+
+  tr.replaceWith(state.from, state.to, node);
+  const afterAtom = state.from + node.nodeSize;
   tr.insertText("\u00A0", afterAtom);
   tr.setSelection(TextSelection.create(tr.doc, afterAtom + 1));
 

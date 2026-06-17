@@ -1,6 +1,7 @@
 import type { Node as ProseMirrorNode, Fragment } from "prosemirror-model";
 
 import { ATOM_TYPES } from "../prosemirror/schema";
+import { escapeRangeBound } from "./dateBounds";
 
 /**
  * A segment in the offset map produced by serializeWithOffsets().
@@ -87,7 +88,9 @@ function serializeInternal(
         if (prefix) result += prefix;
         const lb = inclusiveLower ? "[" : "{";
         const rb = inclusiveUpper ? "]" : "}";
-        result += `${field}:${lb}${lower} TO ${upper}${rb}`;
+        // Escape colons so Solr parses timestamp bounds (00:00:00) as part of
+        // the range rather than treating `:` as a field separator.
+        result += `${field}:${lb}${escapeRangeBound(lower)} TO ${escapeRangeBound(upper)}${rb}`;
         lastWasAtom = true;
         break;
       }

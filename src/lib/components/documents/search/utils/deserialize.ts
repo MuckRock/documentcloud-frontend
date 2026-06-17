@@ -3,6 +3,7 @@ import type { Node as ProseMirrorNode } from "prosemirror-model";
 
 import lucene from "lucene";
 import { searchSchema } from "../prosemirror/schema";
+import { DATE_FIELDS, formatDateBound, unescapeRangeBound } from "./dateBounds";
 
 /**
  * Fields that should be rendered as field-value atoms.
@@ -252,10 +253,19 @@ function handleRangedTerm(
   // Map inclusive string to booleans
   const { inclusiveLower, inclusiveUpper } = mapInclusive(node.inclusive);
 
+  // Bounds arrive colon-escaped from the serialized query; store them clean on
+  // the node (readable, re-escaped on the next serialize). Bare dates also get
+  // Solr time suffixes here.
+  const isDateField = field != null && DATE_FIELDS.has(field);
+  const rawLower = unescapeRangeBound(node.term_min);
+  const rawUpper = unescapeRangeBound(node.term_max);
+  const lower = isDateField ? formatDateBound(rawLower, "lower") : rawLower;
+  const upper = isDateField ? formatDateBound(rawUpper, "upper") : rawUpper;
+
   const pmNode = searchSchema.nodes.range.create({
     field,
-    lower: node.term_min,
-    upper: node.term_max,
+    lower,
+    upper,
     inclusiveLower,
     inclusiveUpper,
     prefix,

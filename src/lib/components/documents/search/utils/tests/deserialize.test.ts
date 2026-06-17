@@ -324,6 +324,134 @@ describe("deserialize", () => {
     });
   });
 
+  describe("date range normalization (#1312)", () => {
+    it("normalizes bare created_at range dates to Solr timestamps", () => {
+      const doc = deserialize("created_at:[2024-01-01 TO 2024-01-31]");
+      const nodes = describeDoc(doc);
+      expect(nodes).toEqual([
+        {
+          type: "range",
+          attrs: expect.objectContaining({
+            field: "created_at",
+            lower: "2024-01-01T00:00:00Z",
+            upper: "2024-01-31T23:59:59Z",
+          }),
+        },
+      ]);
+    });
+
+    it("normalizes bare updated_at range dates to Solr timestamps", () => {
+      const doc = deserialize("updated_at:[2024-01-01 TO 2024-01-31]");
+      const nodes = describeDoc(doc);
+      expect(nodes).toEqual([
+        {
+          type: "range",
+          attrs: expect.objectContaining({
+            field: "updated_at",
+            lower: "2024-01-01T00:00:00Z",
+            upper: "2024-01-31T23:59:59Z",
+          }),
+        },
+      ]);
+    });
+
+    it("re-serializes a pasted bare date range as Solr-valid (escaped colons)", () => {
+      const doc = deserialize("created_at:[2024-01-01 TO 2024-01-31]");
+      // Colons must be escaped or Solr silently drops the range clause.
+      expect(serialize(doc)).toBe(
+        "created_at:[2024-01-01T00\\:00\\:00Z TO 2024-01-31T23\\:59\\:59Z]",
+      );
+    });
+
+    it("round-trips an escaped timestamp range without double-escaping", () => {
+      const escaped =
+        "created_at:[2024-01-01T00\\:00\\:00Z TO 2024-01-31T23\\:59\\:59Z]";
+      const doc = deserialize(escaped);
+      // Stored clean on the node so it displays and edits nicely…
+      const nodes = describeDoc(doc);
+      expect(nodes).toEqual([
+        {
+          type: "range",
+          attrs: expect.objectContaining({
+            field: "created_at",
+            lower: "2024-01-01T00:00:00Z",
+            upper: "2024-01-31T23:59:59Z",
+          }),
+        },
+      ]);
+      // …and re-serializes back to the same escaped query string.
+      expect(serialize(doc)).toBe(escaped);
+    });
+
+    it("leaves a half-open date range's open bound as '*'", () => {
+      const doc = deserialize("created_at:[2024-01-01 TO *]");
+      const nodes = describeDoc(doc);
+      expect(nodes).toEqual([
+        {
+          type: "range",
+          attrs: expect.objectContaining({
+            field: "created_at",
+            lower: "2024-01-01T00:00:00Z",
+            upper: "*",
+          }),
+        },
+      ]);
+    });
+
+    it("leaves Solr date math untouched", () => {
+      const doc = deserialize("created_at:[NOW-1MONTH TO *]");
+      const nodes = describeDoc(doc);
+      expect(nodes).toEqual([
+        {
+          type: "range",
+          attrs: expect.objectContaining({
+            field: "created_at",
+            lower: "NOW-1MONTH",
+            upper: "*",
+          }),
+        },
+      ]);
+    });
+
+    it("does not re-format already-formatted timestamps (no double time suffix)", () => {
+      // Raw (unescaped) colons still parse on the frontend; they normalize to
+      // clean bounds and serialize back out with escaped colons for Solr.
+      const doc = deserialize(
+        "created_at:[2024-01-01T00:00:00Z TO 2024-01-31T23:59:59Z]",
+      );
+      const nodes = describeDoc(doc);
+      expect(nodes).toEqual([
+        {
+          type: "range",
+          attrs: expect.objectContaining({
+            field: "created_at",
+            lower: "2024-01-01T00:00:00Z",
+            upper: "2024-01-31T23:59:59Z",
+          }),
+        },
+      ]);
+      expect(serialize(doc)).toBe(
+        "created_at:[2024-01-01T00\\:00\\:00Z TO 2024-01-31T23\\:59\\:59Z]",
+      );
+    });
+
+    it("does not add time suffixes to non-date ranges", () => {
+      const doc = deserialize("page_count:[10 TO 50]");
+      const nodes = describeDoc(doc);
+      expect(nodes).toEqual([
+        {
+          type: "range",
+          attrs: expect.objectContaining({
+            field: "page_count",
+            lower: "10",
+            upper: "50",
+          }),
+        },
+      ]);
+      expect(serialize(doc)).toBe("page_count:[10 TO 50]");
+    });
+  });
+
   describe("sort nodes", () => {
     it("deserializes sort:created_at as ascending sort", () => {
       const doc = deserialize("sort:created_at");
