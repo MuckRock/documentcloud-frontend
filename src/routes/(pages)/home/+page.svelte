@@ -13,6 +13,7 @@
     SIGN_IN_URL,
     SIGN_UP_URL,
     SIGN_OUT_URL,
+    HOMEPAGE_FEATURED_PROJECTS,
   } from "@/config/config.js";
 
   import Projects from "$lib/components/home/Projects.svelte";
@@ -26,7 +27,7 @@
 
   let { data } = $props();
 
-  let { me, featuredProjects, documentCount } = $derived(data);
+  let { me, documentCount } = $derived(data);
   let sign_in_url = $derived(new URL(`?next=${APP_URL}`, SIGN_IN_URL));
 
   let count = $derived(
@@ -106,7 +107,7 @@
 
         <div class="documents-projects">
           <h3>{$_("homepage.documents.projectsHeading")}</h3>
-          <Projects projects={featuredProjects} />
+          <Projects projects={HOMEPAGE_FEATURED_PROJECTS} />
         </div>
       </div>
     </div>
