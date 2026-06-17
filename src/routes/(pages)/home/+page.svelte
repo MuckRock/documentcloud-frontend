@@ -22,9 +22,6 @@
   import Search from "$lib/components/home/Search.svelte";
   import DonationForm from "$lib/components/home/DonationForm.svelte";
 
-  // Show the login controls
-  const showLogin = true;
-
   let { data } = $props();
 
   let { me, documentCount } = $derived(data);
