@@ -1,26 +1,34 @@
 <script lang="ts">
+  import type { HTMLInputAttributes } from "svelte/elements";
+
   import { Check16, Dash16 } from "svelte-octicons";
 
-  export let name: undefined | string = undefined;
-  export let disabled = false;
-  export let value = false;
-  export let indeterminate = false;
+  interface Props extends HTMLInputAttributes {
+    name?: undefined | string;
+    disabled?: boolean;
+    value?: boolean;
+    indeterminate?: boolean;
+    label?: string;
+  }
 
-  export let label = "";
-
-  let checkbox: HTMLInputElement;
+  let {
+    name = undefined,
+    disabled = false,
+    value = $bindable(false),
+    indeterminate = $bindable(false),
+    label = "",
+    ...rest
+  }: Props = $props();
 </script>
 
 <label>
   <input
+    {...rest}
     type="checkbox"
     {name}
-    bind:this={checkbox}
     {disabled}
     bind:checked={value}
     bind:indeterminate
-    on:input
-    on:change
   />
   <span>
     {#if value}

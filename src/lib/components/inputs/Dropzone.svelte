@@ -6,23 +6,37 @@
   https://developer.mozilla.org/en-US/docs/Web/API/File_API/Using_files_from_web_applications#selecting_files_using_drag_and_drop
 -->
 <script lang="ts">
-  export let onDrop: (files: FileList) => void;
-  export let active = false;
-  export let disabled = false;
+  import type { Snippet } from "svelte";
+  interface Props {
+    onDrop: (files: FileList) => void;
+    active?: boolean;
+    disabled?: boolean;
+    children?: Snippet<[any]>;
+  }
+
+  let {
+    onDrop,
+    active = $bindable(false),
+    disabled = false,
+    children,
+  }: Props = $props();
 
   let dropDepth = 0;
 
-  function enter() {
+  function enter(e: DragEvent) {
+    e.preventDefault();
     if (disabled) return;
     dropDepth++;
     active = true;
   }
 
-  function dragover() {
+  function dragover(e: DragEvent) {
+    e.preventDefault();
     active = true;
   }
 
-  function leave() {
+  function leave(e: DragEvent) {
+    e.preventDefault();
     if (disabled) return;
     dropDepth--;
     if (dropDepth > 0) return;
@@ -30,6 +44,7 @@
   }
 
   function handleDrop(e: DragEvent) {
+    e.preventDefault();
     if (disabled) return;
     const files = e.dataTransfer?.files;
     if (files) onDrop(files);
@@ -41,12 +56,12 @@
   role="button"
   tabindex="0"
   aria-dropeffect="execute"
-  on:dragenter|preventDefault={enter}
-  on:dragover|preventDefault={dragover}
-  on:dragleave|preventDefault={leave}
-  on:drop|preventDefault={handleDrop}
+  ondragenter={enter}
+  ondragover={dragover}
+  ondragleave={leave}
+  ondrop={handleDrop}
 >
-  <slot {active} {disabled} />
+  {@render children?.({ active, disabled })}
 </div>
 
 <style>

@@ -38,6 +38,7 @@ static/viewer/*
 playwright-report
 test-results
 playwright/.auth
+.playwright-mcp/
 coverage
 certs
 

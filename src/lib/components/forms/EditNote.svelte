@@ -5,11 +5,15 @@ This form deals with everything except coordinates, which should be passed in as
 Positioning and generating coordinates should happen outside of this form.
 -->
 <script lang="ts">
-  import type { Bounds, Document, Maybe, Note } from "$lib/api/types";
+  import type {
+    Access,
+    Bounds,
+    Document,
+    Maybe,
+    Note,
+    Nullable,
+  } from "$lib/api/types";
 
-  import { enhance } from "$app/forms";
-
-  import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
 
   import AccessLevel from "../inputs/AccessLevel.svelte";
@@ -19,76 +23,179 @@ Positioning and generating coordinates should happen outside of this form.
   import Text from "../inputs/Text.svelte";
   import TextArea from "../inputs/TextArea.svelte";
 
-  import { canonicalUrl } from "$lib/api/documents";
+  import * as notesApi from "$lib/api/notes";
+  import { getCsrfToken } from "$lib/utils/api";
 
-  export let document: Document;
-  export let note: Partial<Note> = {}; // for updating
-  export let page_number: Maybe<number> = note.page_number;
+  interface Props {
+    document: Document;
+    note?: Partial<Note>; // for updating
+    page_number?: Maybe<number>;
+    onclose?: () => void;
+    onsuccess?: (note: Note) => void;
+  }
 
-  const dispatch = createEventDispatcher();
+  let {
+    document,
+    note = { title: "", content: "", access: "private" },
+    page_number = note.page_number,
+    onclose,
+    onsuccess,
+  }: Props = $props();
 
-  $: coords = [note.x1, note.x2, note.y1, note.y2] as Partial<Bounds>;
-  $: canonical = canonicalUrl(document);
-  $: action = note.id
-    ? new URL("?/updateAnnotation", canonical).href
-    : new URL("?/createAnnotation", canonical).href;
-  $: page_level = !coords || coords.every((c) => !Boolean(c));
+  // Overridable deriveds seed the form from `note`
+  let title = $derived(note.title ?? "");
+  let content = $derived(note.content ?? "");
+  let access: Access = $derived(note.access ?? "private");
 
-  function onSubmit({ formData, submitter }) {
-    submitter.disabled = true;
-    return ({ result, update }) => {
-      if (result.type === "success") {
-        dispatch("success", result.data.note);
-        update(result);
-        dispatch("close");
-      }
-    };
+  let coords = $derived([
+    note.x1,
+    note.x2,
+    note.y1,
+    note.y2,
+  ] as Partial<Bounds>);
+  let page_level = $derived(!coords || coords.every((c) => !Boolean(c)));
+
+  let loading = $state(false);
+  let error: Nullable<string> = $state(null);
+
+  /**
+   * Create a new note on this document, directly from the browser.
+   */
+  async function create(e: SubmitEvent) {
+    e.preventDefault();
+    loading = true;
+    error = null;
+
+    const csrf_token = getCsrfToken() ?? "";
+    const [x1, x2, y1, y2] = coords;
+
+    const { data, error: err } = await notesApi.create(
+      document.id,
+      {
+        title,
+        content,
+        access,
+        page_number: note.page_number ?? page_number ?? undefined,
+        x1,
+        x2,
+        y1,
+        y2,
+      },
+      csrf_token,
+    );
+
+    loading = false;
+
+    if (err) {
+      error = err.message;
+      return;
+    }
+
+    if (data) onsuccess?.(data);
+    onclose?.();
+  }
+
+  /**
+   * Update an existing note, directly from the browser.
+   */
+  async function update(e: SubmitEvent) {
+    e.preventDefault();
+    loading = true;
+    error = null;
+
+    const csrf_token = getCsrfToken() ?? "";
+
+    const { data, error: err } = await notesApi.update(
+      document.id,
+      note.id!,
+      {
+        title,
+        content,
+        access,
+      },
+      csrf_token,
+    );
+
+    loading = false;
+
+    if (err) {
+      error = err.message;
+      return;
+    }
+
+    if (data) onsuccess?.(data);
+    onclose?.();
+  }
+
+  /**
+   * Delete a note, directly from the browser.
+   */
+  async function remove() {
+    loading = true;
+    error = null;
+
+    const csrf_token = getCsrfToken() ?? "";
+
+    const { error: err } = await notesApi.remove(
+      document.id,
+      note.id!,
+      csrf_token,
+    );
+
+    loading = false;
+
+    if (err) {
+      error = err.message;
+      return;
+    }
+
+    onclose?.();
   }
 </script>
 
-<form {action} method="post" class:page_level use:enhance={onSubmit}>
+<form class:page_level onsubmit={note.id ? update : create}>
   <Flex direction="column" gap={1}>
     <Field title={$_("annotate.fields.title")} required>
       <Text
         name="title"
         placeholder={$_("annotate.fields.title")}
-        bind:value={note.title}
+        bind:value={title}
         required
       />
     </Field>
     <Field title={$_("annotate.fields.content")}>
-      <TextArea name="content" bind:value={note.content} />
+      <TextArea name="content" bind:value={content} />
     </Field>
 
-    <AccessLevel name="access" bind:selected={note.access} direction="row" />
+    <AccessLevel name="access" bind:selected={access} direction="row" />
 
-    {#if note.id}
-      <input type="hidden" name="id" value={note.id} />
+    {#if error}
+      <p class="error" role="alert">{error}</p>
     {/if}
-    <input
-      type="hidden"
-      name="page_number"
-      value={note.page_number || page_number}
-    />
-    <input type="hidden" name="coords" value={JSON.stringify(coords)} />
 
     <Flex class="buttons" justify="between">
       <Flex>
-        <Button type="submit" mode="primary">{$_("annotate.save")}</Button>
-        <Button type="reset" onclick={() => dispatch("close")}
-          >{$_("annotate.cancel")}
+        <Button type="submit" mode="primary" disabled={loading}>
+          {$_("annotate.save")}
+        </Button>
+        <Button type="reset" disabled={loading} onclick={() => onclose?.()}>
+          {$_("annotate.cancel")}
         </Button>
       </Flex>
 
       {#if note.id}
-        <Button
-          type="submit"
-          mode="danger"
-          formaction={new URL("?/deleteAnnotation", canonical).href}
-        >
+        <Button type="button" mode="danger" disabled={loading} onclick={remove}>
           {$_("dialog.delete")}
         </Button>
       {/if}
     </Flex>
   </Flex>
 </form>
+
+<style>
+  .error {
+    margin: 0;
+    color: var(--red-3, #cf2e2e);
+    font-size: 0.875rem;
+  }
+</style>

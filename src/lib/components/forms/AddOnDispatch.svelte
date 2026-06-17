@@ -2,7 +2,10 @@
   import type { Snippet } from "svelte";
   import { writable } from "svelte/store";
 
-  export const values = writable({ event: "disabled", selection: null });
+  export const values = writable<Record<string, any>>({
+    event: "disabled",
+    selection: null,
+  });
 </script>
 
 <script lang="ts">
@@ -93,10 +96,10 @@
   afterNavigate(() => {
     // set initial values
     if (event) {
-      $values = {
+      $values = withDefaults({
         ...event.parameters,
         event: schedules[event.event],
-      };
+      });
     }
     // prefill values from search params
     new URLSearchParams($page.url.searchParams).forEach((v, k) => {
@@ -113,6 +116,43 @@
 
     return params;
   }
+
+  // A defined initial value for a field, matching the fallback of the input
+  // component `autofield` will pick. Svelte 5 refuses to `bind:value` an
+  // `undefined` to a prop that declares a fallback, so every field must start
+  // with a defined value.
+  function initialValue(params: any) {
+    if (params.default !== undefined) return params.default;
+
+    switch (String(params.type).toLowerCase()) {
+      case "boolean":
+        return false;
+      case "number":
+      case "integer":
+        return undefined; // the Number input accepts undefined
+      case "string":
+        return params.enum ? null : "";
+      default:
+        return ""; // unknown types fall back to the Text input
+    }
+  }
+
+  // Merge the schema's per-field defaults into a set of form values, filling in
+  // any field that is still undefined.
+  function withDefaults(base: Record<string, any> = {}) {
+    return Object.entries(properties).reduce(
+      (acc, [name, p]) => {
+        if (acc[name] === undefined) {
+          acc[name] = initialValue(objectify(p));
+        }
+        return acc;
+      },
+      { event: "disabled", selection: null, ...base } as Record<string, any>,
+    );
+  }
+
+  // Seed the store before the first render so no field binds to `undefined`.
+  $values = withDefaults($values);
 
   function capitalize(s: string) {
     return s.charAt(0).toUpperCase() + s.slice(1);

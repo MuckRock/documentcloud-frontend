@@ -37,7 +37,7 @@
       <Switch
         name="revision_control"
         checked={document.revision_control}
-        on:change={() => formRef.submit()}
+        onchange={() => formRef.submit()}
         {disabled}
       />
     </Field>

@@ -5,6 +5,7 @@
     "allowJs": true,
     "noUncheckedIndexedAccess": true,
     "strictNullChecks": true,
+    "strict": false,
     "types": ["vitest/globals", "@testing-library/jest-dom"]
   },
   "include": [

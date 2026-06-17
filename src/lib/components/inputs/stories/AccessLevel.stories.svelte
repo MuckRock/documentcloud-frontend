@@ -1,25 +1,17 @@
-<script context="module" lang="ts">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import AccessLevel from "../AccessLevel.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Forms / Inputs /Access Level",
     component: AccessLevel,
     tags: ["autodocs"],
     parameters: { layout: "centered" },
-  };
-
-  let args = {
-    selected: "private",
-  };
+  });
 </script>
 
-<Template let:args>
-  <AccessLevel {...args} />
-</Template>
-
-<Story name="Private" {args} />
-<Story name="Organization" args={{ ...args, selected: "organization" }} />
-<Story name="Public" args={{ ...args, selected: "public" }} />
-<Story name="Row" args={{ ...args, direction: "row" }} />
+<Story name="Private" args={{ selected: "private" }} />
+<Story name="Organization" args={{ selected: "organization" }} />
+<Story name="Public" args={{ selected: "public" }} />
+<Story name="Row" args={{ selected: "private", direction: "row" }} />
 <Story name="Required" args={{ required: true, selected: null }} />

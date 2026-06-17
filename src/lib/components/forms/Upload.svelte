@@ -79,7 +79,7 @@ progress through the three-part upload process.
   export let user = getCurrentUser();
   export let csrf_token: Maybe<string> = undefined;
 
-  let fileDropActive: boolean;
+  let fileDropActive: boolean = false;
 
   /**
    * Upload status

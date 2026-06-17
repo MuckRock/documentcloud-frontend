@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import { clean } from "$lib/utils/markup";
 
   interface Props {
@@ -7,8 +8,8 @@
     inline?: boolean;
     required?: boolean;
     sronly?: boolean;
-    children?: import("svelte").Snippet;
-    error?: import("svelte").Snippet;
+    children?: Snippet;
+    error?: Snippet;
   }
 
   let {

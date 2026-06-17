@@ -3,19 +3,27 @@
 -->
 
 <script lang="ts">
-  export let name: null | string = null;
-  export let placeholder = "";
-  export let value: undefined | number = undefined;
-  export let autofocus = false;
-  export let required = false;
-  export let disabled = false;
-  export let min: undefined | number = undefined;
-  export let max: undefined | number = undefined;
-  export let step: undefined | number = undefined;
+  import type { HTMLInputAttributes } from "svelte/elements";
+
+  interface Props extends HTMLInputAttributes {}
+
+  let {
+    name = null,
+    placeholder = "",
+    value = $bindable(undefined),
+    autofocus = false,
+    required = false,
+    disabled = false,
+    min = undefined,
+    max = undefined,
+    step = undefined,
+    ...rest
+  }: Props = $props();
 </script>
 
-<!-- svelte-ignore a11y-autofocus -->
+<!-- svelte-ignore a11y_autofocus -->
 <input
+  {...rest}
   type="number"
   {name}
   {placeholder}
@@ -26,10 +34,6 @@
   {max}
   {step}
   bind:value
-  on:change
-  on:input
-  on:focus
-  on:blur
 />
 
 <style>

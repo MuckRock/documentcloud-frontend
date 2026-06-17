@@ -1,12 +1,12 @@
-<script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import Select from "../Select.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Forms / Inputs / Select",
     component: Select,
     tags: ["autodocs"],
-  };
+  });
 
   const name = "select";
   const options = [
@@ -19,7 +19,7 @@
   ];
 </script>
 
-<Story name="Empty">
+<Story name="Empty" asChild>
   <Select
     {name}
     {options}
@@ -29,7 +29,7 @@
   />
 </Story>
 
-<Story name="Clearable">
+<Story name="Clearable" asChild>
   <Select
     {name}
     {options}
@@ -40,7 +40,7 @@
   />
 </Story>
 
-<Story name="Multiple">
+<Story name="Multiple" asChild>
   <Select
     {name}
     {options}
@@ -51,7 +51,7 @@
   />
 </Story>
 
-<Story name="With Placeholder">
+<Story name="With Placeholder" asChild>
   <Select
     {name}
     {options}
@@ -62,7 +62,7 @@
   />
 </Story>
 
-<Story name="With Selection">
+<Story name="With Selection" asChild>
   <Select
     {name}
     {options}
@@ -73,7 +73,7 @@
   />
 </Story>
 
-<Story name="With Selection, not object">
+<Story name="With Selection, not object" asChild>
   <Select
     {name}
     {options}
@@ -83,6 +83,6 @@
   />
 </Story>
 
-<Story name="Disabled">
+<Story name="Disabled" asChild>
   <Select {name} {options} disabled />
 </Story>
