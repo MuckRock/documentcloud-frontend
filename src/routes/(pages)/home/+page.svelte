@@ -2,10 +2,13 @@
   import { page } from "$app/state";
 
   import { onMount } from "svelte";
+  import { innerWidth as width } from "svelte/reactivity/window";
   import { _ } from "svelte-i18n";
 
   import Button from "$lib/components/common/Button.svelte";
   import Logo from "$lib/components/common/Logo.svelte";
+
+  import { remToPx } from "$lib/utils/layout";
 
   // Authentication
   import {
@@ -30,6 +33,10 @@
   let count = $derived(
     documentCount?.toLocaleString() ?? $_("homepage.documents.countFallback"),
   );
+
+  let BREAKPOINTS = $derived({
+    DESKTOP: (width.current ?? 800) > remToPx(48),
+  });
 
   onMount(async () => {
     const { init } = await import("@plausible-analytics/tracker");
@@ -62,18 +69,30 @@
               values: { name: me?.name },
             })}
           </span>
-          <Button href={SIGN_OUT_URL} mode="primary" ghost size="small">
+          <Button
+            href={SIGN_OUT_URL}
+            mode="primary"
+            ghost
+            size="small"
+            minW={BREAKPOINTS.DESKTOP}
+          >
             {$_("homeTemplate.signOut")}
           </Button>
-          <Button href="/" size="small" mode="primary">
+          <Button
+            href="/"
+            size="small"
+            mode="primary"
+            minW={BREAKPOINTS.DESKTOP}
+          >
             {$_("homeTemplate.goToApp")}
           </Button>
         {:else}
           <Button href={signInURL} size="small" mode="primary">
-            <span class="signin-long">{$_("homepage.header.signIn")} </span>
-            <span class="signin-short">
-              {$_("homepage.header.signInShort")}
-            </span>
+            {$_(
+              BREAKPOINTS.DESKTOP
+                ? "homepage.header.signIn"
+                : "homepage.header.signInShort",
+            )}
           </Button>
         {/if}
       </div>
@@ -262,10 +281,6 @@
     z-index: 1;
   }
 
-  header .content {
-    flex-direction: row;
-  }
-
   .column {
     width: 100%;
     display: flex;
@@ -295,8 +310,13 @@
     padding-block: 21px;
   }
 
+  header .content {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+
   .logo :global(.icon) {
-    height: 2rem;
+    height: 1.5rem;
     width: auto;
   }
 
@@ -305,29 +325,21 @@
     flex-direction: row;
     gap: 0.5rem;
     align-items: center;
-  }
-
-  .signin-long {
-    display: none;
-  }
-
-  .signin-short {
-    display: inline;
-  }
-
-  @media (min-width: 48rem) {
-    .signin-long {
-      display: inline;
-    }
-
-    .signin-short {
-      display: none;
-    }
+    justify-content: end;
+    flex-wrap: wrap;
   }
 
   .status {
     font-size: 13px;
     color: var(--gray);
+    width: 100%;
+    text-align: right;
+  }
+
+  @media (min-width: 48rem) {
+    .logo :global(.icon) {
+      height: 2rem;
+    }
   }
 
   /* Section: Intro */
