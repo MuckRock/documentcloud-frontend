@@ -19,7 +19,6 @@ export async function load({ fetch, cookies, setHeaders }) {
   }
 
   return {
-    title: "Home",
     documentCount: data?.count,
     me,
   };

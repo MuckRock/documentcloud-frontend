@@ -44,7 +44,7 @@
 </script>
 
 <svelte:head>
-  <title>{data.title} | DocumentCloud</title>
+  <title>Home | DocumentCloud</title>
 </svelte:head>
 
 <article class="page">
