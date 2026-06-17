@@ -214,28 +214,28 @@
 <style>
   /* Typography */
 
-  :global(h1, h2, h3) {
+  article :global(:is(h1, h2, h3)) {
     font-family: var(--font-serif);
     font-style: normal;
     font-weight: 400;
   }
 
-  :global(h1) {
+  article :global(h1) {
     font-size: 3.5rem;
     line-height: 1.286;
   }
 
-  :global(h2) {
+  article :global(h2) {
     font-size: 1.75rem;
     line-height: 1.286;
   }
 
-  :global(h3) {
+  article :global(h3) {
     font-size: 1rem;
     line-height: normal;
   }
 
-  :global(p) {
+  article :global(p) {
     font-feature-settings: "ss04" on;
     font-family: var(--font-sans);
     font-size: 1rem;
