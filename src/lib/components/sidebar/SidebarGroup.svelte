@@ -30,11 +30,23 @@
     }
   }
 
-  function onClick() {
+  // The action (e.g. a link or button) lives inside the clickable header but
+  // has its own behavior. Don't toggle when the event came from such a control,
+  // and don't stop propagation — that would break SvelteKit's client-side nav,
+  // whose click listener sits above us on <html>.
+  function fromAction(event: Event): boolean {
+    const el = event.target as Element | null;
+    return !!el?.closest("a, button");
+  }
+
+  function onClick(event: MouseEvent) {
+    if (fromAction(event)) return;
     toggle(collapsed);
   }
 
-  function onKeydown({ key }) {
+  function onKeydown(event: KeyboardEvent) {
+    if (fromAction(event)) return;
+    const { key } = event;
     if (["Enter", " "].includes(key)) {
       toggle(collapsed);
     } else if (["ArrowDown", "ArrowRight"].includes(key)) {
@@ -59,9 +71,8 @@
       </span>
       {#if title}<span class="title">{@render title?.()}</span>{/if}
       {#if action}
-        <span role="button" tabindex="0">
-          {@render action?.()}
-        </span>{/if}
+        {@render action?.()}
+      {/if}
     </header>
   {/if}
   {#if !collapsed}

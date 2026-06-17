@@ -103,7 +103,7 @@
     {/snippet}
 
     {#snippet action()}
-      <Button ghost minW={false} mode="primary" size="small" href="/documents">
+      <Button ghost minW={false} mode="primary" size="small" href="/documents/">
         <Search16 height="14" width="14" />
         {$_("common.explore")}
       </Button>
