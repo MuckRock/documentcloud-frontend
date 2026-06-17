@@ -710,7 +710,8 @@
   "homepage": {
     "header": {
       "logoLabel": "DocumentCloud homepage",
-      "signIn": "Sign in with MuckRock"
+      "signIn": "Sign in with MuckRock",
+      "signInShort": "Sign in"
     },
     "intro": {
       "heading": "Upload.<br/>Analyze.<br/>Embed.",

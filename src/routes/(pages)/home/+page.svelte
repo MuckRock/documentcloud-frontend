@@ -69,12 +69,12 @@
             {$_("homeTemplate.goToApp")}
           </Button>
         {:else}
-          <Button
-            href={signInURL}
-            size="small"
-            mode="primary"
-            label={$_("homepage.header.signIn")}
-          />
+          <Button href={signInURL} size="small" mode="primary">
+            <span class="signin-long">{$_("homepage.header.signIn")} </span>
+            <span class="signin-short">
+              {$_("homepage.header.signInShort")}
+            </span>
+          </Button>
         {/if}
       </div>
     </div>
@@ -305,6 +305,24 @@
     flex-direction: row;
     gap: 0.5rem;
     align-items: center;
+  }
+
+  .signin-long {
+    display: none;
+  }
+
+  .signin-short {
+    display: inline;
+  }
+
+  @media (min-width: 48rem) {
+    .signin-long {
+      display: inline;
+    }
+
+    .signin-short {
+      display: none;
+    }
   }
 
   .status {
