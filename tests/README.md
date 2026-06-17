@@ -75,10 +75,11 @@ a small file (`Small pdf.pdf`) so processing finishes quickly.
 ## The document-lifecycle spec
 
 `document-lifecycle.spec.ts` is the end-to-end backbone: a logged-in user
-uploads a document, waits for it to process, verifies it views correctly, then
-deletes it. It's written as one serial flow because every step shares the new
-document's id. New per-document journeys (editing metadata, notes, sharing, …)
-should slot in between "view" and "delete".
+uploads a document, waits for it to process, confirms the PDF renders, makes it
+public, checks that text and grid viewer modes render (which proves processing
+produced text and page images), then deletes it. It's written as one serial
+flow because every step shares the new document's id. New per-document journeys
+(notes, sharing, …) should slot in before the delete.
 
 ## Writing e2e tests here — lessons learned
 
@@ -132,6 +133,25 @@ Upload is fully client-side (create → S3 PUT → `process`). Right after creat
 the document briefly reports `status: "nofile"` before moving to `pending` →
 `success`. When polling, treat only `error` (and timeout) as a real failure;
 keep waiting through `nofile`/`pending`/`readable`.
+
+### Viewer modes: switch via the `mode` query param
+
+The viewer's mode switcher renders as tabs at wide widths but collapses to a
+dropdown when the toolbar is narrow, so clicking it is layout-dependent.
+Navigate directly instead: `?mode=text`, `?mode=grid`, etc. Asserting on the
+rendered content also doubles as a processing check — text mode (`.textPages
+pre`) only has content if text was extracted, and grid mode (`.pages
+img[alt*="Page"]`) only shows thumbnails once page images were generated. The
+default ("document") mode draws to `<canvas>`; assert
+`.page-container[data-loaded="true"]` to confirm pdf.js actually rendered.
+
+### Verify backend mutations via the API, not the UI badge
+
+After an edit (e.g. changing access to public), the viewer header can lag
+behind backend indexing — the code even forces the value locally because it's
+"often a step behind". Use the modal closing as the UI-level success signal,
+then confirm the change by polling the document detail endpoint
+(`expect.poll(... access).toBe("public")`), which reflects it immediately.
 
 ### Capturing the new document id, and the viewer URL
 

@@ -10,13 +10,17 @@ import {
 const FIXTURE = "tests/fixtures/Small pdf.pdf";
 
 // The full document lifecycle, as a logged-in user experiences it: upload a
-// document, wait for it to finish processing, verify it views correctly, then
-// delete it. Runs in the `authenticated` project (reuses the saved session);
-// skipped automatically when no test credentials are configured.
+// document, wait for it to finish processing, confirm the PDF renders, make it
+// public, check that text and grid modes work (which proves processing
+// produced text and page images), then delete it. Runs in the `authenticated`
+// project (reuses the saved session); skipped automatically when no test
+// credentials are configured.
 //
-// This is the skeleton — more steps (editing metadata, notes, sharing, …) will
-// slot in between "view" and "delete" later.
-test("upload → process → view → delete", async ({ page, baseURL }) => {
+// More steps (notes, sharing, …) can slot in before the delete later.
+test("upload → process → view → publish → check modes → delete", async ({
+  page,
+  baseURL,
+}) => {
   // Cold processing workers can be slow; give the whole flow headroom.
   test.setTimeout(180_000);
 
@@ -76,11 +80,62 @@ test("upload → process → view → delete", async ({ page, baseURL }) => {
     const processed = await waitForProcessed(page.request, docApiUrl);
 
     // --- VIEW -----------------------------------------------------------
-    await page.goto(`/documents/${id}-${processed.slug}/`);
+    const viewerUrl = `/documents/${id}-${processed.slug}/`;
+    await page.goto(viewerUrl);
     await expect(page.locator("h1.title")).toContainText(title);
-    // At least one page should render in the viewer.
-    await expect(page.locator(".page").first()).toBeVisible({
-      timeout: 30_000,
+
+    // --- VERIFY THE PDF RENDERS -----------------------------------------
+    // The default ("document") mode draws each page to a <canvas> via pdf.js;
+    // a page-container flips `data-loaded` once it has actually rendered.
+    await expect(
+      page.locator('.page-container[data-loaded="true"]').first(),
+    ).toBeVisible({ timeout: 30_000 });
+    await expect(page.locator(".pages canvas").first()).toBeVisible();
+
+    // --- MAKE THE DOCUMENT PUBLIC ---------------------------------------
+    // The access badge in the header doubles as the edit-access trigger and
+    // currently reads "Private". Its onclick only fires post-hydration, so
+    // retry until the edit-access form appears (same race as Delete).
+    const editAccessForm = page.locator('form[action*="?/edit"]');
+    await expect(async () => {
+      await page.getByRole("button", { name: "Private", exact: true }).click();
+      await expect(editAccessForm).toBeVisible({ timeout: 2_000 });
+    }).toPass({ timeout: 20_000 });
+
+    // Pick "Public" (a label wrapping a screen-reader-only radio) and save.
+    await editAccessForm.locator('label[for="public"]').click();
+    await editAccessForm
+      .getByRole("button", { name: "Save", exact: true })
+      .click();
+
+    // A successful save closes the modal. Verify the change via the API: the
+    // header badge can lag behind backend indexing, but the document detail
+    // endpoint reflects the new access immediately.
+    await expect(editAccessForm).toBeHidden({ timeout: 15_000 });
+    await expect
+      .poll(
+        async () => {
+          const r = await page.request.get(docApiUrl!);
+          return r.ok() ? (await r.json()).access : undefined;
+        },
+        { timeout: 15_000 },
+      )
+      .toBe("public");
+
+    // --- TEXT & GRID MODES ----------------------------------------------
+    // Both modes only have content if processing succeeded: text mode shows
+    // the extracted text, grid mode shows a thumbnail per generated page
+    // image. Switch via the `mode` query param (the toolbar collapses to a
+    // dropdown at narrow widths, so a URL is more robust than clicking tabs).
+    await page.goto(`${viewerUrl}?mode=text`);
+    await expect(page.locator(".textPages pre").first()).toContainText(
+      /small pdf/i,
+      { timeout: 15_000 },
+    );
+
+    await page.goto(`${viewerUrl}?mode=grid`);
+    await expect(page.locator('.pages img[alt*="Page"]').first()).toBeVisible({
+      timeout: 15_000,
     });
 
     // --- DELETE (through the UI) ----------------------------------------
