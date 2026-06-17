@@ -87,18 +87,29 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - uses: actions/checkout@v6
-
-      - name: Generate preview wrangler config
-        run: bash scripts/generate-preview-wrangler.sh "dc-preview-${PR_NUMBER}" "preview-${PR_NUMBER}"
-
+      # Delete via the REST API, not `wrangler delete`: wrangler enumerates KV
+      # namespaces (needs a KV read scope the deploy token lacks), which our
+      # Assets-based previews don't use anyway.
       - name: Delete preview worker
-        uses: cloudflare/wrangler-action@v4
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          wranglerVersion: "4.101.0"
-          command: delete --config wrangler.preview.jsonc --force
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          response=$(curl --silent --show-error --write-out '\n%{http_code}' \
+            -X DELETE \
+            "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/workers/scripts/dc-preview-${PR_NUMBER}?force=true" \
+            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}")
+          http_code=$(printf '%s' "$response" | tail -n1)
+          body=$(printf '%s' "$response" | sed '$d')
+          echo "$body"
+          if [ "$http_code" = "200" ]; then
+            echo "Deleted worker dc-preview-${PR_NUMBER}"
+          elif [ "$http_code" = "404" ]; then
+            echo "Worker dc-preview-${PR_NUMBER} not found; nothing to delete"
+          else
+            echo "Delete failed (HTTP ${http_code})"
+            exit 1
+          fi
 
       - name: Comment cleanup
         uses: actions/github-script@v9
