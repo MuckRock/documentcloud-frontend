@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 
 import {
   deleteDocument,
+  openModalForm,
   uniqueTitle,
   waitForProcessed,
 } from "./helpers/documents";
@@ -94,13 +95,12 @@ test("upload → process → view → publish → check modes → delete", async
 
     // --- MAKE THE DOCUMENT PUBLIC ---------------------------------------
     // The access badge in the header doubles as the edit-access trigger and
-    // currently reads "Private". Its onclick only fires post-hydration, so
-    // retry until the edit-access form appears (same race as Delete).
+    // currently reads "Private".
     const editAccessForm = page.locator('form[action*="?/edit"]');
-    await expect(async () => {
-      await page.getByRole("button", { name: "Private", exact: true }).click();
-      await expect(editAccessForm).toBeVisible({ timeout: 2_000 });
-    }).toPass({ timeout: 20_000 });
+    await openModalForm(
+      page.getByRole("button", { name: "Private", exact: true }),
+      editAccessForm,
+    );
 
     // Pick "Public" (a label wrapping a screen-reader-only radio) and save.
     await editAccessForm.locator('label[for="public"]').click();
@@ -139,15 +139,12 @@ test("upload → process → view → publish → check modes → delete", async
     });
 
     // --- DELETE (through the UI) ----------------------------------------
-    // Open the confirmation from the viewer sidebar. The sidebar's onclick
-    // only fires once the viewer has hydrated, so retry the click until the
-    // confirmation modal actually appears (a pre-hydration click just focuses
-    // the button and is a no-op).
+    // Open the confirmation from the viewer sidebar.
     const confirmForm = page.locator('form[action*="?/delete"]');
-    await expect(async () => {
-      await page.getByRole("button", { name: "Delete", exact: true }).click();
-      await expect(confirmForm).toBeVisible({ timeout: 2_000 });
-    }).toPass({ timeout: 20_000 });
+    await openModalForm(
+      page.getByRole("button", { name: "Delete", exact: true }),
+      confirmForm,
+    );
 
     // Confirm via the submit scoped inside the delete form (the modal's submit
     // button also reads "Delete").

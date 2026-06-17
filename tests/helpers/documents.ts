@@ -1,4 +1,9 @@
-import type { APIRequestContext, Page } from "@playwright/test";
+import {
+  expect,
+  type APIRequestContext,
+  type Locator,
+  type Page,
+} from "@playwright/test";
 
 // Mirrors the document `Status` union in src/lib/api/types.d.ts.
 type DocStatus = "success" | "readable" | "pending" | "error" | "nofile";
@@ -8,6 +13,23 @@ export interface DocSummary {
   slug: string;
   title: string;
   status: DocStatus;
+}
+
+/**
+ * Open a modal by clicking its trigger, retrying until the modal's form is
+ * visible. A trigger's onclick only fires once the view has hydrated, so an
+ * early click can silently no-op (it just focuses the button) — retry until the
+ * modal actually appears.
+ */
+export async function openModalForm(
+  trigger: Locator,
+  form: Locator,
+  { timeout = 20_000 }: { timeout?: number } = {},
+): Promise<void> {
+  await expect(async () => {
+    await trigger.click();
+    await expect(form).toBeVisible({ timeout: 2_000 });
+  }).toPass({ timeout });
 }
 
 /**
