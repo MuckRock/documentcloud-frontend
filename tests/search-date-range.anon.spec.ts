@@ -16,9 +16,12 @@ function currentQuery(page: Page): string {
 /** Open the search editor on the document list and focus it. */
 async function focusSearchEditor(page: Page) {
   await page.goto("/documents/");
-  // ProseMirror mounts its contenteditable as a `.ProseMirror` child.
+  // ProseMirror mounts its contenteditable as a `.ProseMirror` child, but only
+  // after the page hydrates and the document list finishes loading. That can
+  // take well over the default 5s on a cold start (especially headed), so give
+  // the mount explicit headroom.
   const editor = page.locator(".prosemirror-editor .ProseMirror");
-  await expect(editor).toBeVisible();
+  await expect(editor).toBeVisible({ timeout: 15_000 });
   await editor.click();
   return editor;
 }
@@ -48,9 +51,13 @@ test("custom date range builder produces an escaped, filtering query", async ({
   await builder.locator('input[id$="-start"]').fill("1900-01-01");
   await builder.locator('input[id$="-end"]').fill("1900-12-31");
 
-  // Capture the search API call the auto-submit triggers.
-  const searchResponse = page.waitForResponse((r) =>
-    r.url().includes("/api/documents/search/?"),
+  // Capture the search API call the auto-submit triggers. Match on the
+  // `created_at` field so we don't accidentally grab the document list's
+  // initial empty-`q` load search, which can fire late on a cold start.
+  const searchResponse = page.waitForResponse(
+    (r) =>
+      r.url().includes("/api/documents/search/?") &&
+      r.url().includes("created_at"),
   );
 
   // The range section's Insert button is the second one in the dropdown.
