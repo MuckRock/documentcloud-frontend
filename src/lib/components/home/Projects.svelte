@@ -68,14 +68,4 @@
     line-height: 1.25;
     flex-basis: 100%;
   }
-
-  .count {
-    color: rgba(0, 0, 0, 0.7);
-    font-family: var(--font-sans);
-    font-size: 0.875rem;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 1.43;
-    white-space: nowrap;
-  }
 </style>
