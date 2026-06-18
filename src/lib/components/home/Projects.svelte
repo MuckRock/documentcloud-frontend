@@ -60,7 +60,7 @@
   }
 
   .title {
-    color: #000;
+    color: var(--black, #000);
     font-family: var(--font-sans);
     font-size: 1rem;
     font-style: normal;
