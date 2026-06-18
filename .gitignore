@@ -77,3 +77,4 @@ CLAUDE.md
 .claude/skills/workers-best-practices
 .agents/
 skills-lock.json
+memory/
