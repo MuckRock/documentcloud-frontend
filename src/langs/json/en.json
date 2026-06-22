@@ -706,5 +706,48 @@
       "shareAnonymously": "Share Anonymously"
     },
     "success": "We have received your feedback. Thank you!"
+  },
+  "homepage": {
+    "header": {
+      "logoLabel": "DocumentCloud homepage",
+      "signIn": "Sign in with MuckRock",
+      "signInShort": "Sign in"
+    },
+    "intro": {
+      "heading": "Upload.<br/>Analyze.<br/>Embed.",
+      "content": "<p><strong>DocumentCloud</strong> is an all-in-one platform used by newsrooms around the world for work with primary source documents.</p><p>Upload and organize documents.<br />Extract, analyze and search text.<br />Annotate, redact and edit.<br />Embed documents on your website.</p>"
+    },
+    "documents": {
+      "heading": "{count} public documents and counting",
+      "countFallback": "Millions of",
+      "description": "<p>Everyone is welcome to explore our public document archive and organize interesting documents into projects.</p>",
+      "projectsHeading": "Explore some of our newsworthy projects:"
+    },
+    "sources": {
+      "heading": "Documents from trustworthy sources",
+      "content": "<p>Newsrooms, independent journalists, archives and academic projects can upload, annotate, and publish documents.</p><p>To get started, create a MuckRock account and request verification.</p>",
+      "createAccount": "Create an account",
+      "learnMore": "Learn more about verification"
+    },
+    "data": {
+      "headingPrefix": "Turn",
+      "headingDocuments": "documents",
+      "headingMiddle": "into",
+      "headingData": "data",
+      "publicApi": "<h3>Public API</h3><p>DocumentCloud has a <a href=\"https://www.documentcloud.org/help/api/\" target=\"_blank\" rel=\"noopener noreferrer\">public API</a> that you can use to manage large-volume projects.</p>",
+      "addOns": "<h3>Add-ons</h3><p>Use community-authored extensions and tools help you do even more with your documents and data.</p>",
+      "fullText": "<h3>Full-text search</h3><p>Automatic OCR and search indexing make it easy to explore documents.</p>",
+      "pythonSdk": "<h3>Python SDK</h3><p>Get started with our <a href=\"https://documentcloud.readthedocs.io/en/latest/\" target=\"_blank\" rel=\"noopener noreferrer\">Python SDK</a> to automate document uploads, analysis, and processing tasks.</p>",
+      "openSource": "<p>DocumentCloud is an open-source project. <a href=\"https://github.com/MuckRock/documentcloud\" target=\"_blank\" rel=\"noopener noreferrer\">Explore the code on GitHub.</a></p>"
+    },
+    "muckrock": {
+      "logoLabel": "MuckRock Foundation",
+      "content": "<p>DocumentCloud is a project of the <a href=\"https://www.muckrock.com\" target=\"_blank\" rel=\"noopener noreferrer\">MuckRock Foundation</a>, a 501c3 organization that is committed to trust, transparency, and civic engagement.</p><p>Our <a href=\"https://www.muckrock.com/privacy-policy/\" target=\"_blank\" rel=\"noopener noreferrer\">privacy policy</a> and <a href=\"https://www.muckrock.com/tos/\" target=\"_blank\" rel=\"noopener noreferrer\">terms of service</a> apply to all users on this site.</p>"
+    },
+    "donate": {
+      "heading": "Together, we hold power to account and shine a light on government transparency",
+      "subheading": "Your donation fuels vital tools such as MuckRock Requests, FOIA Machine, DocumentCloud and oTranscribe that promote civic engagement.",
+      "content": "<ul><li>To donate via Apple Pay, <a href=\"https://www.givebutter.org/muckrock/\" target=\"_blank\" rel=\"noopener noreferrer\">visit our dedicated GiveButter page</a>.</li><li>Or mailed to:<br /><address>MuckRock Foundation<br />263 Huntington Ave<br />Boston, MA 02115</address></li></ul><p>You can always find our most current financial statements at <a href=\"https://www.muckrock.com/financial/\" target=\"_blank\" rel=\"noopener noreferrer\">MuckRock's financial transparency page</a>.</p><p>If you'd like to support our work with a legacy, a gift of stocks or crypto currency, contact <a href=\"mailto:marcia@muckrock.com\" target=\"_blank\" rel=\"noopener noreferrer\">marcia@muckrock.com</a>.</p>"
+    }
   }
 }

@@ -188,3 +188,22 @@ export const DEFAULT_ORDERING = "-created_at";
 export const USER_EXPAND = "user";
 export const ORG_EXPAND = "organization";
 export const DEFAULT_EXPAND = [USER_EXPAND, ORG_EXPAND].join(",");
+
+export const HOMEPAGE_FEATURED_PROJECTS = [
+  {
+    title: "Trump pardons",
+    link: "https://www.documentcloud.org/projects/221636-trump-pardons/",
+  },
+  {
+    title: "Exposed: The Human Radiation Experiments at Hunters Point",
+    link: "https://www.documentcloud.org/projects/203581-exposed/",
+  },
+  {
+    title: "Archive of inspector general reports",
+    link: "https://www.documentcloud.org/projects/221213-archive-of-inspector-general-reports/",
+  },
+  {
+    title: "West Lake Landfill project",
+    link: "https://www.documentcloud.org/projects/214065-west-lake-landfill-project/",
+  },
+];
