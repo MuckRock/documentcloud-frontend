@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
   import { page } from "$app/state";
 
   import { onMount } from "svelte";
@@ -22,8 +23,8 @@
   import Projects from "$lib/components/home/Projects.svelte";
   import SourceLogos from "$lib/components/home/SourceLogos/SourceLogos.svelte";
   import MuckRockLogo from "$lib/components/home/MuckRockLogo.svelte";
-  import Search from "$lib/components/home/Search.svelte";
   import DonationForm from "$lib/components/home/DonationForm.svelte";
+  import SearchEditor from "$lib/components/documents/search/SearchEditor.svelte";
 
   let { data } = $props();
 
@@ -45,6 +46,13 @@
       autoCapturePageviews: true,
     });
   });
+
+  /* Handle search submission */
+  function handleSearchSubmit(detail: { q: string }) {
+    const url = new URL("/documents/", page.url.origin);
+    url.searchParams.set("q", detail.q);
+    goto(url);
+  }
 </script>
 
 <svelte:head>
@@ -119,7 +127,7 @@
         {@html $_("homepage.documents.description")}
       </div>
       <div class="column" style:--width="52%" style:--gap="1.5rem">
-        <Search />
+        <SearchEditor onsubmit={handleSearchSubmit} />
 
         <div class="documents-projects">
           <h3>{$_("homepage.documents.projectsHeading")}</h3>
