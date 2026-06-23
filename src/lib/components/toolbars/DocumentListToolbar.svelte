@@ -14,6 +14,8 @@
   import SearchEditor from "../documents/search/SearchEditor.svelte";
   import VisibleFields from "../documents/VisibleFields.svelte";
   import { remToPx } from "$lib/utils/layout";
+  import { getSearchResults } from "$lib/state/search.svelte";
+  import { extractSuggestions } from "../documents/search/utils/extractSuggestions";
 
   interface Props {
     query?: string;
@@ -23,6 +25,9 @@
   let { query = "", project = null }: Props = $props();
 
   let headerToolbarWidth: number = $state(800);
+
+  const search = getSearchResults();
+  let suggestions = $derived(extractSuggestions(search.results));
 
   let contextAtoms = $derived(
     project ? [{ field: "project", label: project.title }] : [],
@@ -49,6 +54,7 @@
       <SearchEditor
         {query}
         {contextAtoms}
+        {suggestions}
         onchange={handleSearchChange}
         onsubmit={handleSearchSubmit}
       />

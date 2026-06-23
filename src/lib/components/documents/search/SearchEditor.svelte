@@ -11,6 +11,7 @@
 -->
 <script lang="ts">
   import type { EditorView } from "prosemirror-view";
+  import type { Suggestion } from "./prosemirror/plugins/autocomplete-data";
 
   import { onMount, onDestroy } from "svelte";
   import { Search16, Stop16 } from "svelte-octicons";
@@ -18,8 +19,6 @@
   import Button from "$lib/components/common/Button.svelte";
   import FieldValueAtom from "$lib/components/documents/search/FieldValueAtom.svelte";
   import { isMac } from "$lib/utils/platform";
-  import { getSearchResults } from "$lib/state/search.svelte";
-  import { extractSuggestions } from "./utils/extractSuggestions";
 
   import {
     createSearchEditor,
@@ -36,14 +35,18 @@
       field: string;
       label: string;
     }>;
+    suggestions?: Record<string, Suggestion[]>;
     onsubmit?: (detail: { q: string }) => void;
     onchange?: (detail: { q: string; structural: boolean }) => void;
   }
 
-  let { query = "", contextAtoms = [], onsubmit, onchange }: Props = $props();
-
-  const search = getSearchResults();
-  let preloadedSuggestions = $derived(extractSuggestions(search.results));
+  let {
+    query = "",
+    contextAtoms = [],
+    suggestions = {},
+    onsubmit,
+    onchange,
+  }: Props = $props();
 
   let editorRef: HTMLDivElement | undefined = $state();
   let view: EditorView | undefined = $state();
@@ -80,7 +83,7 @@
     }
     view = createSearchEditor(editorRef!, {
       query,
-      getPreloadedSuggestions: () => preloadedSuggestions,
+      getPreloadedSuggestions: () => suggestions,
       onDocChange(q, structural) {
         // Sync error state with the decoration plugin (it clears errors
         // automatically when the query becomes valid while in error mode)

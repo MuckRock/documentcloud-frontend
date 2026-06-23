@@ -5,6 +5,7 @@
     setSearchResults,
   } from "$lib/state/search.svelte";
   import SearchEditor from "../SearchEditor.svelte";
+  import { extractSuggestions } from "$lib/components/documents/search/utils/extractSuggestions";
 
   interface Props {
     query?: string;
@@ -20,6 +21,8 @@
 
   let editor: SearchEditor | undefined = $state();
 
+  let suggestions = $derived(extractSuggestions(search.results));
+
   export function updateQuery(query: string) {
     editor?.updateQuery(query);
   }
@@ -33,4 +36,11 @@
   }
 </script>
 
-<SearchEditor bind:this={editor} {query} {contextAtoms} {onsubmit} {onchange} />
+<SearchEditor
+  bind:this={editor}
+  {query}
+  {contextAtoms}
+  {suggestions}
+  {onsubmit}
+  {onchange}
+/>
