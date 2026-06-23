@@ -1,9 +1,6 @@
-import {
-  expect,
-  type APIRequestContext,
-  type Locator,
-  type Page,
-} from "@playwright/test";
+import type { APIRequestContext, Locator, Page } from "@playwright/test";
+
+import { expect } from "@playwright/test";
 
 // Mirrors the document `Status` union in src/lib/api/types.d.ts.
 type DocStatus = "success" | "readable" | "pending" | "error" | "nofile";
@@ -50,6 +47,18 @@ export async function openModalForm(
     await trigger.click();
     await expect(form).toBeVisible({ timeout: 2_000 });
   }).toPass({ timeout });
+}
+
+/**
+ * Wait until the first PDF page has actually rendered. The viewer draws each
+ * page to a `<canvas>` via pdf.js and flips `data-loaded` once it has; this is
+ * both a "PDF renders" assertion and a precondition for the page being sized
+ * (e.g. before drawing a note/redaction box on it).
+ */
+export async function expectPdfRendered(page: Page, { timeout = 30_000 } = {}) {
+  await expect(
+    page.locator('.page-container[data-loaded="true"]').first(),
+  ).toBeVisible({ timeout });
 }
 
 /**
