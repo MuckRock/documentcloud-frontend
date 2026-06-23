@@ -1,21 +1,14 @@
 import type { APIRequestContext, Locator, Page } from "@playwright/test";
+import type { Document } from "$lib/api/types";
 
 import { expect } from "@playwright/test";
 
-// Mirrors the document `Status` union in src/lib/api/types.d.ts.
-type DocStatus = "success" | "readable" | "pending" | "error" | "nofile";
-
-export interface DocSummary {
-  id: number;
-  slug: string;
-  title: string;
-  status: DocStatus;
-}
-
-export interface DocDetail extends DocSummary {
-  access: "public" | "private" | "organization";
-  description: string;
-}
+// The fields these helpers read off the document JSON. Derived from the app's
+// `Document` type so the status union etc. stay in sync.
+export type DocDetail = Pick<
+  Document,
+  "id" | "slug" | "title" | "status" | "access" | "description"
+>;
 
 /**
  * Fetch the document detail JSON via the authenticated request context, or
@@ -163,14 +156,14 @@ export async function waitForProcessed(
   request: APIRequestContext,
   docApiUrl: string,
   { timeout = 120_000, interval = 2_000 } = {},
-): Promise<DocSummary> {
+): Promise<DocDetail> {
   const deadline = Date.now() + timeout;
-  let last: DocSummary | undefined;
+  let last: DocDetail | undefined;
 
   while (Date.now() < deadline) {
     const resp = await request.get(docApiUrl);
     if (resp.ok()) {
-      last = (await resp.json()) as DocSummary;
+      last = (await resp.json()) as DocDetail;
       if (last.status === "success") return last;
       if (last.status === "error") {
         throw new Error(
