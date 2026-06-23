@@ -8,9 +8,8 @@ import {
 } from "./helpers/documents";
 
 // Document operations that re-trigger processing: redacting and reprocessing.
-// Each test gets a fresh processed document from the `processedDoc` fixture,
-// which also deletes it in teardown. Runs in the `authenticated` project;
-// skipped automatically when no test credentials are configured.
+// Each test gets a fresh document from the `processedDoc` fixture, which also
+// deletes it in teardown.
 
 test("redact a document", async ({ page, processedDoc }) => {
   // Redaction reprocesses the document, so budget for two processing waits.
@@ -20,13 +19,12 @@ test("redact a document", async ({ page, processedDoc }) => {
 
   const { docApiUrl, viewerUrl } = processedDoc;
 
-  // Enter redacting mode and wait for the page to render so the redaction
-  // layer is sized.
+  // Render first so the redaction layer is sized.
   await page.goto(`${viewerUrl}?mode=redacting`);
   await expectPdfRendered(page);
 
-  // Draw a redaction box. The layer's pointer handlers attach on hydration, so
-  // retry the drag until a redaction box actually registers.
+  // The layer's pointer handlers attach on hydration, so retry the drag until a
+  // redaction box actually registers.
   const layer = page.locator('.redactions.active[role="application"]').first();
   await expect(layer).toBeVisible();
   await expect(async () => {
@@ -49,14 +47,13 @@ test("redact a document", async ({ page, processedDoc }) => {
   await redactForm.getByRole("button", { name: "Save", exact: true }).click();
   const redactResult = await redactResponse;
   expect(redactResult.ok()).toBeTruthy();
-  // The action echoes the saved redactions back; a success result means the
-  // drawn box serialized and the API accepted it.
+  // A success result means the drawn box serialized and the API accepted it.
   expect(await redactResult.text()).toContain('"type":"success"');
 
-  // Redacting sends the document back through the pipeline, so it leaves the
-  // "success" state. We don't wait for it to finish: redaction reprocessing
-  // errors on the dev backend (an infra limitation, not a frontend concern) —
-  // the submitted redaction above is the behavior under test.
+  // Redacting kicks the document back into processing, so it leaves "success".
+  // We don't wait for it to finish: redaction reprocessing errors on the dev
+  // backend (infra, not a frontend concern) — submitting the redaction is what's
+  // under test.
   await expect
     .poll(async () => (await fetchDoc(page, docApiUrl))?.status, {
       timeout: 30_000,
@@ -80,9 +77,8 @@ test("reprocess a document", async ({ page, processedDoc }) => {
     reprocessForm,
   );
 
-  // Confirm with the default options. (Forcing OCR on this fixture errors on
-  // the dev backend, so a plain reprocess is the reliable path.) This posts
-  // directly to the process API from the browser.
+  // Confirm with defaults — a plain reprocess (forcing OCR errors on the dev
+  // backend). This posts directly to the process API from the browser.
   const processResponse = page.waitForResponse(
     (r) =>
       r.url().includes("/documents/process/") &&

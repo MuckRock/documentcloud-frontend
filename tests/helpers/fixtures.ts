@@ -17,11 +17,9 @@ export interface ProcessedDoc {
 
 interface Fixtures {
   /**
-   * A freshly uploaded, fully processed throwaway document. Deleted in teardown
-   * (via the API) so tests never leave one behind — Playwright runs teardown
-   * even when the test fails. Use for any test that just needs a document to
-   * operate on; tests that assert on the title should upload their own so they
-   * control it.
+   * A freshly uploaded, fully processed throwaway document, deleted in teardown
+   * (which Playwright runs even on failure). Tests that assert on the title
+   * should upload their own instead, to control it.
    */
   processedDoc: ProcessedDoc;
 }

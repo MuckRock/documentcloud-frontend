@@ -3,12 +3,10 @@ import type { Page } from "@playwright/test";
 import { test, expect } from "./helpers/fixtures";
 import { drawBox, expectPdfRendered, uniqueTitle } from "./helpers/documents";
 
-// The note lifecycle, as a logged-in user experiences it on the document
-// viewer: create a note by drawing on the page, edit it, change its access,
-// then delete it. Notes are created/updated/deleted by direct API calls from
-// the browser, so each step is verified through that call's response. The
-// `processedDoc` fixture supplies (and later deletes) the document. Runs in the
-// `authenticated` project; skipped when no test credentials are configured.
+// The note lifecycle on the document viewer: create a note by drawing on the
+// page, edit it, change its access, then delete it. Note CRUD happens via
+// direct browser→API calls, so each step is verified from that call's response.
+// The `processedDoc` fixture supplies and deletes the document.
 
 /**
  * Open the (single) existing note for editing in annotating mode by clicking
