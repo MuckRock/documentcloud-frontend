@@ -36,6 +36,6 @@
 
 <style>
   svg {
-    fill: #0C1E27;
+    fill: #0c1e27;
   }
 </style>
