@@ -15,9 +15,7 @@ const baseURL = process.env.URL || "https://www.dev.documentcloud.org";
 // Where the logged-in browser session is persisted by the auth setup project.
 export const STORAGE_STATE = "playwright/.auth/user.json";
 
-// Identify our automated traffic so it can be allowlisted (e.g. in a Cloudflare
-// WAF rule) and told apart from real users. Appended to the real browser UA so
-// the browser still behaves normally. Override with PLAYWRIGHT_USER_AGENT.
+// Identify our automated traffic. Override with PLAYWRIGHT_USER_AGENT.
 const userAgent =
   process.env.PLAYWRIGHT_USER_AGENT ||
   `${devices["Desktop Chrome"].userAgent} DocumentCloud-E2E (+https://github.com/MuckRock/documentcloud-frontend)`;
@@ -37,11 +35,7 @@ export default defineConfig({
   // Retry on CI only.
   retries: process.env.CI ? 2 : 0,
 
-  // Run serially. The authenticated specs upload and (re)process documents
-  // against a shared dev/staging backend whose processing queue can't keep up
-  // with concurrent jobs — running them in parallel slows processing enough to
-  // blow the per-test timeouts. One worker keeps the whole suite reliable; it's
-  // small enough that the lost parallelism doesn't matter.
+  // Run serially to avoid overloading the backend
   workers: 1,
 
   // Rich HTML report; don't auto-open it on CI.
@@ -91,6 +85,6 @@ export default defineConfig({
       testIgnore: /.*\.anon\.spec\.ts/,
     },
 
-    // Add Firefox / WebKit projects here when ready for cross-browser runs.
+    // TODO: Add Firefox / WebKit projects here when ready for cross-browser runs.
   ],
 });
