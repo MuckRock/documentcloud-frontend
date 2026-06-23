@@ -37,8 +37,12 @@ export default defineConfig({
   // Retry on CI only.
   retries: process.env.CI ? 2 : 0,
 
-  // Limit workers on CI for stability; use the local default otherwise.
-  workers: process.env.CI ? 1 : undefined,
+  // Run serially. The authenticated specs upload and (re)process documents
+  // against a shared dev/staging backend whose processing queue can't keep up
+  // with concurrent jobs — running them in parallel slows processing enough to
+  // blow the per-test timeouts. One worker keeps the whole suite reliable; it's
+  // small enough that the lost parallelism doesn't matter.
+  workers: 1,
 
   // Rich HTML report; don't auto-open it on CI.
   reporter: process.env.CI ? [["html", { open: "never" }], ["list"]] : "html",

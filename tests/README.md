@@ -40,6 +40,12 @@ The config (`playwright.config.ts`) defines three projects:
 - **`authenticated`** — logged-in tests. Any other `*.spec.ts` runs here and
   reuses the saved session (depends on `setup`).
 
+The suite runs with a **single worker** (`workers: 1`). The authenticated specs
+upload and (re)process documents against a shared dev/staging backend whose
+processing queue can't keep up with concurrent jobs — in parallel, processing
+slows enough to blow the per-test timeouts. The suite is small, so serial
+execution costs little and keeps it reliable.
+
 ## Authentication
 
 Authenticated tests need a dedicated test account on the dev/staging
@@ -66,20 +72,45 @@ a small file (`Small pdf.pdf`) so processing finishes quickly.
 
 - `uniqueTitle(prefix)` — a per-run unique title so a spec can find _its_
   document by name (never "the newest document", which races other runs).
+- `uploadDocument(page, { title, fixture })` — uploads through the UI and
+  returns `{ id, docApiUrl }` once the document is created. Shared by every spec
+  that needs a throwaway document.
 - `waitForProcessed(request, docApiUrl)` — polls the document API until it
   reaches `success`. Pass `page.request` so the poll shares the authenticated
   session.
+- `fetchDoc(page, docApiUrl)` — fetches the document detail JSON. Pair with
+  `expect.poll` to assert a field changed (the detail endpoint reflects edits
+  before the viewer header does).
+- `drawBox(page, layer)` — drags a rectangle across a drawing layer (note
+  annotation or redaction), using fractional offsets so it stays in bounds.
+- `openModalForm(trigger, form)` — clicks a trigger and retries until the
+  modal's form appears (works around the hydration race; see below).
 - `deleteDocument(page, docApiUrl, referer)` — deletes a document straight
   through the API (CSRF from the cookie). Used as a cleanup safety net.
 
-## The document-lifecycle spec
+## The specs
 
-`document-lifecycle.spec.ts` is the end-to-end backbone: a logged-in user
-uploads a document, waits for it to process, confirms the PDF renders, makes it
-public, checks that text and grid viewer modes render (which proves processing
-produced text and page images), then deletes it. It's written as one serial
-flow because every step shares the new document's id. New per-document journeys
-(notes, sharing, …) should slot in before the delete.
+- **`document-lifecycle.spec.ts`** — the end-to-end backbone: upload → process →
+  confirm the PDF renders → make public → edit metadata → check text and grid
+  modes render → delete. One serial flow because every step shares the new
+  document's id.
+- **`document-management.spec.ts`** — self-contained operations that re-trigger
+  processing: redact a document, and reprocess one. Each uploads its own
+  throwaway doc and deletes it in `finally`.
+- **`note-lifecycle.spec.ts`** — the note lifecycle on the viewer: create a note
+  by drawing on the page (annotating mode), edit it, change its access, delete
+  it. Note CRUD is direct browser→API, so each step is verified via that call's
+  response.
+
+### Known dev-backend limitation: image-rendering reprocess paths
+
+Redaction and force-OCR reprocessing both rasterize page images, which on the
+dev backend fails (`libpng16.so.16` missing in the processing worker), leaving
+the document `status: error`. This is infra, not a frontend bug. The specs are
+scoped around it: the redaction test asserts the redaction submits and the doc
+re-enters processing (not that it finishes), and the reprocess test uses a
+**plain** reprocess (no force OCR), which completes. See
+`notes/backend-redaction-libpng-error.md` for the debugging runbook.
 
 ## Writing e2e tests here — lessons learned
 
@@ -151,7 +182,19 @@ After an edit (e.g. changing access to public), the viewer header can lag
 behind backend indexing — the code even forces the value locally because it's
 "often a step behind". Use the modal closing as the UI-level success signal,
 then confirm the change by polling the document detail endpoint
-(`expect.poll(... access).toBe("public")`), which reflects it immediately.
+(`fetchDoc` + `expect.poll`), which reflects it immediately. For direct
+browser→API actions (notes), intercept the request's response and assert on its
+JSON — that's immediate and authoritative.
+
+### Reload before editing: a background invalidate can reset the form
+
+Editable forms (metadata, notes) bind their inputs to the document store. After
+any save the app calls `invalidate(...)`, and when that reload lands it
+re-renders the form and **resets your typed-but-unsaved input**. If you edit
+right after another mutation, the in-flight reload can clobber the field
+between `fill` and submit — intermittently submitting the old value. Start the
+edit from a freshly-loaded page (`await page.goto(viewerUrl)`) so no reload is
+pending.
 
 ### Capturing the new document id, and the viewer URL
 
