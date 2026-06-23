@@ -2,8 +2,10 @@ import { test, expect } from "@playwright/test";
 
 import {
   deleteDocument,
+  fetchDoc,
   openModalForm,
   uniqueTitle,
+  uploadDocument,
   waitForProcessed,
 } from "./helpers/documents";
 
@@ -34,48 +36,9 @@ test("upload → process → view → publish → check modes → delete", async
 
   try {
     // --- UPLOAD ---------------------------------------------------------
-    await page.goto("/upload/");
-
-    // "Select Files" is disabled until the component has hydrated and read the
-    // CSRF token, so waiting for it to enable also ensures the file-picker
-    // handler is wired up before we open it.
-    const selectFiles = page.getByRole("button", {
-      name: "Select Files",
-      exact: true,
-    });
-    await expect(selectFiles).toBeEnabled();
-
-    // Drive the real file chooser rather than poking the hidden <input>, so the
-    // component's onchange handler actually runs and registers the file.
-    const fileChooser = page.waitForEvent("filechooser");
-    await selectFiles.click();
-    await (await fileChooser).setFiles(FIXTURE);
-
-    // Give our document the unique title so later steps can identify it.
-    const titleInput = page.locator('input[name="title"]');
-    await expect(titleInput).toBeVisible();
-    await titleInput.fill(title);
-
-    // The upload happens client-side, hitting the API directly. Capture the
-    // create call (POST .../api/documents/) to learn the new document's id.
-    const createResponse = page.waitForResponse(
-      (r) =>
-        r.request().method() === "POST" &&
-        /\/documents\/$/.test(new URL(r.url()).pathname),
-    );
-
-    await page
-      .getByRole("button", { name: "Begin Upload", exact: true })
-      .click();
-
-    const created = await createResponse;
-    expect(created.ok()).toBeTruthy();
-    const { id } = await created.json();
-    expect(id, "create response should include a document id").toBeTruthy();
-
-    // Derive the document API URL from the create endpoint so we don't have to
-    // hardcode the API host (it differs between dev / staging / previews).
-    docApiUrl = created.url().replace(/\/documents\/$/, `/documents/${id}/`);
+    const uploaded = await uploadDocument(page, { title, fixture: FIXTURE });
+    const { id } = uploaded;
+    docApiUrl = uploaded.docApiUrl;
 
     // --- PROCESS --------------------------------------------------------
     const processed = await waitForProcessed(page.request, docApiUrl);
@@ -113,14 +76,37 @@ test("upload → process → view → publish → check modes → delete", async
     // endpoint reflects the new access immediately.
     await expect(editAccessForm).toBeHidden({ timeout: 15_000 });
     await expect
-      .poll(
-        async () => {
-          const r = await page.request.get(docApiUrl!);
-          return r.ok() ? (await r.json()).access : undefined;
-        },
-        { timeout: 15_000 },
-      )
+      .poll(async () => (await fetchDoc(page, docApiUrl!))?.access, {
+        timeout: 15_000,
+      })
       .toBe("public");
+
+    // --- EDIT METADATA --------------------------------------------------
+    // Reload first: the publish step's background invalidate would otherwise
+    // land mid-edit and reset the form fields (they're bound to the document
+    // store), clobbering our input. A fresh load means no reload is in flight.
+    await page.goto(viewerUrl);
+
+    // The sidebar's "Edit Document Metadata" opens the full editor. Change the
+    // title and description.
+    const editedTitle = `${title} (edited)`;
+    const editForm = page.locator('form[action*="?/edit"]');
+    await openModalForm(
+      page.getByRole("button", { name: "Edit Document Metadata", exact: true }),
+      editForm,
+    );
+    await editForm.locator('input[name="title"]').fill(editedTitle);
+    await editForm
+      .locator('textarea[name="description"]')
+      .fill("Edited by the lifecycle e2e test.");
+    await editForm.getByRole("button", { name: "Save", exact: true }).click();
+    await expect(editForm).toBeHidden({ timeout: 15_000 });
+    // Verify via the API (the header title lags backend indexing).
+    await expect
+      .poll(async () => (await fetchDoc(page, docApiUrl!))?.title, {
+        timeout: 15_000,
+      })
+      .toBe(editedTitle);
 
     // --- TEXT & GRID MODES ----------------------------------------------
     // Both modes only have content if processing succeeded: text mode shows
