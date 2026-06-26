@@ -2,22 +2,18 @@ import { test, expect } from "@playwright/test";
 
 import {
   deleteDocument,
+  fetchDoc,
   openModalForm,
   uniqueTitle,
+  uploadDocument,
   waitForProcessed,
 } from "./helpers/documents";
 
 // A small PDF keeps processing fast.
 const FIXTURE = "tests/fixtures/Small pdf.pdf";
 
-// The full document lifecycle, as a logged-in user experiences it: upload a
-// document, wait for it to finish processing, confirm the PDF renders, make it
-// public, check that text and grid modes work (which proves processing
-// produced text and page images), then delete it. Runs in the `authenticated`
-// project (reuses the saved session); skipped automatically when no test
-// credentials are configured.
-//
-// More steps (notes, sharing, …) can slot in before the delete later.
+// The full document lifecycle as a logged-in user: upload, wait for
+// processing, then view → publish → edit metadata → check modes → delete.
 test("upload → process → view → publish → check modes → delete", async ({
   page,
   baseURL,
@@ -34,48 +30,9 @@ test("upload → process → view → publish → check modes → delete", async
 
   try {
     // --- UPLOAD ---------------------------------------------------------
-    await page.goto("/upload/");
-
-    // "Select Files" is disabled until the component has hydrated and read the
-    // CSRF token, so waiting for it to enable also ensures the file-picker
-    // handler is wired up before we open it.
-    const selectFiles = page.getByRole("button", {
-      name: "Select Files",
-      exact: true,
-    });
-    await expect(selectFiles).toBeEnabled();
-
-    // Drive the real file chooser rather than poking the hidden <input>, so the
-    // component's onchange handler actually runs and registers the file.
-    const fileChooser = page.waitForEvent("filechooser");
-    await selectFiles.click();
-    await (await fileChooser).setFiles(FIXTURE);
-
-    // Give our document the unique title so later steps can identify it.
-    const titleInput = page.locator('input[name="title"]');
-    await expect(titleInput).toBeVisible();
-    await titleInput.fill(title);
-
-    // The upload happens client-side, hitting the API directly. Capture the
-    // create call (POST .../api/documents/) to learn the new document's id.
-    const createResponse = page.waitForResponse(
-      (r) =>
-        r.request().method() === "POST" &&
-        /\/documents\/$/.test(new URL(r.url()).pathname),
-    );
-
-    await page
-      .getByRole("button", { name: "Begin Upload", exact: true })
-      .click();
-
-    const created = await createResponse;
-    expect(created.ok()).toBeTruthy();
-    const { id } = await created.json();
-    expect(id, "create response should include a document id").toBeTruthy();
-
-    // Derive the document API URL from the create endpoint so we don't have to
-    // hardcode the API host (it differs between dev / staging / previews).
-    docApiUrl = created.url().replace(/\/documents\/$/, `/documents/${id}/`);
+    const uploaded = await uploadDocument(page, { title, fixture: FIXTURE });
+    const { id } = uploaded;
+    docApiUrl = uploaded.docApiUrl;
 
     // --- PROCESS --------------------------------------------------------
     const processed = await waitForProcessed(page.request, docApiUrl);
@@ -86,47 +43,62 @@ test("upload → process → view → publish → check modes → delete", async
     await expect(page.locator("h1.title")).toContainText(title);
 
     // --- VERIFY THE PDF RENDERS -----------------------------------------
-    // The default ("document") mode draws each page to a <canvas> via pdf.js;
-    // a page-container flips `data-loaded` once it has actually rendered.
+    // "document" mode draws each page to a <canvas>; data-loaded flips once
+    // pdf.js has rendered.
     await expect(
       page.locator('.page-container[data-loaded="true"]').first(),
     ).toBeVisible({ timeout: 30_000 });
     await expect(page.locator(".pages canvas").first()).toBeVisible();
 
     // --- MAKE THE DOCUMENT PUBLIC ---------------------------------------
-    // The access badge in the header doubles as the edit-access trigger and
-    // currently reads "Private".
+    // The header access badge (reads "Private") is the edit-access trigger.
     const editAccessForm = page.locator('form[action*="?/edit"]');
     await openModalForm(
       page.getByRole("button", { name: "Private", exact: true }),
       editAccessForm,
     );
 
-    // Pick "Public" (a label wrapping a screen-reader-only radio) and save.
+    // "Public" is a label wrapping a screen-reader-only radio.
     await editAccessForm.locator('label[for="public"]').click();
     await editAccessForm
       .getByRole("button", { name: "Save", exact: true })
       .click();
 
-    // A successful save closes the modal. Verify the change via the API: the
-    // header badge can lag behind backend indexing, but the document detail
-    // endpoint reflects the new access immediately.
+    // Verify via the API — the header badge lags backend indexing.
     await expect(editAccessForm).toBeHidden({ timeout: 15_000 });
     await expect
-      .poll(
-        async () => {
-          const r = await page.request.get(docApiUrl!);
-          return r.ok() ? (await r.json()).access : undefined;
-        },
-        { timeout: 15_000 },
-      )
+      .poll(async () => (await fetchDoc(page, docApiUrl!))?.access, {
+        timeout: 15_000,
+      })
       .toBe("public");
 
+    // --- EDIT METADATA --------------------------------------------------
+    // Reload first so the publish step's in-flight invalidate can't reset the
+    // form mid-edit (its fields are bound to the document store).
+    await page.goto(viewerUrl);
+
+    const editedTitle = `${title} (edited)`;
+    const editForm = page.locator('form[action*="?/edit"]');
+    await openModalForm(
+      page.getByRole("button", { name: "Edit Document Metadata", exact: true }),
+      editForm,
+    );
+    await editForm.locator('input[name="title"]').fill(editedTitle);
+    await editForm
+      .locator('textarea[name="description"]')
+      .fill("Edited by the lifecycle e2e test.");
+    await editForm.getByRole("button", { name: "Save", exact: true }).click();
+    await expect(editForm).toBeHidden({ timeout: 15_000 });
+    // Verify via the API (the header title lags backend indexing).
+    await expect
+      .poll(async () => (await fetchDoc(page, docApiUrl!))?.title, {
+        timeout: 15_000,
+      })
+      .toBe(editedTitle);
+
     // --- TEXT & GRID MODES ----------------------------------------------
-    // Both modes only have content if processing succeeded: text mode shows
-    // the extracted text, grid mode shows a thumbnail per generated page
-    // image. Switch via the `mode` query param (the toolbar collapses to a
-    // dropdown at narrow widths, so a URL is more robust than clicking tabs).
+    // Only have content if processing produced text + page images. Use the
+    // mode query param (the toolbar tabs collapse to a dropdown when narrow).
     await page.goto(`${viewerUrl}?mode=text`);
     await expect(page.locator(".textPages pre").first()).toContainText(
       /small pdf/i,
@@ -139,34 +111,30 @@ test("upload → process → view → publish → check modes → delete", async
     });
 
     // --- DELETE (through the UI) ----------------------------------------
-    // Open the confirmation from the viewer sidebar.
     const confirmForm = page.locator('form[action*="?/delete"]');
     await openModalForm(
       page.getByRole("button", { name: "Delete", exact: true }),
       confirmForm,
     );
 
-    // Confirm via the submit scoped inside the delete form (the modal's submit
-    // button also reads "Delete").
+    // The modal's submit also reads "Delete"; scope it to the delete form.
     await confirmForm
       .getByRole("button", { name: "Delete", exact: true })
       .click();
 
-    // A single delete navigates to the user's document list (not the viewer).
+    // A single delete navigates to the document list, not the viewer.
     await page.waitForURL((url) => url.pathname === "/documents/", {
       timeout: 30_000,
     });
     deletedViaUi = true;
 
-    // The document should now be gone from the API.
     await expect
       .poll(async () => (await page.request.get(docApiUrl!)).status(), {
         timeout: 15_000,
       })
       .toBe(404);
   } finally {
-    // Safety net: never leave a test document behind, even if the UI flow
-    // failed before the delete step ran.
+    // Safety net: never leave a test document behind.
     if (!deletedViaUi && docApiUrl && baseURL) {
       await deleteDocument(page, docApiUrl, baseURL);
     }
