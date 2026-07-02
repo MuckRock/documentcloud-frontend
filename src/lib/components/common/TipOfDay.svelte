@@ -2,7 +2,7 @@
   import { writable } from "svelte/store";
 
   import { StorageManager } from "$lib/utils/storage";
-  import { clean } from "$lib/utils/markup";
+  import { renderMarkdown } from "$lib/utils/markup";
 
   let show = writable(false);
 
@@ -39,7 +39,7 @@
 {#if $show}
   <div class="container">
     <div class="message">
-      {@html clean(message ?? "")}
+      {@html renderMarkdown(message)}
     </div>
     <button class="close" title="Hide Tip" onclick={() => hideTip(message)}>
       <X12 />
