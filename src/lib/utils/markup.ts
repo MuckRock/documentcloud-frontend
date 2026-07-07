@@ -10,6 +10,21 @@ export function renderMarkdown(content: string, options: IOptions = {}) {
   return clean(marked.parse(content), options);
 }
 
+/**
+ * Render Markdown/HTML down to plain text, stripping all tags.
+ * Useful for plain-text contexts like <meta> descriptions.
+ */
+export function renderText(content: string): string {
+  if (!content || typeof content !== "string") return "";
+
+  return clean(marked.parse(content), {
+    allowedTags: [],
+    allowedAttributes: {},
+  })
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 export function clean(html: string, options: IOptions = {}): string {
   if (!html || typeof html !== "string") return "";
 

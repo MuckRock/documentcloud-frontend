@@ -6,6 +6,7 @@
 
   import * as projects from "$lib/api/projects";
   import { embedUrl } from "$lib/api/embed";
+  import { renderText } from "$lib/utils/markup";
   import {
     SearchResultsState,
     setSearchResults,
@@ -54,8 +55,8 @@
     title={project.title}
   />
   {#if project.description?.trim().length > 0}
-    <meta name="description" content={project.description} />
-    <meta property="og:description" content={project.description} />
+    <meta name="description" content={renderText(project.description)} />
+    <meta property="og:description" content={renderText(project.description)} />
   {/if}
 </svelte:head>
 

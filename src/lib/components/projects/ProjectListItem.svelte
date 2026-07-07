@@ -7,7 +7,7 @@
   import ProjectPin from "./ProjectPin.svelte";
 
   import { canonicalUrl } from "$lib/api/projects";
-  import { clean } from "$lib/utils/markup";
+  import { renderMarkdown } from "$lib/utils/markup";
 
   interface Props {
     project: Project;
@@ -18,30 +18,32 @@
   let href = $derived(canonicalUrl(project).href);
 </script>
 
-<a {href} id={project.id.toString()}>
-  <div class="container">
-    <div class="row margin">
-      <div class="center-self">
-        <ProjectPin {project} />
-      </div>
-      <div class="stretch row gap-lg">
-        <h3 class="project-title">{project.title}</h3>
-      </div>
-      {#if project.private}
-        <span class="small center center-self" title={$_("projects.private")}>
-          <Lock16 />
-        </span>
-      {:else}
-        <span class="small center center-self" title={$_("projects.public")}>
-          <Globe16 />
-        </span>
-      {/if}
+<div class="container">
+  <div class="row margin">
+    <div class="center-self">
+      <ProjectPin {project} />
     </div>
-    {#if project.description}
-      <div class="description">{@html clean(project.description ?? "")}</div>
+    <div class="stretch row gap-lg">
+      <h3 class="project-title">
+        <a {href} id={project.id.toString()}>
+          {project.title}
+        </a>
+      </h3>
+    </div>
+    {#if project.private}
+      <span class="small center center-self" title={$_("projects.private")}>
+        <Lock16 />
+      </span>
+    {:else}
+      <span class="small center center-self" title={$_("projects.public")}>
+        <Globe16 />
+      </span>
     {/if}
   </div>
-</a>
+  {#if project.description}
+    <div class="description">{@html renderMarkdown(project.description)}</div>
+  {/if}
+</div>
 
 <style>
   a {
@@ -49,8 +51,8 @@
     text-decoration: none;
   }
 
-  a:hover .container,
-  a:target .container {
+  .container a:hover,
+  .container a:target {
     background-color: var(--blue-1);
   }
 

@@ -7,6 +7,7 @@
   import Flex from "$lib/components/common/Flex.svelte";
   import ProjectPin from "./ProjectPin.svelte";
   import { remToPx } from "$lib/utils/layout";
+  import { renderMarkdown } from "$lib/utils/markup";
 
   interface Props {
     project: Project;
@@ -46,7 +47,7 @@
     {/if}
   </Flex>
   {#if project.description}
-    <p class="description">{project.description}</p>
+    <div class="description">{@html renderMarkdown(project.description)}</div>
   {/if}
 </div>
 
