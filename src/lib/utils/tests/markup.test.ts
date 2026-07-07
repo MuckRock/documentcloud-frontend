@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { clean, renderMarkdown } from "../markup";
+import { clean, renderMarkdown, renderText } from "../markup";
 
 describe("clean() security tests", () => {
   // Test allowed tags work correctly
@@ -330,5 +330,46 @@ describe("renderMarkdown() security tests", () => {
     const result = renderMarkdown(input);
     // Images aren't in the allowed tags, so they should be removed
     expect(result).not.toContain("<img");
+  });
+});
+
+describe("renderText()", () => {
+  test("strips markdown formatting to plain text", () => {
+    const input = "**bold** and *italic* and `code`";
+    const result = renderText(input);
+    expect(result).toBe("bold and italic and code");
+  });
+
+  test("keeps link text but drops the URL and markup", () => {
+    const input = "See [the report](https://example.com) for details";
+    const result = renderText(input);
+    expect(result).toBe("See the report for details");
+  });
+
+  test("removes all HTML tags", () => {
+    const input = "<p>Hello <strong>world</strong></p>";
+    const result = renderText(input);
+    expect(result).toBe("Hello world");
+  });
+
+  test("collapses whitespace across block elements", () => {
+    const input = "# Heading\n\nFirst paragraph.\n\nSecond paragraph.";
+    const result = renderText(input);
+    expect(result).toBe("Heading First paragraph. Second paragraph.");
+  });
+
+  test("strips embedded scripts", () => {
+    const input = "Hi <script>alert('XSS')</script>";
+    const result = renderText(input);
+    expect(result).not.toContain("<script");
+    expect(result).not.toContain("alert");
+  });
+
+  test("handles empty and non-string inputs gracefully", () => {
+    expect(renderText("")).toBe("");
+    // @ts-expect-error - testing runtime behavior with invalid input
+    expect(renderText(null)).toBe("");
+    // @ts-expect-error - testing runtime behavior with invalid input
+    expect(renderText(undefined)).toBe("");
   });
 });
