@@ -67,12 +67,20 @@ setup("authenticate", async ({ page }) => {
   );
 
   // Optional one-time MFA opt-in interstitial — only shows for some accounts,
-  // so this branch is intentionally conditional, not dead code. `force` is
-  // needed because the dev Django Debug Toolbar overlay can intercept the click.
+  // so this branch is intentionally conditional, not dead code.
   if (page.url().includes("/accounts/onboard")) {
-    await page
-      .getByRole("button", { name: "Skip", exact: true })
-      .click({ force: true });
+    // The dev Django Debug Toolbar renders a panel list fixed to the right edge
+    // that overlaps the onboarding buttons. Collapse it via its own "Hide"
+    // control so the click reaches the real "Skip" submit button. (Clicking with
+    // `force: true` instead just delivered the click to the toolbar panel — the
+    // form never submitted and the flow hung on the onboarding page.) The
+    // toolbar is only present on environments with DEBUG on, so tolerate its
+    // absence.
+    const hideToolbar = page.locator("#djHideToolBarButton");
+    if (await hideToolbar.isVisible().catch(() => false)) {
+      await hideToolbar.click();
+    }
+    await page.getByRole("button", { name: "Skip", exact: true }).click();
   }
 
   // We should land back on the frontend host, logged in. Matching the exact
