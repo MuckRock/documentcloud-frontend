@@ -27,7 +27,7 @@
   import SavedSearchForm from "$lib/components/sidebar/SavedSearchForm.svelte";
 
   import { userDocs, searchUrl } from "$lib/utils/search";
-  import { getCurrentUser } from "$lib/utils/permissions";
+  import { getCurrentUser, isSignedIn } from "$lib/utils/permissions";
   import { listAll } from "$lib/api/saved-searches";
 
   const me = getCurrentUser();
@@ -70,6 +70,13 @@
   );
 
   onMount(async () => {
+    // The saved searches UI is only shown to signed-in users (see <SignedIn>),
+    // so skip the request for anonymous visitors to save their API quota.
+    if (!isSignedIn($me)) {
+      loadingSavedSearches = false;
+      return;
+    }
+
     try {
       savedSearches = await listAll();
     } finally {

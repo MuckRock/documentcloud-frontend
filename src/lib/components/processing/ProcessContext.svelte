@@ -22,6 +22,7 @@ This makes the state of those processes available via context.
 
   import { history } from "$lib/api/addons";
   import { pending } from "$lib/api/documents";
+  import { getCurrentUser, isSignedIn } from "$lib/utils/permissions";
   import { POLL_INTERVAL } from "@/config/config";
 
   interface ProcessContext {
@@ -94,6 +95,11 @@ This makes the state of those processes available via context.
   }
 
   let { children }: Props = $props();
+
+  // Only signed-in users have pending documents or add-on runs to poll for.
+  // Gating on auth keeps anonymous visitors from burning their API quota.
+  const me = getCurrentUser();
+
   // keep track of processed documents
   let started: Set<number> = new Set();
 
@@ -111,7 +117,9 @@ This makes the state of those processes available via context.
   });
 
   onMount(() => {
-    load();
+    if (isSignedIn($me)) {
+      load();
+    }
     // started grows indefinitely, so we need to manage it here
     return documents.subscribe((docs) => {
       started = new Set([...started, ...docs.map((d) => d.doc_id)]);
@@ -119,7 +127,7 @@ This makes the state of those processes available via context.
   });
 
   $effect(() => {
-    if ($documents.length > 0 || $addons.length > 0) {
+    if (isSignedIn($me) && ($documents.length > 0 || $addons.length > 0)) {
       load();
     }
 

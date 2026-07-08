@@ -207,4 +207,15 @@ describe("Documents sidebar — saved search detection", () => {
       expect(screen.getByText("FOIA requests")).toBeInTheDocument();
     });
   });
+
+  it("does not load saved searches when signed out", async () => {
+    render(DocumentsDemo, {
+      props: { user: null },
+    });
+
+    // give onMount a chance to run
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
+    expect(mockGetAll).not.toHaveBeenCalled();
+  });
 });
