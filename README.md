@@ -71,6 +71,15 @@ DocumentCloud is tested and runs on recent versions of modern browsers -- Chrome
 
 _Learn more about using environment variables in [the SvelteKit learning docs](https://learn.svelte.dev/tutorial/env-static-private)._
 
+### Trending documents (Cloudflare analytics)
+
+The homepage shows a "Trending documents" list powered by the [Cloudflare GraphQL Analytics API](https://developers.cloudflare.com/analytics/graphql-api/). It reads two server-only variables:
+
+- `CLOUDFLARE_ANALYTICS_TOKEN` — a Cloudflare API token with **Account Analytics: Read** permission for the production zone. Store it as a Worker secret (see `docs/cloudflare.md`); never commit it.
+- `CLOUDFLARE_ANALYTICS_ZONE_TAG` — the tag of the zone serving the document viewer (`www.documentcloud.org`).
+
+When either variable is missing (e.g. in local dev), the homepage gracefully falls back to the static featured-projects list, so these are optional for local development.
+
 ## Developing
 
 ### Installing new packages

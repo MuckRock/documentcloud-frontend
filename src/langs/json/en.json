@@ -721,7 +721,8 @@
       "heading": "{count} public documents and counting",
       "countFallback": "Millions of",
       "description": "<p>Everyone is welcome to explore our public document archive and organize interesting documents into projects.</p>",
-      "projectsHeading": "Explore some of our newsworthy projects:"
+      "projectsHeading": "Explore some of our newsworthy projects:",
+      "trendingHeading": "Trending documents today:"
     },
     "sources": {
       "heading": "Documents from trustworthy sources",
