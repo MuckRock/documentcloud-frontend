@@ -52,9 +52,11 @@ If these are unset, the auth setup is skipped and authenticated tests don't run.
 
 ## Helpers
 
-`helpers/` holds shared utilities used across specs. Currently `helpers/documents.ts`:
+`helpers/` holds shared utilities used across specs.
 
-- `uniqueTitle(prefix)` — a per-run unique title so a spec can find _its_ document by name (never "the newest document", which races other runs).
+`helpers/documents.ts`:
+
+- `uniqueTitle(prefix)` — a per-run unique title so a spec can find _its_ document by name (never "the newest document", which races other runs). Also used by the project spec.
 - `uploadDocument(page, { title, fixture })` — uploads through the UI and returns `{ id, docApiUrl }` once the document is created. Shared by every spec that needs a throwaway document.
 - `waitForProcessed(request, docApiUrl)` — polls the document API until it reaches `success`. Pass `page.request` so the poll shares the authenticated session.
 - `fetchDoc(page, docApiUrl)` — fetches the document detail JSON. Pair with `expect.poll` to assert a field changed (the detail endpoint reflects edits before the viewer header does).
@@ -62,11 +64,18 @@ If these are unset, the auth setup is skipped and authenticated tests don't run.
 - `openModalForm(trigger, form)` — clicks a trigger and retries until the modal's form appears (works around the hydration race; see below).
 - `deleteDocument(page, docApiUrl, referer)` — deletes a document straight through the API (CSRF from the cookie). Used as a cleanup safety net.
 
+`helpers/projects.ts`:
+
+- `createProject(page, { title, description })` — creates a project through the UI and returns `{ id, detailPath }`. Because create is a server-side form action (not client-side like upload), the browser never sees an API URL, so it finds the new project by filtering the list on its unique title.
+- `deleteProject(page, projectApiUrl, referer)` — deletes a project straight through the API (mirrors `deleteDocument`). Cleanup safety net.
+- `apiBaseUrl(baseURL)` — resolves the API origin for the environment (prefers `DC_API_URL`, else swaps `www.`→`api.`), mirroring `auth.setup.ts`. Projects have no browser-facing API URL, so this is how the spec reaches the API to confirm a delete.
+
 ## The specs
 
 - **`document-lifecycle.spec.ts`** — the end-to-end backbone: upload → process → confirm the PDF renders → make public → edit metadata → check text and grid modes render → delete. One serial flow because every step shares the new document's id.
 - **`document-management.spec.ts`** — self-contained operations that re-trigger processing: redact a document, and reprocess one. Each uploads its own throwaway doc and deletes it in `finally`.
 - **`note-lifecycle.spec.ts`** — the note lifecycle on the viewer: create a note by drawing on the page (annotating mode), edit it, change its access, delete it. Note CRUD is direct browser→API, so each step is verified via that call's response.
+- **`project-lifecycle.spec.ts`** — the project lifecycle: create a project → view it → edit its metadata → open the share modal → delete it. Exercises the project forms (`EditProject` create + edit, `ProjectShare`, `DeleteProject`). Deletion is confirmed against the API (the delete redirect is the UI signal; the frontend is served SPA-style, so its HTTP status is never 404). Collaborator invite/update/remove are intentionally excluded — inviting sends a real email and update/remove need a second existing collaborator.
 
 ### Known dev-backend limitation: image-rendering reprocess paths
 
