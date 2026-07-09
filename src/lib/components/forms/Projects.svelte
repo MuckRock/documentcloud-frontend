@@ -96,7 +96,8 @@ and we don't want to do that everywhere.
   }
 
   function sort(projects: Project[]) {
-    return projects.sort(
+    // copy first — sort() mutates in place, which is forbidden on reactive state inside a $derived
+    return [...projects].sort(
       (a, b) =>
         +(b.pinned ?? false) - +(a.pinned ?? false) ||
         a.title.localeCompare(b.title),

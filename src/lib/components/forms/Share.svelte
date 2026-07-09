@@ -103,7 +103,11 @@
       }
       case "note": {
         if (!note)
-          return { permalink: undefined, embedSrc: undefined, iframe: undefined };
+          return {
+            permalink: undefined,
+            embedSrc: undefined,
+            iframe: undefined,
+          };
         const embedSrc = canonicalNoteUrl(document, note);
         embedSrc.searchParams.set("embed", "1");
         return {
