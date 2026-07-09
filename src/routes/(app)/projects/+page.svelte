@@ -133,7 +133,7 @@
       {#snippet title()}
         <h1>{$_("projects.create")}</h1>
       {/snippet}
-      <EditProject on:close={() => (create = false)} />
+      <EditProject onclose={() => (create = false)} />
     </Modal>
   </Portal>
 {/if}

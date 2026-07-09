@@ -19,11 +19,15 @@ Invite a new collaborator to a project
 
   const dispatch = createEventDispatcher();
 
-  export let project: Project;
+  interface Props {
+    project: Project;
+  }
 
-  let errors: ValidationError = {};
+  let { project }: Props = $props();
 
-  $: action = new URL("?/invite", canonicalUrl(project)).href;
+  let errors: ValidationError = $state({});
+
+  let action = $derived(new URL("?/invite", canonicalUrl(project)).href);
 
   /**
    * @type {import('@sveltejs/kit').SubmitFunction}

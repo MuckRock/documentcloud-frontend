@@ -67,7 +67,7 @@
         {actions[show]}
       </h1>
       {#if show === "edit"}
-        <EditProject {project} on:close={hide} />
+        <EditProject {project} onclose={hide} />
       {/if}
 
       {#if show === "share"}

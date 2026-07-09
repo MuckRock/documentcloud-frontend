@@ -6,7 +6,6 @@ Edit project metadata
 
   import { enhance } from "$app/forms";
 
-  import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
 
   import Button from "../common/Button.svelte";
@@ -22,11 +21,11 @@ Edit project metadata
 
   interface Props {
     project?: Partial<Project>;
+    onclose?: () => void;
+    onsuccess?: (project: Project) => void;
   }
 
-  let { project = {} }: Props = $props();
-
-  const dispatch = createEventDispatcher();
+  let { project = {}, onclose, onsuccess }: Props = $props();
 
   let action = $derived(
     project?.id
@@ -43,10 +42,10 @@ Edit project metadata
     submitter.disabled = true;
     return ({ result, update }) => {
       if (result.type === "success") {
-        dispatch("success", result.data?.project?.data);
+        onsuccess?.(result.data?.project?.data);
       }
       update(result);
-      dispatch("close");
+      onclose?.();
     };
   }
 </script>
@@ -79,7 +78,7 @@ Edit project metadata
           {$_("projects.create")}
         </Button>
       {/if}
-      <Button full onclick={(e) => dispatch("close")}>
+      <Button full onclick={() => onclose?.()}>
         {$_("edit.cancel")}
       </Button>
     </Flex>

@@ -9,7 +9,7 @@ and we don't want to do that everywhere.
 
   import { invalidate } from "$app/navigation";
 
-  import { createEventDispatcher, onMount } from "svelte";
+  import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
   import { Alert24, FileDirectory24, PlusCircle16 } from "svelte-octicons";
 
@@ -28,37 +28,38 @@ and we don't want to do that everywhere.
   import { getCurrentUser } from "$lib/utils/permissions";
   import { intersection } from "$lib/utils/array";
 
-  export let documents: Document[] = [];
-  export let projects: Project[] = [];
+  interface Props {
+    documents?: Document[];
+    projects?: Project[];
+    onclose?: () => void;
+  }
 
-  const dispatch = createEventDispatcher();
+  let { documents = [], projects = $bindable([]), onclose }: Props = $props();
 
   const me = getCurrentUser();
 
-  let createProjectOpen = false;
-  let common: Set<number>;
-
-  $: disabled = documents.length < 1 || documents.length > MAX_EDIT_BATCH;
-  $: sorted = sort(projects);
-  $: common = new Set(
-    intersection(
-      documents.map((d) => d.projects ?? []),
-      (a, b) => {
-        // If a is a number, not a project
-        if (typeof a === "number") {
-          if (typeof b === "number") {
-            return a === b;
+  let createProjectOpen = $state(false);
+  let common: Set<number> = $derived(
+    new Set(
+      intersection(
+        documents.map((d) => d.projects ?? []),
+        (a, b) => {
+          // If a is a number, not a project
+          if (typeof a === "number") {
+            if (typeof b === "number") {
+              return a === b;
+            }
+            return a === b.id;
           }
-          return a === b.id;
-        }
-        // If b is a number, not a project
-        if (typeof b === "number") {
-          return a.id === b;
-        }
-        // a and b are both projects
-        return a.id === b.id;
-      },
-    ).map((p: Project | number) => (typeof p === "number" ? p : p.id)),
+          // If b is a number, not a project
+          if (typeof b === "number") {
+            return a.id === b;
+          }
+          // a and b are both projects
+          return a.id === b.id;
+        },
+      ).map((p: Project | number) => (typeof p === "number" ? p : p.id)),
+    ),
   );
 
   onMount(async () => {
@@ -71,9 +72,11 @@ and we don't want to do that everywhere.
     return Promise.all(documents.map((d) => invalidate(`document:${d.id}`)));
   }
 
-  // typescript doesn't know what to do with svelte's events
-  async function toggle(project: Project, e) {
-    const { checked } = e.target;
+  async function toggle(
+    project: Project,
+    e: Event & { currentTarget: HTMLInputElement },
+  ) {
+    const { checked } = e.currentTarget;
     const ids = documents.map((d) => d.id);
     const csrf_token = getCsrfToken();
     if (!csrf_token) {
@@ -88,8 +91,8 @@ and we don't want to do that everywhere.
     await invalidateDocs(documents);
   }
 
-  function onCreateSuccess(event: CustomEvent<Project>) {
-    projects = [...projects, event.detail];
+  function onCreateSuccess(project: Project) {
+    projects = [...projects, project];
   }
 
   function sort(projects: Project[]) {
@@ -99,6 +102,10 @@ and we don't want to do that everywhere.
         a.title.localeCompare(b.title),
     );
   }
+  let disabled = $derived(
+    documents.length < 1 || documents.length > MAX_EDIT_BATCH,
+  );
+  let sorted = $derived(sort(projects));
 </script>
 
 <div class="container">
@@ -126,7 +133,7 @@ and we don't want to do that everywhere.
           name="project"
           value={project.id}
           checked={common.has(project.id)}
-          on:change={(e) => toggle(project, e)}
+          onchange={(e) => toggle(project, e)}
           {disabled}
         />
         {project.title}
@@ -145,17 +152,19 @@ and we don't want to do that everywhere.
       name="documents"
       value={documents.map((d) => d.id).join(",")}
     />
-    <Button onclick={() => dispatch("close")}>{$_("dialog.done")}</Button>
+    <Button onclick={() => onclose?.()}>{$_("dialog.done")}</Button>
   </footer>
 </div>
 
 {#if createProjectOpen}
   <Portal>
     <Modal on:close={() => (createProjectOpen = false)}>
-      <h1 slot="title">{$_("projects.create")}</h1>
+      {#snippet title()}
+        <h1>{$_("projects.create")}</h1>
+      {/snippet}
       <EditProject
-        on:close={() => (createProjectOpen = false)}
-        on:success={onCreateSuccess}
+        onclose={() => (createProjectOpen = false)}
+        onsuccess={onCreateSuccess}
       />
     </Modal>
   </Portal>
