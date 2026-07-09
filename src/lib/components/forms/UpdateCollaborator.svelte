@@ -25,7 +25,7 @@ Update permissions for a single collaborator on a project
 
   let { project, user = $bindable(), onclose }: Props = $props();
 
-  let errors: ValidationError = {};
+  let errors: ValidationError = $state({});
 
   let action = $derived(new URL("?/update", canonicalUrl(project)).href);
   let name = $derived(getUserName(user.user));

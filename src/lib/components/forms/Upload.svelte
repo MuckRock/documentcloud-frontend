@@ -31,12 +31,14 @@ progress through the three-part upload process.
 </script>
 
 <script lang="ts">
+  import type { Writable } from "svelte/store";
   import type {
     Access,
     DocumentUpload,
     Maybe,
     Nullable,
     Project,
+    User,
   } from "$lib/api/types";
 
   import { beforeNavigate } from "$app/navigation";
@@ -77,7 +79,7 @@ progress through the three-part upload process.
   interface Props {
     files?: File[];
     projects?: Project[];
-    user?: any;
+    user?: Writable<Nullable<User>>;
     csrf_token?: Maybe<string>;
   }
 

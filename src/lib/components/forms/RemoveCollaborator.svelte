@@ -21,7 +21,7 @@ Remove a collaborator from a project
 
   let { project, user, onclose }: Props = $props();
 
-  let errors: ValidationError = {};
+  let errors: ValidationError = $state({});
 
   let action = $derived(new URL("?/remove", canonicalUrl(project)).href);
   let name = $derived(getUserName(user.user));
