@@ -57,14 +57,27 @@ export async function load({ fetch, cookies }) {
     });
   }
 
+  // Await this data instead of returning the promises directly. Returning
+  // unresolved promises from a layout `load` makes SvelteKit stream the
+  // response, and once streaming begins the HTTP status is locked at 200 —
+  // even when a child page's `load` throws (e.g. a 404 for a missing
+  // document). Awaiting keeps the sidebar requests running in parallel while
+  // letting error statuses propagate. See sveltejs/kit#12533 and #12987.
+  const [
+    resolvedUserOrgs,
+    resolvedOrgUsers,
+    resolvedPinnedAddons,
+    resolvedPinnedProjects,
+  ] = await Promise.all([user_orgs, org_users, pinnedAddons, pinnedProjects]);
+
   return {
     me,
     org,
     tipOfDay,
     breadcrumbs: [],
-    user_orgs,
-    org_users,
-    pinnedAddons,
-    pinnedProjects,
+    user_orgs: resolvedUserOrgs,
+    org_users: resolvedOrgUsers,
+    pinnedAddons: resolvedPinnedAddons,
+    pinnedProjects: resolvedPinnedProjects,
   };
 }

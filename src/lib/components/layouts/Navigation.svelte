@@ -31,8 +31,8 @@
   const me = getCurrentUser();
   const org = getContext<Writable<Org>>("org");
   const tipOfDay = getContext<Flatpage>("tipOfDay");
-  const user_orgs = getContext<Writable<Promise<Org[]>>>("user_orgs");
-  const org_users = getContext<Writable<Promise<User[]>>>("org_users");
+  const user_orgs = getContext<Writable<Org[]>>("user_orgs");
+  const org_users = getContext<Writable<User[]>>("org_users");
 
   let feedbackOpen = false;
   let width: number;
