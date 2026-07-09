@@ -20,16 +20,24 @@ Edit project metadata
 
   import { canonicalUrl } from "$lib/api/projects";
 
-  export let project: Partial<Project> = {};
+  interface Props {
+    project?: Partial<Project>;
+  }
+
+  let { project = {} }: Props = $props();
 
   const dispatch = createEventDispatcher();
 
-  $: action = project?.id
-    ? new URL("?/edit", canonicalUrl(project as Project)).href
-    : "/projects/";
+  let action = $derived(
+    project?.id
+      ? new URL("?/edit", canonicalUrl(project as Project)).href
+      : "/projects/",
+  );
 
   // handle optimistic updates
-  $: is_pinned = $pinned.includes(project as Project) || project.pinned;
+  let is_pinned = $derived(
+    $pinned.includes(project as Project) || project.pinned,
+  );
 
   function onSubmit({ submitter }) {
     submitter.disabled = true;

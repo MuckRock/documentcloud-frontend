@@ -5,7 +5,7 @@ This form is entirely client-side.
 <script lang="ts">
   import type { Document, Maybe, Section } from "$lib/api/types";
 
-  import { beforeUpdate, createEventDispatcher, onMount } from "svelte";
+  import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
   import Button from "../common/Button.svelte";
@@ -13,23 +13,23 @@ This form is entirely client-side.
 
   import { getCsrfToken } from "$lib/utils/api";
 
-  export let document: Document;
-  export let section: Partial<Section> = {};
+  interface Props {
+    document: Document;
+    section?: Partial<Section>;
+    onclose?: () => void;
+  }
 
-  const dispatch = createEventDispatcher();
+  let { document, section = {}, onclose }: Props = $props();
 
-  let csrftoken: Maybe<string>;
-  let table: HTMLTableElement;
+  let csrftoken: Maybe<string> = $state();
 
-  $: sections = document.sections ?? [];
-  $: existing_pages = new Set(sections.map((s) => s.page_number));
+  let sections = $derived(document.sections ?? []);
+  let existing_pages = $derived(new Set(sections.map((s) => s.page_number)));
 
-  beforeUpdate(() => {
-    // updating, so remove new section data
-    if (section.id) {
-      section = {};
-    }
-  });
+  // If the passed-in section already exists (has an id), it's shown in the
+  // list above, so start the "new section" row blank. Otherwise use it as
+  // prefill (e.g. the current page number).
+  let newSection = $derived(section.id ? {} : section);
 
   onMount(() => {
     csrftoken = getCsrfToken();
@@ -37,7 +37,7 @@ This form is entirely client-side.
 </script>
 
 <form method="post">
-  <table bind:this={table}>
+  <table>
     {#if sections.length}
       <thead>
         <tr>
@@ -64,18 +64,18 @@ This form is entirely client-side.
       <EditSectionRow
         {document}
         {csrftoken}
-        title={section.title}
-        page_number={section.page_number}
+        title={newSection.title}
+        page_number={newSection.page_number}
         disabled={Boolean(
-          section.page_number && existing_pages.has(section.page_number),
+          newSection.page_number && existing_pages.has(newSection.page_number),
         )}
       />
 
-      {#if Boolean(section.page_number && existing_pages.has(section.page_number))}
+      {#if Boolean(newSection.page_number && existing_pages.has(newSection.page_number))}
         <tr class="warning">
           <td colspan="2">
             {$_("sections.overwrite", {
-              values: { n: (section.page_number ?? 0) + 1 },
+              values: { n: (newSection.page_number ?? 0) + 1 },
             })}
           </td>
         </tr>
@@ -83,7 +83,7 @@ This form is entirely client-side.
     </tfoot>
   </table>
   <div class="buttons">
-    <Button mode="primary" onclick={() => dispatch("close")}>
+    <Button mode="primary" onclick={() => onclose?.()}>
       {$_("dialog.done")}
     </Button>
   </div>

@@ -12,10 +12,7 @@
   });
 </script>
 
-<Story
-  name="Without Projects"
-  args={{ projects: [], documents: [document] }}
-/>
+<Story name="Without Projects" args={{ projects: [], documents: [document] }} />
 
 <Story
   name="one document"

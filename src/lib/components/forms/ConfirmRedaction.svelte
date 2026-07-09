@@ -5,7 +5,7 @@ which you can't undo.
 This almost certainly lives in a modal.
 -->
 <script lang="ts">
-  import type { Document } from "$lib/api/types";
+  import type { Document, Maybe } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
   import { invalidate, goto } from "$app/navigation";
@@ -24,13 +24,17 @@ This almost certainly lives in a modal.
   import { canonicalUrl } from "$lib/api/documents";
   import { load } from "$lib/components/processing/ProcessContext.svelte";
 
-  export let document: Document;
+  interface Props {
+    document: Document;
+  }
+
+  let { document }: Props = $props();
 
   const dispatch = createEventDispatcher();
 
-  let error: string;
+  let error: Maybe<string> = $state();
 
-  $: action = new URL("?/redact", canonicalUrl(document)).href;
+  let action = $derived(new URL("?/redact", canonicalUrl(document)).href);
 
   function onSubmit({ formElement, submitter }) {
     formElement.disabled = true;

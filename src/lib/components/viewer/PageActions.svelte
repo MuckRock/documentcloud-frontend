@@ -125,7 +125,7 @@
       </h2>
       <EditSections
         {document}
-        on:close={() => (editSection = false)}
+        onclose={() => (editSection = false)}
         section={section || { page_number: page_number - 1 }}
       />
     </Modal>

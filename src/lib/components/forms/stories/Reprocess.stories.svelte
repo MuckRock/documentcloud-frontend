@@ -45,4 +45,7 @@
 
 <Story name="Pending documents" args={{ documents: pending }} />
 
-<Story name="Too many documents" args={{ documents: documents.concat(document) }} />
+<Story
+  name="Too many documents"
+  args={{ documents: documents.concat(document) }}
+/>

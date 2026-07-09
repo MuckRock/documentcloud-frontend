@@ -13,11 +13,15 @@ Confirm project deletion.
 
   import { canonicalUrl } from "$lib/api/projects";
 
-  export let project: Project;
+  interface Props {
+    project: Project;
+  }
+
+  let { project }: Props = $props();
 
   const dispatch = createEventDispatcher();
 
-  $: action = new URL("?/delete", canonicalUrl(project)).href;
+  let action = $derived(new URL("?/delete", canonicalUrl(project)).href);
 </script>
 
 <form {action} method="post">

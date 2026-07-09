@@ -19,17 +19,28 @@ One row of the `EditSections.svelte` form, to encapsulate logic.
 
   import { create, update, remove } from "$lib/api/sections";
 
-  export let csrftoken: Maybe<string> = undefined;
-  export let disabled = false;
-  export let document: Document;
-  export let id: Maybe<number | string> = undefined;
-  export let page_number: number = 1;
-  export let title: string = "";
+  interface Props {
+    csrftoken?: Maybe<string>;
+    disabled?: boolean;
+    document: Document;
+    id?: Maybe<number | string>;
+    page_number?: number;
+    title?: string;
+  }
+
+  let {
+    csrftoken = undefined,
+    disabled = false,
+    document,
+    id = undefined,
+    page_number = $bindable(1),
+    title = $bindable(""),
+  }: Props = $props();
 
   // store separately to deal with zero-indexed section pages
-  let display_number: number = (page_number || 0) + 1;
+  let display_number: number = $state((page_number || 0) + 1);
 
-  $: mode = id ? "edit" : "create";
+  let mode = $derived(id ? "edit" : "create");
 
   function reset() {
     title = "";
@@ -40,7 +51,7 @@ One row of the `EditSections.svelte` form, to encapsulate logic.
 
 <tr class="section {mode}" id="section-{id ?? 'new'}">
   <td class="page_number">
-    <!-- svelte-ignore a11y-label-has-associated-control -->
+    <!-- svelte-ignore a11y_label_has_associated_control -->
     <label>
       <span class="sr-only">{$_("sections.page")}</span>
       <input
@@ -50,12 +61,12 @@ One row of the `EditSections.svelte` form, to encapsulate logic.
         min={1}
         max={document.page_count}
         required
-        on:input={(e) => (page_number = display_number - 1)}
+        oninput={(e) => (page_number = display_number - 1)}
       />
     </label>
   </td>
   <td class="title">
-    <!-- svelte-ignore a11y-label-has-associated-control -->
+    <!-- svelte-ignore a11y_label_has_associated_control -->
     <label>
       <span class="sr-only">{$_("sections.title")}</span>
       <Text name="title" bind:value={title} required />

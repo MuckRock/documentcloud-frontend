@@ -158,7 +158,7 @@
       {#snippet title()}
         <h1>{$_("sections.edit")}</h1>
       {/snippet}
-      <EditSections {document} on:close={() => (sectionsOpen = false)} />
+      <EditSections {document} onclose={() => (sectionsOpen = false)} />
     </Modal>
   </Portal>
 {/if}
