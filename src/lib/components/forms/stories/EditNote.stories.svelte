@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import type { Document } from "$lib/api/types";
 
   import { defineMeta } from "@storybook/addon-svelte-csf";

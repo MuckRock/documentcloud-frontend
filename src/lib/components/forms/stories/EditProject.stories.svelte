@@ -1,27 +1,26 @@
-<script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import EditProject from "../EditProject.svelte";
 
-  export const meta = {
+  import { project } from "@/test/fixtures/projects";
+
+  const { Story } = defineMeta({
     title: "Forms / Edit project",
     component: EditProject,
     parameters: { layout: "centered" },
-  };
-
-  import { project } from "@/test/fixtures/projects";
+    render: template,
+  });
 </script>
 
-<Story name="create project">
+{#snippet template(args)}
   <div>
-    <EditProject />
+    <EditProject {...args} />
   </div>
-</Story>
+{/snippet}
 
-<Story name="update project">
-  <div>
-    <EditProject {project} />
-  </div>
-</Story>
+<Story name="create project" args={{}} />
+
+<Story name="update project" args={{ project }} />
 
 <style>
   div {

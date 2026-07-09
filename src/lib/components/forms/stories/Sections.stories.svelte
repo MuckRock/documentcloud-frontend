@@ -1,7 +1,7 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import type { Document } from "$lib/api/types";
 
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import EditSections from "../EditSections.svelte";
 
   import doc from "@/test/fixtures/documents/document.json";
@@ -9,15 +9,18 @@
 
   const document = { ...doc, sections: sections.results } as Document;
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Forms / Edit sections",
     component: EditSections,
     parameters: { layout: "centered" },
-  };
+    render: template,
+  });
 </script>
 
-<Story name="default">
+{#snippet template(args)}
   <div style="width: 22rem;">
-    <EditSections {document} />
+    <EditSections {...args} />
   </div>
-</Story>
+{/snippet}
+
+<Story name="default" args={{ document }} />

@@ -1,16 +1,14 @@
-<script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import DeleteProject from "../DeleteProject.svelte";
 
   import { project } from "@/test/fixtures/projects";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Forms / Delete project",
     component: DeleteProject,
     parameters: { layout: "centered" },
-  };
+  });
 </script>
 
-<Story name="default">
-  <DeleteProject {project} />
-</Story>
+<Story name="default" args={{ project }} />

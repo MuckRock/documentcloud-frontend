@@ -1,16 +1,16 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import { writable } from "svelte/store";
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import Upload from "../Upload.svelte";
   import Unverified from "../../accounts/Unverified.svelte";
 
   import { me } from "@/test/fixtures/accounts";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Forms / Document Upload",
     component: Upload,
     parameters: { layout: "centered" },
-  };
+  });
 
   const args = {
     files: [],
@@ -19,11 +19,8 @@
   const user = { ...me, verified_journalist: false };
 </script>
 
-<Template let:args>
-  <Upload {...args} />
-</Template>
-
 <Story name="Empty" {args} />
+
 <Story
   name="With Documents"
   args={{
@@ -37,6 +34,7 @@
     ],
   }}
 />
+
 <Story
   name="With Oversized Files"
   args={{

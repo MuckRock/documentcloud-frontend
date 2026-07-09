@@ -1,19 +1,22 @@
-<script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import InviteCollaborator from "../InviteCollaborator.svelte";
-
-  export const meta = {
-    title: "Forms / Invite collaborator",
-    component: InviteCollaborator,
-    parameters: { layout: "centered" },
-  };
 
   import { project, projectUsers } from "@/test/fixtures/projects";
   const user = projectUsers.results[0];
+
+  const { Story } = defineMeta({
+    title: "Forms / Invite collaborator",
+    component: InviteCollaborator,
+    parameters: { layout: "centered" },
+    render: template,
+  });
 </script>
 
-<Story name="default">
+{#snippet template(args)}
   <div style="max-width: 88ch;">
-    <InviteCollaborator {project} />
+    <InviteCollaborator {...args} />
   </div>
-</Story>
+{/snippet}
+
+<Story name="default" args={{ project }} />
