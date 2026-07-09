@@ -10,7 +10,6 @@ This almost certainly lives in a modal.
   import { enhance } from "$app/forms";
   import { invalidate, goto } from "$app/navigation";
 
-  import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
   import { Check16 } from "svelte-octicons";
 
@@ -26,11 +25,10 @@ This almost certainly lives in a modal.
 
   interface Props {
     document: Document;
+    onclose?: () => void;
   }
 
-  let { document }: Props = $props();
-
-  const dispatch = createEventDispatcher();
+  let { document, onclose }: Props = $props();
 
   let error: Maybe<string> = $state();
 
@@ -57,7 +55,7 @@ This almost certainly lives in a modal.
         });
         load();
         goto("?mode=document");
-        dispatch("close");
+        onclose?.();
       }
     };
   }
@@ -85,7 +83,7 @@ This almost certainly lives in a modal.
         <Check16 />
         {$_("redact.confirm")}
       </Button>
-      <Button onclick={() => dispatch("close")}>
+      <Button onclick={() => onclose?.()}>
         {$_("redact.cancel")}
       </Button>
     </Flex>

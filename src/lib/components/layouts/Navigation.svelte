@@ -91,7 +91,7 @@
       <Portal>
         <Modal on:close={() => (feedbackOpen = false)}>
           <h1 slot="title">{$_("feedback.title")}</h1>
-          <UserFeedback user={$me} on:close={() => (feedbackOpen = false)} />
+          <UserFeedback user={$me} onclose={() => (feedbackOpen = false)} />
         </Modal>
       </Portal>
     {/if}

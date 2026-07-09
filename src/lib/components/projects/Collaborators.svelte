@@ -196,7 +196,7 @@
       <h1 slot="title">{actions[show]}</h1>
 
       {#if show === "invite"}
-        <InviteCollaborator {project} on:close={hide} />
+        <InviteCollaborator {project} onclose={hide} />
       {/if}
 
       {#if show === "update" && user_to_update}

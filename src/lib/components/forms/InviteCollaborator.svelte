@@ -6,7 +6,6 @@ Invite a new collaborator to a project
 
   import { enhance } from "$app/forms";
 
-  import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
 
   import Button from "../common/Button.svelte";
@@ -17,13 +16,12 @@ Invite a new collaborator to a project
 
   import { canonicalUrl } from "$lib/api/projects";
 
-  const dispatch = createEventDispatcher();
-
   interface Props {
     project: Project;
+    onclose?: () => void;
   }
 
-  let { project }: Props = $props();
+  let { project, onclose }: Props = $props();
 
   let errors: ValidationError = $state({});
 
@@ -37,7 +35,7 @@ Invite a new collaborator to a project
 
     return ({ result, update }) => {
       if (result.type === "success") {
-        dispatch("close");
+        onclose?.();
         return update(result);
       }
 
@@ -68,7 +66,7 @@ Invite a new collaborator to a project
 
   <Flex class="buttons">
     <Button type="submit" mode="primary">{$_("collaborators.add")}</Button>
-    <Button onclick={() => dispatch("close")}>{$_("dialog.cancel")}</Button>
+    <Button onclick={() => onclose?.()}>{$_("dialog.cancel")}</Button>
   </Flex>
 </form>
 

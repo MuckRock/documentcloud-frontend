@@ -108,7 +108,7 @@ Assumes it's a child of a ViewerContext
       {#snippet title()}
         <h1>{$_("redact.confirmTitle")}</h1>
       {/snippet}
-      <ConfirmRedaction {document} on:close={() => (confirmOpen = false)} />
+      <ConfirmRedaction {document} onclose={() => (confirmOpen = false)} />
     </Modal>
   </Portal>
 {/if}

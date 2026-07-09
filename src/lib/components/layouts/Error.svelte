@@ -70,7 +70,7 @@
       <UserFeedback
         user={$me}
         feedbackType="Bug"
-        on:close={() => (feedbackOpen = false)}
+        onclose={() => (feedbackOpen = false)}
       />
     </Modal>
   </Portal>

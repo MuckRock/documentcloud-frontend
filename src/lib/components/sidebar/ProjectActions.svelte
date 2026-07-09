@@ -75,7 +75,7 @@
       {/if}
 
       {#if show === "delete"}
-        <DeleteProject {project} on:close={hide} />
+        <DeleteProject {project} onclose={hide} />
       {/if}
     </Modal>
   </Portal>
