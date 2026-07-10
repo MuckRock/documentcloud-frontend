@@ -192,8 +192,10 @@
 
 {#if show && project.add_remove_access}
   <Portal>
-    <Modal on:close={hide}>
-      <h1 slot="title">{actions[show]}</h1>
+    <Modal onclose={hide}>
+      {#snippet title()}
+        <h1>{actions[show!]}</h1>
+      {/snippet}
 
       {#if show === "invite"}
         <InviteCollaborator {project} onclose={hide} />

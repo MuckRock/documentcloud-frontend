@@ -169,8 +169,10 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 
 {#if visible}
   <Portal>
-    <Modal on:close={close}>
-      <h1 slot="title">{$_(labels[visible])}</h1>
+    <Modal onclose={close}>
+      {#snippet title()}
+        <h1>{$_(labels[visible!])}</h1>
+      {/snippet}
 
       {#if visible === "share"}
         <Share document={toShare} />

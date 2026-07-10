@@ -302,7 +302,7 @@
 </div>
 {#if editOpen}
   <Portal>
-    <Modal on:close={closeEditing}>
+    <Modal onclose={closeEditing}>
       {#snippet title()}
         <h1>{$_("access.edit")}</h1>
       {/snippet}

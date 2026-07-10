@@ -1,11 +1,11 @@
 <script lang="ts">
-  import type { Component } from "svelte";
+  import type { Component, Snippet } from "svelte";
   import type { SvgComponent } from "svelte-octicons";
 
   interface Props {
     key: string;
     icon?: Component | typeof SvgComponent;
-    children?: import("svelte").Snippet;
+    children?: Snippet;
   }
 
   let { key, icon: Icon, children }: Props = $props();

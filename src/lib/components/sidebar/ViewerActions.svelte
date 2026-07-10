@@ -158,13 +158,15 @@
 
 {#if visible}
   <Portal>
-    <Modal on:close={close}>
-      <h1 slot="title">
-        {$_(labels[visible])}
-        {#if visible === "revisions"}
-          <PremiumBadge />
-        {/if}
-      </h1>
+    <Modal onclose={close}>
+      {#snippet title()}
+        <h1>
+          {$_(labels[visible!])}
+          {#if visible === "revisions"}
+            <PremiumBadge />
+          {/if}
+        </h1>
+      {/snippet}
 
       {#if visible === "share"}
         <Share {document} page={$page} />

@@ -6,7 +6,7 @@
   should hide themselves off-screen and default to being closed.
 -->
 
-<script lang="ts" context="module">
+<script lang="ts" module>
   /**
    * Sidebar open state is stored in an id-indexed object.
    *
@@ -22,6 +22,8 @@
 </script>
 
 <script lang="ts">
+  import type { Snippet } from "svelte";
+
   import { browser } from "$app/environment";
 
   import { circOut } from "svelte/easing";
@@ -30,26 +32,34 @@
 
   import Button from "$lib/components/common/Button.svelte";
 
-  export let id: string;
-  export let position: "left" | "right" = "left";
+  interface Props {
+    id: string;
+    position?: "left" | "right";
+    title?: Snippet;
+    children?: Snippet;
+  }
 
-  let viewWidth: undefined | number = Boolean(browser)
-    ? window.innerWidth
-    : undefined;
+  let { id, position = "left", title, children }: Props = $props();
 
-  $: isSmall = viewWidth ? viewWidth < 64 * 16 : false;
-  $: $sidebars[id] = isSmall ? false : true;
-  $: isOpen = $sidebars[id];
+  let viewWidth: undefined | number = $state(
+    Boolean(browser) ? window.innerWidth : undefined,
+  );
 
-  $: flyOptions = {
+  let isSmall = $derived(viewWidth ? viewWidth < 64 * 16 : false);
+  $effect(() => {
+    $sidebars[id] = isSmall ? false : true;
+  });
+  let isOpen = $derived($sidebars[id]);
+
+  let flyOptions = $derived({
     duration: isSmall ? 200 : 0,
     x: 400 * (position === "left" ? -1 : 1),
     easing: circOut,
-  };
+  });
 
-  $: fadeOptions = {
+  let fadeOptions = $derived({
     duration: isSmall ? 200 : 0,
-  };
+  });
 
   function close() {
     $sidebars[id] = false;
@@ -61,8 +71,8 @@
 {#if isOpen}
   <aside class="sidebarContainer {position}" {id} transition:fly={flyOptions}>
     <header class:reverse={position === "left"}>
-      {#if $$slots.title}
-        <span class="title"><slot name="title" /></span>
+      {#if title}
+        <span class="title">{@render title?.()}</span>
       {/if}
       <Button ghost minW={false} onclick={close}>
         <span class="icon" class:flipV={position === "left"}>
@@ -71,14 +81,14 @@
       </Button>
     </header>
     <main>
-      <slot />
+      {@render children?.()}
     </main>
   </aside>
   <div
     class="overlay"
     role="presentation"
-    on:click={close}
-    on:keydown={close}
+    onclick={close}
+    onkeydown={close}
     transition:fade={fadeOptions}
   ></div>
 {/if}

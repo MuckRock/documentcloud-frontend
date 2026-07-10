@@ -5,6 +5,7 @@ This will mostly be used inside a modal but isn't dependent on one.
 -->
 <script lang="ts">
   import type { Document, Status, APIError, Maybe } from "$lib/api/types";
+  import type { Snippet } from "svelte";
 
   import { untrack } from "svelte";
   import { _ } from "svelte-i18n";
@@ -47,7 +48,7 @@ This will mostly be used inside a modal but isn't dependent on one.
     documents?: Document[];
     // exported for testing and demos
     errors?: Maybe<APIError<string[]>>;
-    children?: import("svelte").Snippet;
+    children?: Snippet;
     onclose?: () => void;
   }
 

@@ -26,44 +26,49 @@ Assumes it's a child of a ViewerContext
 
   const me = getCurrentUser();
 
-  export let documentStore = getDocument();
-  export let text = getText();
+  let { documentStore = getDocument(), text = getText() } = $props();
 
-  $: document = $documentStore;
-  $: projects = (document.projects ?? []) as Project[];
+  let document = $derived($documentStore);
+  let projects = $derived((document.projects ?? []) as Project[]);
 </script>
 
 <SidebarLayout hideNavigation={!$me}>
-  <nav class="column" slot="navigation">
-    <Projects {projects} {document} />
-    <Data {document} />
-    <Notes {document} />
-  </nav>
+  {#snippet navigation()}
+    <nav class="column">
+      <Projects {projects} {document} />
+      <Data {document} />
+      <Notes {document} />
+    </nav>
+  {/snippet}
 
-  <article slot="content">
-    <header><DocumentHeader {document} /></header>
-    <main><Viewer /></main>
-  </article>
+  {#snippet content()}
+    <article>
+      <header><DocumentHeader {document} /></header>
+      <main><Viewer /></main>
+    </article>
+  {/snippet}
 
-  <aside class="column between" slot="action">
-    <Flex direction="column" gap={2}>
-      {#if document.access === "organization" && isOrg(document.organization)}
-        <Metadata key={$_("sidebar.sharedWith")}>
-          <Flex>
-            <Avatar org={document.organization} />
-            {document.organization.name}
-          </Flex>
-        </Metadata>
-      {/if}
-      <ViewerActions {document} user={$me} />
-      <SignedIn>
-        <AddOns query="+document:{document.id}" />
-      </SignedIn>
-    </Flex>
-    {#await text then text}
-      <DocumentMetadata {document} {text} />
-    {/await}
-  </aside>
+  {#snippet action()}
+    <aside class="column between">
+      <Flex direction="column" gap={2}>
+        {#if document.access === "organization" && isOrg(document.organization)}
+          <Metadata key={$_("sidebar.sharedWith")}>
+            <Flex>
+              <Avatar org={document.organization} />
+              {document.organization.name}
+            </Flex>
+          </Metadata>
+        {/if}
+        <ViewerActions {document} user={$me} />
+        <SignedIn>
+          <AddOns query="+document:{document.id}" />
+        </SignedIn>
+      </Flex>
+      {#await text then text}
+        <DocumentMetadata {document} {text} />
+      {/await}
+    </aside>
+  {/snippet}
 </SidebarLayout>
 
 <style>

@@ -67,7 +67,7 @@
 
 {#if edit}
   <Portal>
-    <Modal on:close={close}>
+    <Modal onclose={close}>
       {#snippet title()}
         <h2>
           {$_("access.edit")}

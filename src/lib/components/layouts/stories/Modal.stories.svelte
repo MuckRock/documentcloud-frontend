@@ -11,7 +11,9 @@
 
 <Story name="With Title" asChild>
   <Modal>
-    <h1 slot="title">The Ship</h1>
+    {#snippet title()}
+      <h1>The Ship</h1>
+    {/snippet}
     <div>
       <p>
         In bed we concocted our plans for the morrow. But to my surprise and no

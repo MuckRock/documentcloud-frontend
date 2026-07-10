@@ -57,8 +57,10 @@
   }
 </script>
 
-<Modal on:close={() => onclose?.()}>
-  <h1 slot="title">{$_("mailkey.title")}</h1>
+<Modal onclose={() => onclose?.()}>
+  {#snippet title()}
+    <h1>{$_("mailkey.title")}</h1>
+  {/snippet}
   <div class="description">{@html $_("mailkey.description")}</div>
   {#if message}
     <p class="message" class:error>

@@ -53,83 +53,85 @@
 </svelte:head>
 
 <SidebarLayout>
-  <svelte:fragment slot="navigation">
+  {#snippet navigation()}
     <Documents />
     <Projects />
     <AddOns />
-  </svelte:fragment>
+  {/snippet}
 
-  <ContentLayout slot="content">
-    {#snippet header()}
-      <Flex>
-        {#if $sidebars["navigation"] === false}
-          <div class="toolbar w-auto">
-            <Button
-              ghost
-              minW={false}
-              onclick={() => ($sidebars["navigation"] = true)}
-            >
-              <span class="flipV">
+  {#snippet content()}
+    <ContentLayout>
+      {#snippet header()}
+        <Flex>
+          {#if $sidebars["navigation"] === false}
+            <div class="toolbar w-auto">
+              <Button
+                ghost
+                minW={false}
+                onclick={() => ($sidebars["navigation"] = true)}
+              >
+                <span class="flipV">
+                  <SidebarExpand16 />
+                </span>
+              </Button>
+            </div>
+          {/if}
+          <PageToolbar>
+            {#snippet center()}
+              <Search
+                name="query"
+                placeholder={$_("projects.placeholder.projects")}
+                {query}
+              />
+            {/snippet}
+          </PageToolbar>
+          {#if $sidebars["action"] === false}
+            <div class="toolbar w-auto">
+              <Button
+                ghost
+                minW={false}
+                onclick={() => ($sidebars["action"] = true)}
+              >
                 <SidebarExpand16 />
-              </span>
-            </Button>
-          </div>
-        {/if}
+              </Button>
+            </div>
+          {/if}
+        </Flex>
+      {/snippet}
+
+      {#each projects as project}
+        <ProjectListItem {project} />
+      {:else}
+        <Empty icon={FileDirectory24}>{$_("projects.none")}</Empty>
+      {/each}
+
+      {#snippet footer()}
         <PageToolbar>
           {#snippet center()}
-            <Search
-              name="query"
-              placeholder={$_("projects.placeholder.projects")}
-              {query}
+            <Paginator
+              has_next={Boolean(next)}
+              has_previous={Boolean(previous)}
+              onnext={() => paginate(next)}
+              onprevious={() => paginate(previous)}
             />
           {/snippet}
         </PageToolbar>
-        {#if $sidebars["action"] === false}
-          <div class="toolbar w-auto">
-            <Button
-              ghost
-              minW={false}
-              onclick={() => ($sidebars["action"] = true)}
-            >
-              <SidebarExpand16 />
-            </Button>
-          </div>
-        {/if}
-      </Flex>
-    {/snippet}
+      {/snippet}
+    </ContentLayout>
+  {/snippet}
 
-    {#each projects as project}
-      <ProjectListItem {project} />
-    {:else}
-      <Empty icon={FileDirectory24}>{$_("projects.none")}</Empty>
-    {/each}
-
-    {#snippet footer()}
-      <PageToolbar>
-        {#snippet center()}
-          <Paginator
-            has_next={Boolean(next)}
-            has_previous={Boolean(previous)}
-            onnext={() => paginate(next)}
-            onprevious={() => paginate(previous)}
-          />
-        {/snippet}
-      </PageToolbar>
-    {/snippet}
-  </ContentLayout>
-
-  <svelte:fragment slot="action">
+  {#snippet action()}
     {#if $me}
       <Button mode="primary" onclick={() => (create = true)}>
         {$_("projects.create")}
       </Button>
     {/if}
-  </svelte:fragment>
+  {/snippet}
 </SidebarLayout>
 
 {#if create}
   <Portal>
-    <Modal on:close={() => (create = false)}>
+    <Modal onclose={() => (create = false)}>
       {#snippet title()}
         <h1>{$_("projects.create")}</h1>
       {/snippet}

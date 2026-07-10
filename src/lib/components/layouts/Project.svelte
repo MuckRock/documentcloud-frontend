@@ -28,27 +28,29 @@
 </script>
 
 <SidebarLayout>
-  <svelte:fragment slot="navigation">
+  {#snippet navigation()}
     <Documents />
     <Projects />
     <AddOns query={combinedQuery} />
-  </svelte:fragment>
+  {/snippet}
 
-  <article slot="content">
-    <header><ProjectHeader {project} /></header>
-    <main>
-      <DocumentBrowser {project} {query} />
-    </main>
-  </article>
+  {#snippet content()}
+    <article>
+      <header><ProjectHeader {project} /></header>
+      <main>
+        <DocumentBrowser {project} {query} />
+      </main>
+    </article>
+  {/snippet}
 
-  <svelte:fragment slot="action">
+  {#snippet action()}
     <UploadButton {project} />
     <h4>Document Actions</h4>
     <DocumentActions />
     <h4>Project Actions</h4>
     <ProjectActions {project} />
     <Collaborators {users} {project} />
-  </svelte:fragment>
+  {/snippet}
 </SidebarLayout>
 
 <style>

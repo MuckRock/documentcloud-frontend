@@ -6,6 +6,8 @@
 </script>
 
 <script lang="ts">
+  import type { Snippet } from "svelte";
+
   import { TriangleRight16 } from "svelte-octicons";
 
   import Flex from "../common/Flex.svelte";
@@ -15,7 +17,7 @@
 
   interface Props {
     trail?: Breadcrumb[];
-    root?: import("svelte").Snippet;
+    root?: Snippet;
   }
 
   let { trail = [], root }: Props = $props();

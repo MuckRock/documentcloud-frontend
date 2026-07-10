@@ -47,17 +47,19 @@
 </svelte:head>
 
 <SidebarLayout>
-  <svelte:fragment slot="navigation">
+  {#snippet navigation()}
     <DocumentNavigation />
     <ProjectNavigation />
     <AddOnsNavigation {query} />
-  </svelte:fragment>
+  {/snippet}
 
-  <DocumentBrowser slot="content" {query} />
+  {#snippet content()}
+    <DocumentBrowser {query} />
+  {/snippet}
 
-  <svelte:fragment slot="action">
+  {#snippet action()}
     <UploadButton />
     <DocumentActions />
-  </svelte:fragment>
+  {/snippet}
 </SidebarLayout>
 <GuidedTour />
