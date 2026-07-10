@@ -1,9 +1,9 @@
-<script lang="ts" context="module">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import AddOnBrowser from "../AddOnBrowser.svelte";
   import { addonsList, eventsList, runsList } from "@/test/fixtures/addons";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Layout / Add-On Browser",
     component: AddOnBrowser,
     parameters: {
@@ -16,22 +16,22 @@
         },
       },
     },
-  };
+  });
 
-  let args = {
-    addons: Promise.resolve(addonsList),
-    events: Promise.resolve(eventsList),
-    runs: Promise.resolve(runsList),
+  const args = {
+    addons: Promise.resolve({ data: addonsList }),
+    events: Promise.resolve({ data: eventsList }),
+    runs: Promise.resolve({ data: runsList }),
   };
 </script>
 
-<Template let:args>
+{#snippet template(args)}
   <div class="vh">
     <AddOnBrowser {...args} />
   </div>
-</Template>
+{/snippet}
 
-<Story name="With Data" {args} />
+<Story name="With Data" {args} {template} />
 
 <style>
   .vh {

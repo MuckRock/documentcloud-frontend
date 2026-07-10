@@ -1,15 +1,15 @@
 <script module lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import Error from "../Error.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Layout / Error",
     component: Error,
     parameters: { layout: "fullscreen" },
-  };
+  });
 </script>
 
-<Story name="Error 500">
+<Story name="Error 500" asChild>
   <div class="vh-100">
     <Error status={500}>
       {#snippet message()}
@@ -19,7 +19,7 @@
   </div>
 </Story>
 
-<Story name="Error 404">
+<Story name="Error 404" asChild>
   <div class="vh-100">
     <Error status={404}>
       {#snippet message()}

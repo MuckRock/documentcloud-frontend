@@ -1,26 +1,25 @@
-<script lang="ts" context="module">
-  import type { Meta } from "@storybook/svelte";
-  import { Template, Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import Flatpage from "../Flatpage.svelte";
 
   import { flatpage } from "@/test/fixtures/flatpages";
 
-  export const meta: Meta = {
+  const { Story } = defineMeta({
     title: "Layout / Flatpage",
     component: Flatpage,
     parameters: {
       layout: "fullscreen",
     },
-  };
+  });
 </script>
 
-<Template let:args>
+{#snippet template(args)}
   <div class="vh vw">
     <Flatpage {...args} />
   </div>
-</Template>
+{/snippet}
 
-<Story name="Search Docs" args={{ ...flatpage }} />
+<Story name="Search Docs" args={{ ...flatpage }} {template} />
 
 <style>
   .vh {

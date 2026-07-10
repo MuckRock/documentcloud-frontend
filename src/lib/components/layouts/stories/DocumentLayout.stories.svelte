@@ -1,16 +1,15 @@
-<script lang="ts" context="module">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import DocumentLayout from "../DocumentLayout.svelte";
 
   import type { Document } from "$lib/api/types";
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import txt from "@/test/fixtures/documents/document.txt.json";
-  import { activeAddons } from "@/test/fixtures/addons";
   import { writable } from "svelte/store";
   const document = doc as Document;
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Layout / Document",
     component: DocumentLayout,
     parameters: {
@@ -23,49 +22,48 @@
         },
       },
     },
-  };
+  });
 
-  let args = {
-    document: writable(document),
-    mode: "document",
-    text: txt,
-    query: "",
-    addons: Promise.resolve(activeAddons),
+  const args = {
+    documentStore: writable(document),
+    text: Promise.resolve(txt),
   };
 </script>
 
-<Template let:args>
+{#snippet template(args)}
   <div class="vh">
     <DocumentLayout {...args} />
   </div>
-</Template>
+{/snippet}
 
-<Story name="With Read Access" {args} />
+<Story name="With Read Access" {args} {template} />
 
 <Story
   name="With Edit Access"
   args={{
     ...args,
-    document: {
+    documentStore: writable({
       ...document,
       edit_access: true,
-    },
+    }),
   }}
+  {template}
 />
 
 <Story
   name="Without Description"
   args={{
     ...args,
-    document: {
+    documentStore: writable({
       ...document,
       description: "",
       edit_access: true,
-    },
+    }),
   }}
+  {template}
 />
 
-<Story name="With Processing Document" {args} />
+<Story name="With Processing Document" {args} {template} />
 
 <style>
   .vh {

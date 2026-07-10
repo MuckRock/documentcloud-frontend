@@ -1,18 +1,18 @@
-<script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import Toaster, { toast } from "../Toaster.svelte";
   import Flex from "../../common/Flex.svelte";
   import Button from "../../common/Button.svelte";
   import Kv from "../../common/KV.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Layout / Toaster",
     component: Toaster,
     parameters: { layout: "centered" },
-  };
+  });
 </script>
 
-<Story name="With Title">
+<Story name="With Title" asChild>
   <Flex direction="column">
     <Button onclick={() => toast("A standard message")}>Send Toast</Button>
     <Button onclick={() => toast("Did you know?", { status: "info" })}
