@@ -203,7 +203,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
       {/if}
 
       {#if visible === "project"}
-        <Projects documents={search.selected} on:close={close} />
+        <Projects documents={search.selected} onclose={close} />
       {/if}
 
       {#if visible === "change_owner"}

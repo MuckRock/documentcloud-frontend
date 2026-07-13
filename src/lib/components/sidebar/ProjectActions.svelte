@@ -67,7 +67,7 @@
         {actions[show]}
       </h1>
       {#if show === "edit"}
-        <EditProject {project} on:close={hide} />
+        <EditProject {project} onclose={hide} />
       {/if}
 
       {#if show === "share"}
@@ -75,7 +75,7 @@
       {/if}
 
       {#if show === "delete"}
-        <DeleteProject {project} on:close={hide} />
+        <DeleteProject {project} onclose={hide} />
       {/if}
     </Modal>
   </Portal>

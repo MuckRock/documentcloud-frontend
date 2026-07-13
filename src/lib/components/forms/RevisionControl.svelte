@@ -1,6 +1,6 @@
 <!-- @component Enable or disable revisions for a document. -->
 <script lang="ts">
-  import type { Document } from "$lib/api/types";
+  import type { Document, Maybe } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
@@ -13,12 +13,16 @@
 
   import { canonicalUrl } from "$lib/api/documents";
 
-  export let document: Document;
-  export let disabled = false;
+  interface Props {
+    document: Document;
+    disabled?: boolean;
+  }
 
-  let formRef: HTMLFormElement;
+  let { document, disabled = false }: Props = $props();
 
-  $: action = canonicalUrl(document).href + "?/edit";
+  let formRef: Maybe<HTMLFormElement> = $state();
+
+  let action = $derived(canonicalUrl(document).href + "?/edit");
 
   function onSubmit({ formData }) {
     const enabled = formData.get("revision_control") === "on";
@@ -37,7 +41,7 @@
       <Switch
         name="revision_control"
         checked={document.revision_control}
-        onchange={() => formRef.submit()}
+        onchange={() => formRef?.submit()}
         {disabled}
       />
     </Field>

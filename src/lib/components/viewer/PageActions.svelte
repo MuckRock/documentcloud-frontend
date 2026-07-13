@@ -32,7 +32,8 @@
   let pageNote = false;
   let editSection = false;
 
-  $: section = getSections(document)[page_number];
+  // `page_number` is 1-indexed here; sections are keyed by 0-indexed page.
+  $: section = getSections(document)[page_number - 1];
 </script>
 
 <div class="page-actions">
@@ -125,7 +126,7 @@
       </h2>
       <EditSections
         {document}
-        on:close={() => (editSection = false)}
+        onclose={() => (editSection = false)}
         section={section || { page_number: page_number - 1 }}
       />
     </Modal>

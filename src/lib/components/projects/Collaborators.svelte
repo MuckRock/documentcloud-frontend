@@ -196,15 +196,15 @@
       <h1 slot="title">{actions[show]}</h1>
 
       {#if show === "invite"}
-        <InviteCollaborator {project} on:close={hide} />
+        <InviteCollaborator {project} onclose={hide} />
       {/if}
 
       {#if show === "update" && user_to_update}
-        <UpdateCollaborator {project} user={user_to_update} on:close={hide} />
+        <UpdateCollaborator {project} user={user_to_update} onclose={hide} />
       {/if}
 
       {#if show === "remove" && user_to_update}
-        <RemoveCollaborator {project} user={user_to_update} on:close={hide} />
+        <RemoveCollaborator {project} user={user_to_update} onclose={hide} />
       {/if}
     </Modal>
   </Portal>

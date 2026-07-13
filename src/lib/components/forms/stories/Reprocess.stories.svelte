@@ -1,7 +1,7 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import type { APIError } from "$lib/api/types";
 
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import Reprocess from "../Reprocess.svelte";
 
   import { document, documentsList } from "@/test/fixtures/documents";
@@ -28,33 +28,24 @@
     errors: ["This is what an error looks like", "There can be more than one"],
   };
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Forms / Reprocess",
     component: Reprocess,
     parameters: { layout: "centered" },
-  };
+  });
 </script>
 
-<Story name="Single Document">
-  <Reprocess documents={[document]} />
-</Story>
+<Story name="Single Document" args={{ documents: [document] }} />
 
-<Story name="Multiple Documents">
-  <Reprocess {documents} />
-</Story>
+<Story name="Multiple Documents" args={{ documents }} />
 
-<Story name="Errors">
-  <Reprocess {documents} {errors} />
-</Story>
+<Story name="Errors" args={{ documents, errors }} />
 
-<Story name="Multilingual">
-  <Reprocess documents={multilingual} />
-</Story>
+<Story name="Multilingual" args={{ documents: multilingual }} />
 
-<Story name="Pending documents">
-  <Reprocess documents={pending} />
-</Story>
+<Story name="Pending documents" args={{ documents: pending }} />
 
-<Story name="Too many documents">
-  <Reprocess documents={documents.concat(document)} />
-</Story>
+<Story
+  name="Too many documents"
+  args={{ documents: documents.concat(document) }}
+/>

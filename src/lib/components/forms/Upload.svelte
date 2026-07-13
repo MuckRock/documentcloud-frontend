@@ -9,7 +9,7 @@ an initial set of files for upload. This isn't used directly, though.
 All file handling happens through an internal status object that tracks
 progress through the three-part upload process.
 -->
-<script context="module" lang="ts">
+<script module lang="ts">
   import { get, writable } from "svelte/store";
 
   import { DEFAULT_LANGUAGE, LANGUAGE_MAP } from "@/config/config.js";
@@ -31,12 +31,14 @@ progress through the three-part upload process.
 </script>
 
 <script lang="ts">
+  import type { Writable } from "svelte/store";
   import type {
     Access,
     DocumentUpload,
     Maybe,
     Nullable,
     Project,
+    User,
   } from "$lib/api/types";
 
   import { beforeNavigate } from "$app/navigation";
@@ -74,12 +76,21 @@ progress through the three-part upload process.
   import { getProcessLoader } from "../processing/ProcessContext.svelte";
   import { toast } from "../layouts/Toaster.svelte";
 
-  export let files: File[] = getFilesToUpload();
-  export let projects: Project[] = [];
-  export let user = getCurrentUser();
-  export let csrf_token: Maybe<string> = undefined;
+  interface Props {
+    files?: File[];
+    projects?: Project[];
+    user?: Writable<Nullable<User>>;
+    csrf_token?: Maybe<string>;
+  }
 
-  let fileDropActive: boolean = false;
+  let {
+    files = getFilesToUpload(),
+    projects = [],
+    user = getCurrentUser(),
+    csrf_token = $bindable(undefined),
+  }: Props = $props();
+
+  let fileDropActive: boolean = $state(false);
 
   /**
    * Upload status
@@ -88,18 +99,18 @@ progress through the three-part upload process.
    * can track its progress. This also handles cases
    * where multiple files have the same filename.
    */
-  let STATUS: Record<string, UploadStatus> = {};
-  let loading = false; // are requests in flight?
+  let STATUS: Record<string, UploadStatus> = $state({});
+  let loading = $state(false); // are requests in flight?
 
   // Get load function from processing context
   const loadProcessing = getProcessLoader();
 
   // fields
-  let access: Access = "private";
-  let language: { value: string; label: string } = {
+  let access: Access = $state("private");
+  let language: { value: string; label: string } = $state({
     value: DEFAULT_LANGUAGE,
     label: LANGUAGE_MAP.get(DEFAULT_LANGUAGE),
-  };
+  });
 
   const ocrEngineOptions = [
     {
@@ -114,33 +125,18 @@ progress through the three-part upload process.
     },
   ];
 
-  let ocrEngine = ocrEngineOptions[0];
-  let add_to_projects: Project[] = [getProjectToUpload()].filter(
-    Boolean,
-  ) as Project[];
-
-  $: total = Object.values(STATUS).reduce((t, status) => {
-    return t + status.file.size;
-  }, 0);
-
-  $: count = Object.keys(STATUS).length;
-  $: empty = count === 0;
-
-  $: exceedsSizeLimit = files.some((file) => !isWithinSizeLimit(file));
-
-  $: disabled = !$user?.verified_journalist || loading || !csrf_token;
-
-  // consume any files passed in
-  $: if (files.length > 0) {
-    addFiles(files);
-    files = [];
-  }
+  let ocrEngine = $state(ocrEngineOptions[0]);
+  let add_to_projects: Project[] = $state(
+    [getProjectToUpload()].filter(Boolean) as Project[],
+  );
 
   onMount(() => {
     if (!csrf_token) {
       csrf_token = getCsrfToken();
     }
+    // consume any initial files: from the store, and from the `files` prop
     addFiles(getFilesToUpload());
+    addFiles(files);
   });
 
   beforeNavigate((navigation) => {
@@ -313,16 +309,29 @@ progress through the three-part upload process.
     // trigger process load request
     loadProcessing?.();
   }
+  let total = $derived(
+    Object.values(STATUS).reduce((t, status) => {
+      return t + status.file.size;
+    }, 0),
+  );
+  let count = $derived(Object.keys(STATUS).length);
+  let empty = $derived(count === 0);
+  let exceedsSizeLimit = $derived(
+    Object.values(STATUS).some(({ file }) => !isWithinSizeLimit(file)),
+  );
+  let disabled = $derived(
+    !$user?.verified_journalist || loading || !csrf_token,
+  );
 </script>
 
-<svelte:window on:paste={onPaste} />
+<svelte:window onpaste={onPaste} />
 
 <Dropzone bind:active={fileDropActive} onDrop={addFiles} {disabled}>
   <form
     method="post"
     enctype="multipart/form-data"
     action="/upload/"
-    on:submit={onSubmit}
+    onsubmit={onSubmit}
   >
     <Flex gap={1} align="stretch" wrap>
       <div class="files" class:active={fileDropActive}>
@@ -338,11 +347,7 @@ progress through the three-part upload process.
         </header>
         <div class="fileList" class:empty>
           {#each Object.entries(STATUS) as [id, status] (id)}
-            <UploadListItem
-              {id}
-              {status}
-              on:remove={(e) => removeFile(e.detail)}
-            />
+            <UploadListItem {id} {status} onremove={removeFile} />
           {:else}
             <Empty icon={Paperclip24}>
               {$_("uploadDialog.empty")}

@@ -5,7 +5,6 @@ Remove a collaborator from a project
   import type { Project, ProjectUser, ValidationError } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
-  import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
 
   import Button from "../common/Button.svelte";
@@ -14,16 +13,19 @@ Remove a collaborator from a project
   import { canonicalUrl } from "$lib/api/projects";
   import { getUserName } from "$lib/api/accounts";
 
-  export let project: Project;
-  export let user: ProjectUser;
+  interface Props {
+    project: Project;
+    user: ProjectUser;
+    onclose?: () => void;
+  }
 
-  const dispatch = createEventDispatcher();
+  let { project, user, onclose }: Props = $props();
 
-  let errors: ValidationError = {};
+  let errors: ValidationError = $state({});
 
-  $: action = new URL("?/remove", canonicalUrl(project)).href;
-  $: name = getUserName(user.user);
-  $: title = project.title;
+  let action = $derived(new URL("?/remove", canonicalUrl(project)).href);
+  let name = $derived(getUserName(user.user));
+  let title = $derived(project.title);
 
   /**
    * @type {import('@sveltejs/kit').SubmitFunction}
@@ -33,7 +35,7 @@ Remove a collaborator from a project
 
     return ({ result, update }) => {
       if (result.type === "success") {
-        dispatch("close");
+        onclose?.();
         return update(result);
       }
 
@@ -43,12 +45,12 @@ Remove a collaborator from a project
   }
 </script>
 
-<form {action} method="post" on:submit={onSubmit}>
+<form {action} method="post" use:enhance={onSubmit}>
   <p>{$_("collaborators.remove.message", { values: { name, title } })}</p>
   <input type="hidden" name="user" value={user.user.id} />
   <Flex class="buttons">
     <Button type="submit" mode="danger">{$_("dialog.remove")}</Button>
-    <Button onclick={() => dispatch("close")}>{$_("dialog.cancel")}</Button>
+    <Button onclick={() => onclose?.()}>{$_("dialog.cancel")}</Button>
   </Flex>
 </form>
 

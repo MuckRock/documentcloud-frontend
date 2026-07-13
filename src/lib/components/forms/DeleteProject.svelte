@@ -4,7 +4,6 @@ Confirm project deletion.
 <script lang="ts">
   import type { Project } from "$lib/api/types";
 
-  import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
   import { Trash16 } from "svelte-octicons";
 
@@ -13,11 +12,14 @@ Confirm project deletion.
 
   import { canonicalUrl } from "$lib/api/projects";
 
-  export let project: Project;
+  interface Props {
+    project: Project;
+    onclose?: () => void;
+  }
 
-  const dispatch = createEventDispatcher();
+  let { project, onclose }: Props = $props();
 
-  $: action = new URL("?/delete", canonicalUrl(project)).href;
+  let action = $derived(new URL("?/delete", canonicalUrl(project)).href);
 </script>
 
 <form {action} method="post">
@@ -28,7 +30,7 @@ Confirm project deletion.
       <Trash16 />
       {$_("delete.confirm")}
     </Button>
-    <Button onclick={() => dispatch("close")}>
+    <Button onclick={() => onclose?.()}>
       {$_("delete.cancel")}
     </Button>
   </Flex>

@@ -23,6 +23,7 @@
   import { pageHashUrl, shouldPaginate } from "$lib/api/documents";
   import { remToPx } from "$lib/utils/layout";
   import { scrollToPage } from "$lib/utils/scroll";
+  import { sortedSections } from "$lib/utils/viewer";
   import {
     getCurrentMode,
     getCurrentPage,
@@ -43,7 +44,7 @@
   });
 
   let document = $derived($documentStore);
-  let sections = $derived(document.sections ?? []);
+  let sections = $derived(sortedSections(document));
   let totalPages = $derived(document.page_count);
   let showPDF = $derived(
     ["document", "annotating", "redacting"].includes($currentMode),
@@ -95,10 +96,8 @@
           <Menu>
             {#each sections as section}
               <MenuItem
-                onclick={() => {
-                  gotoPage(section.page_number + 1);
-                  close();
-                }}
+                href={pageHashUrl(section.page_number + 1)}
+                onclick={close}
               >
                 {section.title}
               </MenuItem>
@@ -158,7 +157,7 @@
       {#snippet title()}
         <h1>{$_("sections.edit")}</h1>
       {/snippet}
-      <EditSections {document} on:close={() => (sectionsOpen = false)} />
+      <EditSections {document} onclose={() => (sectionsOpen = false)} />
     </Modal>
   </Portal>
 {/if}

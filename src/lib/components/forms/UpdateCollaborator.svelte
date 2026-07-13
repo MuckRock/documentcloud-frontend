@@ -1,12 +1,11 @@
 <!-- @component
 Update permissions for a single collaborator on a project
 -->
-<script context="module" lang="ts">
+<script module lang="ts">
   import type { Project, ProjectUser, ValidationError } from "$lib/api/types";
 </script>
 
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
 
   import { enhance } from "$app/forms";
@@ -18,16 +17,19 @@ Update permissions for a single collaborator on a project
   import { canonicalUrl } from "$lib/api/projects";
   import { getUserName } from "$lib/api/accounts";
 
-  const dispatch = createEventDispatcher();
+  interface Props {
+    project: Project;
+    user: ProjectUser;
+    onclose?: () => void;
+  }
 
-  export let project: Project;
-  export let user: ProjectUser;
+  let { project, user = $bindable(), onclose }: Props = $props();
 
-  let errors: ValidationError = {};
+  let errors: ValidationError = $state({});
 
-  $: action = new URL("?/update", canonicalUrl(project)).href;
-  $: name = getUserName(user.user);
-  $: title = project.title;
+  let action = $derived(new URL("?/update", canonicalUrl(project)).href);
+  let name = $derived(getUserName(user.user));
+  let title = $derived(project.title);
 
   /**
    * @type {import('@sveltejs/kit').SubmitFunction}
@@ -37,7 +39,7 @@ Update permissions for a single collaborator on a project
 
     return ({ result, update }) => {
       if (result.type === "success") {
-        dispatch("close");
+        onclose?.();
         return update(result);
       }
 
@@ -55,7 +57,7 @@ Update permissions for a single collaborator on a project
 
   <Flex class="buttons">
     <Button type="submit" mode="primary">{$_("dialog.update")}</Button>
-    <Button onclick={() => dispatch("close")}>{$_("dialog.cancel")}</Button>
+    <Button onclick={() => onclose?.()}>{$_("dialog.cancel")}</Button>
   </Flex>
 </form>
 

@@ -6,7 +6,6 @@ Edit project metadata
 
   import { enhance } from "$app/forms";
 
-  import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
 
   import Button from "../common/Button.svelte";
@@ -20,25 +19,33 @@ Edit project metadata
 
   import { canonicalUrl } from "$lib/api/projects";
 
-  export let project: Partial<Project> = {};
+  interface Props {
+    project?: Partial<Project>;
+    onclose?: () => void;
+    onsuccess?: (project: Project) => void;
+  }
 
-  const dispatch = createEventDispatcher();
+  let { project = {}, onclose, onsuccess }: Props = $props();
 
-  $: action = project?.id
-    ? new URL("?/edit", canonicalUrl(project as Project)).href
-    : "/projects/";
+  let action = $derived(
+    project?.id
+      ? new URL("?/edit", canonicalUrl(project as Project)).href
+      : "/projects/",
+  );
 
   // handle optimistic updates
-  $: is_pinned = $pinned.includes(project as Project) || project.pinned;
+  let is_pinned = $derived(
+    $pinned.includes(project as Project) || project.pinned,
+  );
 
   function onSubmit({ submitter }) {
     submitter.disabled = true;
     return ({ result, update }) => {
       if (result.type === "success") {
-        dispatch("success", result.data?.project?.data);
+        onsuccess?.(result.data?.project?.data);
       }
       update(result);
-      dispatch("close");
+      onclose?.();
     };
   }
 </script>
@@ -71,7 +78,7 @@ Edit project metadata
           {$_("projects.create")}
         </Button>
       {/if}
-      <Button full onclick={(e) => dispatch("close")}>
+      <Button full onclick={() => onclose?.()}>
         {$_("edit.cancel")}
       </Button>
     </Flex>

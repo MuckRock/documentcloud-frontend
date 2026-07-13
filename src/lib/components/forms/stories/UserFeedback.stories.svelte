@@ -1,10 +1,10 @@
-<script lang="ts" context="module">
-  import { Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import UserFeedbackForm from "../UserFeedback.svelte";
   import { me } from "@/test/fixtures/accounts";
   import { feedback } from "@/test/handlers/feedback";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Forms / User Feedback",
     component: UserFeedbackForm,
     parameters: {
@@ -13,29 +13,20 @@
         handlers: [feedback.data],
       },
     },
-  };
+    render: template,
+  });
 </script>
 
-<Story name="With User">
+{#snippet template(args)}
   <div style="max-width: 45rem;">
-    <UserFeedbackForm user={me} />
+    <UserFeedbackForm {...args} />
   </div>
-</Story>
+{/snippet}
 
-<Story name="Without User">
-  <div style="max-width: 45rem;">
-    <UserFeedbackForm />
-  </div>
-</Story>
+<Story name="With User" args={{ user: me }} />
 
-<Story name="Loading" parameters={{ msw: { handlers: [feedback.loading] } }}>
-  <div style="max-width: 45rem;">
-    <UserFeedbackForm />
-  </div>
-</Story>
+<Story name="Without User" args={{}} />
 
-<Story name="With Error" parameters={{ msw: { handlers: [feedback.error] } }}>
-  <div style="max-width: 45rem;">
-    <UserFeedbackForm />
-  </div>
-</Story>
+<Story name="Loading" parameters={{ msw: { handlers: [feedback.loading] } }} />
+
+<Story name="With Error" parameters={{ msw: { handlers: [feedback.error] } }} />

@@ -5,12 +5,11 @@ which you can't undo.
 This almost certainly lives in a modal.
 -->
 <script lang="ts">
-  import type { Document } from "$lib/api/types";
+  import type { Document, Maybe } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
   import { invalidate, goto } from "$app/navigation";
 
-  import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
   import { Check16 } from "svelte-octicons";
 
@@ -24,13 +23,16 @@ This almost certainly lives in a modal.
   import { canonicalUrl } from "$lib/api/documents";
   import { load } from "$lib/components/processing/ProcessContext.svelte";
 
-  export let document: Document;
+  interface Props {
+    document: Document;
+    onclose?: () => void;
+  }
 
-  const dispatch = createEventDispatcher();
+  let { document, onclose }: Props = $props();
 
-  let error: string;
+  let error: Maybe<string> = $state();
 
-  $: action = new URL("?/redact", canonicalUrl(document)).href;
+  let action = $derived(new URL("?/redact", canonicalUrl(document)).href);
 
   function onSubmit({ formElement, submitter }) {
     formElement.disabled = true;
@@ -53,7 +55,7 @@ This almost certainly lives in a modal.
         });
         load();
         goto("?mode=document");
-        dispatch("close");
+        onclose?.();
       }
     };
   }
@@ -81,7 +83,7 @@ This almost certainly lives in a modal.
         <Check16 />
         {$_("redact.confirm")}
       </Button>
-      <Button onclick={() => dispatch("close")}>
+      <Button onclick={() => onclose?.()}>
         {$_("redact.cancel")}
       </Button>
     </Flex>

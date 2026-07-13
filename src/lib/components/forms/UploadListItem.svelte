@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import type { APIError, Document } from "$lib/api/types";
 
   type Step = "ready" | "created" | "uploading" | "processing" | "done";
@@ -16,7 +16,6 @@
 
 <script lang="ts">
   import { filesize } from "filesize";
-  import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
   import { Alert16, Check16, Sync16, XCircleFill24 } from "svelte-octicons";
 
@@ -34,10 +33,13 @@
     isWithinSizeLimit,
   } from "$lib/utils/files";
 
-  const dispatch = createEventDispatcher();
+  interface Props {
+    id: string;
+    status: UploadStatus;
+    onremove?: (id: string) => void;
+  }
 
-  export let id: string;
-  export let status: UploadStatus;
+  let { id, status, onremove }: Props = $props();
 
   // i18n
   const steps: Record<Step, string> = {
@@ -48,12 +50,15 @@
     done: $_("uploadDialog.steps.done"),
   };
 
-  $: file = status.file;
-  $: step = steps[status.step];
-  $: description = status?.error ? `${file.name}` : `${file.name}: ${step}`;
-  $: loading = ["created", "uploading"].includes(status.step);
-  $: linkable =
-    status?.document && ["processing", "done"].includes(status?.step);
+  let file = $derived(status.file);
+  let step = $derived(steps[status.step]);
+  let description = $derived(
+    status?.error ? `${file.name}` : `${file.name}: ${step}`,
+  );
+  let loading = $derived(["created", "uploading"].includes(status.step));
+  let linkable = $derived(
+    status?.document && ["processing", "done"].includes(status?.step),
+  );
 </script>
 
 <!-- file is ready, uploading or processing -->
@@ -73,7 +78,7 @@
           {#if status?.error}
             <p class="error">
               {status?.error.message}
-              <Button ghost minW={false} onclick={() => dispatch("remove", id)}>
+              <Button ghost minW={false} onclick={() => onremove?.(id)}>
                 {$_("dialog.remove")}?
               </Button>
             </p>
@@ -112,7 +117,7 @@
       minW={false}
       ghost
       title={$_("dialog.remove")}
-      onclick={() => dispatch("remove", id)}
+      onclick={() => onremove?.(id)}
     >
       <XCircleFill24 />
     </Button>

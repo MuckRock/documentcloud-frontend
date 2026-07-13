@@ -65,7 +65,7 @@
   <Portal>
     <Modal on:close={hide}>
       <h1 slot="title">{$_("projects.header")}</h1>
-      <Projects documents={[document]} on:close={hide} />
+      <Projects documents={[document]} onclose={hide} />
     </Modal>
   </Portal>
 {/if}

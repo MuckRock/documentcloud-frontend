@@ -1,20 +1,31 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
+  import type { Nullable, User } from "$lib/api/types";
+
   import { enhance } from "$app/forms";
   import { page } from "$app/stores";
+
   import { _ } from "svelte-i18n";
   import { Bug16, Comment16, Question16 } from "svelte-octicons";
-  import type { Nullable, User } from "$lib/api/types";
+
+  import Avatar from "../accounts/Avatar.svelte";
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
-  import Avatar from "../accounts/Avatar.svelte";
+
   import { APP_URL } from "@/config/config";
   import { getUserName } from "$lib/api/accounts";
 
-  export let user: Nullable<User> = null;
+  let feedback = $state("");
+  interface Props {
+    user?: Nullable<User>;
+    feedbackType?: string;
+    onclose?: () => void;
+  }
 
-  let feedback = "";
-  export let feedbackType = "Comment";
+  let {
+    user = null,
+    feedbackType = $bindable("Comment"),
+    onclose,
+  }: Props = $props();
 
   let feedbackTypes = [
     {
@@ -40,21 +51,21 @@
     },
   ];
 
-  let anonymous = !Boolean(user);
+  let anonymous = $derived(!Boolean(user));
 
-  const dispatch = createEventDispatcher();
-  $: placeholder =
+  let placeholder = $derived(
     feedbackTypes.find((type) => type.value === feedbackType)?.placeholder ??
-    $_("feedback.defaultPlaceholder");
+      $_("feedback.defaultPlaceholder"),
+  );
 
-  let status: null | "loading" | "success" | "error" = null;
+  let status: null | "loading" | "success" | "error" = $state(null);
 
   function handleSubmit() {
     status = "loading";
     return async ({ result }) => {
       if (result.type === "success") {
         status = "success";
-        dispatch("close");
+        onclose?.();
       } else if (result.type === "failure") {
         status = "error";
       }
@@ -82,7 +93,7 @@
           value={type.value}
           bind:group={feedbackType}
         />
-        <svelte:component this={type.icon} />
+        <type.icon />
         {type.label}
       </label>
     {/each}

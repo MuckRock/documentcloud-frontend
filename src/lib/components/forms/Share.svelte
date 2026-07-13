@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import type { Document } from "$lib/api/types";
 
   interface NoteOption {
@@ -49,52 +49,79 @@
   import { createEmbedSearchParams } from "$lib/utils/embed";
   import { onMount } from "svelte";
 
-  export let document: Document;
-  export let page: number = 1;
-  export let note_id: undefined | string | number = undefined;
-  export let currentTab: "document" | "page" | "note" = "document";
+  interface Props {
+    document: Document;
+    page?: number;
+    note_id?: undefined | string | number;
+    currentTab?: "document" | "page" | "note";
+  }
 
-  const noteOptions = document.notes?.map<NoteOption>((note) => ({
-    value: note.id,
-    label: `pg. ${note.page_number + 1} – ${note.title}`,
-  }));
+  let {
+    document,
+    page = $bindable(1),
+    note_id = $bindable(undefined),
+    currentTab = $bindable("document"),
+  }: Props = $props();
 
-  $: notes = document.notes || [];
-  $: note = note_id ? notes?.find((n) => n.id === note_id) : notes[0];
+  let noteOptions = $derived(
+    document.notes?.map<NoteOption>((note) => ({
+      value: note.id,
+      label: `pg. ${note.page_number + 1} – ${note.title}`,
+    })),
+  );
 
-  // dimensions and style for note embeds
-  let permalink: URL;
-  let embedSrc: URL;
-  let iframe: string;
+  let notes = $derived(document.notes || []);
+  let note = $derived(
+    note_id ? notes?.find((n) => n.id === note_id) : notes[0],
+  );
 
-  let customizeEmbedOpen = false;
-  let editOpen = false;
+  let customizeEmbedOpen = $state(false);
+  let editOpen = $state(false);
 
-  $: access = $edited.get(String(document.id))?.access ?? document.access;
-  $: embedUrlParams = createEmbedSearchParams($embedSettings);
-  $: {
+  let access = $derived(
+    $edited.get(String(document.id))?.access ?? document.access,
+  );
+  let embedUrlParams = $derived(createEmbedSearchParams($embedSettings));
+
+  // permalink, embed src, and iframe snippet for the selected tab
+  let links = $derived.by(() => {
     switch (currentTab) {
       case "document":
-        permalink = canonicalUrl(document);
-        embedSrc = embedUrl(document, embedUrlParams);
-        iframe = embed.document(document, embedUrlParams);
-        break;
-      case "page":
-        permalink = pageUrl(document, page);
-        embedSrc = canonicalPageUrl(document, page, true);
+        return {
+          permalink: canonicalUrl(document),
+          embedSrc: embedUrl(document, embedUrlParams),
+          iframe: embed.document(document, embedUrlParams),
+        };
+      case "page": {
+        const embedSrc = canonicalPageUrl(document, page, true);
         embedSrc.searchParams.set("embed", "1");
-        iframe = embed.page(document, page);
-        break;
-      case "note":
-        if (note) {
-          permalink = noteUrl(document, note);
-          embedSrc = canonicalNoteUrl(document, note);
-          embedSrc.searchParams.set("embed", "1");
-          iframe = embed.note(document, note);
-        }
-        break;
+        return {
+          permalink: pageUrl(document, page),
+          embedSrc,
+          iframe: embed.page(document, page),
+        };
+      }
+      case "note": {
+        if (!note)
+          return {
+            permalink: undefined,
+            embedSrc: undefined,
+            iframe: undefined,
+          };
+        const embedSrc = canonicalNoteUrl(document, note);
+        embedSrc.searchParams.set("embed", "1");
+        return {
+          permalink: noteUrl(document, note),
+          embedSrc,
+          iframe: embed.note(document, note),
+        };
+      }
     }
-  }
+  });
+
+  let permalink = $derived(links?.permalink);
+  let embedSrc = $derived(links?.embedSrc);
+  let iframe = $derived(links?.iframe);
 
   onMount(() => {
     if (!note_id) {
@@ -194,7 +221,7 @@
       <Field>
         <FieldLabel>
           {$_("share.permalink")}
-          {#snippet action()}<Copy text={permalink?.href} />{/snippet}
+          {#snippet action()}<Copy text={permalink?.href ?? ""} />{/snippet}
         </FieldLabel>
         <Text
           value={permalink?.href}
@@ -206,7 +233,7 @@
       <Field>
         <FieldLabel>
           {$_("share.embed")}
-          {#snippet action()}<Copy text={embedSrc?.href} />{/snippet}
+          {#snippet action()}<Copy text={embedSrc?.href ?? ""} />{/snippet}
         </FieldLabel>
         <Text
           value={embedSrc?.href}
@@ -218,7 +245,7 @@
       <Field>
         <FieldLabel>
           {$_("share.iframe")}
-          {#snippet action()}<Copy text={iframe} />{/snippet}
+          {#snippet action()}<Copy text={iframe ?? ""} />{/snippet}
         </FieldLabel>
         <TextArea
           value={iframe}
@@ -276,7 +303,9 @@
 {#if editOpen}
   <Portal>
     <Modal on:close={closeEditing}>
-      <h1 slot="title">{$_("access.edit")}</h1>
+      {#snippet title()}
+        <h1>{$_("access.edit")}</h1>
+      {/snippet}
       <EditAccess {document} onclose={closeEditing} />
     </Modal>
   </Portal>
