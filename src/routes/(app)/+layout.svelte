@@ -11,8 +11,8 @@
 
   const me: Writable<Maybe<User>> = writable(props.data.me);
   const org: Writable<Maybe<Org>> = writable(props.data.org);
-  const user_orgs: Writable<Promise<Org[]>> = writable(props.data.user_orgs);
-  const org_users: Writable<Promise<User[]>> = writable(props.data.org_users);
+  const user_orgs: Writable<Org[]> = writable(props.data.user_orgs);
+  const org_users: Writable<User[]> = writable(props.data.org_users);
 
   // update context so other components can access and update
   setContext("me", me);

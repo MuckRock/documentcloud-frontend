@@ -57,14 +57,22 @@ export async function load({ fetch, cookies }) {
     });
   }
 
+  // Await (don't stream) this data so child-page error statuses aren't locked to 200. See sveltejs/kit#12533.
+  const [
+    resolvedUserOrgs,
+    resolvedOrgUsers,
+    resolvedPinnedAddons,
+    resolvedPinnedProjects,
+  ] = await Promise.all([user_orgs, org_users, pinnedAddons, pinnedProjects]);
+
   return {
     me,
     org,
     tipOfDay,
     breadcrumbs: [],
-    user_orgs,
-    org_users,
-    pinnedAddons,
-    pinnedProjects,
+    user_orgs: resolvedUserOrgs,
+    org_users: resolvedOrgUsers,
+    pinnedAddons: resolvedPinnedAddons,
+    pinnedProjects: resolvedPinnedProjects,
   };
 }
