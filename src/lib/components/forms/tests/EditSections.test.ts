@@ -316,6 +316,30 @@ describe("EditSections", () => {
     expect(onclose).not.toHaveBeenCalled();
   });
 
+  // The status text (`message`) is empty over HTTP/2, so the alert must still
+  // render visible content (a generic message + the field errors), not a blank.
+  it("shows a non-empty error even when the status message is empty", async () => {
+    vi.mocked(sectionsApi.create).mockResolvedValue({
+      error: {
+        status: 400,
+        message: "",
+        errors: { page_number: ["Must be a valid page for the document"] },
+      },
+    });
+
+    const { container } = render(EditSections, {
+      document: docWithSections([]),
+    });
+
+    const { title } = newRowInputs(container);
+    await fireEvent.input(title, { target: { value: "Bad section" } });
+    await fireEvent.click(addButton());
+
+    const alert = await screen.findByRole("alert");
+    expect(alert).toHaveTextContent(/An Error Ocurred/i);
+    expect(alert).toHaveTextContent(/Must be a valid page for the document/);
+  });
+
   it("does not close on Done when create fails", async () => {
     vi.mocked(sectionsApi.create).mockResolvedValue({
       error: { status: 400, message: "Bad Request" },

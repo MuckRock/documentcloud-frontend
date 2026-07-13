@@ -138,16 +138,20 @@ This form is entirely client-side.
   {#if error}
     <Tip mode="error">
       {#snippet icon()}<Alert24 />{/snippet}
-      <p role="alert">{error.message}</p>
-      {#if Object.keys(error.errors ?? {}).length}
-        <ul>
-          {#each Object.entries(error.errors ?? {}) as [field, errs]}
-            <li>
-              <strong>{field}</strong>: {errs.join("; ")}
-            </li>
-          {/each}
-        </ul>
-      {/if}
+      <div role="alert">
+        <!-- `message` is the HTTP status text, which is empty over HTTP/2, so
+             fall back to a generic message; the field errors carry the detail. -->
+        <p>{error.message || $_("common.error")}</p>
+        {#if Object.keys(error.errors ?? {}).length}
+          <ul>
+            {#each Object.entries(error.errors ?? {}) as [field, errs]}
+              <li>
+                <strong>{field}</strong>: {errs.join("; ")}
+              </li>
+            {/each}
+          </ul>
+        {/if}
+      </div>
     </Tip>
   {/if}
 
