@@ -22,6 +22,7 @@ This form is entirely client-side.
 
   import { create } from "$lib/api/sections";
   import { getCsrfToken } from "$lib/utils/api";
+  import { sortedSections } from "$lib/utils/viewer";
 
   interface Props {
     document: Document;
@@ -33,7 +34,7 @@ This form is entirely client-side.
 
   let csrftoken: Maybe<string> = $state();
 
-  let sections = $derived(document.sections ?? []);
+  let sections = $derived(sortedSections(document));
   let existing_pages = $derived(new Set(sections.map((s) => s.page_number)));
 
   // Seed the "new section" row: blank if the passed-in section already exists

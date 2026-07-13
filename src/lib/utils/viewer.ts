@@ -131,6 +131,16 @@ export function getSections(document: Document): Record<number, Section> {
   );
 }
 
+/**
+ * A document's sections ordered by page. The API returns them in insertion
+ * order (via `expand`), so sort before listing them for navigation.
+ */
+export function sortedSections(document: Document): Section[] {
+  return [...(document.sections ?? [])].sort(
+    (a, b) => a.page_number - b.page_number,
+  );
+}
+
 // for typescript
 export function zoomToScale(zoom: any): number | "width" | "height" {
   if (zoom === "width" || zoom === "height") {

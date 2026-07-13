@@ -7,6 +7,7 @@ import {
   fitPage,
   getViewerHref,
   pageSizes,
+  sortedSections,
   zoomToScale,
   zoomToSize,
   getZoomLevels,
@@ -200,5 +201,36 @@ describe("zoom", () => {
 
       expect(result).toBeUndefined();
     });
+  });
+});
+
+describe("sortedSections", () => {
+  it("orders sections by page number regardless of insertion order", () => {
+    const doc = {
+      ...document,
+      sections: [
+        { id: 1, page_number: 4, title: "Later" },
+        { id: 2, page_number: 0, title: "First" },
+        { id: 3, page_number: 2, title: "Middle" },
+      ],
+    };
+
+    expect(sortedSections(doc).map((s) => s.page_number)).toEqual([0, 2, 4]);
+  });
+
+  it("returns an empty array when there are no sections", () => {
+    expect(sortedSections({ ...document, sections: undefined })).toEqual([]);
+  });
+
+  it("does not mutate the document's sections array", () => {
+    const sections = [
+      { id: 1, page_number: 2, title: "B" },
+      { id: 2, page_number: 1, title: "A" },
+    ];
+    const doc = { ...document, sections };
+
+    sortedSections(doc);
+
+    expect(doc.sections.map((s) => s.page_number)).toEqual([2, 1]);
   });
 });
