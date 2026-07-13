@@ -3,14 +3,24 @@ Create, update and delete sections for a single document.
 This form is entirely client-side.
 -->
 <script lang="ts">
-  import type { Document, Maybe, Section } from "$lib/api/types";
+  import type {
+    APIError,
+    Document,
+    Maybe,
+    Section,
+    ValidationError,
+  } from "$lib/api/types";
 
   import { onMount } from "svelte";
+  import { invalidate } from "$app/navigation";
   import { _ } from "svelte-i18n";
+  import { Alert24 } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
   import EditSectionRow from "./EditSectionRow.svelte";
+  import Tip from "../common/Tip.svelte";
 
+  import { create } from "$lib/api/sections";
   import { getCsrfToken } from "$lib/utils/api";
 
   interface Props {
@@ -26,14 +36,51 @@ This form is entirely client-side.
   let sections = $derived(document.sections ?? []);
   let existing_pages = $derived(new Set(sections.map((s) => s.page_number)));
 
-  // If the passed-in section already exists (has an id), it's shown in the
-  // list above, so start the "new section" row blank. Otherwise use it as
-  // prefill (e.g. the current page number).
-  let newSection = $derived(section.id ? {} : section);
+  // Seed the "new section" row: blank if the passed-in section already exists
+  // (shown above), else prefill from it. (Fn read avoids state_referenced_locally.)
+  function prefill(): Partial<Section> {
+    return section.id ? {} : section;
+  }
+  const initial = prefill();
+  let newTitle = $state(initial.title ?? "");
+  let newPageNumber = $state(initial.page_number ?? 0);
+
+  // A new section on a page that already has one would overwrite it.
+  let collides = $derived(existing_pages.has(newPageNumber));
+
+  // The most recent API error from any create/update/delete on this form.
+  let error: Maybe<APIError<ValidationError>> = $state();
 
   onMount(() => {
     csrftoken = getCsrfToken();
   });
+
+  // Create the pending new section (shared by the row's add button and "Done").
+  // Returns false when the API rejects it, so the caller keeps the modal open.
+  async function addSection(): Promise<boolean> {
+    if (!newTitle.trim() || collides) return true;
+
+    const { error: err } = await create(
+      document.id,
+      { title: newTitle, page_number: newPageNumber },
+      csrftoken,
+    );
+
+    if (err) {
+      error = err;
+      return false;
+    }
+
+    error = undefined;
+    await invalidate(`document:${document.id}`);
+    newTitle = "";
+    newPageNumber = 0;
+    return true;
+  }
+
+  async function done() {
+    if (await addSection()) onclose?.();
+  }
 </script>
 
 <form method="post">
@@ -52,7 +99,12 @@ This form is entirely client-side.
     {/if}
     <tbody>
       {#each sections as section}
-        <EditSectionRow {document} {...section} {csrftoken} />
+        <EditSectionRow
+          {document}
+          {...section}
+          {csrftoken}
+          onerror={(err) => (error = err)}
+        />
       {/each}
     </tbody>
     <tfoot>
@@ -64,26 +116,42 @@ This form is entirely client-side.
       <EditSectionRow
         {document}
         {csrftoken}
-        title={newSection.title}
-        page_number={newSection.page_number}
-        disabled={Boolean(
-          newSection.page_number && existing_pages.has(newSection.page_number),
-        )}
+        bind:title={newTitle}
+        bind:page_number={newPageNumber}
+        disabled={collides}
+        onadd={addSection}
       />
 
-      {#if Boolean(newSection.page_number && existing_pages.has(newSection.page_number))}
+      {#if collides}
         <tr class="warning">
           <td colspan="2">
             {$_("sections.overwrite", {
-              values: { n: (newSection.page_number ?? 0) + 1 },
+              values: { n: newPageNumber + 1 },
             })}
           </td>
         </tr>
       {/if}
     </tfoot>
   </table>
+
+  {#if error}
+    <Tip mode="error">
+      {#snippet icon()}<Alert24 />{/snippet}
+      <p role="alert">{error.message}</p>
+      {#if Object.keys(error.errors ?? {}).length}
+        <ul>
+          {#each Object.entries(error.errors ?? {}) as [field, errs]}
+            <li>
+              <strong>{field}</strong>: {errs.join("; ")}
+            </li>
+          {/each}
+        </ul>
+      {/if}
+    </Tip>
+  {/if}
+
   <div class="buttons">
-    <Button mode="primary" onclick={() => onclose?.()}>
+    <Button mode="primary" onclick={done}>
       {$_("dialog.done")}
     </Button>
   </div>

@@ -2,7 +2,12 @@
 One row of the `EditSections.svelte` form, to encapsulate logic.
 -->
 <script lang="ts">
-  import type { Document, Maybe } from "$lib/api/types";
+  import type {
+    APIError,
+    Document,
+    Maybe,
+    ValidationError,
+  } from "$lib/api/types";
 
   import { invalidate } from "$app/navigation";
 
@@ -17,7 +22,7 @@ One row of the `EditSections.svelte` form, to encapsulate logic.
   import Button from "../common/Button.svelte";
   import Text from "../inputs/Text.svelte";
 
-  import { create, update, remove } from "$lib/api/sections";
+  import { update, remove } from "$lib/api/sections";
 
   interface Props {
     csrftoken?: Maybe<string>;
@@ -26,6 +31,10 @@ One row of the `EditSections.svelte` form, to encapsulate logic.
     id?: Maybe<number | string>;
     page_number?: number;
     title?: string;
+    /** Create the pending new section. Only supplied for the "new" row. */
+    onadd?: () => void;
+    /** Report (or clear) an API error from this row's update/delete. */
+    onerror?: (err?: Maybe<APIError<ValidationError>>) => void;
   }
 
   let {
@@ -33,19 +42,17 @@ One row of the `EditSections.svelte` form, to encapsulate logic.
     disabled = false,
     document,
     id = undefined,
-    page_number = $bindable(1),
+    page_number = $bindable(0),
     title = $bindable(""),
+    onadd = undefined,
+    onerror = undefined,
   }: Props = $props();
-
-  // store separately to deal with zero-indexed section pages
-  let display_number: number = $state((page_number || 0) + 1);
 
   let mode = $derived(id ? "edit" : "create");
 
   function reset() {
     title = "";
-    page_number = 1;
-    display_number = 1;
+    page_number = 0;
   }
 </script>
 
@@ -57,11 +64,14 @@ One row of the `EditSections.svelte` form, to encapsulate logic.
       <input
         type="number"
         name="page_number"
-        bind:value={display_number}
+        value={page_number + 1}
         min={1}
         max={document.page_count}
         required
-        oninput={(e) => (page_number = display_number - 1)}
+        oninput={(e) => {
+          const n = e.currentTarget.valueAsNumber;
+          if (!Number.isNaN(n)) page_number = n - 1;
+        }}
       />
     </label>
   </td>
@@ -79,12 +89,12 @@ One row of the `EditSections.svelte` form, to encapsulate logic.
         mode="primary"
         title={$_("sections.update")}
         minW={false}
-        name="action"
-        value="update"
         {disabled}
         onclick={async () => {
           const section = { id, page_number, title };
-          await update(document.id, id, section, csrftoken);
+          const { error } = await update(document.id, id, section, csrftoken);
+          onerror?.(error);
+          if (error) return;
           await invalidate(`document:${document.id}`);
         }}
       >
@@ -95,31 +105,19 @@ One row of the `EditSections.svelte` form, to encapsulate logic.
         mode="primary"
         title={$_("sections.delete")}
         minW={false}
-        name="action"
-        value="delete"
         onclick={async () => {
-          await remove(document.id, id, csrftoken);
+          const { error } = await remove(document.id, id, csrftoken);
+          onerror?.(error as Maybe<APIError<ValidationError>>);
+          if (error) return;
           await invalidate(`document:${document.id}`);
         }}
       >
         <Trash16 fill="var(--caution)" />
       </Button>
     {:else}
-      <Button
-        ghost
-        mode="primary"
-        title={$_("sections.new")}
-        minW={false}
-        name="action"
-        value="add"
-        {disabled}
-        onclick={async (e) => {
-          await create(document.id, { title, page_number }, csrftoken);
-          await invalidate(`document:${document.id}`);
-          reset();
-        }}
-      >
+      <Button ghost mode="primary" {disabled} onclick={() => onadd?.()}>
         <PlusCircle16 />
+        {$_("sections.new")}
       </Button>
 
       <Button
@@ -150,8 +148,9 @@ One row of the `EditSections.svelte` form, to encapsulate logic.
   }
 
   td.action {
-    max-width: 10ch;
     display: flex;
+    gap: 0.25rem;
+    align-items: center;
   }
 
   tr.section {
