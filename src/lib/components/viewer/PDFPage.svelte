@@ -10,7 +10,7 @@ Selectable text can be rendered in one of two ways:
 - Passed in as a server-fetched JSON object
 -->
 <script lang="ts">
-  import type { TextPosition } from "$lib/api/types";
+  import type { Maybe, TextPosition } from "$lib/api/types";
 
   import { page as pageStore } from "$app/stores";
 
@@ -34,75 +34,48 @@ Selectable text can be rendered in one of two ways:
   import { getQuery } from "$lib/utils/search";
   import { fitPage, getNotes } from "$lib/utils/viewer";
 
-  export let page_number: number; // 1-indexed
-
-  export let scale: number | "width" | "height";
-  export let width: number;
-  export let height: number;
-  export let text: TextPosition[] = [];
-  export let query: string = getQuery($pageStore.url, "q");
-
   const documentStore = getDocument();
   const mode = getCurrentMode();
   const pdf = getPDF();
 
-  // make hidden things visible, for debugging
-  export let debug = false;
+  interface Props {
+    page_number: number; // 1-indexed
+    scale: number | "width" | "height";
+    width: number;
+    height: number;
+    text?: TextPosition[];
+    query?: string;
+    // make hidden things visible, for debugging
+    debug?: boolean;
+  }
 
-  let canvas: HTMLCanvasElement;
-  let container: HTMLElement;
-  let textContainer: HTMLElement;
+  let {
+    page_number,
+    scale,
+    width = $bindable(),
+    height = $bindable(),
+    text = [],
+    query = $bindable(getQuery($pageStore.url, "q")),
+    debug = false,
+  }: Props = $props();
+
+  let canvas: Maybe<HTMLCanvasElement> = $state();
+  let container: Maybe<HTMLElement> = $state();
+  let textContainer: Maybe<HTMLElement> = $state();
 
   // keep track of this to avoid overlapping renders
   let renderTask;
-  let textPromise: Promise<void>; // resolves when text is rendered
-  let loaded = false;
+  let textPromise: Maybe<Promise<void>> = $state(); // resolves when text is rendered
+  let loaded = $state(false);
   let textLayer: pdfjs.TextLayer; // TextLayer
 
   // visibility, for loading optimization
-  let visible: boolean = false;
-
-  $: query = getQuery($pageStore.url, "q");
-  $: document = $documentStore;
-  $: aspect = height / width;
-  $: orientation = height > width ? "vertical" : "horizontal";
-  $: numericScale = fitPage(width, height, container, scale);
-
-  // render when anything changes
-  $: page =
-    visible && Promise.resolve($pdf).then((pdf) => pdf?.getPage(page_number));
-
-  // we need to wait on both promises to render on initial load
-  $: Promise.all([$pdf, page]).then(([pdf, page]) => {
-    render(page, canvas, container, scale);
-    textPromise = renderTextLayer(page, textContainer, container, scale);
-  });
-
-  $: textPromise?.then(() => {
-    markHighlights(textContainer, query);
-  });
-
-  // handle 0 sizing when page_spec is unavailable
-  $: if (page && width === 0 && height === 0) {
-    page.then((p) => {
-      // It's safe to assume that PDFPageProxy.view is 4 elements long
-      width = p.view[2]!;
-      height = p.view[3]!;
-    });
-  }
-
-  $: redactions_for_page = [
-    ...($pending[document.id] ?? []),
-    ...($redactions[document.id] ?? []),
-  ].filter((r) => r.page_number === page_number - 1);
-
-  $: page_level_notes =
-    getNotes(document)[page_number - 1]?.filter((n) => isPageLevel(n)) ?? [];
+  let visible: boolean = $state(false);
 
   async function render(
     page, // pdf.getPage
-    canvas: HTMLCanvasElement,
-    container: HTMLElement,
+    canvas: Maybe<HTMLCanvasElement>,
+    container: Maybe<HTMLElement>,
     scale: number | "width" | "height",
   ) {
     // only one render task at a time;
@@ -111,7 +84,7 @@ Selectable text can be rendered in one of two ways:
     }
 
     // check that we have things
-    if (![canvas, container, scale, page].every(Boolean)) return;
+    if (!canvas || !container || !scale || !page) return;
 
     const numericScale = fitPage(width, height, container, scale);
     const context = canvas.getContext("2d");
@@ -141,8 +114,8 @@ Selectable text can be rendered in one of two ways:
 
   async function renderTextLayer(
     page, // PdfPageProxy
-    textContainer: HTMLElement,
-    pageContainer: HTMLElement,
+    textContainer: Maybe<HTMLElement>,
+    pageContainer: Maybe<HTMLElement>,
     scale: number | "width" | "height",
   ) {
     if (text.length > 0) return;
@@ -155,7 +128,7 @@ Selectable text can be rendered in one of two ways:
     const content = await page.getTextContent();
 
     // svelte's reactivity ends up a step behind, so do this here
-    container.style.setProperty("--scale-factor", numericScale.toFixed(2));
+    container?.style.setProperty("--scale-factor", numericScale.toFixed(2));
 
     textLayer = new pdfjs.TextLayer({
       textContentSource: content,
@@ -166,8 +139,8 @@ Selectable text can be rendered in one of two ways:
     return textLayer.render();
   }
 
-  function markHighlights(textContainer: HTMLElement, query: string) {
-    if (!query || !textContainer) return;
+  function markHighlights(textContainer: Maybe<HTMLElement>, query: string) {
+    if (!query || !textContainer || !container) return;
     container.querySelectorAll("span").forEach((span) => {
       if (span.textContent) {
         span.innerHTML = highlight(span.textContent, query);
@@ -182,6 +155,7 @@ Selectable text can be rendered in one of two ways:
     // they overlap its bounds — otherwise clicking inside an open EditNote form
     // reopens the note beneath it and editing becomes impossible.
     if ((click.target as HTMLElement)?.closest(".note.card, .note-tab")) return;
+    if (!container) return;
 
     const clickX = click.clientX;
     const clickY = click.clientY;
@@ -208,83 +182,149 @@ Selectable text can be rendered in one of two ways:
   }
 
   function onVisibilityChange() {
-    if (window.document.visibilityState === "visible" && !canvas.hidden) {
+    if (
+      window.document.visibilityState === "visible" &&
+      canvas &&
+      !canvas.hidden
+    ) {
       Promise.all([$pdf, page]).then(([pdf, page]) => {
         render(page, canvas, container, scale);
       });
     }
   }
 
-  let pageWidth: number;
+  let pageWidth: Maybe<number> = $state();
+  $effect(() => {
+    query = getQuery($pageStore.url, "q");
+  });
+  let document = $derived($documentStore);
+  // render when anything changes
+  let page = $derived(
+    visible
+      ? Promise.resolve($pdf).then((pdf) => pdf?.getPage(page_number))
+      : undefined,
+  );
+  // handle 0 sizing when page_spec is unavailable
+  $effect(() => {
+    // Capture the derived value in a local so TS can narrow it; reading the
+    // `page` accessor twice (guard + `.then`) would not narrow.
+    const pagePromise = page;
+    if (pagePromise && width === 0 && height === 0) {
+      pagePromise.then((p) => {
+        // It's safe to assume that PDFPageProxy.view is 4 elements long
+        width = p.view[2]!;
+        height = p.view[3]!;
+      });
+    }
+  });
+  let aspect = $derived(height / width);
+  let orientation = $derived(height > width ? "vertical" : "horizontal");
+  // Recomputed reactively when its inputs change; `onResize` also writes to
+  // it directly to pick up window resizes, which don't emit a reactive signal.
+  let numericScale = $derived(fitPage(width, height, container, scale));
+  // we need to wait on both promises to render on initial load
+  $effect(() => {
+    // Read `scale` synchronously so the effect tracks it as a dependency;
+    // reading it only inside the async `.then` below would not register it,
+    // and numeric zoom changes (which flow through `scale`) wouldn't re-render.
+    const currentScale = scale;
+    Promise.all([$pdf, page]).then(([pdf, page]) => {
+      render(page, canvas, container, currentScale);
+      textPromise = renderTextLayer(
+        page,
+        textContainer,
+        container,
+        currentScale,
+      );
+    });
+  });
+  $effect(() => {
+    // Read `query` synchronously so the effect re-runs when the search query
+    // changes; reading it only inside the async `.then` would not track it.
+    const currentQuery = query;
+    textPromise?.then(() => {
+      markHighlights(textContainer, currentQuery);
+    });
+  });
+  let redactions_for_page = $derived(
+    [
+      ...($pending[document.id] ?? []),
+      ...($redactions[document.id] ?? []),
+    ].filter((r) => r.page_number === page_number - 1),
+  );
+  let page_level_notes = $derived(
+    getNotes(document)[page_number - 1]?.filter((n) => isPageLevel(n)) ?? [],
+  );
 </script>
 
-<svelte:window on:resize={onResize} />
+<svelte:window onresize={onResize} />
 
-<svelte:document on:visibilitychange={onVisibilityChange} />
+<svelte:document onvisibilitychange={onVisibilityChange} />
 
 <Page
   {page_number}
   wide={scale === "width"}
   tall={scale === "height"}
   track
-  let:visible
-  on:visible={() => {
+  onvisible={() => {
     visible = true;
   }}
   bind:width={pageWidth}
 >
-  {#if page_level_notes.length}
-    <div class="page-notes">
-      {#each page_level_notes as note}
-        <Note {note} />
-      {/each}
-    </div>
-  {/if}
-
-  <div
-    bind:this={container}
-    class="page-container scale-{scale} {orientation}"
-    class:visible
-    class:debug
-    style:--aspect={aspect}
-    style:--scale-factor={numericScale.toFixed(2)}
-    style:--width="{width}px"
-    style:--height="{height}px"
-    data-loaded={loaded}
-    on:click={checkForHighlightClick}
-    on:keydown={checkForHighlightClick}
-    role="none"
-    tabindex="-1"
-  >
-    <canvas bind:this={canvas} {width} {height}></canvas>
-
-    {#if text.length > 0}
-      <div bind:this={textContainer} class="selectable-text">
-        {#each text as word}
-          <span
-            role="presentation"
-            class="word"
-            style="left: {word.x1 * 100}%; top: {word.y1 * 100}%;"
-            >{word.text}</span
-          >
+  {#snippet children({ visible })}
+    {#if page_level_notes.length}
+      <div class="page-notes">
+        {#each page_level_notes as note}
+          <Note {note} />
         {/each}
       </div>
-    {:else}
-      <div bind:this={textContainer} class="selectable-text embedded">
-        <!-- pdfjs.renderTextLayer will fill this in -->
-      </div>
     {/if}
 
-    <AnnotationLayer page_number={page_number - 1} />
+    <div
+      bind:this={container}
+      class="page-container scale-{scale} {orientation}"
+      class:visible
+      class:debug
+      style:--aspect={aspect}
+      style:--scale-factor={numericScale.toFixed(2)}
+      style:--width="{width}px"
+      style:--height="{height}px"
+      data-loaded={loaded}
+      onclick={checkForHighlightClick}
+      onkeydown={checkForHighlightClick}
+      role="none"
+      tabindex="-1"
+    >
+      <canvas bind:this={canvas} {width} {height}></canvas>
 
-    {#if redactions_for_page.length > 0 || $mode === "redacting"}
-      <RedactionLayer
-        page_number={page_number - 1}
-        active={$mode === "redacting"}
-        id={document.id.toString()}
-      />
-    {/if}
-  </div>
+      {#if text.length > 0}
+        <div bind:this={textContainer} class="selectable-text">
+          {#each text as word}
+            <span
+              role="presentation"
+              class="word"
+              style="left: {word.x1 * 100}%; top: {word.y1 * 100}%;"
+              >{word.text}</span
+            >
+          {/each}
+        </div>
+      {:else}
+        <div bind:this={textContainer} class="selectable-text embedded">
+          <!-- pdfjs.renderTextLayer will fill this in -->
+        </div>
+      {/if}
+
+      <AnnotationLayer page_number={page_number - 1} />
+
+      {#if redactions_for_page.length > 0 || $mode === "redacting"}
+        <RedactionLayer
+          page_number={page_number - 1}
+          active={$mode === "redacting"}
+          id={document.id.toString()}
+        />
+      {/if}
+    </div>
+  {/snippet}
 </Page>
 
 <style>

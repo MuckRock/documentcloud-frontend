@@ -7,9 +7,12 @@
 <script lang="ts">
   import type { Access } from "$lib/api/types";
 
-  export let access: Access | "" = "";
-  export let size: "small" | "normal" = "normal";
-  // export let title: string | undefined = undefined;
+  interface Props {
+    access?: Access | "";
+    size?: "small" | "normal";
+  }
+
+  let { access = "", size = "normal" }: Props = $props();
 </script>
 
 <div class="tab {access} {size}"></div>

@@ -13,18 +13,9 @@
   });
 
   const id = "1";
-</script>
 
-<script lang="ts">
-  import { onMount } from "svelte";
-
-  onMount(() => {
-    $redactions = redacted;
-
-    return () => {
-      $redactions = [];
-    };
-  });
+  // Seed the shared redactions store so the layers have something to display.
+  redactions.set(redacted);
 </script>
 
 {#snippet template(args)}

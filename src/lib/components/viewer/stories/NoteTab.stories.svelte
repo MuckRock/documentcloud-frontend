@@ -1,4 +1,6 @@
 <script module lang="ts">
+  import type { ComponentProps } from "svelte";
+
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import NoteTab from "../NoteTab.svelte";
 
@@ -12,7 +14,7 @@
   let args = {
     access: "public",
     size: "normal",
-  };
+  } satisfies ComponentProps<typeof NoteTab>;
 </script>
 
 <Story name="public note" {args} />

@@ -4,8 +4,8 @@ It's layered over a PDF page and allows us to render redactions and draw new one
 When saved, redactions are burned into the PDF.
 So this layer is only showing unsaved redactions.
 -->
-<script context="module" lang="ts">
-  import type { Redaction, Nullable } from "$lib/api/types";
+<script module lang="ts">
+  import type { Redaction, Nullable, Maybe } from "$lib/api/types";
   import { writable, type Writable } from "svelte/store";
   import { saveStore } from "$lib/utils/storage";
 
@@ -40,17 +40,23 @@ So this layer is only showing unsaved redactions.
   import { _ } from "svelte-i18n";
   import { beforeNavigate } from "$app/navigation";
 
-  export let active = false;
-  export let page_number: number; // 0-indexed
-  export let id: string; // document ID, for namespacing
+  interface Props {
+    active?: boolean;
+    page_number: number; // 0-indexed
+    id: string; // document ID, for namespacing
+  }
+
+  let { active = false, page_number, id }: Props = $props();
 
   const KEY = "redactions";
 
-  let container: HTMLElement;
-  let currentRedaction: Nullable<Redaction> = null;
+  let container: Maybe<HTMLElement> = $state();
+  let currentRedaction: Nullable<Redaction> = $state(null);
 
-  $: redactions_for_page = [...($pending[id] ?? []), ...$redactions].filter(
-    (r) => r.page_number === page_number,
+  let redactions_for_page = $derived(
+    [...($pending[id] ?? []), ...$redactions].filter(
+      (r) => r.page_number === page_number,
+    ),
   );
 
   // handle interaction events
@@ -143,9 +149,9 @@ So this layer is only showing unsaved redactions.
   class:active
   role="application"
   bind:this={container}
-  on:pointerdown={startDrawingBox}
-  on:pointermove={continueDrawingBox}
-  on:pointerup={finishDrawingBox}
+  onpointerdown={startDrawingBox}
+  onpointermove={continueDrawingBox}
+  onpointerup={finishDrawingBox}
 >
   {#each redactions_for_page as redaction}
     <span

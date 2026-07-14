@@ -39,11 +39,15 @@ Assumes it's a child of a ViewerContext
   const progress = getPDFProgress();
 
   // only show loading for slow-loading pages
-  let showLoading = false;
+  let showLoading = $state(false);
 
-  $: mode = $currentMode;
-  $: showPDF = ["document", "annotating", "redacting"].includes($currentMode);
-  $: loading = $progress.total > 0 ? $progress.loaded / $progress.total : null;
+  let mode = $derived($currentMode);
+  let showPDF = $derived(
+    ["document", "annotating", "redacting"].includes($currentMode),
+  );
+  let loading = $derived(
+    $progress.total > 0 ? $progress.loaded / $progress.total : null,
+  );
 
   onMount(() => {
     const timeout = setTimeout(() => (showLoading = true), 500);
