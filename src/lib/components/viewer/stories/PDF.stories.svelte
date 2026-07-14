@@ -1,11 +1,11 @@
-<script context="module" lang="ts">
-  import { http, HttpResponse, delay } from "msw";
+<script module lang="ts">
   import type { Document, Section } from "$lib/api/types";
 
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+  import { http, HttpResponse, delay } from "msw";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
 
   import PDF from "../PDF.svelte";
-  import { redactions } from "../RedactionLayer.svelte";
+  import { pending } from "../RedactionLayer.svelte";
 
   import ViewerContext from "../ViewerContext.svelte";
 
@@ -16,13 +16,14 @@
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import redacted from "@/test/fixtures/documents/redactions.json";
 
-  export const meta = {
+  const document = doc as Document;
+
+  const { Story } = defineMeta({
     title: "Viewer / PDF Viewer",
     component: PDF,
     parameters: { layout: "centered" },
-  };
-
-  const document = doc as Document;
+    render: template,
+  });
 
   const loadingUrl = createApiUrl("loading/");
 
@@ -51,13 +52,13 @@
   };
 </script>
 
-<Template let:args>
+{#snippet template(args)}
   <ViewerContext {...args.context}>
     <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
       <PDF {...args.props} />
     </div>
   </ViewerContext>
-</Template>
+{/snippet}
 
 <Story name="Default" {args} />
 
@@ -127,15 +128,15 @@
   }}
 />
 
-<Story name="Redactions in-progress">
+<Story name="Redactions in-progress" asChild>
   <ViewerContext
     document={{ ...document, notes: [] }}
     asset_url={pdfUrl(document)}
   >
     <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
-      <button on:click={() => ($redactions[document.id] = redacted)}
-        >Show redactions</button
-      >
+      <button on:click={() => ($pending[document.id] = redacted)}>
+        Show redactions
+      </button>
       <PDF />
     </div>
   </ViewerContext>

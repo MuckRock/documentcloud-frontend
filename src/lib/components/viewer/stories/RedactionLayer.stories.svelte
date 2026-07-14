@@ -1,15 +1,16 @@
-<script context="module" lang="ts">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import RedactionLayer, { redactions } from "../RedactionLayer.svelte";
   import Flex from "../../common/Flex.svelte";
 
   import redacted from "@/test/fixtures/documents/redactions.json";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Viewer / Redaction Layer",
     component: RedactionLayer,
     parameters: { layout: "centered" },
-  };
+    render: template,
+  });
 
   const id = "1";
 </script>
@@ -26,7 +27,7 @@
   });
 </script>
 
-<Template let:args>
+{#snippet template(args)}
   <Flex class="pages" direction="column" gap={1}>
     {#each redacted as page}
       <div class="page">
@@ -34,7 +35,7 @@
       </div>
     {/each}
   </Flex>
-</Template>
+{/snippet}
 
 <Story name="display redactions" />
 

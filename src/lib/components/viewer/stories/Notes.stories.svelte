@@ -1,16 +1,17 @@
-<script context="module" lang="ts">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import type { Document } from "$lib/api/types";
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import pdfFile from "@/test/fixtures/documents/examples/agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government.pdf";
   import ViewerContext from "../ViewerContext.svelte";
   import Notes from "../Notes.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Viewer / Notes View",
     component: Notes,
     parameters: { layout: "centered" },
-  };
+    render: template,
+  });
 
   const document = doc as Document;
   const url = new URL(pdfFile, import.meta.url);
@@ -21,11 +22,11 @@
   };
 </script>
 
-<Template let:args>
+{#snippet template(args)}
   <ViewerContext {...args}>
     <Notes />
   </ViewerContext>
-</Template>
+{/snippet}
 
 <Story name="notes using images" args={{ document }} />
 

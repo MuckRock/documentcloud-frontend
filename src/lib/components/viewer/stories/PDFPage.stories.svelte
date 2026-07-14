@@ -1,10 +1,10 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import type { Document } from "$lib/api/types";
 
   import { page } from "$app/stores";
 
   import { writable } from "svelte/store";
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import PdfPage from "../PDFPage.svelte";
 
   import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
@@ -21,11 +21,11 @@
 
   const document = { ...doc, edit_access: true } as Document;
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Viewer / PDF Page",
     component: PdfPage,
     parameters: { layout: "centered" },
-  };
+  });
 
   const sizes = pageSizes(document.page_spec!);
   const [width, height] = sizes[0]!;
@@ -37,19 +37,19 @@
   }
 </script>
 
-<Story name="fit width" parameters={{ layout: "fullscreen" }}>
+<Story name="fit width" parameters={{ layout: "fullscreen" }} asChild>
   <ViewerContext {document} pdf={writable(load(url))}>
     <PdfPage page_number={1} scale="width" {width} {height} />
   </ViewerContext>
 </Story>
 
-<Story name="embedded text">
+<Story name="embedded text" asChild>
   <ViewerContext {document} pdf={writable(load(url))}>
     <PdfPage page_number={1} scale={1.5} {width} {height} />
   </ViewerContext>
 </Story>
 
-<Story name="server text">
+<Story name="server text" asChild>
   <ViewerContext {document} pdf={writable(load(url))}>
     <PdfPage
       page_number={1}
@@ -74,6 +74,7 @@
       },
     },
   }}
+  asChild
 >
   <ViewerContext {document} pdf={writable(load(url))}>
     <p>Query: {query}</p>
@@ -82,7 +83,7 @@
   </ViewerContext>
 </Story>
 
-<Story name="long section start" parameters={{ layout: "fullscreen" }}>
+<Story name="long section start" parameters={{ layout: "fullscreen" }} asChild>
   <ViewerContext {document} pdf={writable(load(url))}>
     <PdfPage page_number={1} scale="width" {width} {height} />
   </ViewerContext>

@@ -1,23 +1,19 @@
-<script context="module" lang="ts">
-  import { Template, Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import NoteTab from "../NoteTab.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Viewer / Note tab",
     component: NoteTab,
     tags: ["autodocs"],
     parameters: { layout: "centered" },
-  };
+  });
 
   let args = {
     access: "public",
     size: "normal",
   };
 </script>
-
-<Template let:args>
-  <NoteTab {...args} />
-</Template>
 
 <Story name="public note" {args} />
 

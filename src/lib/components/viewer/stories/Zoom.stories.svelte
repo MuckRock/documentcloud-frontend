@@ -1,24 +1,20 @@
-<script context="module" lang="ts">
-  import { Template, Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import Zoom from "../Zoom.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Viewer / Zoom",
     component: Zoom,
     parameters: {
       layout: "centered",
     },
     tags: ["autodocs"],
-  };
+  });
 
   let args = {
     mode: "document",
   };
 </script>
-
-<Template let:args>
-  <Zoom {...args} />
-</Template>
 
 <Story name="Document Zoom" {args} />
 
