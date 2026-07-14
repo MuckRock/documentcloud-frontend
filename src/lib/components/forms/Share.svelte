@@ -54,6 +54,8 @@
     page?: number;
     note_id?: undefined | string | number;
     currentTab?: "document" | "page" | "note";
+    /** Override preview iframe contents; used in stories/tests to avoid a live embed request */
+    previewSrcdoc?: string;
   }
 
   let {
@@ -61,6 +63,7 @@
     page = $bindable(1),
     note_id = $bindable(undefined),
     currentTab = $bindable("document"),
+    previewSrcdoc,
   }: Props = $props();
 
   let noteOptions = $derived(
@@ -293,6 +296,9 @@
         <div class="embedSettings">
           <CustomizeEmbed />
         </div>
+      {:else if previewSrcdoc}
+        <iframe class="embed" title="Embed Preview" srcdoc={previewSrcdoc}
+        ></iframe>
       {:else}
         <iframe class="embed" title="Embed Preview" src={embedSrc?.toString()}
         ></iframe>
@@ -302,7 +308,7 @@
 </div>
 {#if editOpen}
   <Portal>
-    <Modal on:close={closeEditing}>
+    <Modal onclose={closeEditing}>
       {#snippet title()}
         <h1>{$_("access.edit")}</h1>
       {/snippet}

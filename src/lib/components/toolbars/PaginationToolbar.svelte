@@ -153,7 +153,7 @@
 
 {#if canEditSections && sectionsOpen}
   <Portal>
-    <Modal on:close={() => (sectionsOpen = false)}>
+    <Modal onclose={() => (sectionsOpen = false)}>
       {#snippet title()}
         <h1>{$_("sections.edit")}</h1>
       {/snippet}

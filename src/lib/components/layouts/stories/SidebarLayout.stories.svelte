@@ -49,18 +49,18 @@
 {#snippet template(args)}
   <div class="vh-100 vw-100">
     <SidebarLayout {...args}>
-      <svelte:fragment slot="navigation">
+      {#snippet navigation()}
         <DocumentsNavigation />
         <ProjectsNavigation />
         <AddOnsNavigation />
-      </svelte:fragment>
-      <svelte:fragment slot="content">
+      {/snippet}
+      {#snippet content()}
         <DocumentBrowser />
-      </svelte:fragment>
-      <svelte:fragment slot="action">
+      {/snippet}
+      {#snippet action()}
         <UploadButton />
         <DocumentActions />
-      </svelte:fragment>
+      {/snippet}
     </SidebarLayout>
   </div>
 {/snippet}

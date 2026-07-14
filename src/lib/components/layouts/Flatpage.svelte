@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Maybe } from "$lib/api/types";
   import { onMount } from "svelte";
   import { APP_URL } from "@/config/config.js";
 
@@ -6,20 +7,26 @@
   import { renderMarkdown } from "$lib/utils/markup";
   import { ALLOWED_TAGS } from "@/config/config.js";
 
-  export let content: string;
+  interface Props {
+    content: string;
+  }
 
-  $: markdownContent = renderMarkdown(content, {
-    allowedTags: ALLOWED_TAGS.concat(
-      "h1",
-      "h2",
-      "h3",
-      "h4",
-      "h5",
-      "h6",
-      "br",
-      "hr",
-    ),
-  });
+  let { content }: Props = $props();
+
+  let markdownContent = $derived(
+    renderMarkdown(content, {
+      allowedTags: ALLOWED_TAGS.concat(
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "br",
+        "hr",
+      ),
+    }),
+  );
 
   interface Heading {
     text: string;
@@ -27,8 +34,8 @@
     level: number;
   }
 
-  let contentElem: HTMLElement;
-  let sidebarElem: HTMLDivElement;
+  let contentElem: Maybe<HTMLElement> = $state();
+  let sidebarElem: Maybe<HTMLDivElement> = $state();
   let headers: Heading[];
 
   onMount(() => {
@@ -128,7 +135,7 @@
     const toc = generateToc(root);
 
     if (toc !== null) {
-      sidebarElem.appendChild(toc);
+      sidebarElem?.appendChild(toc);
     }
   }
 </script>

@@ -59,20 +59,22 @@
 {#snippet template(args: Args)}
   <AppLayout {...args}>
     <SidebarLayout>
-      <svelte:fragment slot="navigation">
+      {#snippet navigation()}
         <Documents />
         <Projects />
         <AddOns />
-      </svelte:fragment>
+      {/snippet}
 
-      <DocumentBrowser slot="content" />
+      {#snippet content()}
+        <DocumentBrowser />
+      {/snippet}
 
-      <svelte:fragment slot="action">
+      {#snippet action()}
         <Button mode="primary" href="/upload/">
           <PlusCircle16 />Upload Documents
         </Button>
         <BulkActions />
-      </svelte:fragment>
+      {/snippet}
     </SidebarLayout>
   </AppLayout>
 {/snippet}

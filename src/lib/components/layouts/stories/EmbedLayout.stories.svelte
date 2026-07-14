@@ -1,5 +1,7 @@
-<script lang="ts" context="module">
-  import { Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import type { ComponentProps } from "svelte";
+
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import EmbedLayout from "../EmbedLayout.svelte";
 
   import type { Document } from "$lib/api/types";
@@ -13,17 +15,19 @@
   const document = doc as Document;
   const text = Promise.resolve(txt);
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Layout / Embed",
     component: EmbedLayout,
     parameters: {
       layout: "fullscreen",
     },
-  };
+  });
 
-  let args = {
+  type Args = ComponentProps<typeof EmbedLayout>;
+
+  const args = {
     settings: {
-      fullscreen: true,
+      fullscreen: 1,
       title: 1,
       pdf: 1,
       onlyshoworg: 0,
@@ -31,18 +35,20 @@
   };
 </script>
 
-<Story name="With Document" {args} let:args>
-  <div class="vh">
-    <ViewerContext {document} {text} asset_url={pdfUrl(document)}>
-      <EmbedLayout
-        settings={args.settings}
-        canonicalUrl={canonicalUrl(document).href}
-        downloadUrl={pdfUrl(document).href}
-      >
-        <DocumentEmbed settings={args.settings} />
-      </EmbedLayout>
-    </ViewerContext>
-  </div>
+<Story name="With Document" {args}>
+  {#snippet template(args: Args)}
+    <div class="vh">
+      <ViewerContext {document} {text} asset_url={pdfUrl(document)}>
+        <EmbedLayout
+          settings={args.settings}
+          canonicalUrl={canonicalUrl(document).href}
+          downloadUrl={pdfUrl(document).href}
+        >
+          <DocumentEmbed settings={args.settings} />
+        </EmbedLayout>
+      </ViewerContext>
+    </div>
+  {/snippet}
 </Story>
 
 <style>

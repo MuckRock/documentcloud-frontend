@@ -234,12 +234,14 @@
 
 {#if editing}
   <Portal>
-    <Modal on:close={() => (editing = null)}>
-      <h1 slot="title">
-        {editing === "create"
-          ? $_("documents.savedSearches.createTitle")
-          : $_("documents.savedSearches.editTitle")}
-      </h1>
+    <Modal onclose={() => (editing = null)}>
+      {#snippet title()}
+        <h1>
+          {editing === "create"
+            ? $_("documents.savedSearches.createTitle")
+            : $_("documents.savedSearches.editTitle")}
+        </h1>
+      {/snippet}
       <SavedSearchForm
         savedSearch={editing === "create" ? undefined : editing}
         initialQuery={editing === "create" ? query : undefined}

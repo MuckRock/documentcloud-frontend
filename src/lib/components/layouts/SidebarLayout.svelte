@@ -1,24 +1,38 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import Sidebar from "./Sidebar.svelte";
 
-  export let hideNavigation = false;
-  export let hideActions = false;
+  interface Props {
+    hideNavigation?: boolean;
+    hideActions?: boolean;
+    navigation?: Snippet;
+    content?: Snippet;
+    action?: Snippet;
+  }
+
+  let {
+    hideNavigation = false,
+    hideActions = false,
+    navigation,
+    content,
+    action,
+  }: Props = $props();
 </script>
 
 <div class="sidebarLayoutContainer">
-  {#if $$slots.navigation && !hideNavigation}
+  {#if navigation && !hideNavigation}
     <Sidebar position="left" id="navigation">
-      <slot name="navigation" />
+      {@render navigation?.()}
     </Sidebar>
   {/if}
 
   <div class="content" id="content">
-    <slot name="content" />
+    {@render content?.()}
   </div>
 
-  {#if $$slots.action && !hideActions}
+  {#if action && !hideActions}
     <Sidebar position="right" id="action">
-      <slot name="action" />
+      {@render action?.()}
     </Sidebar>
   {/if}
 </div>

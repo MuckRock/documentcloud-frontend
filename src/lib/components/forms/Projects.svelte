@@ -159,7 +159,7 @@ and we don't want to do that everywhere.
 
 {#if createProjectOpen}
   <Portal>
-    <Modal on:close={() => (createProjectOpen = false)}>
+    <Modal onclose={() => (createProjectOpen = false)}>
       {#snippet title()}
         <h1>{$_("projects.create")}</h1>
       {/snippet}

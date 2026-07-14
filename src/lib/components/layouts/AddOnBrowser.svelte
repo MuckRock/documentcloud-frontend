@@ -52,12 +52,12 @@
 </script>
 
 <SidebarLayout>
-  <svelte:fragment slot="navigation">
+  {#snippet navigation()}
     <Documents />
     <Projects />
     <AddOns />
-  </svelte:fragment>
-  <svelte:fragment slot="content">
+  {/snippet}
+  {#snippet content()}
     <div class="container">
       <main>
         <ContentLayout>
@@ -160,7 +160,7 @@
         {/await}
       </aside>
     </div>
-  </svelte:fragment>
+  {/snippet}
 </SidebarLayout>
 
 <style>

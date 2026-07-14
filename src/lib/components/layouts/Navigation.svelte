@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Writable } from "svelte/store";
+  import type { Snippet } from "svelte";
   import type { Flatpage, Org, User } from "$lib/api/types";
 
   import { page } from "$app/stores";
@@ -27,6 +28,12 @@
   import { remToPx } from "$lib/utils/layout";
   import { inMyOrg } from "$lib/api/accounts";
   import { getCurrentUser } from "$lib/utils/permissions";
+  interface Props {
+    breadcrumbs?: Snippet;
+    children?: Snippet;
+  }
+
+  let { breadcrumbs, children }: Props = $props();
 
   const me = getCurrentUser();
   const org = getContext<Writable<Org>>("org");
@@ -34,22 +41,22 @@
   const user_orgs = getContext<Writable<Org[]>>("user_orgs");
   const org_users = getContext<Writable<User[]>>("org_users");
 
-  let feedbackOpen = false;
-  let width: number;
+  let feedbackOpen = $state(false);
+  let width: number = $state(800);
 
-  $: BREAKPOINTS = {
+  let BREAKPOINTS = $derived({
     BOTTOM_NAV: width < remToPx(36),
-  };
+  });
 
-  $: sign_in_url = new URL(`?next=${APP_URL}`, SIGN_IN_URL);
+  let sign_in_url = $derived(new URL(`?next=${APP_URL}`, SIGN_IN_URL));
 </script>
 
 {#if tipOfDay}<TipOfDay message={tipOfDay.content} />{/if}
 <nav bind:clientWidth={width}>
   <div class="inner">
-    <slot name="breadcrumbs">
+    {#if breadcrumbs}{@render breadcrumbs()}{:else}
       <Breadcrumbs trail={$page.data.breadcrumbs} />
-    </slot>
+    {/if}
     <ProcessDropdown />
     {#if !BREAKPOINTS.BOTTOM_NAV}
       <SignedIn>
@@ -89,15 +96,17 @@
 
     {#if feedbackOpen}
       <Portal>
-        <Modal on:close={() => (feedbackOpen = false)}>
-          <h1 slot="title">{$_("feedback.title")}</h1>
+        <Modal onclose={() => (feedbackOpen = false)}>
+          {#snippet title()}
+            <h1>{$_("feedback.title")}</h1>
+          {/snippet}
           <UserFeedback user={$me} onclose={() => (feedbackOpen = false)} />
         </Modal>
       </Portal>
     {/if}
   </div>
 </nav>
-<slot />
+{@render children?.()}
 {#if BREAKPOINTS.BOTTOM_NAV}
   <nav class="bottom-nav">
     <SignedIn>

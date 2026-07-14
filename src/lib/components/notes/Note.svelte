@@ -106,8 +106,10 @@
 </div>
 {#if !embed && shareNoteOpen}
   <Portal>
-    <Modal on:close={() => (shareNoteOpen = false)}>
-      <h1 slot="title">{$_("dialog.share")}</h1>
+    <Modal onclose={() => (shareNoteOpen = false)}>
+      {#snippet title()}
+        <h1>{$_("dialog.share")}</h1>
+      {/snippet}
       <Share document={doc} note_id={note.id} currentTab="note" />
     </Modal>
   </Portal>

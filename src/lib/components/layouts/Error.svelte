@@ -63,7 +63,7 @@
 
 {#if feedbackOpen}
   <Portal>
-    <Modal on:close={() => (feedbackOpen = false)}>
+    <Modal onclose={() => (feedbackOpen = false)}>
       {#snippet title()}
         <h1>{$_("feedback.title")}</h1>
       {/snippet}

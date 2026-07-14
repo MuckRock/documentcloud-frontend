@@ -1,17 +1,19 @@
-<script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import Modal from "../Modal.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Layout / Modal",
     component: Modal,
     parameters: { layout: "fullscreen" },
-  };
+  });
 </script>
 
-<Story name="With Title">
+<Story name="With Title" asChild>
   <Modal>
-    <h1 slot="title">The Ship</h1>
+    {#snippet title()}
+      <h1>The Ship</h1>
+    {/snippet}
     <div>
       <p>
         In bed we concocted our plans for the morrow. But to my surprise and no
@@ -31,7 +33,7 @@
   </Modal>
 </Story>
 
-<Story name="Without Title">
+<Story name="Without Title" asChild>
   <Modal>
     <div>
       <p>

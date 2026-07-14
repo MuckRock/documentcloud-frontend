@@ -16,17 +16,18 @@
   <title>Upload | DocumentCloud</title>
 </svelte:head>
 
-<!-- todo: convert these to snippets once SidebarLayout has been migrated -->
 <SidebarLayout>
-  <svelte:fragment slot="navigation">
+  {#snippet navigation()}
     <Documents />
     <Projects />
     <AddOns />
-  </svelte:fragment>
+  {/snippet}
 
-  <div class="form-container" slot="content">
-    <Upload {projects} />
-  </div>
+  {#snippet content()}
+    <div class="form-container">
+      <Upload {projects} />
+    </div>
+  {/snippet}
 </SidebarLayout>
 
 <style>

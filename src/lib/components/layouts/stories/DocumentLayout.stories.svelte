@@ -1,18 +1,19 @@
-<script lang="ts" context="module">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import DocumentLayout from "../DocumentLayout.svelte";
+  import ViewerContext from "../../viewer/ViewerContext.svelte";
 
-  import type { Document } from "$lib/api/types";
+  import type { Document, DocumentText, Maybe } from "$lib/api/types";
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import txt from "@/test/fixtures/documents/document.txt.json";
-  import { activeAddons } from "@/test/fixtures/addons";
-  import { writable } from "svelte/store";
+  import { pdfUrl } from "$lib/api/documents";
   const document = doc as Document;
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Layout / Document",
     component: DocumentLayout,
+    render: template,
     parameters: {
       layout: "fullscreen",
       sveltekit_experimental: {
@@ -23,22 +24,30 @@
         },
       },
     },
+  });
+
+  type Args = {
+    document: Document;
+    text: Promise<Maybe<DocumentText>>;
   };
 
-  let args = {
-    document: writable(document),
-    mode: "document",
-    text: txt,
-    query: "",
-    addons: Promise.resolve(activeAddons),
+  const args: Args = {
+    document,
+    text: Promise.resolve(txt),
   };
 </script>
 
-<Template let:args>
+{#snippet template(args: Args)}
   <div class="vh">
-    <DocumentLayout {...args} />
+    <ViewerContext
+      document={args.document}
+      text={args.text}
+      asset_url={pdfUrl(args.document)}
+    >
+      <DocumentLayout />
+    </ViewerContext>
   </div>
-</Template>
+{/snippet}
 
 <Story name="With Read Access" {args} />
 

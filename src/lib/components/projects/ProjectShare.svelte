@@ -101,7 +101,7 @@
 </div>
 {#if editing}
   <Portal>
-    <Modal on:close={closeEditing}>
+    <Modal onclose={closeEditing}>
       {#snippet title()}
         <h1>{$_("projects.edit")}</h1>
       {/snippet}

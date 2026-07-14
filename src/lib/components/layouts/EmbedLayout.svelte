@@ -1,5 +1,7 @@
 <script lang="ts">
+  import type { Maybe } from "$lib/api/types";
   import type { EmbedSettings } from "$lib/utils/embed";
+  import type { Snippet } from "svelte";
 
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
@@ -10,15 +12,25 @@
   import Logo from "../common/Logo.svelte";
   import Tooltip from "$lib/components/common/Tooltip.svelte";
 
-  export let canonicalUrl: string;
-  export let downloadUrl: string = "";
-  export let settings: Partial<EmbedSettings> = {};
-  export let type: "document" | "page" | "note" | "project" | undefined =
-    undefined;
+  interface Props {
+    canonicalUrl: string;
+    downloadUrl?: string;
+    settings?: Partial<EmbedSettings>;
+    type?: "document" | "page" | "note" | "project" | undefined;
+    children?: Snippet;
+  }
 
-  let embedRef: HTMLDivElement;
-  let isFullscreen = false;
-  let isFullscreenSupported = false;
+  let {
+    canonicalUrl,
+    downloadUrl = "",
+    settings = {},
+    type = undefined,
+    children,
+  }: Props = $props();
+
+  let embedRef: Maybe<HTMLDivElement> = $state();
+  let isFullscreen = $state(false);
+  let isFullscreenSupported = $state(false);
 
   onMount(() => {
     isFullscreenSupported = window.document.fullscreenEnabled;
@@ -40,10 +52,10 @@
 <div
   class="container {type}"
   bind:this={embedRef}
-  on:fullscreenchange={handleFullscreenChange}
+  onfullscreenchange={handleFullscreenChange}
 >
   <main>
-    <slot />
+    {@render children?.()}
   </main>
   <footer>
     <Tooltip caption="View on DocumentCloud">

@@ -108,22 +108,26 @@
 </div>
 {#if pageShareOpen}
   <Portal>
-    <Modal on:close={() => (pageShareOpen = false)}>
-      <h1 slot="title">{$_("dialog.share")}</h1>
+    <Modal onclose={() => (pageShareOpen = false)}>
+      {#snippet title()}
+        <h1>{$_("dialog.share")}</h1>
+      {/snippet}
       <Share {document} page={page_number} currentTab="page" />
     </Modal>
   </Portal>
 {/if}
 {#if editSection}
   <Portal>
-    <Modal on:close={() => (editSection = false)}>
-      <h2 slot="title">
-        {#if section}
-          {$_("annotate.cta.edit-section")}
-        {:else}
-          {$_("annotate.cta.add-section")}
-        {/if}
-      </h2>
+    <Modal onclose={() => (editSection = false)}>
+      {#snippet title()}
+        <h2>
+          {#if section}
+            {$_("annotate.cta.edit-section")}
+          {:else}
+            {$_("annotate.cta.add-section")}
+          {/if}
+        </h2>
+      {/snippet}
       <EditSections
         {document}
         onclose={() => (editSection = false)}
@@ -134,10 +138,12 @@
 {/if}
 {#if pageNote}
   <Portal>
-    <Modal on:close={() => (pageNote = false)}>
-      <h2 slot="title">
-        {$_("annotate.cta.add-note")}
-      </h2>
+    <Modal onclose={() => (pageNote = false)}>
+      {#snippet title()}
+        <h2>
+          {$_("annotate.cta.add-note")}
+        </h2>
+      {/snippet}
       <EditNote
         {document}
         page_number={page_number - 1}

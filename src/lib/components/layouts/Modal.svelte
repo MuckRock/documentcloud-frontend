@@ -7,14 +7,14 @@ Any content is slotted.
 This module also exports a writable $modal store and a ModalContext type, describing the shape
 of the $modal store. These are used to set the active modal on any given page.
 -->
-<script context="module" lang="ts">
-  import type { ComponentType, SvelteComponent } from "svelte";
+<script module lang="ts">
+  import type { Component } from "svelte";
   import { writable, type Writable } from "svelte/store";
 
   export type ModalContext = Writable<
     Nullable<{
       title?: string;
-      component: ComponentType<SvelteComponent>;
+      component: Component;
       props?: any;
     }>
   >;
@@ -25,24 +25,29 @@ of the $modal store. These are used to set the active modal on any given page.
 
 <script lang="ts">
   import type { Nullable } from "$lib/api/types";
+  import type { Snippet } from "svelte";
 
-  import { createEventDispatcher } from "svelte";
   import { quintOut } from "svelte/easing";
   import { fade, fly } from "svelte/transition";
   import { XCircle24 } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
+  interface Props {
+    title?: Snippet;
+    children?: Snippet;
+    onclose?: () => void;
+  }
 
-  const dispatch = createEventDispatcher();
+  let { title, children, onclose }: Props = $props();
 
   function onKeydown(e: KeyboardEvent) {
     if (e.key === "Escape") {
-      dispatch("close");
+      onclose?.();
     }
   }
 </script>
 
-<svelte:window on:keydown={onKeydown} />
+<svelte:window onkeydown={onKeydown} />
 
 <div class="backdrop" transition:fade={{ duration: 200 }}>
   <div
@@ -50,18 +55,13 @@ of the $modal store. These are used to set the active modal on any given page.
     transition:fly={{ duration: 400, easing: quintOut, y: "25vw" }}
   >
     <header>
-      <Button
-        minW={false}
-        ghost
-        mode="primary"
-        onclick={() => dispatch("close")}
-      >
+      <Button minW={false} ghost mode="primary" onclick={() => onclose?.()}>
         <XCircle24 />
       </Button>
-      <slot name="title" />
+      {@render title?.()}
     </header>
     <main class="content">
-      <slot />
+      {@render children?.()}
     </main>
   </div>
 </div>

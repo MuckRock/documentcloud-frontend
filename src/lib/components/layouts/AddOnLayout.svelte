@@ -113,13 +113,13 @@
 </script>
 
 <SidebarLayout>
-  <svelte:fragment slot="navigation">
+  {#snippet navigation()}
     <Documents />
     <Projects />
     <AddOns />
-  </svelte:fragment>
+  {/snippet}
 
-  <svelte:fragment slot="content">
+  {#snippet content()}
     <div class="container" bind:clientWidth>
       <section class="addon">
         <header>
@@ -254,7 +254,7 @@
         {/if}
       {/if}
     </div>
-  </svelte:fragment>
+  {/snippet}
 </SidebarLayout>
 
 <style>

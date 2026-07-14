@@ -63,8 +63,10 @@
 
 {#if edit}
   <Portal>
-    <Modal on:close={hide}>
-      <h1 slot="title">{$_("projects.header")}</h1>
+    <Modal onclose={hide}>
+      {#snippet title()}
+        <h1>{$_("projects.header")}</h1>
+      {/snippet}
       <Projects documents={[document]} onclose={hide} />
     </Modal>
   </Portal>
