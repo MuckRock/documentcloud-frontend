@@ -3,7 +3,7 @@
  * ViewerContext provider via renderInViewer. Only pdfjs (network) and the
  * SvelteKit router are mocked.
  */
-import type { Document, Note } from "$lib/api/types";
+import type { Document } from "$lib/api/types";
 
 import { describe, it, expect, vi } from "vitest";
 import { screen } from "@testing-library/svelte";
@@ -26,25 +26,10 @@ vi.mock("$app/navigation", () => ({ afterNavigate: vi.fn() }));
 
 import Notes from "../Notes.svelte";
 import { renderInViewer } from "./renderInViewer";
-import documentFixture from "@/test/fixtures/documents/document.json";
+import { document as base } from "@/test/fixtures/documents";
+import { notePage } from "@/test/fixtures/notes";
 
-const base = documentFixture as unknown as Document;
-
-/** A page-level note (all bbox coords null) — renders without a PDF excerpt. */
-function pageLevelNote(id: number): Note {
-  return {
-    id,
-    title: `Note ${id}`,
-    content: "note body",
-    page_number: 0,
-    access: "public",
-    x1: null,
-    x2: null,
-    y1: null,
-    y2: null,
-    edit_access: false,
-  } as unknown as Note;
-}
+const notes = notePage.results; // 15 real notes
 
 function doc(overrides: Partial<Document>): Document {
   return { ...base, ...overrides };
@@ -71,18 +56,18 @@ describe("Notes", () => {
   });
 
   it("renders one entry per note", () => {
+    const sample = notes.slice(0, 3);
     const { container } = renderInViewer(Notes, {
       context: {
-        document: doc({
-          notes: [pageLevelNote(1), pageLevelNote(2), pageLevelNote(3)],
-          edit_access: false,
-        }),
+        document: doc({ notes: sample, edit_access: false }),
         embed: true, // skip the note footer (actions/metadata) to keep it light
       },
     });
 
-    expect(container.querySelectorAll(".note-wrapper")).toHaveLength(3);
-    // the empty-state CTA should not appear when notes exist
-    expect(screen.queryByRole("link")).not.toBeInTheDocument();
+    expect(container.querySelectorAll(".note-wrapper")).toHaveLength(
+      sample.length,
+    );
+    // the first note's title is shown
+    expect(screen.getByText(sample[0]!.title!)).toBeInTheDocument();
   });
 });

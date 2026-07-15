@@ -7,8 +7,6 @@
  * Only genuinely external dependencies are mocked: pdfjs (network) and the
  * SvelteKit router.
  */
-import type { Document } from "$lib/api/types";
-
 import { describe, it, expect, vi } from "vitest";
 import { screen } from "@testing-library/svelte";
 import { readable } from "svelte/store";
@@ -32,9 +30,7 @@ vi.mock("$app/navigation", () => ({ afterNavigate: vi.fn() }));
 
 import Zoom from "../Zoom.svelte";
 import { renderInViewer } from "./renderInViewer";
-import documentFixture from "@/test/fixtures/documents/document.json";
-
-const document = documentFixture as unknown as Document;
+import { document } from "@/test/fixtures/documents";
 
 /** `value` attributes of the zoom <select>'s options, in order. */
 function optionValues() {

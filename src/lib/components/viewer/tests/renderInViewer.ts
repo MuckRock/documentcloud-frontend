@@ -24,9 +24,9 @@ export interface ViewerContextProps {
   text?: Promise<Maybe<DocumentText>>;
 }
 
-interface Options<Props extends Record<string, unknown>> {
+interface Options {
   /** Props passed to the component under test. */
-  props?: Props;
+  props?: Record<string, unknown>;
   /** Props passed to ViewerContext to seed viewer state. */
   context: ViewerContextProps;
 }
@@ -38,10 +38,14 @@ interface Options<Props extends Record<string, unknown>> {
  * establishes context before the component under test renders), but wraps the
  * actual ViewerContext so tests exercise the public provider rather than a
  * hand-rolled context stub.
+ *
+ * `child` is typed loosely (`Component<any>`): component prop interfaces aren't
+ * assignable to `Record<string, unknown>`, and the harness forwards props
+ * untyped anyway. Each component still validates its props at render time.
  */
-export function renderInViewer<Props extends Record<string, unknown>>(
-  child: Component<Props>,
-  { props = {} as Props, context }: Options<Props>,
+export function renderInViewer(
+  child: Component<any>,
+  { props = {}, context }: Options,
 ) {
   return render(ViewerHarness, {
     props: { child, childProps: props, context },

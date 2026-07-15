@@ -6,8 +6,6 @@
  *
  * Only external dependencies are mocked: pdfjs (network) and the router.
  */
-import type { Document } from "$lib/api/types";
-
 import { describe, it, expect, vi } from "vitest";
 import { screen, fireEvent } from "@testing-library/svelte";
 import { readable } from "svelte/store";
@@ -34,10 +32,9 @@ vi.mock("$app/navigation", () => ({
 
 import PaginationToolbar from "../PaginationToolbar.svelte";
 import { renderInViewer } from "../../viewer/tests/renderInViewer";
-import documentFixture from "@/test/fixtures/documents/document.json";
+import { document } from "@/test/fixtures/documents";
 
-const document = documentFixture as unknown as Document; // page_count: 7
-
+const lastPage = document.page_count;
 const pageInput = () => screen.getByRole("spinbutton") as HTMLInputElement;
 
 describe("PaginationToolbar", () => {
@@ -50,7 +47,9 @@ describe("PaginationToolbar", () => {
     expect(screen.getByTitle("Previous Page")).toBeDisabled();
     expect(screen.getByTitle("Next Page")).toBeEnabled();
     // total page count is shown
-    expect(screen.getByText(/of\s+7/)).toBeInTheDocument();
+    expect(
+      screen.getByText(new RegExp(`of\\s+${lastPage}`)),
+    ).toBeInTheDocument();
   });
 
   it("advances the page when Next is clicked", async () => {
@@ -66,10 +65,10 @@ describe("PaginationToolbar", () => {
 
   it("disables Next on the last page", () => {
     renderInViewer(PaginationToolbar, {
-      context: { document, mode: "document", page: 7 },
+      context: { document, mode: "document", page: lastPage },
     });
 
-    expect(pageInput()).toHaveValue(7);
+    expect(pageInput()).toHaveValue(lastPage);
     expect(screen.getByTitle("Next Page")).toBeDisabled();
     expect(screen.getByTitle("Previous Page")).toBeEnabled();
   });
