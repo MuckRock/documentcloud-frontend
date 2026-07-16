@@ -1,7 +1,3 @@
-<!-- @component
-Assumes it's a child of a ViewerContext
- -->
-
 <script lang="ts">
   import { browser } from "$app/environment";
 
@@ -42,7 +38,7 @@ Assumes it's a child of a ViewerContext
   />
 </svelte:head>
 
-<ViewerContext {document} {mode} {text} {asset_url}>
+<ViewerContext {document} {mode} {text} {asset_url} embed>
   <EmbedLayout
     settings={data.settings}
     canonicalUrl={canonical_url}

@@ -1,7 +1,7 @@
 <!-- @component
 Page is a generic container for Viewer content.
 
-Assumes it's a child of a ViewerContext
+Must be a child of a ViewerContext
 -->
 
 <script lang="ts">
@@ -15,12 +15,7 @@ Assumes it's a child of a ViewerContext
   import PageActions from "./PageActions.svelte";
 
   import { pageHashUrl } from "$lib/api/documents";
-  import {
-    getCurrentMode,
-    getCurrentPage,
-    getDocument,
-    isEmbedded,
-  } from "$lib/components/viewer/ViewerContext.svelte";
+  import { getViewerState } from "$lib/state/viewer.svelte";
   import { getQuery } from "$lib/utils/search";
   import { getViewerHref } from "$lib/utils/viewer";
 
@@ -46,26 +41,28 @@ Assumes it's a child of a ViewerContext
     onvisible,
   }: Props = $props();
 
-  const documentStore = getDocument();
-  const currentPage = getCurrentPage();
-  const mode = getCurrentMode();
-  const embed = isEmbedded();
+  const viewer = getViewerState();
 
   let io: IntersectionObserver;
   let container: Maybe<HTMLElement> = $state();
   let visible = $state(false);
 
-  let document = $derived($documentStore);
+  let document = $derived(viewer.document!);
   let id = $derived(pageHashUrl(page_number).replace("#", ""));
   let href = $derived(
-    getViewerHref({ document, mode: $mode, page: page_number, embed }),
+    getViewerHref({
+      document,
+      mode: viewer.mode,
+      page: page_number,
+      embed: viewer.embed,
+    }),
   );
   let documentHref = $derived(
     getViewerHref({
       document,
       mode: "document",
       page: page_number,
-      embed,
+      embed: viewer.embed,
       query: getQuery($page.url, "q"),
     }),
   );
@@ -91,10 +88,10 @@ Assumes it's a child of a ViewerContext
             rootBounds &&
             boundingClientRect.top > rootBounds.top &&
             boundingClientRect.top < rootBounds.height / 2 &&
-            currentPage // in case context is missing
+            viewer // in case context is missing
           ) {
-            $currentPage = page_number;
-            // replaceState(pageHashUrl($currentPage), {});
+            viewer.page = page_number;
+            // replaceState(pageHashUrl(viewer.page), {});
           }
         });
       },
@@ -143,7 +140,7 @@ Assumes it's a child of a ViewerContext
       </a>
     </h4>
 
-    {#if !embed}
+    {#if !viewer.embed}
       <PageActions {document} {page_number} pageWidth={width} />
     {/if}
   </header>

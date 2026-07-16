@@ -1,7 +1,7 @@
 <!-- @component
 Shared zoom component for all viewer routes.
 
-Assumes it's a child of a ViewerContext
+Must be a child of a ViewerContext
 -->
 <script lang="ts">
   import { page } from "$app/stores";
@@ -12,26 +12,25 @@ Assumes it's a child of a ViewerContext
     getZoomLevels,
     getInitialZoom,
   } from "$lib/utils/viewer";
-  import { getCurrentMode, getZoom } from "./ViewerContext.svelte";
+  import { getViewerState } from "$lib/state/viewer.svelte";
 
-  const mode = getCurrentMode();
-  const zoom = getZoom();
+  const viewer = getViewerState();
 
-  let zoomLevels = $derived(getZoomLevels($mode));
-  let initial = $derived(getInitialZoom($page.url, $mode));
+  let zoomLevels = $derived(getZoomLevels(viewer.mode));
+  let initial = $derived(getInitialZoom($page.url, viewer.mode));
   $effect(() => {
-    $zoom = initial || getDefaultZoom($mode);
+    viewer.zoom = initial || getDefaultZoom(viewer.mode);
   });
 </script>
 
 {#if zoomLevels.length}
   <label class="zoom">
-    {#if $mode === "grid"}
+    {#if viewer.mode === "grid"}
       {$_("zoom.size")}
     {:else}
       {$_("zoom.zoom")}
     {/if}
-    <select name="zoom" bind:value={$zoom}>
+    <select name="zoom" bind:value={viewer.zoom}>
       {#each zoomLevels as [value, label]}
         <option {value}>{$_(label)}</option>
       {/each}

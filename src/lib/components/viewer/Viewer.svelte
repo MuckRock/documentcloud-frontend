@@ -1,7 +1,7 @@
 <!-- @component
 The document viewer.
 
-Assumes it's a child of a ViewerContext
+Must be a child of a ViewerContext
 -->
 
 <script lang="ts">
@@ -18,35 +18,29 @@ Assumes it's a child of a ViewerContext
   import Text from "./Text.svelte";
   import Grid from "./Grid.svelte";
   import Notes from "./Notes.svelte";
+  import Search from "./Search.svelte";
 
   // toolbars
   import AnnotationToolbar from "../toolbars/AnnotationToolbar.svelte";
+  import LoadingToolbar from "../toolbars/LoadingToolbar.svelte";
   import PaginationToolbar from "../toolbars/PaginationToolbar.svelte";
   import ReadingToolbar from "../toolbars/ReadingToolbar.svelte";
   import RedactionToolbar from "../toolbars/RedactionToolbar.svelte";
 
-  // utils
-  import {
-    getCurrentMode,
-    getPDFProgress,
-    isEmbedded,
-  } from "./ViewerContext.svelte";
-  import LoadingToolbar from "../toolbars/LoadingToolbar.svelte";
-  import Search from "./Search.svelte";
-
-  const embed = isEmbedded();
-  const currentMode = getCurrentMode();
-  const progress = getPDFProgress();
+  // state
+  import { getViewerState } from "$lib/state/viewer.svelte";
+  const viewer = getViewerState();
 
   // only show loading for slow-loading pages
   let showLoading = $state(false);
 
-  let mode = $derived($currentMode);
+  let embed = $derived(viewer.embed);
+  let mode = $derived(viewer.mode);
   let showPDF = $derived(
-    ["document", "annotating", "redacting"].includes($currentMode),
+    ["document", "annotating", "redacting"].includes(viewer.mode),
   );
   let loading = $derived(
-    $progress.total > 0 ? $progress.loaded / $progress.total : null,
+    viewer.progress.total > 0 ? viewer.loadingProgress : null,
   );
 
   onMount(() => {

@@ -1,5 +1,5 @@
 <!-- @component
-Assumes it's a child of a ViewerContext
+Must be a child of a ViewerContext
  -->
 
 <script lang="ts">
@@ -15,18 +15,19 @@ Assumes it's a child of a ViewerContext
   import Error from "../common/Error.svelte";
   import Highlight from "../documents/Highlight.svelte";
 
-  import { getDocument } from "./ViewerContext.svelte";
+  import { getViewerState } from "$lib/state/viewer.svelte";
   import { getQuery, highlight, pageNumber } from "$lib/utils/search";
   import { getViewerHref } from "$lib/utils/viewer";
   import { qs } from "$lib/utils/navigation";
   import { searchWithin } from "$lib/api/documents";
 
-  const document = getDocument();
+  const viewer = getViewerState();
+  let document = $derived(viewer.document!);
 
   let query = $derived(getQuery(page.url, "q"));
   let search: Promise<[number, string[]][]> = $derived(
     browser
-      ? searchWithin($document.id, query).then(formatResults)
+      ? searchWithin(document.id, query).then(formatResults)
       : new Promise(() => {}),
   );
 
@@ -68,7 +69,7 @@ Assumes it's a child of a ViewerContext
     {/if}
     {#each resultsPages as [pageNumber, resultsList]}
       {@const href = getViewerHref({
-        document: $document,
+        document,
         page: pageNumber,
         mode: "document",
         query,

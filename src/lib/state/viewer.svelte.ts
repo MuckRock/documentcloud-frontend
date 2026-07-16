@@ -38,7 +38,12 @@ export class ViewerState {
   errors: Error[] = $state([]);
   mode: ViewerMode = $state("document");
   page: number = $state(1); // 1-indexed
-  pdf: Promise<pdfjs.PDFDocumentProxy> = $state(new Promise(() => {}));
+  // A never-resolving placeholder until `loadPDF` runs. `null` means this viewer
+  // has no PDF at all (e.g. a single-note embed), so consumers render from a
+  // page image instead of loading the document.
+  pdf: Nullable<Promise<pdfjs.PDFDocumentProxy>> = $state(
+    new Promise(() => {}),
+  );
   progress: DocumentLoadProgress = $state({ loaded: 0, total: 0 });
   zoom: Zoom = $state(1);
 

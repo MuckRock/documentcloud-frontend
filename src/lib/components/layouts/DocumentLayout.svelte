@@ -1,5 +1,5 @@
 <!-- @component
-Assumes it's a child of a ViewerContext
+Must be a child of a ViewerContext
 -->
 
 <script lang="ts">
@@ -16,19 +16,19 @@ Assumes it's a child of a ViewerContext
   import Notes from "../viewer/sidebar/Notes.svelte";
   import Projects from "../documents/Projects.svelte";
   import SidebarLayout from "./SidebarLayout.svelte";
+  import SignedIn from "../common/SignedIn.svelte";
   import Viewer from "../viewer/Viewer.svelte";
   import ViewerActions from "$lib/components/sidebar/ViewerActions.svelte";
 
   import { getCurrentUser } from "$lib/utils/permissions";
   import { isOrg } from "$lib/api/accounts";
-  import { getDocument, getText } from "../viewer/ViewerContext.svelte";
-  import SignedIn from "../common/SignedIn.svelte";
+  import { getViewerState } from "$lib/state/viewer.svelte";
 
   const me = getCurrentUser();
+  const viewer = getViewerState();
 
-  let { documentStore = getDocument(), text = getText() } = $props();
-
-  let document = $derived($documentStore);
+  let document = $derived(viewer.document!);
+  let text = $derived(viewer.text);
   let projects = $derived((document.projects ?? []) as Project[]);
 </script>
 

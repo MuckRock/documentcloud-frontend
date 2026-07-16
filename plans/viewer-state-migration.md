@@ -82,6 +82,11 @@ files and 2 route pages working with minimal edits.
 Delete the module-script `getX()` exports — every consumer switches to
 `getViewerState()`.
 
+While rewriting the body, also **upgrade `ViewerContext.svelte` to Svelte 5
+runes syntax** (it's still Svelte 4: `context="module"`, `export let`, `$:`,
+store `$` prefixes, `<slot />`, `on:` directives). See Phase 2 for the concrete
+steps.
+
 ### 2. Extend `ViewerState` to cover all data
 
 Add the four missing fields and fix `newNote`:
@@ -96,15 +101,10 @@ zoom: Zoom = $state(1);
 newNote: Nullable<Partial<Note> & BBox> = $state(null);
 ```
 
-Decision to confirm: **`document` nullability.** The class defaults to
-`null`, but every consumer treats it as always-present (`document.page_count`,
-etc.). Options: (a) keep `Nullable`, assign in the provider, and have consumers
-read `viewer.document` with the understanding it's set before children mount
-(add a `!` or a getter that throws if unset); or (b) add a `get doc(): Document`
-that asserts non-null for ergonomic child use. Recommend a non-null
-`get document()` accessor is overkill — simplest is to keep the field, assign it
-in the provider before rendering `<slot/>`, and let consumers read
-`viewer.document` (TS may need a non-null assertion at a few call sites).
+**`document` nullability — resolved (see Confirmed decisions):** the field stays
+`Nullable<Document>`. The provider assigns it before children render; consumers
+read `viewer.document` and add a non-null assertion at the few sites TS flags.
+No non-null getter. (Implemented in Phase 1: the field is `Nullable<Document>`.)
 
 ### 3. Move controller logic
 
@@ -117,28 +117,79 @@ in the provider before rendering `<slot/>`, and let consumers read
 
 ## Migration steps
 
-### Phase 1 — Extend the class ([viewer.svelte.ts](../src/lib/state/viewer.svelte.ts))
+> **Status (as of this update):**
+> ✅ **Phase 1 complete** (class extended).
+> ✅ **Test safety net in place** (see section below).
+> ✅ **Phase 2 complete** — provider rewritten to construct `ViewerState` +
+> `setViewerState`, Svelte 5 syntax, `getX()` exports deleted.
+> ✅ **Phase 3 complete** — all consumers read `getViewerState()`.
+> ✅ **Phase 4 complete** — routes/stories updated (embed route passes `embed`;
+> stories pass `asset_url` instead of a `pdf` writable).
+> ✅ **Phase 5** — `npm run check` clean (0 errors), full unit suite green
+> (981 pass / 9 todo). Manual browser spot-check still recommended.
+>
+> **Two implementation notes worth remembering:**
+>
+> 1. **Seeding must be synchronous, not a parent `$effect`.** An initial attempt
+>    to sync all props into the state via a single parent `$effect` (mirroring
+>    `SearchState`) failed two safety-net tests: children read `viewer.document`
+>    on their first render (before a parent effect runs → null crash), and a
+>    parent effect running after child effects clobbered child-computed state
+>    (`Zoom` writes `viewer.zoom`, then the parent reset it). Final approach:
+>    seed synchronously inside a `seedState()` function (ordinary reads, so no
+>    `state_referenced_locally` warning), and reactively re-sync only
+>    `document` via `$effect` (the only field the old code synced reactively).
+> 2. **Annotation embed route now provides a real `ViewerContext`, but stays
+>    lightweight.** `embed/documents/[id]/annotations/[note_id]/+page.svelte`
+>    used to hand-roll context and pass `pdf: undefined`, so `NoteExcerpt`
+>    rendered from a page image. `Note`/`NoteExcerpt` now require
+>    `getViewerState()` (which throws without a provider), so the route wraps the
+>    note in `ViewerContext` — with **`loadPdf={false}`**. `ViewerState.pdf` is
+>    `Nullable`; `loadPdf={false}` seeds it to `null`, and `NoteExcerpt` falls
+>    back to `renderImage` when `pdf` is null. So the embed still loads only a
+>    single page image, never the full PDF (covered by
+>    `notes/tests/NoteExcerpt.test.ts`).
 
-1. Add `text`, `assetUrl`, `embed`, `zoom` `$state` fields.
-2. Change `newNote` type to `Nullable<Partial<Note> & BBox>`.
-3. Add a `loadPDF(assetUrl: URL)` method (port logic from
-   `ViewerContext.svelte` lines 168–192), mutating `this.pdf/progress/errors`.
-4. Optionally a constructor / `init(props)` that takes the initial
-   document/text/asset_url/embed/mode/page/zoom/errors.
+### Phase 1 — Extend the class ([viewer.svelte.ts](../src/lib/state/viewer.svelte.ts)) — ✅ DONE
 
-### Phase 2 — Rewrite the provider ([ViewerContext.svelte](../src/lib/components/viewer/ViewerContext.svelte))
+1. ✅ Added `text`, `assetUrl`, `embed`, `zoom` `$state` fields.
+2. ✅ Changed `newNote` type to `Nullable<Partial<Note> & BBox>`.
+3. ✅ Added a `loadPDF(url: URL)` method (ported the 403-retry logic), mutating
+   `this.pdf/progress/errors` and using private `#task` / `#retriesOn403Error`
+   fields. Also moved the pdfjs worker-src init to module scope.
+4. Skipped the optional constructor/`init(props)` — the provider (Phase 2) will
+   assign fields directly.
+
+### Phase 2 — Rewrite the provider ([ViewerContext.svelte](../src/lib/components/viewer/ViewerContext.svelte)) — ✅ DONE
+
+This phase also **migrates `ViewerContext.svelte` to Svelte 5 runes syntax**. The
+component is still written in Svelte 4 style (`<script context="module">`,
+`export let`, `$:`, store `$` prefixes, `<slot />`, `on:` directives); the rewrite
+brings it in line with the runes conventions used elsewhere.
 
 1. Delete the entire module `<script context="module">` block of `getX()`
-   exports (lines 42–89).
-2. In the instance script: keep the same `export let` props; construct
-   `const state = new ViewerState()`, populate fields from props, call
-   `setViewerState(state)`.
-3. Keep `documentStore.set` behavior as `$effect(() => state.document = document)`.
-4. Port `onMount(() => state.loadPDF(asset_url))`, the `<svelte:window>`
-   hashchange/popstate handlers, and `afterNavigate` — rewritten to mutate
-   `state.*`.
+   exports (lines 42–89). No module script remains — `getViewerState` /
+   `setViewerState` are imported from `$lib/state/viewer.svelte`.
+2. Convert props from `export let` to a single `$props()` destructure with an
+   interface. Keep the same prop names (`document`, `text`, `note`, `asset_url`,
+   `embed`, `page`, `mode`, `zoom`, `errors`; the legacy `pdf` writable prop is
+   dropped — the state owns the PDF promise now).
+3. Construct `const state = new ViewerState()`, populate fields from props
+   (mapping `asset_url` → `state.assetUrl`), call `setViewerState(state)`.
+4. Replace the `documentStore` + `$: documentStore.set(document)` reactivity with
+   `$effect(() => { state.document = document; })` (and same for any other prop
+   that should track its source).
+5. Port the controller logic to runes:
+   - `onMount(() => loadPDF(asset_url))` → `onMount(() => state.loadPDF(state.assetUrl!))`.
+   - `scrollToHash` / `onHashChange` / `afterNavigate` handlers rewritten to
+     mutate `state.page` / `state.currentNote` / `state.mode` directly instead of
+     `$store` assignments.
+6. Syntax cleanup: `<slot />` → `{@render children?.()}` (add `children` to
+   `$props()`); `<svelte:window on:hashchange=… on:popstate=…>` →
+   `onhashchange` / `onpopstate` attribute form; read `page` from `$app/state`
+   instead of the `$app/stores` `$page` store where practical.
 
-### Phase 3 — Migrate consumers
+### Phase 3 — Migrate consumers — ✅ DONE
 
 Uniform transform in each consumer:
 
@@ -188,7 +239,7 @@ Per-file notes:
 - **DocumentEmbed.svelte** — still uses legacy `$:`; migrate that line to
   `$derived` while switching to `viewer.document`.
 
-### Phase 4 — Providers (routes + stories)
+### Phase 4 — Providers (routes + stories) — ✅ DONE
 
 - **Route pages** (`(app)/documents/[id]-[slug]/+page.svelte`,
   `embed/documents/[id]-[slug]/+page.svelte`): unchanged if provider keeps the
@@ -197,7 +248,7 @@ Per-file notes:
   `pdf={writable(load(url))}` — the provider now takes a plain promise, so change
   to `pdf={load(url)}` in `PDFPage.stories.svelte` and `Note.stories.svelte`.
 
-### Phase 5 — Verify
+### Phase 5 — Verify — ✅ (typecheck + unit tests; manual spot-check pending)
 
 1. `npm run check` (svelte-check / TS) — expect to chase down `Nullable<Document>`
    assertions.
@@ -209,23 +260,55 @@ Per-file notes:
    https://www.dev.documentcloud.org/, exercise pagination, zoom, note
    create/edit, hash navigation.
 
-## Test safety net (added before migration)
+## Test safety net — ✅ DONE (before Phase 2)
 
-The affected components previously had **no** unit coverage. Added:
+The affected components previously had **no** unit coverage. All component tests
+render through the **real `ViewerContext`** via the `renderInViewer` helper,
+seeding state through the provider's public props and mocking only external deps
+(`pdfjs` = network, `$app/*` = router). Because they exercise the provider's
+public interface — not reproduced context keys — they are expected to pass
+**unchanged** after Phase 2 swaps the internals to `ViewerState`. Real fixtures
+from `src/test/fixtures/` are used throughout (no hand-rolled document/note/text
+data).
 
-- **`src/lib/state/tests/viewer.test.svelte.ts`** — unit tests for `ViewerState`
-  (defaults, `loadingProgress`, `loadPDF` success / progress wiring / idempotence
-  / 403-retry / non-403 error / retry cap). Mocks `pdfjs` and the documents API.
+Harness:
+
 - **`src/lib/components/viewer/tests/ViewerHarness.svelte`** +
-  **`renderInViewer.ts`** — a generic helper that renders any component inside
-  the **real `ViewerContext`** provider, seeding state via its public props.
-  Because it goes through the provider (not reproduced context keys), these
-  tests are expected to pass **unchanged** after the internal migration.
-- **`viewer/tests/Zoom.test.ts`** — zoom option sets + defaults per mode.
-- **`viewer/tests/Notes.test.ts`** — empty-state CTA gated on edit access; one
-  entry per note.
-- **`toolbars/tests/PaginationToolbar.test.ts`** — page-write path: next/prev
-  enable/disable and the displayed page following `next`.
+  **`renderInViewer.ts`** — renders any child inside `ViewerContext`, forwarding
+  context props (`document`, `mode`, `zoom`, `page`, `embed`, `note`, `text`,
+  `errors`).
+
+Unit tests for the class:
+
+- **`src/lib/state/tests/viewer.test.svelte.ts`** (8) — defaults,
+  `loadingProgress`, `loadPDF` success / progress wiring / idempotence /
+  403-retry / non-403 error / retry cap. Mocks `pdfjs` + documents API.
+
+Component tests (all green; the state reads/writes each covers are the migration
+surface):
+
+| Test                                           | Covers                                                                             |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `viewer/tests/Zoom.test.ts` (4)                | option sets + default zoom per mode; the `bind:value` write                        |
+| `viewer/tests/Notes.test.ts` (3)               | empty-state CTA gated on edit access; one entry per note                           |
+| `viewer/tests/Grid.test.ts` (1)                | one linked thumbnail per page in the spec                                          |
+| `viewer/tests/Text.test.ts` (2)                | text block per page (async); `--zoom` custom property                              |
+| `viewer/tests/Search.test.ts` (2)              | result card per matching page; empty state                                         |
+| `viewer/tests/AnnotationLayer.test.ts` (3)     | renders page notes; writing mode; **draw box + Escape-to-close** (the note writer) |
+| `viewer/tests/PDF.test.ts` (2)                 | one page wrapper per page; error view when `errors` seeded                         |
+| `viewer/tests/Page.test.ts` (3)                | page-number link; `PageActions` gated on `embed`                                   |
+| `notes/tests/Note.test.ts` (5)                 | title/content; footer + close-button gating on `embed`/`mode`                      |
+| `toolbars/tests/PaginationToolbar.test.ts` (3) | page-write path: next/prev enable/disable; page follows `next`                     |
+
+`notes/tests/NoteExcerpt.test.ts` (2) was added during Phase 3 to pin the
+image-vs-PDF render decision (spies on `renderImage`/`renderPDF`), guarding that
+a `loadPdf={false}` embed renders from an image and never fetches the PDF.
+
+Deliberately **not** unit-tested (better via Storybook/e2e): `Viewer`
+(routing — low migration risk), `ReadingToolbar` (`clientWidth`-driven
+breakpoints are unreliable in jsdom), `PDFPage` (canvas-only). Still untested if
+coverage is extended later: `RedactionToolbar`, `ViewerActions`,
+`DocumentLayout`, `DocumentEmbed`.
 
 Each test mocks only genuinely external deps (`pdfjs` = network, `$app/*` =
 router). When migrating, keep `ViewerContext`'s prop names stable so
@@ -243,3 +326,38 @@ router). When migrating, keep `ViewerContext`'s prop names stable so
    internal usage. The **provider prop stays `asset_url`** because that is the
    backend API's field name (`data.asset_url` flows straight through the route
    pages). The provider maps prop `asset_url` → `state.assetUrl`.
+
+## Behavioral changes from the refactor
+
+Most of the migration is behavior-preserving (store reads → field reads,
+`$store =` writes → `state.x =` writes). The changes that are _not_ pure
+refactors:
+
+1. **Annotation embed: no behavior change (verified & tested).** The single-note
+   embed still renders from a page image and never fetches the full PDF. It used
+   to hand-roll context with `pdf: undefined`; it now uses a real
+   `ViewerContext` with `loadPdf={false}`, which seeds `ViewerState.pdf` (made
+   `Nullable`) to `null` so `NoteExcerpt` falls back to `renderImage`. Pinned by
+   `notes/tests/NoteExcerpt.test.ts` (image path + no PDF fetch when there's no
+   PDF; PDF path when there is one). `PDF.svelte`/`PDFPage.svelte` assert
+   non-null `pdf` since they only render in a PDF-loading viewer.
+
+2. **Annotation embed viewer mode `"note"` → `"notes"`.** The old code set an
+   invalid `currentMode` of `"note"` (untyped context tolerated it); the provider
+   prop is typed `ViewerMode`, so it is now `"notes"`. Only affected the CSS
+   class on the note wrapper (`note {mode}`); no rule keys on that class, so no
+   visual change.
+
+3. **Embedded-ness now flows from the route, not `DocumentEmbed`.** Previously
+   `DocumentEmbed` called `setContext("embed", true)`. Now the embed route passes
+   `embed` to `ViewerContext`. Same net scope (DocumentEmbed wraps the whole
+   viewer subtree), so no user-facing change — but the signal's origin moved.
+
+Explicitly **not** changed (verified): the reactive-sync surface matches the old
+code — only `document` re-syncs reactively (old code only did
+`documentStore.set(document)`); `text`/`asset_url` are still seeded once (so the
+pre-existing "stale text/asset_url if ViewerContext isn't remounted between
+documents" behavior is preserved, not introduced); `loadPDF` still runs once in
+`onMount`; `errors`, `zoom`, `page`, note create/edit all behave as before. The
+`$app/stores` `$page` → `$app/state` `page` swap in the provider is
+behaviorally equivalent (both track navigation).

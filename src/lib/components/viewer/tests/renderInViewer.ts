@@ -23,6 +23,8 @@ export interface ViewerContextProps {
   note?: Nullable<Note>;
   text?: Promise<Maybe<DocumentText>>;
   errors?: Error[];
+  /** Set false for a lightweight viewer that never loads the document PDF. */
+  loadPdf?: boolean;
 }
 
 interface Options {

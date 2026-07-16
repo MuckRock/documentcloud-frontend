@@ -16,7 +16,6 @@
   import pdfFile from "@/test/fixtures/documents/examples/agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government.pdf";
   import cji from "@/test/fixtures/documents/examples/cji.json";
   import cjiPdf from "@/test/fixtures/documents/examples/signed-fair-fight-foundation-settlement-2024.pdf";
-  import { writable } from "svelte/store";
   import { pdfUrl } from "$lib/api/documents";
 
   const document = doc as Document;
@@ -38,10 +37,6 @@
   Within a month-and-a-half, <a href="https://en.wikipedia.org/wiki/George_Osborne">George Osborne</a>, the country's new 38 year-old Chancellor of the Exchequor (i.e. the country's Finance Minister)
   will present a budget to Parliament that calls for emergency actions to reduce Britain's forecast $280 billion deficit.`;
 
-  async function load(url: URL) {
-    return pdfjs.getDocument(url).promise;
-  }
-
   const CJI = {
     document: cji as Document,
     note: cji.notes.find((n) => n.id === 2587355) as NoteType,
@@ -56,12 +51,12 @@
   });
 
   type Args = ComponentProps<typeof Note> & {
-    pdf?: ComponentProps<typeof ViewerContext>["pdf"];
+    asset_url?: ComponentProps<typeof ViewerContext>["asset_url"];
   };
 </script>
 
-{#snippet template({ pdf, ...args }: Args)}
-  <ViewerContext {document} asset_url={pdfUrl(document)} {pdf}>
+{#snippet template({ asset_url = pdfUrl(document), ...args }: Args)}
+  <ViewerContext {document} {asset_url}>
     <Note {...args} />
   </ViewerContext>
 {/snippet}
@@ -83,15 +78,11 @@
 
 <Story
   name="render using PDF"
-  args={{ pdf: writable(load(url)), note: { ...note2, content: html } }}
+  args={{ asset_url: url, note: { ...note2, content: html } }}
 />
 
 <Story name="Excerpt from rotated page" asChild>
-  <ViewerContext
-    document={CJI.document}
-    asset_url={pdfUrl(CJI.document)}
-    pdf={writable(load(CJI.url))}
-  >
-    <Note document={writable(CJI.document)} note={CJI.note} scale={2} />
+  <ViewerContext document={CJI.document} asset_url={CJI.url}>
+    <Note document={CJI.document} note={CJI.note} scale={2} />
   </ViewerContext>
 </Story>

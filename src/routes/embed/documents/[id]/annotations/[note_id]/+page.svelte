@@ -1,11 +1,11 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { onMount, setContext } from "svelte";
-  import { writable } from "svelte/store";
+  import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
   import EmbedLayout from "$lib/components/layouts/EmbedLayout.svelte";
   import Note from "$lib/components/notes/Note.svelte";
+  import ViewerContext from "$lib/components/viewer/ViewerContext.svelte";
 
   import { informSize } from "$lib/utils/embed";
   import { pageImageUrl } from "$lib/api/documents";
@@ -28,11 +28,6 @@
     `${note.title} (${$_("documents.pageAbbrev")} ${note.page_number + 1})`,
   );
   let debug = $derived(page?.url?.searchParams?.has("debug") ?? false);
-
-  setContext("document", () => writable(doc));
-  setContext("embed", true);
-  setContext("currentMode", writable("note"));
-  setContext("pdf", undefined);
 
   onMount(() => {
     if (window.document.readyState === "complete" && embedContainer) {
@@ -75,7 +70,9 @@
   <EmbedLayout canonicalUrl={viewerUrl} type="note">
     <div class="note-container" bind:this={embedContainer}>
       <div class="card">
-        <Note document={writable(doc)} {note} />
+        <ViewerContext document={doc} {note} embed mode="notes" loadPdf={false}>
+          <Note {note} />
+        </ViewerContext>
       </div>
     </div>
   </EmbedLayout>

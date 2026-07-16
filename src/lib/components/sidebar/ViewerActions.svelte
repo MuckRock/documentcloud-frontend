@@ -39,7 +39,7 @@
   import Revisions from "$lib/components/documents/Revisions.svelte";
   import Share from "$lib/components/forms/Share.svelte";
 
-  import { getCurrentPage } from "../viewer/ViewerContext.svelte";
+  import { getViewerState } from "$lib/state/viewer.svelte";
   import { getPendingDocuments } from "$lib/components/processing/ProcessContext.svelte";
 
   import { getUpgradeUrl } from "$lib/api/accounts";
@@ -53,7 +53,7 @@
 
   let { document, user }: Props = $props();
 
-  const page = getCurrentPage();
+  const viewer = getViewerState();
   const pending = getPendingDocuments();
 
   const labels: Record<Action, string> = {
@@ -169,7 +169,7 @@
       {/snippet}
 
       {#if visible === "share"}
-        <Share {document} page={$page} />
+        <Share {document} page={viewer.page} />
       {/if}
 
       {#if visible === "edit"}

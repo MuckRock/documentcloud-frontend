@@ -1,5 +1,5 @@
 <!-- @component
- Assumes it's a child of a ViewerContext
+ Must be a child of a ViewerContext
 -->
 
 <script lang="ts">
@@ -24,17 +24,9 @@
   import { remToPx } from "$lib/utils/layout";
   import { scrollToPage } from "$lib/utils/scroll";
   import { sortedSections } from "$lib/utils/viewer";
-  import {
-    getCurrentMode,
-    getCurrentPage,
-    getDocument,
-    isEmbedded,
-  } from "$lib/components/viewer/ViewerContext.svelte";
+  import { getViewerState } from "$lib/state/viewer.svelte";
 
-  const documentStore = getDocument();
-  const embed = isEmbedded();
-  const currentMode = getCurrentMode();
-  const currentPage = getCurrentPage();
+  const viewer = getViewerState();
 
   let sectionsOpen = $state(false);
   let width: number = $state(800);
@@ -43,31 +35,31 @@
     TWO_ROWS: width <= remToPx(34),
   });
 
-  let document = $derived($documentStore);
+  let document = $derived(viewer.document!);
   let sections = $derived(sortedSections(document));
   let totalPages = $derived(document.page_count);
   let showPDF = $derived(
-    ["document", "annotating", "redacting"].includes($currentMode),
+    ["document", "annotating", "redacting"].includes(viewer.mode),
   );
-  let canEditSections = $derived(!embed && document.edit_access);
+  let canEditSections = $derived(!viewer.embed && document.edit_access);
 
   // pagination
   function next() {
-    $currentPage = Math.min($currentPage + 1, totalPages);
-    scrollToPage($currentPage);
-    replaceState(pageHashUrl($currentPage), {});
+    viewer.page = Math.min(viewer.page + 1, totalPages);
+    scrollToPage(viewer.page);
+    replaceState(pageHashUrl(viewer.page), {});
   }
 
   function previous() {
-    $currentPage = Math.max($currentPage - 1, 1);
-    scrollToPage($currentPage);
-    replaceState(pageHashUrl($currentPage), {});
+    viewer.page = Math.max(viewer.page - 1, 1);
+    scrollToPage(viewer.page);
+    replaceState(pageHashUrl(viewer.page), {});
   }
 
   function gotoPage(n: number) {
-    $currentPage = n;
-    scrollToPage($currentPage);
-    replaceState(pageHashUrl($currentPage), {});
+    viewer.page = n;
+    scrollToPage(viewer.page);
+    replaceState(pageHashUrl(viewer.page), {});
   }
 </script>
 
@@ -131,17 +123,17 @@
     {/if}
   </div>
 
-  {#if shouldPaginate($currentMode)}
+  {#if shouldPaginate(viewer.mode)}
     <div class="paginator">
       <Paginator
         goToNav
         ongoto={(n) => gotoPage(n)}
         onnext={next}
         onprevious={previous}
-        bind:page={$currentPage}
+        bind:page={viewer.page}
         {totalPages}
-        has_next={$currentPage < totalPages}
-        has_previous={$currentPage > 1}
+        has_next={viewer.page < totalPages}
+        has_previous={viewer.page > 1}
       />
     </div>
   {/if}

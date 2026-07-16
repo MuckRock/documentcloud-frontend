@@ -3,7 +3,6 @@
 
   import { page } from "$app/stores";
 
-  import { writable } from "svelte/store";
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import PdfPage from "../PDFPage.svelte";
 
@@ -31,26 +30,22 @@
   const [width, height] = sizes[0]!;
   const query = "los angeles";
   const url = new URL(pdfFile, import.meta.url);
-
-  async function load(url: URL): Promise<pdfjs.PDFDocumentProxy> {
-    return pdfjs.getDocument(url).promise;
-  }
 </script>
 
 <Story name="fit width" parameters={{ layout: "fullscreen" }} asChild>
-  <ViewerContext {document} pdf={writable(load(url))}>
+  <ViewerContext {document} asset_url={url}>
     <PdfPage page_number={1} scale="width" {width} {height} />
   </ViewerContext>
 </Story>
 
 <Story name="embedded text" asChild>
-  <ViewerContext {document} pdf={writable(load(url))}>
+  <ViewerContext {document} asset_url={url}>
     <PdfPage page_number={1} scale={1.5} {width} {height} />
   </ViewerContext>
 </Story>
 
 <Story name="server text" asChild>
-  <ViewerContext {document} pdf={writable(load(url))}>
+  <ViewerContext {document} asset_url={url}>
     <PdfPage
       page_number={1}
       scale={1.5}
@@ -76,7 +71,7 @@
   }}
   asChild
 >
-  <ViewerContext {document} pdf={writable(load(url))}>
+  <ViewerContext {document} asset_url={url}>
     <p>Query: {query}</p>
     <p>URL: {$page.url}</p>
     <PdfPage page_number={1} scale={1.5} {width} {height} />
@@ -84,7 +79,7 @@
 </Story>
 
 <Story name="long section start" parameters={{ layout: "fullscreen" }} asChild>
-  <ViewerContext {document} pdf={writable(load(url))}>
+  <ViewerContext {document} asset_url={url}>
     <PdfPage page_number={1} scale="width" {width} {height} />
   </ViewerContext>
 </Story>

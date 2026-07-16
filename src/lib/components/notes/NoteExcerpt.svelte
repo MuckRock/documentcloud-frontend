@@ -2,7 +2,7 @@
   import type { Document, Note } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
-  import { getPDF } from "$lib/components/viewer/ViewerContext.svelte";
+  import { getViewerState } from "$lib/state/viewer.svelte";
   import { getViewerHref } from "$lib/utils/viewer";
   import { renderImage, renderPDF } from "$lib/utils/notes";
 
@@ -12,22 +12,21 @@
     scale?: number;
   }
 
-  type AsyncPDF = typeof $pdf;
+  const viewer = getViewerState();
+  type AsyncPDF = typeof viewer.pdf;
 
   let { document, note, scale = 2 }: Props = $props();
-
-  const pdf = getPDF();
 
   let canvas: HTMLCanvasElement | undefined = $state();
 
   $effect(() => {
     if (!canvas) return;
-    // The PDF store starts as a never-resolving placeholder, so re-run on
+    // The PDF promise starts as a never-resolving placeholder, so re-run on
     // each change. Latest-wins: cleanup marks a stale run so it won't draw
     // over a newer one (we can't await the previous render — it may hang).
     const targetCanvas = canvas;
     const targetDoc = document;
-    const targetPdf = $pdf;
+    const targetPdf = viewer.pdf;
 
     let cancelled = false;
     render(targetCanvas, targetDoc, targetPdf, () => cancelled).catch(
