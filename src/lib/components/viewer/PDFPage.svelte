@@ -12,7 +12,7 @@ Selectable text can be rendered in one of two ways:
 <script lang="ts">
   import type { Maybe, TextPosition } from "$lib/api/types";
 
-  import { page as pageStore } from "$app/stores";
+  import { page as pageState } from "$app/state";
 
   import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
   import { _ } from "svelte-i18n";
@@ -49,7 +49,7 @@ Selectable text can be rendered in one of two ways:
     width = $bindable(),
     height = $bindable(),
     text = [],
-    query = $bindable(getQuery($pageStore.url, "q")),
+    query = $bindable(getQuery(pageState.url, "q")),
     debug = false,
   }: Props = $props();
 
@@ -189,14 +189,15 @@ Selectable text can be rendered in one of two ways:
 
   let pageWidth: Maybe<number> = $state();
   $effect(() => {
-    query = getQuery($pageStore.url, "q");
+    query = getQuery(pageState.url, "q");
   });
   let document = $derived(viewer.document!);
   // render when anything changes
-  // (PDFPage is only rendered when the viewer loads a PDF, so `pdf` is non-null)
+  // (PDFPage normally only renders when the viewer loads a PDF, but guard `pdf`
+  // in case this component ends up in a viewer that never loads a PDF)
   let page = $derived(
-    visible
-      ? Promise.resolve(viewer.pdf!).then((pdf) => pdf.getPage(page_number))
+    visible && viewer.pdf
+      ? Promise.resolve(viewer.pdf).then((pdf) => pdf.getPage(page_number))
       : undefined,
   );
   // handle 0 sizing when page_spec is unavailable

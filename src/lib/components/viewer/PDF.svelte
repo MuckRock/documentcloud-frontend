@@ -29,10 +29,13 @@
   let sections = $derived(getSections(document));
 
   // handle missing page_spec
-  // (PDF is only rendered when the viewer loads one, so `pdf` is non-null here)
+  // (PDF normally only renders when the viewer loads one, but guard `pdf` in
+  // case this component ends up in a viewer that never loads a PDF)
   $effect(() => {
-    viewer
-      .pdf!.then((p) => {
+    const pdf = viewer.pdf;
+    if (!pdf) return;
+    pdf
+      .then((p) => {
         if (sizes.length === 0) {
           sizes = Array(p.numPages).fill([0, 0]);
         }
@@ -44,8 +47,10 @@
   });
 
   onMount(() => {
-    viewer
-      .pdf!.then((p) => {
+    const pdf = viewer.pdf;
+    if (!pdf) return;
+    pdf
+      .then((p) => {
         if (viewer.page > 1) {
           scrollToPage(viewer.page);
         }

@@ -1,7 +1,7 @@
 <script module lang="ts">
   import type { Document } from "$lib/api/types";
 
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import PdfPage from "../PDFPage.svelte";
@@ -59,8 +59,11 @@
 <Story
   name="search results"
   parameters={{
+    // PDFPage derives its search query from `$app/state` (page.url). Storybook
+    // 8.6 doesn't mock `$app/state`, so this override is inert until Storybook
+    // is upgraded; the highlight demo won't reflect the query in the meantime.
     sveltekit_experimental: {
-      stores: {
+      state: {
         page: {
           url: new URL(
             `https://www.dev.documentcloud.org/documents/20000040-the-santa-anas/?q=${query}`,
@@ -73,7 +76,7 @@
 >
   <ViewerContext {document} asset_url={url}>
     <p>Query: {query}</p>
-    <p>URL: {$page.url}</p>
+    <p>URL: {page.url}</p>
     <PdfPage page_number={1} scale={1.5} {width} {height} />
   </ViewerContext>
 </Story>

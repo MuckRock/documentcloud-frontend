@@ -5,7 +5,7 @@ Must be a child of a ViewerContext
 <script lang="ts">
   import type { ReadMode, WriteMode } from "$lib/api/types";
 
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 
   import { _ } from "svelte-i18n";
   import {
@@ -34,7 +34,7 @@ Must be a child of a ViewerContext
   import { getViewerHref } from "$lib/utils/viewer";
   import { getViewerState } from "$lib/state/viewer.svelte";
 
-  let { query = getQuery($page.url, "q") } = $props();
+  let { query = getQuery(page.url, "q") } = $props();
 
   let width: number = $state(800);
 

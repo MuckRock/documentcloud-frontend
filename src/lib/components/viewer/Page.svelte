@@ -7,7 +7,7 @@ Must be a child of a ViewerContext
 <script lang="ts">
   import type { Maybe } from "$lib/api/types";
 
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 
   import { type Snippet, onMount } from "svelte";
   import { _ } from "svelte-i18n";
@@ -63,7 +63,7 @@ Must be a child of a ViewerContext
       mode: "document",
       page: page_number,
       embed: viewer.embed,
-      query: getQuery($page.url, "q"),
+      query: getQuery(page.url, "q"),
     }),
   );
 
