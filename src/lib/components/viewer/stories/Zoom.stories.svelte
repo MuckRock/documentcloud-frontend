@@ -1,27 +1,43 @@
-<script context="module" lang="ts">
-  import { Template, Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
+  import type { Document } from "$lib/api/types";
+  import ViewerContext from "../ViewerContext.svelte";
   import Zoom from "../Zoom.svelte";
 
-  export const meta = {
+  import doc from "@/test/fixtures/documents/document-expanded.json";
+
+  const document = doc as Document;
+
+  const { Story } = defineMeta({
     title: "Viewer / Zoom",
     component: Zoom,
     parameters: {
       layout: "centered",
     },
     tags: ["autodocs"],
-  };
+    render: template,
+  });
 
+  // Zoom reads its mode from ViewerContext, not from props.
   let args = {
-    mode: "document",
+    context: { document, mode: "document" },
   };
 </script>
 
-<Template let:args>
-  <Zoom {...args} />
-</Template>
+{#snippet template(args)}
+  <ViewerContext {...args.context}>
+    <Zoom />
+  </ViewerContext>
+{/snippet}
 
 <Story name="Document Zoom" {args} />
 
-<Story name="Text Zoom" args={{ ...args, mode: "text" }} />
+<Story
+  name="Text Zoom"
+  args={{ ...args, context: { ...args.context, mode: "text" } }}
+/>
 
-<Story name="Grid Zoom" args={{ ...args, mode: "grid" }} />
+<Story
+  name="Grid Zoom"
+  args={{ ...args, context: { ...args.context, mode: "grid" } }}
+/>

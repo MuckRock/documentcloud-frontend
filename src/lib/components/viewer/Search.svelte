@@ -6,7 +6,7 @@ Assumes it's a child of a ViewerContext
   import type { APIResponse, Highlights } from "$lib/api/types";
 
   import { browser } from "$app/environment";
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 
   import { _ } from "svelte-i18n";
   import { Hourglass24, Search24 } from "svelte-octicons";
@@ -23,12 +23,12 @@ Assumes it's a child of a ViewerContext
 
   const document = getDocument();
 
-  let search: Promise<[number, string[]][]>;
-
-  $: query = getQuery($page.url, "q");
-  $: search = browser
-    ? searchWithin($document.id, query).then(formatResults)
-    : new Promise(() => {});
+  let query = $derived(getQuery(page.url, "q"));
+  let search: Promise<[number, string[]][]> = $derived(
+    browser
+      ? searchWithin($document.id, query).then(formatResults)
+      : new Promise(() => {}),
+  );
 
   // Format page numbers, highlight search results, and remove invalid pages
   function formatResults(results: APIResponse<Highlights>) {

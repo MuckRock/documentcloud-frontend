@@ -32,8 +32,12 @@ Assumes it's a child of a ViewerContext
   import { getNotes, getViewerHref } from "$lib/utils/viewer";
   import Tooltip from "../common/Tooltip.svelte";
 
-  export let scale = 1.5;
-  export let page_number: number; // zero-indexed
+  interface Props {
+    scale?: number;
+    page_number: number; // zero-indexed
+  }
+
+  let { scale = 1.5, page_number }: Props = $props();
 
   const documentStore = getDocument();
   const embed = isEmbedded();
@@ -42,13 +46,16 @@ Assumes it's a child of a ViewerContext
   const newNote = getNewNote();
 
   let drawStart: Nullable<[x: number, y: number]> = null;
-  let drawing = false;
+  let drawing = $state(false);
 
-  $: document = $documentStore;
-  $: notes =
-    getNotes(document)[page_number]?.filter((note) => !isPageLevel(note)) ?? [];
-  $: writing = $mode === "annotating";
-  $: activeNote = Boolean($currentNote) || (Boolean($newNote) && !drawing);
+  let document = $derived($documentStore);
+  let notes = $derived(
+    getNotes(document)[page_number]?.filter((note) => !isPageLevel(note)) ?? [],
+  );
+  let writing = $derived($mode === "annotating");
+  let activeNote = $derived(
+    Boolean($currentNote) || (Boolean($newNote) && !drawing),
+  );
 
   function getNoteId(note: NoteType) {
     return noteHashUrl(note).split("#")[1];
@@ -64,6 +71,7 @@ Assumes it's a child of a ViewerContext
   }
 
   function startDrawingBox(e: PointerEvent) {
+    if (e.target !== e.currentTarget) return;
     closeNote();
 
     drawing = true;
@@ -82,6 +90,7 @@ Assumes it's a child of a ViewerContext
   }
 
   function continueDrawingBox(e: PointerEvent) {
+    if (e.target !== e.currentTarget) return;
     if (!drawing || !newNote || !drawStart || !$newNote) return;
 
     const [x, y] = getLayerPosition(e);
@@ -105,6 +114,7 @@ Assumes it's a child of a ViewerContext
   }
 
   function finishDrawingBox(e: PointerEvent) {
+    if (e.target !== e.currentTarget) return;
     if (!newNote || !drawing || !$newNote) return;
 
     $newNote = {
@@ -174,7 +184,7 @@ Assumes it's a child of a ViewerContext
   }
 </script>
 
-<svelte:window on:keydown={onkeypress} />
+<svelte:window onkeydown={onkeypress} />
 
 <div
   class="notes"
@@ -182,9 +192,9 @@ Assumes it's a child of a ViewerContext
   class:drawing
   class:activeNote
   role="application"
-  on:pointerdown|self={startDrawingBox}
-  on:pointermove|self={continueDrawingBox}
-  on:pointerup|self={finishDrawingBox}
+  onpointerdown={startDrawingBox}
+  onpointermove={continueDrawingBox}
+  onpointerup={finishDrawingBox}
 >
   {#each notes as note (note.id)}
     <a
@@ -193,7 +203,7 @@ Assumes it's a child of a ViewerContext
       href={getViewerHref({ document, note, mode: $mode, embed })}
       title={note.title}
       style:top="calc({note.y1} * 100%)"
-      on:click={(e) => openNote(e, note)}
+      onclick={(e) => openNote(e, note)}
     >
       <Tooltip caption={note.title}><NoteTab access={note.access} /></Tooltip>
     </a>
@@ -206,7 +216,7 @@ Assumes it's a child of a ViewerContext
       style:left="{note.x1 * 100}%"
       style:width="{width(note) * 100}%"
       style:height="{height(note) * 100}%"
-      on:click={(e) => openNote(e, note)}
+      onclick={(e) => openNote(e, note)}
     >
       {note.title}
     </a>

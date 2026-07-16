@@ -1,18 +1,18 @@
-<script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import Search from "../Search.svelte";
-
-  export const meta = {
-    title: "Viewer / Search",
-    component: Search,
-    parameters: { layout: "centered" },
-  };
 
   import { document } from "@/test/fixtures/documents";
   import { searchWithin } from "@/test/handlers/documents";
   import text from "@/test/fixtures/documents/document.txt.json";
 
   import ViewerContext from "../ViewerContext.svelte";
+
+  const { Story } = defineMeta({
+    title: "Viewer / Search",
+    component: Search,
+    parameters: { layout: "centered" },
+  });
 
   const query = "Trump";
 </script>
@@ -31,6 +31,7 @@
       },
     },
   }}
+  asChild
 >
   <ViewerContext {document} text={Promise.resolve(text)} mode="search">
     <Search />
@@ -51,6 +52,7 @@
       },
     },
   }}
+  asChild
 >
   <ViewerContext {document} text={Promise.resolve(text)} mode="search">
     <Search />
@@ -71,6 +73,7 @@
       },
     },
   }}
+  asChild
 >
   <ViewerContext {document} text={Promise.resolve(text)} mode="search">
     <Search />
@@ -91,6 +94,7 @@
       },
     },
   }}
+  asChild
 >
   <ViewerContext {document} text={Promise.resolve(text)} mode="search">
     <Search />

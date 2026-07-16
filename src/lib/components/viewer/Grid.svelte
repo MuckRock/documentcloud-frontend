@@ -24,7 +24,11 @@
   } from "$lib/components/viewer/ViewerContext.svelte";
   import { zoomToSize } from "$lib/utils/viewer";
 
-  export let size: Sizes = "thumbnail";
+  interface Props {
+    size?: Sizes;
+  }
+
+  let { size = "thumbnail" }: Props = $props();
 
   const documentStore = getDocument();
   const zoom = getZoom();
@@ -36,11 +40,13 @@
     large: 3,
   };
 
-  $: document = $documentStore;
-  $: size = zoomToSize($zoom);
-  $: sizes = pageSizesFromSpec(document.page_spec);
-  $: scale = SCALE[size] ?? 1;
-  $: width = (IMAGE_WIDTHS_MAP.get(size) ?? 180) / scale;
+  let document = $derived($documentStore);
+  $effect(() => {
+    size = zoomToSize($zoom);
+  });
+  let sizes = $derived(pageSizesFromSpec(document.page_spec));
+  let scale = $derived(SCALE[size] ?? 1);
+  let width = $derived((IMAGE_WIDTHS_MAP.get(size) ?? 180) / scale);
 </script>
 
 <div class="pages" style:--image-width="{width}px">
@@ -49,17 +55,19 @@
       {@const page_number = n + 1}
       {@const height = width * aspect}
       {@const src = pageImageUrl(document, page_number, size).href}
-      <Page {page_number} let:documentHref>
-        <a href={documentHref}>
-          <img
-            {src}
-            alt="Page {page_number}, {document.title}"
-            title="Page {page_number}, {document.title}"
-            width="{width}px"
-            height="{height}px"
-            loading="lazy"
-          />
-        </a>
+      <Page {page_number}>
+        {#snippet children({ documentHref })}
+          <a href={documentHref}>
+            <img
+              {src}
+              alt="Page {page_number}, {document.title}"
+              title="Page {page_number}, {document.title}"
+              width="{width}px"
+              height="{height}px"
+              loading="lazy"
+            />
+          </a>
+        {/snippet}
       </Page>
     {/each}
   {/if}

@@ -1,18 +1,19 @@
-<script context="module" lang="ts">
-  import { Template, Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import type { Document } from "$lib/api/types";
   import ViewerContext from "../ViewerContext.svelte";
   import Grid from "../Grid.svelte";
 
-  export const meta = {
-    title: "Viewer / Grid",
-    component: Grid,
-    parameters: { layout: "fullscreen" },
-  };
-
   import doc from "@/test/fixtures/documents/examples/lefler-thesis.json";
 
   const document = doc as Document;
+
+  const { Story } = defineMeta({
+    title: "Viewer / Grid",
+    component: Grid,
+    parameters: { layout: "fullscreen" },
+    render: template,
+  });
 
   let args = {
     context: {
@@ -24,11 +25,11 @@
   };
 </script>
 
-<Template let:args>
+{#snippet template(args)}
   <ViewerContext {...args.context}>
     <Grid {...args.props} />
   </ViewerContext>
-</Template>
+{/snippet}
 
 <Story
   name="small"

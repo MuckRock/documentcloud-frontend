@@ -14,9 +14,9 @@ Assumes it's a child of a ViewerContext
 
   const documentStore = getDocument();
 
-  $: document = $documentStore;
-  $: notes = document.notes ?? [];
-  $: annotate = getViewerHref({ document, mode: "annotating" });
+  let document = $derived($documentStore);
+  let notes = $derived(document.notes ?? []);
+  let annotate = $derived(getViewerHref({ document, mode: "annotating" }));
 </script>
 
 <div class="pages">

@@ -17,9 +17,11 @@ Assumes it's a child of a ViewerContext
   const mode = getCurrentMode();
   const zoom = getZoom();
 
-  $: zoomLevels = getZoomLevels($mode);
-  $: initial = getInitialZoom($page.url, $mode);
-  $: $zoom = initial || getDefaultZoom($mode);
+  let zoomLevels = $derived(getZoomLevels($mode));
+  let initial = $derived(getInitialZoom($page.url, $mode));
+  $effect(() => {
+    $zoom = initial || getDefaultZoom($mode);
+  });
 </script>
 
 {#if zoomLevels.length}

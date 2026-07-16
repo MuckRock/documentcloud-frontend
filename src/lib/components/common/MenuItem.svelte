@@ -72,7 +72,7 @@
     class:disabled
     class:indent
     class:special
-    onclick={onclick?.()}
+    onclick={() => onclick?.()}
     role="menuitem"
     tabindex="0"
   >

@@ -1,7 +1,7 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import type { Document, DocumentText, ViewerMode } from "$lib/api/types";
 
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import ViewerContext from "../ViewerContext.svelte";
   import Viewer from "../Viewer.svelte";
 
@@ -13,14 +13,15 @@
 
   const document = doc as Document;
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Viewer / Viewer",
     component: Viewer,
     parameters: {
       layout: "fullscreen",
     },
     tags: ["autodocs"],
-  };
+    render: template,
+  });
 
   let args: {
     document: Document;
@@ -35,13 +36,13 @@
   };
 </script>
 
-<Template let:args>
+{#snippet template(args)}
   <div class="vh">
     <ViewerContext {...args}>
       <Viewer />
     </ViewerContext>
   </div>
-</Template>
+{/snippet}
 
 <Story
   name="Edit Access"

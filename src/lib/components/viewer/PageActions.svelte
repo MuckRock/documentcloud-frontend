@@ -24,16 +24,20 @@
   import { remToPx } from "$lib/utils/layout";
   import { getSections } from "$lib/utils/viewer";
 
-  export let document: Document;
-  export let page_number: number;
-  export let pageWidth: number;
+  interface Props {
+    document: Document;
+    page_number: number;
+    pageWidth: number;
+  }
 
-  let pageShareOpen = false;
-  let pageNote = false;
-  let editSection = false;
+  let { document, page_number, pageWidth }: Props = $props();
+
+  let pageShareOpen = $state(false);
+  let pageNote = $state(false);
+  let editSection = $state(false);
 
   // `page_number` is 1-indexed here; sections are keyed by 0-indexed page.
-  $: section = getSections(document)[page_number - 1];
+  let section = $derived(getSections(document)[page_number - 1]);
 </script>
 
 <div class="page-actions">

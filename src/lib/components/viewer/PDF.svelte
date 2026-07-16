@@ -30,25 +30,27 @@
   const pdf = getPDF();
   const zoom = getZoom();
 
-  let width: number;
+  let width: number = $state(800);
 
-  $: document = $documentStore;
-  $: scale = zoomToScale($zoom);
-  $: sizes = document.page_spec ? pageSizes(document.page_spec) : [];
-  $: sections = getSections(document);
-  $: errors = getErrors();
+  let document = $derived($documentStore);
+  let scale = $derived(zoomToScale($zoom));
+  let sizes = $derived(document.page_spec ? pageSizes(document.page_spec) : []);
+  let sections = $derived(getSections(document));
+  let errors = $derived(getErrors());
 
   // handle missing page_spec
-  $: $pdf
-    .then((p) => {
-      if (sizes.length === 0) {
-        sizes = Array(p.numPages).fill([0, 0]);
-      }
-    })
-    .catch((e) => {
-      console.warn(e);
-      errors.update((errs) => [...errs, e]);
-    });
+  $effect(() => {
+    $pdf
+      .then((p) => {
+        if (sizes.length === 0) {
+          sizes = Array(p.numPages).fill([0, 0]);
+        }
+      })
+      .catch((e) => {
+        console.warn(e);
+        errors.update((errs) => [...errs, e]);
+      });
+  });
 
   onMount(() => {
     $pdf

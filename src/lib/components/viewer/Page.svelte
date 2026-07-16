@@ -5,9 +5,11 @@ Assumes it's a child of a ViewerContext
 -->
 
 <script lang="ts">
+  import type { Maybe } from "$lib/api/types";
+
   import { page } from "$app/stores";
 
-  import { createEventDispatcher, onMount } from "svelte";
+  import { type Snippet, onMount } from "svelte";
   import { _ } from "svelte-i18n";
 
   import PageActions from "./PageActions.svelte";
@@ -22,13 +24,27 @@ Assumes it's a child of a ViewerContext
   import { getQuery } from "$lib/utils/search";
   import { getViewerHref } from "$lib/utils/viewer";
 
-  export let page_number: number;
-  export let wide = false;
-  export let tall = false;
-  export let track: boolean | "once" = false;
-  export let width: number | undefined = undefined;
+  interface Props {
+    page_number: number;
+    wide?: boolean;
+    tall?: boolean;
+    track?: boolean | "once";
+    width?: number | undefined;
+    title?: Snippet;
+    children?: Snippet<[any]>;
+    onvisible?: () => void;
+  }
 
-  const dispatch = createEventDispatcher();
+  let {
+    page_number,
+    wide = false,
+    tall = false,
+    track = false,
+    width = $bindable(undefined),
+    title,
+    children,
+    onvisible,
+  }: Props = $props();
 
   const documentStore = getDocument();
   const currentPage = getCurrentPage();
@@ -36,19 +52,23 @@ Assumes it's a child of a ViewerContext
   const embed = isEmbedded();
 
   let io: IntersectionObserver;
-  let container: HTMLElement;
-  let visible: boolean;
+  let container: Maybe<HTMLElement> = $state();
+  let visible = $state(false);
 
-  $: document = $documentStore;
-  $: id = pageHashUrl(page_number).replace("#", "");
-  $: href = getViewerHref({ document, mode: $mode, page: page_number, embed });
-  $: documentHref = getViewerHref({
-    document,
-    mode: "document",
-    page: page_number,
-    embed,
-    query: getQuery($page.url, "q"),
-  });
+  let document = $derived($documentStore);
+  let id = $derived(pageHashUrl(page_number).replace("#", ""));
+  let href = $derived(
+    getViewerHref({ document, mode: $mode, page: page_number, embed }),
+  );
+  let documentHref = $derived(
+    getViewerHref({
+      document,
+      mode: "document",
+      page: page_number,
+      embed,
+      query: getQuery($page.url, "q"),
+    }),
+  );
 
   function watch(el: HTMLElement, once = false): IntersectionObserver {
     const io = new IntersectionObserver(
@@ -57,7 +77,7 @@ Assumes it's a child of a ViewerContext
           if (entry.isIntersecting) {
             // update state
             visible = true;
-            dispatch("visible");
+            onvisible?.();
 
             if (once) {
               observer.unobserve(el);
@@ -91,12 +111,12 @@ Assumes it's a child of a ViewerContext
     return io;
   }
 
-  function unwatch(io: IntersectionObserver, el: HTMLElement) {
-    io?.unobserve(el);
+  function unwatch(io: IntersectionObserver, el: Maybe<HTMLElement>) {
+    if (el) io?.unobserve(el);
   }
 
   onMount(() => {
-    if (track) {
+    if (track && container) {
       io = watch(container, track === "once");
     }
 
@@ -114,7 +134,7 @@ Assumes it's a child of a ViewerContext
   class:wide
   class:tall
 >
-  <div class="title"><slot name="title" /></div>
+  <div class="title">{@render title?.()}</div>
   <header>
     <h4 class="pageNumber">
       <a href={documentHref}>
@@ -127,7 +147,7 @@ Assumes it's a child of a ViewerContext
       <PageActions {document} {page_number} pageWidth={width} />
     {/if}
   </header>
-  <slot {id} {href} {visible} {documentHref} />
+  {@render children?.({ id, href, visible, documentHref })}
 </div>
 
 <style>

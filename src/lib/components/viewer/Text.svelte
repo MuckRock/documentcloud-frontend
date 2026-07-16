@@ -5,7 +5,7 @@
   Assumes it's a child of a ViewerContext
 -->
 <script lang="ts">
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import { onMount } from "svelte";
 
   import Page from "./Page.svelte";
@@ -14,7 +14,7 @@
   import { highlight } from "$lib/utils/search";
   import { getQuery } from "$lib/utils/search";
 
-  export let query = getQuery($page.url, "q");
+  let { query = getQuery(page.url, "q") } = $props();
 
   const currentPage = getCurrentPage();
   const text = getText();
