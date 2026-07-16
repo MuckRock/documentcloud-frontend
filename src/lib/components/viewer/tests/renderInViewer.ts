@@ -22,6 +22,7 @@ export interface ViewerContextProps {
   embed?: boolean;
   note?: Nullable<Note>;
   text?: Promise<Maybe<DocumentText>>;
+  errors?: Error[];
 }
 
 interface Options {
