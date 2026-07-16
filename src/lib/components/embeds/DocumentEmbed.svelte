@@ -23,6 +23,11 @@
 
   const viewer = getViewerState();
 
+  // If we're using this layout, we're embedded. Declare it on the shared state
+  // so every descendant builds embed links (EMBED_URL) even if the provider
+  // wasn't told `embed`. Set synchronously, before children render.
+  viewer.embed = true;
+
   let document = $derived(viewer.document!);
 
   let user = $derived(

@@ -348,10 +348,22 @@ refactors:
    class on the note wrapper (`note {mode}`); no rule keys on that class, so no
    visual change.
 
-3. **Embedded-ness now flows from the route, not `DocumentEmbed`.** Previously
-   `DocumentEmbed` called `setContext("embed", true)`. Now the embed route passes
-   `embed` to `ViewerContext`. Same net scope (DocumentEmbed wraps the whole
-   viewer subtree), so no user-facing change — but the signal's origin moved.
+3. **Embedded-ness: provider prop + `DocumentEmbed` self-declaration.** The embed
+   routes pass `embed` to `ViewerContext` (the provider owns the flag). In
+   addition, `DocumentEmbed` re-asserts `viewer.embed = true` on mount — restoring
+   its original "if we're using this layout, we're embedded" contract. This is
+   belt-and-suspenders: `embed` links (`EMBED_URL`) work even if a provider
+   forgot the `embed` prop.
+
+   **Regression this caught:** in the first pass, dropping `DocumentEmbed`'s
+   declaration meant embed contexts that _didn't_ pass `embed` (the two embed
+   Storybook stories) built `APP_URL` links — `embed.documentcloud.org` showed
+   up as `www.documentcloud.org` on CI (dev config hides it because
+   `EMBED_URL === APP_URL` there). Fixed by (a) passing `embed` in those stories,
+   (b) `DocumentEmbed` self-declaring, and (c) two guard tests:
+   `utils/tests/getViewerHref.embed.test.ts` (mocks distinct hosts → `embed:true`
+   uses `EMBED_URL`) and `embeds/tests/DocumentEmbed.test.ts` (`DocumentEmbed`
+   sets `viewer.embed` even when the provider didn't).
 
 Explicitly **not** changed (verified): the reactive-sync surface matches the old
 code — only `document` re-syncs reactively (old code only did
