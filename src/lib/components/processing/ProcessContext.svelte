@@ -60,6 +60,13 @@ This makes the state of those processes available via context.
 
   // loading, exported so other components can restart this process
   async function _load() {
+    // Don't poll for a backgrounded tab; auth is gated at the instance-script call sites.
+    if (
+      typeof document !== "undefined" &&
+      document.visibilityState !== "visible"
+    )
+      return;
+
     const promises = [
       pending().then((inProgress) => {
         documents.set(inProgress);
@@ -140,11 +147,22 @@ This makes the state of those processes available via context.
     });
   });
 
+  // Refresh on tab focus; gate on auth here since _load() can't (module scope).
+  function onVisibilityChange() {
+    if (document.visibilityState === "visible") {
+      if (isSignedIn($me)) load();
+    } else {
+      load.cancel(); // drop any queued trailing invocation for a hidden tab
+    }
+  }
+
   onDestroy(() => {
     if (load.cancel) {
       load.cancel();
     }
   });
 </script>
+
+<svelte:document on:visibilitychange={onVisibilityChange} />
 
 {@render children?.()}
