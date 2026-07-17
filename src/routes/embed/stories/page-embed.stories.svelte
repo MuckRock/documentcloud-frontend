@@ -1,7 +1,7 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import type { ViewerMode } from "$lib/api/types";
 
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import PageEmbed from "../documents/[id]/pages/[page]/+page.svelte";
 
   import { documentExpanded } from "@/test/fixtures/documents";
@@ -11,11 +11,11 @@
     documentExpanded.notes?.filter((note) => note.page_number === page - 1) ??
     [];
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Embed / Page",
     component: PageEmbed,
     parameters: { layout: "centered" },
-  };
+  });
 
   const data = {
     document: documentExpanded,
@@ -33,6 +33,6 @@
   };
 </script>
 
-<Story name="default">
+<Story name="default" asChild>
   <PageEmbed {data} />
 </Story>

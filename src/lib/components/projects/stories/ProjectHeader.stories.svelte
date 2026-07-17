@@ -1,14 +1,14 @@
-<script context="module" lang="ts">
-  import { Template, Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import ProjectHeader from "../ProjectHeader.svelte";
 
   import { project } from "@/test/fixtures/projects";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Projects / Header",
     component: ProjectHeader,
     parameters: { layout: "centered" },
-  };
+  });
 
   let args = {
     project: {
@@ -18,10 +18,6 @@
     },
   };
 </script>
-
-<Template let:args>
-  <ProjectHeader {...args} />
-</Template>
 
 <Story name="Public" {args} />
 

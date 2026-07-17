@@ -1,29 +1,36 @@
-<script context="module" lang="ts">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import type { ComponentProps } from "svelte";
+  import type { Document } from "$lib/api/types";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import DocumentListItem from "../DocumentListItem.svelte";
   import { defaultVisibleFields } from "../VisibleFields.svelte";
 
-  import document from "@/test/fixtures/documents/document.json";
-  import expanded from "@/test/fixtures/documents/document-expanded.json";
-  import santaanas from "@/test/fixtures/documents/examples/the-santa-anas.json";
+  import documentFixture from "@/test/fixtures/documents/document.json";
+  import expandedFixture from "@/test/fixtures/documents/document-expanded.json";
+  import santaanasFixture from "@/test/fixtures/documents/examples/the-santa-anas.json";
   import { projectList } from "@/test/fixtures/projects";
   import { data } from "@/test/fixtures/documents";
 
-  export const meta = {
+  const document = documentFixture as Document;
+  const expanded = expandedFixture as Document;
+  const santaanas = santaanasFixture as Document;
+
+  const { Story } = defineMeta({
     title: "Documents / Document List Item",
     component: DocumentListItem,
     tags: ["autodocs"],
     parameters: {
       layout: "centered",
     },
-  };
+    render: template,
+  });
 </script>
 
-<Template let:args>
+{#snippet template(args: ComponentProps<typeof DocumentListItem>)}
   <div class="wrapper">
     <DocumentListItem {...args} />
   </div>
-</Template>
+{/snippet}
 
 <Story
   name="Basic"
@@ -59,8 +66,8 @@
     document: {
       ...expanded,
       projects: projectList.results.slice(0, 7),
-      visibleFields: { ...defaultVisibleFields, thumbnail: true },
     },
+    visibleFields: { ...defaultVisibleFields, thumbnail: true },
   }}
 />
 
@@ -118,7 +125,6 @@
     visibleFields: {
       ...defaultVisibleFields,
       description: true,
-      fullTitle: false,
     },
   }}
 />
@@ -136,7 +142,6 @@
     visibleFields: {
       ...defaultVisibleFields,
       description: true,
-      fullTitle: false,
     },
   }}
 />

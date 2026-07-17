@@ -1,19 +1,19 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import type { Page, Project, Document, APIResponse } from "$lib/api/types";
 
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import ProjectEmbed from "../projects/[project_id]-[slug]/+page.svelte";
 
   import documents from "@/test/fixtures/documents/documents-expanded.json";
   import project from "@/test/fixtures/projects/project.json";
   import { projects } from "@/test/handlers/projects";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Embed / Project",
     component: ProjectEmbed,
     tags: ["autodocs"],
     parameters: { layout: "centered" },
-  };
+  });
 
   const data = {
     project: project as Project,
@@ -34,6 +34,7 @@
 
 <Story
   name="default"
+  asChild
   parameters={{
     msw: { handlers: [projects.info, projects.documents] },
   }}

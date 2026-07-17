@@ -14,7 +14,7 @@ const config: StorybookConfig = {
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
     "storybook-addon-cookie",
-    { name: "@storybook/addon-svelte-csf", options: { legacyTemplate: true } },
+    { name: "@storybook/addon-svelte-csf" },
   ],
   framework: {
     name: "@storybook/sveltekit",

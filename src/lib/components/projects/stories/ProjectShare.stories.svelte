@@ -1,15 +1,17 @@
-<script context="module" lang="ts">
-  import { Template, Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import type { ComponentProps } from "svelte";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import ProjectShare from "../ProjectShare.svelte";
 
   import { project } from "@/test/fixtures/projects";
   import Toaster from "../../layouts/Toaster.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Projects / Share",
     component: ProjectShare,
     parameters: { layout: "centered" },
-  };
+    render: template,
+  });
 
   let args = {
     project: {
@@ -20,10 +22,10 @@
   };
 </script>
 
-<Template let:args>
+{#snippet template(args: ComponentProps<typeof ProjectShare>)}
   <ProjectShare {...args} />
   <Toaster />
-</Template>
+{/snippet}
 
 <Story name="Public" {args} />
 
