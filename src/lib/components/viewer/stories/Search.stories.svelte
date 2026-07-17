@@ -22,7 +22,7 @@
   parameters={{
     msw: { handlers: [searchWithin.empty] },
     sveltekit_experimental: {
-      stores: {
+      state: {
         page: {
           url: new URL(
             `https://www.dev.documentcloud.org/documents/20000040-the-santa-anas/?q=${query}`,
@@ -43,7 +43,7 @@
   parameters={{
     msw: { handlers: [searchWithin.data] },
     sveltekit_experimental: {
-      stores: {
+      state: {
         page: {
           url: new URL(
             `https://www.dev.documentcloud.org/documents/20000040-the-santa-anas/?q=${query}`,
@@ -64,7 +64,7 @@
   parameters={{
     msw: { handlers: [searchWithin.loading] },
     sveltekit_experimental: {
-      stores: {
+      state: {
         page: {
           url: new URL(
             `https://www.dev.documentcloud.org/documents/20000040-the-santa-anas/?q=${query}`,
@@ -85,7 +85,7 @@
   parameters={{
     msw: { handlers: [searchWithin.error] },
     sveltekit_experimental: {
-      stores: {
+      state: {
         page: {
           url: new URL(
             `https://www.dev.documentcloud.org/documents/20000040-the-santa-anas/?q=${query}`,

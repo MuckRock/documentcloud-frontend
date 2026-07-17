@@ -29,9 +29,9 @@
         handlers: [addons.data, organizations.data, users.data],
       },
       sveltekit_experimental: {
-        stores: {
+        state: {
           page: {
-            url: "/",
+            url: new URL("https://www.documentcloud.org/"),
             data: {
               pinnedAddons: Promise.resolve({ data: activeAddons }),
             },

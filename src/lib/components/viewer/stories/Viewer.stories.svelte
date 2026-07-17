@@ -85,7 +85,7 @@
   parameters={{
     msw: { handlers: [searchWithin.data] },
     sveltekit_experimental: {
-      stores: {
+      state: {
         page: {
           url: new URL(
             `https://www.dev.documentcloud.org/documents/20000040-the-santa-anas/?q=Trump`,
