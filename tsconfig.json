@@ -23,6 +23,8 @@
     ".svelte-kit/ambient.d.ts",
     "vite.config.js",
     "vite.config.ts",
+    ".storybook/**/*.ts",
+    ".storybook/**/*.svelte",
     "src/app.d.ts",
     "src/lib/**/*.js",
     "src/lib/**/*.ts",

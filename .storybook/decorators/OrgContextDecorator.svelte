@@ -1,11 +1,16 @@
 <script lang="ts">
-  import { setContext } from "svelte";
-  import { writable, type Writable } from "svelte/store";
-  import type { Org } from "@/api/types";
+  import type { Maybe, Org } from "$lib/api/types";
+  import { type Snippet, setContext } from "svelte";
+  import { type Writable, writable } from "svelte/store";
   import { organization } from "@/test/fixtures/accounts";
-  const orgStore: Writable<Org> = writable(null);
-  $: orgStore.set(organization as Org);
+
+  interface Props {
+    children?: Snippet;
+  }
+
+  let { children }: Props = $props();
+  const orgStore: Writable<Maybe<Org>> = writable(organization);
   setContext("org", orgStore);
 </script>
 
-<slot />
+{@render children?.()}
