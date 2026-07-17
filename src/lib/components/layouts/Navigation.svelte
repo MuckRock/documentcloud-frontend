@@ -3,7 +3,7 @@
   import type { Snippet } from "svelte";
   import type { Flatpage, Org, User } from "$lib/api/types";
 
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
@@ -55,7 +55,7 @@
 <nav bind:clientWidth={width}>
   <div class="inner">
     {#if breadcrumbs}{@render breadcrumbs()}{:else}
-      <Breadcrumbs trail={$page.data.breadcrumbs} />
+      <Breadcrumbs trail={page.data.breadcrumbs} />
     {/if}
     <ProcessDropdown />
     {#if !BREAKPOINTS.BOTTOM_NAV}
