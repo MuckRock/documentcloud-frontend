@@ -1,12 +1,64 @@
-# Scope: Storybook 8.6 → 9 Upgrade
+# Scope: Storybook 8.6 → 9 → **10** Upgrade
+
+> **⚠️ Key correction (2026-07-17):** the premise that **SB9 mocks `$app/state`**
+> is **false**. `@storybook/sveltekit@9.1.20` mocks only `$app/{forms,navigation,
+> stores}` — there is no `$app/state` mock and its vite-plugin doesn't alias it
+> (verified in the installed package + a headless test: `page.url` came back as
+> the unmocked `a:`). The `$app/state` mock (PR #24795) actually shipped in
+> **Storybook 10** (`@storybook/sveltekit@10.5.x` ships
+> `static/app-state-mock.svelte.js` + `MockProvider.svelte`). We therefore
+> upgraded to **SB10**, where the mock works. Everything else in this plan (addon
+> consolidation, codemods, addon-cookie removal) applies the same to 9 and 10.
+
+## Progress
+
+- **✅ Page store → page state migration (DONE).** The whole app now reads `page`
+  from `$app/state`, not `$app/stores` — verified: **0** `$app/stores` imports
+  remain, **40** files import `$app/state`. This widens the blast radius of the
+  motivating problem below: it's no longer just the viewer that can't inject a
+  URL in Storybook — every `$app/state`-dependent story is affected until SB9
+  lands the `$app/state` mock. Raises the priority of steps 1–5.
+- **✅ Step 6 — legacy-story modernization (DONE, 2026-07-17).** All 42 unique
+  files across Lists A (24) + B (35, 17 overlapping) migrated to the modern Svelte
+  CSF API and `<script module>` syntax. `svelte-check` clean (0 errors; the 5
+  remaining warnings pre-exist in `src/routes/(app)/+layout.svelte`);
+  `build-storybook` succeeds. See "Step 6 notes" below for details.
+- **✅ Steps 1–5 — core upgrade + addon cleanup + `$app/state` verify + full
+  regression (DONE, 2026-07-17).** Upgraded to **Storybook 10.5.0** (not 9 — see
+  Key correction above). Details:
+  - **Automigration:** ran `storybook@9 upgrade` then `storybook@10 upgrade`.
+    Codemods removed `addon-essentials`/`addon-interactions`, migrated `action`
+    imports → `storybook/actions` and `INITIAL_VIEWPORTS` → `storybook/viewport`,
+    moved renderer types `@storybook/svelte` → `@storybook/sveltekit`, added
+    `@storybook/addon-docs`, and dropped `docs.autodocs: "tag"`.
+  - **Versions:** `storybook`/`@storybook/sveltekit`/`@storybook/svelte`/
+    `addon-docs`/`addon-links` = 10.5.0; `@storybook/addon-svelte-csf` = ^5.1.2
+    (peer resolves cleanly on SB10); `msw-storybook-addon` = ^2.0.7. Removed the
+    dead `@storybook/test` + `@storybook/addon-actions`. Removed the auto-added
+    `@storybook/addon-mcp` (out of scope).
+  - **`storybook-addon-cookie` (the HIGH-risk one): removed** — incompatible with
+    SB9+ (imports SB8-era `@storybook/{theming,components,manager-api,...}` that
+    were consolidated into `storybook`). Replaced with a one-liner in
+    `preview.ts`: `document.cookie = "csrftoken=mockToken; path=/"` (the app's
+    `getCsrfToken()` reads `csrftoken` from `document.cookie`).
+  - **`$app/state` verified:** PDFPage "search results" story's `page.url` now
+    reflects the injected `?q=los angeles` santa-anas URL (headless check).
+    Removed the "inert until upgrade" comments in `preview.ts` + the story.
+  - **Regression:** `build-storybook` ✅; `svelte-check` ✅ 0 errors; unit tests
+    ✅ 990 passed; drove all **545** stories headless — all render. Non-failures
+    filtered: pdfjs `UnknownErrorException` (minified `qf`, no PDF backend),
+    intentional error-state stories (`File Error`, `With 403 Error`), and
+    pre-existing unhandled rejections from API endpoints not covered by a story's
+    MSW handlers (stories still render; framework-agnostic, not upgrade-caused).
 
 ## Why
 
 `@storybook/sveltekit` **8.6 does not mock `$app/state`** (only `$app/stores`);
 its dist has zero references to `$app/state`, so `sveltekit_experimental.state`
-is silently ignored. Now that the viewer components read `page` from
-`$app/state`, URL-dependent stories can't inject a URL (e.g. the PDFPage
-"search results" highlight demo is inert). **Storybook 9 fixes this** — its
+is silently ignored. Now that the **entire app** reads `page` from `$app/state`
+(the page store → page state migration is complete — 0 `$app/stores` imports, 40
+files on `$app/state`), URL-dependent stories can't inject a URL (e.g. the
+PDFPage "search results" highlight demo is inert). **Storybook 9 fixes this** — its
 SvelteKit framework mocks `$app/state` via `sveltekit_experimental.state`
 (resolved in [storybookjs/storybook#30209](https://github.com/storybookjs/storybook/issues/30209),
 PR [#24795](https://github.com/storybookjs/storybook/pull/24795)). The
@@ -105,24 +157,54 @@ diff regardless.
   — filter those.
 - If Chromatic is wired to CI, use it as the visual-diff safety net.
 
-### 6. Optional but recommended: modernize the legacy stories
+### 6. ✅ DONE — modernize the legacy stories
 
 Neither axis blocks SB9 (`legacyTemplate: true` keeps the old API working, and
 Svelte 5 still accepts `context="module"` with a deprecation warning), but both
-are on borrowed time — SB10 will likely drop `legacyTemplate`. Best as a
-separate follow-up PR (or two). Two independent lists at the bottom:
+are on borrowed time — SB10 will likely drop `legacyTemplate`. Completed
+2026-07-17 (both lists in one pass, since 17 files overlapped).
 
-- **A. Old `Story`/`Template` API → `defineMeta` (24 files).** Use the
+- **A. Old `Story`/`Template` API → `defineMeta` (24 files).** ✅ Done via the
   `migrate-storybook-csf` skill.
-- **B. `<script context="module">` → `<script module>` (35 files).** Mostly a
-  mechanical rename.
+- **B. `<script context="module">` → `<script module>` (35 files).** ✅ Done —
+  the 24 List A rewrites got this for free; the other 18 were a mechanical
+  rename.
+
+#### Step 6 notes
+
+Migration patterns applied:
+
+- **Plain `<Template let:args>` wrappers** (just `<Comp {...args}/>`) → dropped;
+  stories now default to the meta `component`.
+- **Composition stories** (explicit markup inside `<Story>`) → `asChild`.
+- **Custom-markup templates** → `render` default snippet (DocumentListItem's
+  wrapper div; ProjectShare + Toaster) or an inline `{#snippet template}`
+  (CustomizeEmbed).
+- Dropped the non-standard `id` prop on Price/UpgradePrompt stories.
+
+Type issues surfaced by `defineMeta({ component })` now type-checking `args`
+(the old `<Template>` API left args untyped) — all resolved:
+
+- **CustomizeEmbed** — the `document` arg targeted a prop that doesn't exist
+  (component only takes `storageManager`); it was inert, so removed.
+- **DocumentListItem / Thumbnail** — cast JSON fixtures `as Document` (existing
+  repo idiom). Cleaned two latent bugs: a `fullTitle` key absent from the
+  `VisibleFields` type (always ignored at runtime), and a `visibleFields` object
+  mistakenly nested _inside_ `document`.
+
+⚠️ **One behavior change:** DocumentListItem's **"With Many Projects"** story had
+`visibleFields: { ...defaultVisibleFields, thumbnail: true }` nested inside
+`document` (so it never applied). Promoted to a sibling arg to honor intent —
+this story **now renders thumbnails** where it previously didn't. Revisit if a
+Chromatic baseline needs the old render (alternative: drop the key entirely for a
+byte-identical render).
 
 ## Effort estimate
 
 - **Core upgrade + addon cleanup + `$app/state` verify:** ~0.5–1 day, _if_
   both third-party addons cooperate.
 - **`storybook-addon-cookie` replacement** (if it breaks): +0.5 day.
-- **35 legacy-story migration:** separate, ~0.5–1 day, best as its own PR.
+- **~~35 legacy-story migration:~~** ✅ done (2026-07-17), 42 files.
 
 ## Recommendation
 

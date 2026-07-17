@@ -7,7 +7,7 @@
   import { usersList, organizationsList } from "@/test/fixtures/accounts";
   import { projectList } from "@/test/fixtures/projects";
   import { documentsList } from "@/test/fixtures/documents";
-  import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
+  import { INITIAL_VIEWPORTS } from "storybook/viewport";
   import { createApiUrl } from "@/test/handlers/utils";
 
   // MSW handlers for API-backed autocomplete and atom enrichment.

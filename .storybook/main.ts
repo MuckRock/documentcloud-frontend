@@ -4,24 +4,23 @@ const config: StorybookConfig = {
   core: {
     disableTelemetry: true, // 👈 Disables telemetry
   },
+
   stories: [
     "../src/lib/**/*.stories.@(js|jsx|ts|tsx|svelte)",
     "../src/routes/**/*.stories.@(js|jsx|ts|tsx|svelte)",
   ],
+
   staticDirs: ["../public", "../static"],
+
   addons: [
     "@storybook/addon-links",
-    "@storybook/addon-essentials",
-    "@storybook/addon-interactions",
-    "storybook-addon-cookie",
     { name: "@storybook/addon-svelte-csf" },
+    "@storybook/addon-docs",
   ],
+
   framework: {
     name: "@storybook/sveltekit",
     options: {},
-  },
-  docs: {
-    autodocs: "tag",
   },
 
   async viteFinal(config) {

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { setContext } from "svelte";
   import { writable, type Writable } from "svelte/store";
-  import type { StoryContext } from "@storybook/svelte";
+  import type { StoryContext } from "@storybook/sveltekit";
   import type { User } from "@/api/types";
   import { me } from "@/test/fixtures/accounts";
 

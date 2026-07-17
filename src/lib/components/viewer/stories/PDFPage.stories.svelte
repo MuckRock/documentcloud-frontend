@@ -59,9 +59,8 @@
 <Story
   name="search results"
   parameters={{
-    // PDFPage derives its search query from `$app/state` (page.url). Storybook
-    // 8.6 doesn't mock `$app/state`, so this override is inert until Storybook
-    // is upgraded; the highlight demo won't reflect the query in the meantime.
+    // PDFPage derives its search query from `$app/state` (page.url); this
+    // override injects the query URL via @storybook/sveltekit's state mock.
     sveltekit_experimental: {
       state: {
         page: {

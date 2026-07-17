@@ -1,4 +1,4 @@
-import type { Preview, StoryContext, StoryFn } from "@storybook/svelte";
+import type { Preview, StoryContext, StoryFn } from "@storybook/sveltekit";
 
 import "@/style/kit.css";
 import "$lib/i18n/index.js";
@@ -17,6 +17,13 @@ initialize({
   },
 });
 
+// Set a mock CSRF token cookie for MSW-backed stories that hit the API
+// (getCsrfToken() reads `csrftoken` from document.cookie). This replaces
+// storybook-addon-cookie, which is incompatible with Storybook 9+.
+if (typeof document !== "undefined") {
+  document.cookie = "csrftoken=mockToken; path=/";
+}
+
 const preview: Preview = {
   parameters: {
     actions: { argTypesRegex: "^on[A-Z].*" },
@@ -26,10 +33,6 @@ const preview: Preview = {
         date: /Date$/,
       },
     },
-    cookie: {
-      csrftoken: "mockToken",
-    },
-    cookiePreserve: true,
     sveltekit_experimental: {
       stores: {
         page: {
@@ -40,11 +43,9 @@ const preview: Preview = {
           },
         },
       },
-      // NOTE: @storybook/sveltekit 8.6 only mocks `$app/stores`; it ignores
-      // this `state` block, so components reading `$app/state` (page.url) get an
-      // unpopulated value in Storybook. Kept in sync with `stores` above so it
-      // starts working once Storybook is upgraded to a version that mocks
-      // `$app/state`. Production/tests are unaffected.
+      // The app reads `page` from `$app/state`; @storybook/sveltekit 10 mocks
+      // it from this `state` block (kept in sync with `stores` above for any
+      // transitive `$app/stores` consumers).
       state: {
         page: {
           url: new URL("https://www.documentcloud.org/"),
