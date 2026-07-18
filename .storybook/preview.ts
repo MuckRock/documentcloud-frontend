@@ -34,18 +34,8 @@ const preview: Preview = {
       },
     },
     sveltekit_experimental: {
-      stores: {
-        page: {
-          url: new URL("https://www.documentcloud.org/"),
-          route: { id: "/" },
-          data: {
-            breadcrumbs: [],
-          },
-        },
-      },
       // The app reads `page` from `$app/state`; @storybook/sveltekit 10 mocks
-      // it from this `state` block (kept in sync with `stores` above for any
-      // transitive `$app/stores` consumers).
+      // it from this `state` block.
       state: {
         page: {
           url: new URL("https://www.documentcloud.org/"),
