@@ -125,7 +125,7 @@
       </NavItem>
     {/if}
   {/snippet}
-  {#snippet inner(close)}
+  {#snippet inner({ close })}
     <Menu>
       <div class="menu-inner" class:sm={width && width <= remToPx(32)}>
         {#if showCredits}

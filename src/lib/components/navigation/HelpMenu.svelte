@@ -57,7 +57,7 @@
       {/snippet}
     </NavItem>
   {/snippet}
-  {#snippet inner(close)}
+  {#snippet inner({ close })}
     <Menu>
       {#if showTour}
         <NavItem hover onclick={onTourClick}>
