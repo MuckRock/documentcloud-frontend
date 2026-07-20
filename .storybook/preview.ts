@@ -4,7 +4,6 @@ import "@/style/kit.css";
 import "$lib/i18n/index.js";
 
 import { initialize, mswLoader } from "msw-storybook-addon";
-import TipOfDayContextDecorator from "./decorators/TipOfDayContextDecorator.svelte";
 import ViewerContextDecorator from "./decorators/ViewerContextDecorator.svelte";
 
 import { me, myOrgs, organization, usersList } from "@/test/fixtures/accounts";
@@ -48,6 +47,12 @@ const preview: Preview = {
             org: organization,
             user_orgs: myOrgs.results,
             org_users: usersList.results,
+            tipOfDay: {
+              url: "/tipofday/",
+              title: "Tip of the Day",
+              content:
+                '<p>Welcome to DocumentCloud, the <a href="#">SvelteKit</a> rewrite!</p>',
+            },
           },
         },
       },
@@ -66,9 +71,6 @@ const preview: Preview = {
 // Provide the MSW addon loader globally
 export const loaders = [mswLoader];
 
-export let decorators = [
-  () => ViewerContextDecorator,
-  () => TipOfDayContextDecorator,
-];
+export let decorators = [() => ViewerContextDecorator];
 
 export default preview;

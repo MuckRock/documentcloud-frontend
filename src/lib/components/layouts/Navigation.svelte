@@ -1,10 +1,8 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
-  import type { Flatpage } from "$lib/api/types";
 
   import { page } from "$app/state";
 
-  import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
 
   import Breadcrumbs from "../navigation/Breadcrumbs.svelte";
@@ -38,7 +36,7 @@
   let org = $derived(page.data.org);
   let user_orgs = $derived(page.data.user_orgs);
   let org_users = $derived(page.data.org_users);
-  const tipOfDay = getContext<Flatpage>("tipOfDay");
+  let tipOfDay = $derived(page.data.tipOfDay);
 
   let feedbackOpen = $state(false);
   let width: number = $state(800);

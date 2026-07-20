@@ -1,15 +1,12 @@
 <script lang="ts">
-  import { setContext, onMount } from "svelte";
+  import { onMount } from "svelte";
 
   import AppLayout from "$lib/components/layouts/AppLayout.svelte";
 
-  // don't destructure props to preserve reactivity
-  let props = $props();
-
-  setContext("tipOfDay", props.data.tipOfDay);
+  let { data, children } = $props();
 
   onMount(async () => {
-    if (props.data.me) {
+    if (data.me) {
       const { init } = await import("@plausible-analytics/tracker");
       init({
         domain: "documentcloud.org",
@@ -20,5 +17,5 @@
 </script>
 
 <AppLayout>
-  {@render props.children?.()}
+  {@render children?.()}
 </AppLayout>
