@@ -1,10 +1,13 @@
 import type { Nullable, ProjectUser, User } from "$lib/api/types";
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen, within } from "@testing-library/svelte";
-import { setContext } from "svelte";
-import { writable } from "svelte/store";
 
+vi.mock("$app/state", () => ({
+  page: { data: {} as { me?: Nullable<User> } },
+}));
+
+import { page } from "$app/state";
 import Collaborators from "../Collaborators.svelte";
 import { getUserName } from "$lib/api/accounts";
 import { me, usersList } from "@/test/fixtures/accounts";
@@ -20,17 +23,11 @@ const members: ProjectUser[] = [
   { user: bob, access: "edit" },
 ];
 
-// https://svelte.dev/docs/svelte/context#Component-testing
-function withUser(user: Nullable<User>) {
-  return function Wrapper(...args: Parameters<typeof Collaborators>) {
-    setContext("me", writable(user));
-    return Collaborators(...args);
-  };
-}
-
 describe("Collaborators — self vs. other member controls", () => {
   it("hides Change Access / Remove on your own row but shows them for others", () => {
-    render(withUser(me), { props: { project, users: members } });
+    page.data.me = me;
+
+    render(Collaborators, { props: { project, users: members } });
 
     // one row's worth of controls (Bob's), not two
     expect(screen.getAllByTitle("Change Access")).toHaveLength(1);
@@ -47,8 +44,9 @@ describe("Collaborators — self vs. other member controls", () => {
   });
 
   it("hides every row's controls when the signed-in user isn't a member and lacks edit access", () => {
-    const outsider = { ...me, id: 999999 };
-    render(withUser(outsider), {
+    page.data.me = { ...me, id: 999999 };
+
+    render(Collaborators, {
       props: { project: { ...project, edit_access: false }, users: members },
     });
 
@@ -57,7 +55,9 @@ describe("Collaborators — self vs. other member controls", () => {
   });
 
   it("shows every row's controls (none excluded) when signed out and the project grants edit access", () => {
-    render(withUser(null), {
+    page.data.me = null;
+
+    render(Collaborators, {
       props: { project: { ...project, edit_access: true }, users: members },
     });
 

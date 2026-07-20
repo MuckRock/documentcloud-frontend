@@ -70,7 +70,7 @@
 
   let { children }: Props = $props();
 
-  const user = getCurrentUser();
+  let user = $derived(getCurrentUser());
 
   onMount(() => {
     // do we have a tour?
@@ -86,7 +86,7 @@
       const history = getTourHistory();
       if (!currentRoute) return;
       const offerTour = history[currentRoute] ?? true;
-      if ($user && offerTour) {
+      if (user && offerTour) {
         startTour();
       }
     }

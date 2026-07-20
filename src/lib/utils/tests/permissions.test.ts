@@ -1,13 +1,21 @@
-import type { Document } from "$lib/api/types";
+import type { Document, Nullable, User } from "$lib/api/types";
 
-import { render, screen } from "@testing-library/svelte";
-import { describe, it, test, expect } from "vitest";
+import { describe, it, test, expect, vi } from "vitest";
 
-import { canChangeOwner, canUploadFiles, isSignedIn } from "../permissions";
+vi.mock("$app/state", () => ({
+  page: { data: {} as { me?: Nullable<User> } },
+}));
+
+import { page } from "$app/state";
+import {
+  canChangeOwner,
+  canUploadFiles,
+  getCurrentUser,
+  isSignedIn,
+} from "../permissions";
 
 import { me } from "@/test/fixtures/accounts";
 import { document } from "@/test/fixtures/documents";
-import UserContextDemo from "@/test/components/UserContext.demo.svelte";
 
 describe("permission checks", () => {
   test("isSignedIn", () => {
@@ -137,9 +145,13 @@ describe("permission checks", () => {
 
 // Test the getCurrentUser function
 describe("getCurrentUser", () => {
-  it("should return the current user from context", () => {
-    // Render the mock component to set the context
-    render(UserContextDemo);
-    expect(screen.getByText(me.name!)).toBeInTheDocument();
+  it("returns the signed-in user from page data", () => {
+    page.data.me = me;
+    expect(getCurrentUser()).toBe(me);
+  });
+
+  it("returns null when signed out", () => {
+    page.data.me = null;
+    expect(getCurrentUser()).toBe(null);
   });
 });

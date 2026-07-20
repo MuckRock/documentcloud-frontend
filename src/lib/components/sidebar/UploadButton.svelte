@@ -20,7 +20,7 @@
   }
 
   let { project = undefined }: Props = $props();
-  const me = getCurrentUser();
+  let me = $derived(getCurrentUser());
 
   function onUploadClick() {
     if (project) {
@@ -30,7 +30,7 @@
   }
 </script>
 
-{#if isSignedIn($me) && canUploadFiles($me)}
+{#if isSignedIn(me) && canUploadFiles(me)}
   {#if project}
     <Button
       full

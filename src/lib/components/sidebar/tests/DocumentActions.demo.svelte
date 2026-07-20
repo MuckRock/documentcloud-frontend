@@ -1,7 +1,6 @@
 <script lang="ts">
-  import type { Document, User } from "$lib/api/types";
-  import { setContext, untrack } from "svelte";
-  import { writable } from "svelte/store";
+  import type { Document } from "$lib/api/types";
+  import { untrack } from "svelte";
 
   import DocumentActions from "../DocumentActions.svelte";
   import {
@@ -11,10 +10,9 @@
 
   interface Props {
     docs?: Document[];
-    user?: User | null;
   }
 
-  const { docs = [], user = null }: Props = $props();
+  const { docs = [] }: Props = $props();
 
   const search = new SearchResultsState();
   untrack(() => {
@@ -24,8 +22,6 @@
     }
   });
   setSearchResults(search);
-
-  setContext("me", writable(untrack(() => user)));
 </script>
 
 <DocumentActions />

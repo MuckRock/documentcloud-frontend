@@ -2,12 +2,16 @@ import type { Nullable, User } from "$lib/api/types";
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/svelte";
-import { setContext } from "svelte";
-import { get, writable } from "svelte/store";
+import { get } from "svelte/store";
 
 vi.mock("$app/navigation", () => ({ goto: vi.fn() }));
 
+vi.mock("$app/state", () => ({
+  page: { data: {} as { me?: Nullable<User> } },
+}));
+
 import { goto } from "$app/navigation";
+import { page } from "$app/state";
 import UploadButton from "../UploadButton.svelte";
 import { uploadToProject } from "$lib/components/forms/Upload.svelte";
 import { me } from "@/test/fixtures/accounts";
@@ -21,14 +25,6 @@ const unverifiedUser: User = {
   is_staff: false,
 };
 
-// https://svelte.dev/docs/svelte/context#Component-testing
-function withUser(user: Nullable<User>) {
-  return function Wrapper(...args: Parameters<typeof UploadButton>) {
-    setContext("me", writable(user));
-    return UploadButton(...args);
-  };
-}
-
 describe("UploadButton", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -36,28 +32,36 @@ describe("UploadButton", () => {
   });
 
   it("renders nothing when signed out", () => {
-    render(withUser(null));
+    page.data.me = null;
+
+    render(UploadButton);
 
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
 
   it("renders nothing for a signed-in user who isn't verified or staff", () => {
-    render(withUser(unverifiedUser));
+    page.data.me = unverifiedUser;
+
+    render(UploadButton);
 
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
 
   it("renders an upload link for a verified journalist with no project", () => {
-    render(withUser(me));
+    page.data.me = me;
+
+    render(UploadButton);
 
     const link = screen.getByRole("link", { name: /upload/i });
     expect(link).toHaveAttribute("href", "/upload/");
   });
 
   it("renders an enabled upload-to-project button when the project is editable", async () => {
-    render(withUser(me), { props: { project: editableProject } });
+    page.data.me = me;
+
+    render(UploadButton, { props: { project: editableProject } });
 
     const btn = screen.getByRole("button", { name: /upload/i });
     expect(btn).toBeEnabled();
@@ -69,7 +73,9 @@ describe("UploadButton", () => {
   });
 
   it("sets the upload target and disables the button when the project isn't editable", () => {
-    render(withUser(me), {
+    page.data.me = me;
+
+    render(UploadButton, {
       props: { project: { ...privateProject, edit_access: false } },
     });
 

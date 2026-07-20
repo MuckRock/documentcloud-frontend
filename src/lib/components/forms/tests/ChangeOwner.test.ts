@@ -2,8 +2,10 @@ import type { Nullable, Org, User } from "$lib/api/types";
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/svelte";
-import { setContext } from "svelte";
-import { writable } from "svelte/store";
+
+vi.mock("$app/state", () => ({
+  page: { data: {} as { me?: Nullable<User> } },
+}));
 
 vi.mock("$lib/api/accounts", async () => {
   const actual =
@@ -17,6 +19,7 @@ vi.mock("$lib/api/accounts", async () => {
   };
 });
 
+import { page } from "$app/state";
 import { userOrgs, orgUsers } from "$lib/api/accounts";
 import ChangeOwner from "../ChangeOwner.svelte";
 import { me } from "@/test/fixtures/accounts";
@@ -25,14 +28,6 @@ import { document } from "@/test/fixtures/documents";
 const mockUserOrgs = vi.mocked(userOrgs);
 const mockOrgUsers = vi.mocked(orgUsers);
 const meOrg = me.organization as Org;
-
-// https://svelte.dev/docs/svelte/context#Component-testing
-function withUser(user: Nullable<User>) {
-  return function Wrapper(...args: Parameters<typeof ChangeOwner>) {
-    setContext("me", writable(user));
-    return ChangeOwner(...args);
-  };
-}
 
 function saveButton() {
   return screen.getByRole("button", { name: /save/i });
@@ -46,7 +41,9 @@ describe("ChangeOwner — signed-in / selection gating", () => {
   });
 
   it("disables Save and never looks up orgs when signed out", async () => {
-    render(withUser(null), { props: { documents: [document] } });
+    page.data.me = null;
+
+    render(ChangeOwner, { props: { documents: [document] } });
 
     await vi.waitFor(() => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
@@ -57,9 +54,10 @@ describe("ChangeOwner — signed-in / selection gating", () => {
   });
 
   it("disables Save when no documents are selected, even when signed in", async () => {
+    page.data.me = me;
     mockUserOrgs.mockResolvedValue([meOrg]);
 
-    render(withUser(me), { props: { documents: [] } });
+    render(ChangeOwner, { props: { documents: [] } });
 
     await vi.waitFor(() => {
       expect(saveButton()).toBeDisabled();
@@ -67,9 +65,10 @@ describe("ChangeOwner — signed-in / selection gating", () => {
   });
 
   it("enables Save once signed in, a document is selected, and the current org resolves", async () => {
+    page.data.me = me;
     mockUserOrgs.mockResolvedValue([meOrg]);
 
-    render(withUser(me), { props: { documents: [document] } });
+    render(ChangeOwner, { props: { documents: [document] } });
 
     await vi.waitFor(() => {
       expect(saveButton()).toBeEnabled();

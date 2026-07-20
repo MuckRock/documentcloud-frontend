@@ -17,13 +17,13 @@
 
   let { data } = $props();
 
-  const me = getCurrentUser();
+  let me = $derived(getCurrentUser());
 
   let addon = $derived(data.addon);
   let query = $derived(data.query);
   let scheduled = $derived(data.scheduled);
   let organization = $derived(
-    typeof $me?.organization === "object" ? $me.organization : null,
+    typeof me?.organization === "object" ? me.organization : null,
   );
   let creditBalance = $derived(getCreditBalance(organization) ?? 0);
   let isPremiumAddon = $derived(

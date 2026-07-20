@@ -36,7 +36,7 @@ and we don't want to do that everywhere.
 
   let { documents = [], projects = $bindable([]), onclose }: Props = $props();
 
-  const me = getCurrentUser();
+  let me = $derived(getCurrentUser());
 
   let createProjectOpen = $state(false);
   let common: Set<number> = $derived(
@@ -63,8 +63,8 @@ and we don't want to do that everywhere.
   );
 
   onMount(async () => {
-    if ($me && projects.length === 0) {
-      projects = await getForUser($me.id);
+    if (me && projects.length === 0) {
+      projects = await getForUser(me.id);
     }
   });
 

@@ -1,20 +1,16 @@
 import type { Nullable, User } from "$lib/api/types";
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/svelte";
-import { setContext, createRawSnippet } from "svelte";
-import { writable } from "svelte/store";
+import { createRawSnippet } from "svelte";
 
+vi.mock("$app/state", () => ({
+  page: { data: {} as { me?: Nullable<User> } },
+}));
+
+import { page } from "$app/state";
 import SignedIn from "../SignedIn.svelte";
 import { me } from "@/test/fixtures/accounts";
-
-// https://svelte.dev/docs/svelte/context#Component-testing
-function withUser(user: Nullable<User>) {
-  return function Wrapper(...args: Parameters<typeof SignedIn>) {
-    setContext("me", writable(user));
-    return SignedIn(...args);
-  };
-}
 
 const signedInContent = createRawSnippet(() => ({
   render: () => `<p>Welcome back</p>`,
@@ -26,7 +22,9 @@ const signedOutContent = createRawSnippet(() => ({
 
 describe("SignedIn", () => {
   it("renders the signed-in content when a user is present", () => {
-    render(withUser(me), {
+    page.data.me = me;
+
+    render(SignedIn, {
       props: { children: signedInContent, signedOut: signedOutContent },
     });
 
@@ -35,7 +33,9 @@ describe("SignedIn", () => {
   });
 
   it("renders the signedOut fallback when there is no user", () => {
-    render(withUser(null), {
+    page.data.me = null;
+
+    render(SignedIn, {
       props: { children: signedInContent, signedOut: signedOutContent },
     });
 
@@ -44,7 +44,9 @@ describe("SignedIn", () => {
   });
 
   it("renders nothing when signed out and no fallback is provided", () => {
-    render(withUser(null), { props: { children: signedInContent } });
+    page.data.me = null;
+
+    render(SignedIn, { props: { children: signedInContent } });
 
     expect(screen.queryByText("Welcome back")).not.toBeInTheDocument();
   });

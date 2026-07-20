@@ -1,5 +1,4 @@
 import { describe, it, expect } from "vitest";
-import { writable } from "svelte/store";
 import {
   render,
   screen,
@@ -14,7 +13,7 @@ import { me } from "@/test/fixtures/accounts";
 
 describe("DocumentUpload form", () => {
   it("lists files selected for upload", async () => {
-    render(DocumentUploadForm, { user: writable(me), csrf_token: "token" });
+    render(DocumentUploadForm, { user: me, csrf_token: "token" });
     const dropzone = document.querySelector(
       '[aria-dropeffect="execute"]',
     ) as HTMLElement;
@@ -34,7 +33,7 @@ describe("DocumentUpload form", () => {
   });
 
   it("provides feedback when a file is too large", async () => {
-    render(DocumentUploadForm, { user: writable(me), csrf_token: "token" });
+    render(DocumentUploadForm, { user: me, csrf_token: "token" });
     const dropzone = document.querySelector(
       '[aria-dropeffect="execute"]',
     ) as HTMLElement;

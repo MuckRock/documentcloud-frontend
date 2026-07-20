@@ -20,7 +20,7 @@ Confirm deletion or one or more documents.
   import { getCurrentUser } from "$lib/utils/permissions";
   import { searchUrl, userDocs } from "$lib/utils/search";
 
-  const me = getCurrentUser();
+  let me = $derived(getCurrentUser());
 
   interface Props {
     // one document or a list of IDs
@@ -35,7 +35,7 @@ Confirm deletion or one or more documents.
   let ids = $derived(documents.map((d) => d.id));
   let bulk = $derived(documents.length !== 1); // if it's zero, handle that elsewhere
   let count = $derived(documents.length);
-  let disabled = $derived(count > MAX_EDIT_BATCH || count === 0 || !$me);
+  let disabled = $derived(count > MAX_EDIT_BATCH || count === 0 || !me);
   let action = $derived(
     bulk
       ? "/documents/?/delete"
@@ -46,7 +46,7 @@ Confirm deletion or one or more documents.
 
   function onSubmit({ submitter, cancel }) {
     submitter.disabled = true;
-    if (!$me) {
+    if (!me) {
       return cancel();
     }
     return ({ result }) => {
@@ -73,7 +73,7 @@ Confirm deletion or one or more documents.
           // don't redirect for bulk deletes
           if (count === 1) {
             // go back home for single deletes
-            goto(searchUrl(userDocs($me)), { invalidateAll: true });
+            goto(searchUrl(userDocs(me)), { invalidateAll: true });
           }
           onclose?.();
       }

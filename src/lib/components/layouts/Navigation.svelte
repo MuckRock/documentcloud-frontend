@@ -1,7 +1,6 @@
 <script lang="ts">
-  import type { Writable } from "svelte/store";
   import type { Snippet } from "svelte";
-  import type { Flatpage, Org, User } from "$lib/api/types";
+  import type { Flatpage } from "$lib/api/types";
 
   import { page } from "$app/state";
 
@@ -35,11 +34,11 @@
 
   let { breadcrumbs, children }: Props = $props();
 
-  const me = getCurrentUser();
-  const org = getContext<Writable<Org>>("org");
+  let me = $derived(getCurrentUser());
+  let org = $derived(page.data.org);
+  let user_orgs = $derived(page.data.user_orgs);
+  let org_users = $derived(page.data.org_users);
   const tipOfDay = getContext<Flatpage>("tipOfDay");
-  const user_orgs = getContext<Writable<Org[]>>("user_orgs");
-  const org_users = getContext<Writable<User[]>>("org_users");
 
   let feedbackOpen = $state(false);
   let width: number = $state(800);
@@ -60,16 +59,14 @@
     <ProcessDropdown />
     {#if !BREAKPOINTS.BOTTOM_NAV}
       <SignedIn>
-        {#if $me}
+        {#if me && org}
           <Flex>
-            {#await Promise.all([$user_orgs, $org_users]) then [orgs, users]}
-              <OrgMenu
-                active_org={$org}
-                {orgs}
-                users={inMyOrg($org.id, $me.id, users)}
-              />
-            {/await}
-            <UserMenu user={$me} />
+            <OrgMenu
+              active_org={org}
+              orgs={user_orgs}
+              users={inMyOrg(org.id, me.id, org_users)}
+            />
+            <UserMenu user={me} />
           </Flex>
         {/if}
         {#snippet signedOut()}
@@ -100,7 +97,7 @@
           {#snippet title()}
             <h1>{$_("feedback.title")}</h1>
           {/snippet}
-          <UserFeedback user={$me} onclose={() => (feedbackOpen = false)} />
+          <UserFeedback user={me} onclose={() => (feedbackOpen = false)} />
         </Modal>
       </Portal>
     {/if}
@@ -110,12 +107,15 @@
 {#if BREAKPOINTS.BOTTOM_NAV}
   <nav class="bottom-nav">
     <SignedIn>
-      {#if $me}
+      {#if me && org}
         <Flex>
-          {#await Promise.all([$user_orgs, $org_users]) then [orgs, users]}
-            <OrgMenu position="top-start" active_org={$org} {orgs} {users} />
-          {/await}
-          <UserMenu position="top-start" user={$me} />
+          <OrgMenu
+            position="top-start"
+            active_org={org}
+            orgs={user_orgs}
+            users={org_users}
+          />
+          <UserMenu position="top-start" user={me} />
         </Flex>
       {/if}
       {#snippet signedOut()}

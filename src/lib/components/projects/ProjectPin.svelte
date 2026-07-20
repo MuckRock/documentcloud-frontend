@@ -31,7 +31,7 @@
 
   let { project = $bindable(), size = 1 }: Props = $props();
 
-  const me = getCurrentUser();
+  let me = $derived(getCurrentUser());
 
   async function toggle(e: MouseEvent) {
     e.preventDefault();
@@ -63,4 +63,4 @@
   }
 </script>
 
-<Pin active={project.pinned} {size} disabled={!$me} onclick={toggle} />
+<Pin active={project.pinned} {size} disabled={!me} onclick={toggle} />

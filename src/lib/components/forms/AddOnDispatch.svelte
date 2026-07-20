@@ -33,7 +33,6 @@
 
   import { autofield } from "../inputs/generator";
   import { schedules } from "$lib/api/addons";
-  import { getCurrentUser } from "$lib/utils/permissions";
   import { SIGN_IN_URL } from "@/config/config";
 
   interface Props {
@@ -61,8 +60,6 @@
     selection,
     premium,
   }: Props = $props();
-
-  const me = getCurrentUser();
 
   let form: HTMLFormElement | undefined = $state();
   let created: Nullable<Event | Run> = null;

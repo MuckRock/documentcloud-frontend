@@ -31,7 +31,6 @@ progress through the three-part upload process.
 </script>
 
 <script lang="ts">
-  import type { Writable } from "svelte/store";
   import type {
     Access,
     DocumentUpload,
@@ -79,7 +78,7 @@ progress through the three-part upload process.
   interface Props {
     files?: File[];
     projects?: Project[];
-    user?: Writable<Nullable<User>>;
+    user?: Nullable<User>;
     csrf_token?: Maybe<string>;
   }
 
@@ -319,9 +318,7 @@ progress through the three-part upload process.
   let exceedsSizeLimit = $derived(
     Object.values(STATUS).some(({ file }) => !isWithinSizeLimit(file)),
   );
-  let disabled = $derived(
-    !$user?.verified_journalist || loading || !csrf_token,
-  );
+  let disabled = $derived(!user?.verified_journalist || loading || !csrf_token);
 </script>
 
 <svelte:window onpaste={onPaste} />
@@ -336,13 +333,13 @@ progress through the three-part upload process.
     <Flex gap={1} align="stretch" wrap>
       <div class="files" class:active={fileDropActive}>
         <header>
-          {#if $user?.verified_journalist}
+          {#if user?.verified_journalist}
             <h1 class="title">{$_("uploadDialog.title")}</h1>
             <p class="description">
               {$_("uploadDialog.description")}
             </p>
           {:else}
-            <Unverified user={$user} />
+            <Unverified {user} />
           {/if}
         </header>
         <div class="fileList" class:empty>

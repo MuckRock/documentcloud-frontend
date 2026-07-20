@@ -11,4 +11,9 @@
 
 <Story name="Signed In" />
 
-<Story name="Signed Out" parameters={{ signedOut: true }} />
+<Story
+  name="Signed Out"
+  parameters={{
+    sveltekit_experimental: { state: { page: { data: { me: undefined } } } },
+  }}
+/>

@@ -1,20 +1,16 @@
 import type { Nullable, User } from "$lib/api/types";
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/svelte";
-import { setContext, createRawSnippet } from "svelte";
-import { writable } from "svelte/store";
+import { createRawSnippet } from "svelte";
 
+vi.mock("$app/state", () => ({
+  page: { data: {} as { me?: Nullable<User> } },
+}));
+
+import { page } from "$app/state";
 import Premium from "../Premium.svelte";
 import { me, organization, proOrg, freeOrg } from "@/test/fixtures/accounts";
-
-// https://svelte.dev/docs/svelte/context#Component-testing
-function withUser(user: Nullable<User>) {
-  return function Wrapper(...args: Parameters<typeof Premium>) {
-    setContext("me", writable(user));
-    return Premium(...args);
-  };
-}
 
 const premiumContent = createRawSnippet(() => ({
   render: () => `<p>Premium feature</p>`,
@@ -26,7 +22,9 @@ const basicContent = createRawSnippet(() => ({
 
 describe("Premium", () => {
   it("renders premium content for an Organization-plan user", () => {
-    render(withUser({ ...me, organization }), {
+    page.data.me = { ...me, organization };
+
+    render(Premium, {
       props: { children: premiumContent, basic: basicContent },
     });
 
@@ -35,7 +33,9 @@ describe("Premium", () => {
   });
 
   it("renders premium content for a Professional-plan user", () => {
-    render(withUser({ ...me, organization: proOrg }), {
+    page.data.me = { ...me, organization: proOrg };
+
+    render(Premium, {
       props: { children: premiumContent, basic: basicContent },
     });
 
@@ -43,7 +43,9 @@ describe("Premium", () => {
   });
 
   it("renders the basic fallback for a Free-plan user", () => {
-    render(withUser({ ...me, organization: freeOrg }), {
+    page.data.me = { ...me, organization: freeOrg };
+
+    render(Premium, {
       props: { children: premiumContent, basic: basicContent },
     });
 
@@ -52,7 +54,9 @@ describe("Premium", () => {
   });
 
   it("renders the basic fallback when signed out", () => {
-    render(withUser(null), {
+    page.data.me = null;
+
+    render(Premium, {
       props: { children: premiumContent, basic: basicContent },
     });
 
@@ -61,7 +65,9 @@ describe("Premium", () => {
   });
 
   it("renders the basic fallback when the org isn't expanded (unexpanded id)", () => {
-    render(withUser({ ...me, organization: organization.id }), {
+    page.data.me = { ...me, organization: organization.id };
+
+    render(Premium, {
       props: { children: premiumContent, basic: basicContent },
     });
 
