@@ -40,8 +40,15 @@ const preview: Preview = {
           },
         },
       },
+      // NOTE: @storybook/sveltekit 8.6 only mocks `$app/stores`; it ignores
+      // this `state` block, so components reading `$app/state` (page.url) get an
+      // unpopulated value in Storybook. Kept in sync with `stores` above so it
+      // starts working once Storybook is upgraded to a version that mocks
+      // `$app/state`. Production/tests are unaffected.
       state: {
         page: {
+          url: new URL("https://www.documentcloud.org/"),
+          route: { id: "/" },
           data: {
             breadcrumbs: [],
           },

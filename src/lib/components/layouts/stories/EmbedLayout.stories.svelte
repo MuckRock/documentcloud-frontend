@@ -38,7 +38,7 @@
 <Story name="With Document" {args}>
   {#snippet template(args: Args)}
     <div class="vh">
-      <ViewerContext {document} {text} asset_url={pdfUrl(document)}>
+      <ViewerContext {document} {text} asset_url={pdfUrl(document)} embed>
         <EmbedLayout
           settings={args.settings}
           canonicalUrl={canonicalUrl(document).href}

@@ -1,5 +1,5 @@
 <!-- @component
-Assumes it's a child of a ViewerContext
+Must be a child of a ViewerContext
  -->
 
 <script lang="ts">
@@ -10,11 +10,11 @@ Assumes it's a child of a ViewerContext
   import Note from "../notes/Note.svelte";
 
   import { getViewerHref } from "$lib/utils/viewer";
-  import { getDocument } from "$lib/components/viewer/ViewerContext.svelte";
+  import { getViewerState } from "$lib/state/viewer.svelte";
 
-  const documentStore = getDocument();
+  const viewer = getViewerState();
 
-  let document = $derived($documentStore);
+  let document = $derived(viewer.document!);
   let notes = $derived(document.notes ?? []);
   let annotate = $derived(getViewerHref({ document, mode: "annotating" }));
 </script>

@@ -1,5 +1,5 @@
 <!-- @component
-Assumes it's a child of a ViewerContext 
+Must be a child of a ViewerContext 
 -->
 
 <script lang="ts">
@@ -25,10 +25,10 @@ Assumes it's a child of a ViewerContext
   import { redactions, undo, clear } from "../viewer/RedactionLayer.svelte";
   import { remToPx } from "$lib/utils/layout";
   import { getViewerHref } from "$lib/utils/viewer";
-  import { getDocument } from "../viewer/ViewerContext.svelte";
+  import { getViewerState } from "$lib/state/viewer.svelte";
 
-  const documentStore = getDocument();
-  let document = $derived($documentStore);
+  const viewer = getViewerState();
+  let document = $derived(viewer.document!);
 
   let width: number = $state(800);
   let confirmOpen = $state(false);

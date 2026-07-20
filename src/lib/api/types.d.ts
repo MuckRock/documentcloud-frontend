@@ -199,6 +199,11 @@ export interface Document {
 
 export interface DocumentResults extends Page<Document> {}
 
+export interface DocumentLoadProgress {
+  loaded: number;
+  total: number;
+}
+
 export interface Note extends BBox {
   id: number | string;
   user: number | User;

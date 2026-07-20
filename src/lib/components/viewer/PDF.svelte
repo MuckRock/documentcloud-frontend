@@ -5,7 +5,7 @@
 
   This is only the pages of the document, contained inside the larger viewer.
 
-  Assumes it's a child of a ViewerContext
+  Must be a child of a ViewerContext
 -->
 <script lang="ts">
   import { browser } from "$app/environment";
@@ -16,31 +16,25 @@
   import { scrollToPage } from "$lib/utils/scroll";
   import { remToPx } from "$lib/utils/layout";
   import { getSections, pageSizes, zoomToScale } from "$lib/utils/viewer";
-  import {
-    getCurrentPage,
-    getDocument,
-    getErrors,
-    getPDF,
-    getZoom,
-  } from "./ViewerContext.svelte";
+  import { getViewerState } from "$lib/state/viewer.svelte";
   import Error from "../common/Error.svelte";
 
-  const documentStore = getDocument();
-  const currentPage = getCurrentPage();
-  const pdf = getPDF();
-  const zoom = getZoom();
+  const viewer = getViewerState();
 
   let width: number = $state(800);
 
-  let document = $derived($documentStore);
-  let scale = $derived(zoomToScale($zoom));
+  let document = $derived(viewer.document!);
+  let scale = $derived(zoomToScale(viewer.zoom));
   let sizes = $derived(document.page_spec ? pageSizes(document.page_spec) : []);
   let sections = $derived(getSections(document));
-  let errors = $derived(getErrors());
 
   // handle missing page_spec
+  // (PDF normally only renders when the viewer loads one, but guard `pdf` in
+  // case this component ends up in a viewer that never loads a PDF)
   $effect(() => {
-    $pdf
+    const pdf = viewer.pdf;
+    if (!pdf) return;
+    pdf
       .then((p) => {
         if (sizes.length === 0) {
           sizes = Array(p.numPages).fill([0, 0]);
@@ -48,15 +42,17 @@
       })
       .catch((e) => {
         console.warn(e);
-        errors.update((errs) => [...errs, e]);
+        viewer.errors = [...viewer.errors, e];
       });
   });
 
   onMount(() => {
-    $pdf
+    const pdf = viewer.pdf;
+    if (!pdf) return;
+    pdf
       .then((p) => {
-        if ($currentPage > 1) {
-          scrollToPage($currentPage);
+        if (viewer.page > 1) {
+          scrollToPage(viewer.page);
         }
 
         // @ts-ignore
@@ -64,14 +60,14 @@
       })
       .catch((e) => {
         console.warn(e);
-        errors.update((errs) => [...errs, e]);
+        viewer.errors = [...viewer.errors, e];
       });
   });
 </script>
 
-{#if Boolean($errors?.length)}
+{#if Boolean(viewer.errors?.length)}
   <Error>
-    {#each $errors as error}
+    {#each viewer.errors as error}
       <p>{String(error)}</p>
     {/each}
   </Error>

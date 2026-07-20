@@ -1,7 +1,3 @@
-<!-- @component
-  Assumes it's a child of a ViewerContext
- -->
-
 <script lang="ts">
   import { browser } from "$app/environment";
   import { page } from "$app/state";

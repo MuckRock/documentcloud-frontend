@@ -3,7 +3,7 @@ A single page of a PDF document.
 This component exists to manage state and rendering for a single page,
 working with PDF.svelte.
 
-Assumes it's a child of a ViewerContext
+Must be a child of a ViewerContext
 
 Selectable text can be rendered in one of two ways:
 - Extracted from the PDF page (preferred)
@@ -12,7 +12,7 @@ Selectable text can be rendered in one of two ways:
 <script lang="ts">
   import type { Maybe, TextPosition } from "$lib/api/types";
 
-  import { page as pageStore } from "$app/stores";
+  import { page as pageState } from "$app/state";
 
   import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
   import { _ } from "svelte-i18n";
@@ -26,17 +26,11 @@ Selectable text can be rendered in one of two ways:
   // writable ui
   import { highlight } from "$lib/utils/search";
   import { isPageLevel } from "$lib/api/notes";
-  import {
-    getDocument,
-    getCurrentMode,
-    getPDF,
-  } from "$lib/components/viewer/ViewerContext.svelte";
+  import { getViewerState } from "$lib/state/viewer.svelte";
   import { getQuery } from "$lib/utils/search";
   import { fitPage, getNotes } from "$lib/utils/viewer";
 
-  const documentStore = getDocument();
-  const mode = getCurrentMode();
-  const pdf = getPDF();
+  const viewer = getViewerState();
 
   interface Props {
     page_number: number; // 1-indexed
@@ -55,7 +49,7 @@ Selectable text can be rendered in one of two ways:
     width = $bindable(),
     height = $bindable(),
     text = [],
-    query = $bindable(getQuery($pageStore.url, "q")),
+    query = $bindable(getQuery(pageState.url, "q")),
     debug = false,
   }: Props = $props();
 
@@ -187,7 +181,7 @@ Selectable text can be rendered in one of two ways:
       canvas &&
       !canvas.hidden
     ) {
-      Promise.all([$pdf, page]).then(([pdf, page]) => {
+      Promise.all([viewer.pdf, page]).then(([pdf, page]) => {
         render(page, canvas, container, scale);
       });
     }
@@ -195,13 +189,15 @@ Selectable text can be rendered in one of two ways:
 
   let pageWidth: Maybe<number> = $state();
   $effect(() => {
-    query = getQuery($pageStore.url, "q");
+    query = getQuery(pageState.url, "q");
   });
-  let document = $derived($documentStore);
+  let document = $derived(viewer.document!);
   // render when anything changes
+  // (PDFPage normally only renders when the viewer loads a PDF, but guard `pdf`
+  // in case this component ends up in a viewer that never loads a PDF)
   let page = $derived(
-    visible
-      ? Promise.resolve($pdf).then((pdf) => pdf?.getPage(page_number))
+    visible && viewer.pdf
+      ? Promise.resolve(viewer.pdf).then((pdf) => pdf.getPage(page_number))
       : undefined,
   );
   // handle 0 sizing when page_spec is unavailable
@@ -228,7 +224,7 @@ Selectable text can be rendered in one of two ways:
     // reading it only inside the async `.then` below would not register it,
     // and numeric zoom changes (which flow through `scale`) wouldn't re-render.
     const currentScale = scale;
-    Promise.all([$pdf, page]).then(([pdf, page]) => {
+    Promise.all([viewer.pdf, page]).then(([pdf, page]) => {
       render(page, canvas, container, currentScale);
       textPromise = renderTextLayer(
         page,
@@ -316,10 +312,10 @@ Selectable text can be rendered in one of two ways:
 
       <AnnotationLayer page_number={page_number - 1} />
 
-      {#if redactions_for_page.length > 0 || $mode === "redacting"}
+      {#if redactions_for_page.length > 0 || viewer.mode === "redacting"}
         <RedactionLayer
           page_number={page_number - 1}
-          active={$mode === "redacting"}
+          active={viewer.mode === "redacting"}
           id={document.id.toString()}
         />
       {/if}

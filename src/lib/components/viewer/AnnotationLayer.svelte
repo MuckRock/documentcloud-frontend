@@ -7,7 +7,7 @@ and instances of the EditNote form.
 
 Only one note can be added/edited at a time.
 
-Assumes it's a child of a ViewerContext
+Must be a child of a ViewerContext
 -->
 <script lang="ts">
   import type { BBox, Maybe, Note as NoteType, Nullable } from "$lib/api/types";
@@ -22,13 +22,7 @@ Assumes it's a child of a ViewerContext
   import NoteTab from "./NoteTab.svelte";
 
   import { width, height, isPageLevel, noteHashUrl } from "$lib/api/notes";
-  import {
-    getCurrentMode,
-    getCurrentNote,
-    getDocument,
-    getNewNote,
-    isEmbedded,
-  } from "$lib/components/viewer/ViewerContext.svelte";
+  import { getViewerState } from "$lib/state/viewer.svelte";
   import { getNotes, getViewerHref } from "$lib/utils/viewer";
   import Tooltip from "../common/Tooltip.svelte";
 
@@ -39,22 +33,18 @@ Assumes it's a child of a ViewerContext
 
   let { scale = 1.5, page_number }: Props = $props();
 
-  const documentStore = getDocument();
-  const embed = isEmbedded();
-  const mode = getCurrentMode();
-  const currentNote = getCurrentNote();
-  const newNote = getNewNote();
+  const viewer = getViewerState();
 
   let drawStart: Nullable<[x: number, y: number]> = null;
   let drawing = $state(false);
 
-  let document = $derived($documentStore);
+  let document = $derived(viewer.document!);
   let notes = $derived(
     getNotes(document)[page_number]?.filter((note) => !isPageLevel(note)) ?? [],
   );
-  let writing = $derived($mode === "annotating");
+  let writing = $derived(viewer.mode === "annotating");
   let activeNote = $derived(
-    Boolean($currentNote) || (Boolean($newNote) && !drawing),
+    Boolean(viewer.currentNote) || (Boolean(viewer.newNote) && !drawing),
   );
 
   function getNoteId(note: NoteType) {
@@ -75,12 +65,12 @@ Assumes it's a child of a ViewerContext
     closeNote();
 
     drawing = true;
-    $currentNote = null;
-    $newNote = null;
+    viewer.currentNote = null;
+    viewer.newNote = null;
     const [x, y] = getLayerPosition(e);
     drawStart = [x, y];
     // when starting, the note is a 0px shape
-    $newNote = {
+    viewer.newNote = {
       x1: x,
       x2: x,
       y1: y,
@@ -91,7 +81,7 @@ Assumes it's a child of a ViewerContext
 
   function continueDrawingBox(e: PointerEvent) {
     if (e.target !== e.currentTarget) return;
-    if (!drawing || !newNote || !drawStart || !$newNote) return;
+    if (!drawing || !drawStart || !viewer.newNote) return;
 
     const [x, y] = getLayerPosition(e);
     const [startX, startY] = drawStart;
@@ -104,7 +94,7 @@ Assumes it's a child of a ViewerContext
     const y1 = movingDown ? startY : y;
     const y2 = movingDown ? y : startY;
 
-    $newNote = {
+    viewer.newNote = {
       x1,
       x2,
       y1,
@@ -115,10 +105,10 @@ Assumes it's a child of a ViewerContext
 
   function finishDrawingBox(e: PointerEvent) {
     if (e.target !== e.currentTarget) return;
-    if (!newNote || !drawing || !$newNote) return;
+    if (!drawing || !viewer.newNote) return;
 
-    $newNote = {
-      ...$newNote,
+    viewer.newNote = {
+      ...viewer.newNote,
       // now initialize some note values
       page_number,
       title: "",
@@ -142,17 +132,22 @@ Assumes it's a child of a ViewerContext
   function openNote(e: MouseEvent, note: NoteType) {
     const target = e.target as HTMLAnchorElement;
     const href =
-      target?.href || getViewerHref({ document, note, mode: $mode, embed });
-    $currentNote = note;
-    $newNote = null;
+      target?.href ||
+      getViewerHref({ document, note, mode: viewer.mode, embed: viewer.embed });
+    viewer.currentNote = note;
+    viewer.newNote = null;
     goto(href);
   }
 
   function closeNote() {
     drawing = false;
-    $newNote = null;
-    $currentNote = null;
-    const href = getViewerHref({ document, mode: $mode, embed });
+    viewer.newNote = null;
+    viewer.currentNote = null;
+    const href = getViewerHref({
+      document,
+      mode: viewer.mode,
+      embed: viewer.embed,
+    });
     goto(href);
   }
 
@@ -176,10 +171,10 @@ Assumes it's a child of a ViewerContext
     // When a note is added or edited, add or replace it in the array.
     // When it's deleted, `editedNote` will be undefined so we'll skip this.
     if (editedNote) newDocNotes?.push(editedNote);
-    // Update the $documentStore with new value for `document.notes`.
-    documentStore.update((document) => ({ ...document, notes: newDocNotes }));
-    // Finally, invalidate the document. After it's refetched, the
-    // $documentStore will be updated with fresh data from the API.
+    // Make an optimistic update to `viewer.document` for `document.notes`.
+    viewer.document = { ...document, notes: newDocNotes };
+    // Finally, invalidate the document. After it's refetched,
+    // viewer.document will be updated with fresh data from the API.
     invalidate(`document:${document.id}`);
   }
 </script>
@@ -200,7 +195,12 @@ Assumes it's a child of a ViewerContext
     <a
       id={getNoteId(note)}
       class="note-tab"
-      href={getViewerHref({ document, note, mode: $mode, embed })}
+      href={getViewerHref({
+        document,
+        note,
+        mode: viewer.mode,
+        embed: viewer.embed,
+      })}
       title={note.title}
       style:top="calc({note.y1} * 100%)"
       onclick={(e) => openNote(e, note)}
@@ -208,9 +208,14 @@ Assumes it's a child of a ViewerContext
       <Tooltip caption={note.title}><NoteTab access={note.access} /></Tooltip>
     </a>
     <a
-      href={getViewerHref({ document, note, mode: $mode, embed })}
+      href={getViewerHref({
+        document,
+        note,
+        mode: viewer.mode,
+        embed: viewer.embed,
+      })}
       class="note-highlight {note.access}"
-      class:active={$currentNote?.id === note.id}
+      class:active={viewer.currentNote?.id === note.id}
       title={note.title}
       style:top="{note.y1 * 100}%"
       style:left="{note.x1 * 100}%"
@@ -222,24 +227,24 @@ Assumes it's a child of a ViewerContext
     </a>
   {/each}
 
-  {#if $currentNote && !Boolean($newNote) && $currentNote.page_number === page_number}
+  {#if viewer.currentNote && !Boolean(viewer.newNote) && viewer.currentNote.page_number === page_number}
     <div
       class="note card"
-      style={positionNote($currentNote, 1.5)}
+      style={positionNote(viewer.currentNote, 1.5)}
       transition:fly={{ duration: 250, y: "-1.1rem" }}
     >
       {#if writing}
         <EditNote
-          note={$currentNote}
+          note={viewer.currentNote}
           {document}
           {page_number}
           onclose={closeNote}
-          onsuccess={(note) => onEditNoteSuccess(note, $currentNote)}
+          onsuccess={(note) => onEditNoteSuccess(note, viewer.currentNote)}
         />
       {:else}
-        {#key $currentNote.id}
+        {#key viewer.currentNote.id}
           <Note
-            note={$currentNote}
+            note={viewer.currentNote}
             showExcerpt={false}
             {scale}
             onclose={closeNote}
@@ -249,24 +254,24 @@ Assumes it's a child of a ViewerContext
     </div>
   {/if}
 
-  {#if $newNote && $newNote.page_number === page_number}
+  {#if viewer.newNote && viewer.newNote.page_number === page_number}
     <div
-      class="box {$newNote.access}"
-      style:top="{$newNote.y1 * 100}%"
-      style:left="{$newNote.x1 * 100}%"
-      style:width="{width($newNote) * 100}%"
-      style:height="{height($newNote) * 100}%"
+      class="box {viewer.newNote.access}"
+      style:top="{viewer.newNote.y1 * 100}%"
+      style:left="{viewer.newNote.x1 * 100}%"
+      style:width="{width(viewer.newNote) * 100}%"
+      style:height="{height(viewer.newNote) * 100}%"
     ></div>
 
     {#if !drawing}
       <div
         class="note card"
-        style={positionNote($newNote, 1.5)}
+        style={positionNote(viewer.newNote, 1.5)}
         transition:fly={{ duration: 250, y: "-1.1rem" }}
       >
         <EditNote
           {document}
-          note={$newNote}
+          note={viewer.newNote}
           onclose={closeNote}
           onsuccess={(note) => onEditNoteSuccess(note, undefined)}
         />

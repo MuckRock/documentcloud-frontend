@@ -5,7 +5,7 @@
   It can use *either* a loaded PDF or a document image to render
   a document excerpt.
 
-  Assumes it's a child of a ViewerContext
+  Must be a child of a ViewerContext
 
   To improve:
 
@@ -17,7 +17,7 @@
 
 -->
 <script lang="ts">
-  import type { Note } from "$lib/api/types";
+  import type { Document, Note } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
   import { XCircle16 } from "svelte-octicons";
@@ -28,22 +28,17 @@
   import Share from "../forms/Share.svelte";
 
   import { width, height, isPageLevel } from "$lib/api/notes";
-  import {
-    getCurrentMode,
-    getDocument,
-    isEmbedded,
-  } from "$lib/components/viewer/ViewerContext.svelte";
+  import { getViewerState } from "$lib/state/viewer.svelte";
   import NoteContent from "./NoteContent.svelte";
   import NoteExcerpt from "./NoteExcerpt.svelte";
   import NoteActions from "./NoteActions.svelte";
   import NoteTitle from "./NoteTitle.svelte";
   import NoteMetadata from "./NoteMetadata.svelte";
 
-  const embed = isEmbedded();
-  const mode = getCurrentMode();
+  const viewer = getViewerState();
 
   interface Props {
-    document?: any;
+    document?: Document;
     note: Note;
     scale?: number;
     showExcerpt?: boolean;
@@ -51,7 +46,7 @@
   }
 
   let {
-    document = getDocument(),
+    document,
     note,
     scale = 2,
     showExcerpt = true,
@@ -62,15 +57,17 @@
   // the viewer, then set its visibility through context.
   let shareNoteOpen = $state(false);
 
-  let doc = $derived($document);
+  let doc = $derived(document ?? viewer.document!);
   let page_level = $derived(isPageLevel(note));
-  let canEdit = $derived(note.edit_access && !embed);
-  let canShare = $derived(!embed);
-  let canClose = $derived(!embed && !page_level && $mode === "document");
+  let canEdit = $derived(note.edit_access && !viewer.embed);
+  let canShare = $derived(!viewer.embed);
+  let canClose = $derived(
+    !viewer.embed && !page_level && viewer.mode === "document",
+  );
 </script>
 
 <div
-  class="note {note.access} {$mode || 'notes'}"
+  class="note {note.access} {viewer.mode || 'notes'}"
   class:page_level
   style:--x1={note.x1}
   style:--x2={note.x2}
@@ -80,7 +77,7 @@
   style:--note-height={height(note)}
 >
   <header>
-    <NoteTitle {doc} {note} {embed} />
+    <NoteTitle {doc} {note} embed={viewer.embed} />
     {#if canClose}
       <Button minW={false} ghost onclick={() => onclose?.()}>
         <XCircle16 />
@@ -91,7 +88,7 @@
     <NoteExcerpt document={doc} {note} {scale} />
   {/if}
   <NoteContent {note} />
-  {#if !embed}
+  {#if !viewer.embed}
     <footer>
       <NoteActions
         {doc}
@@ -104,7 +101,7 @@
     </footer>
   {/if}
 </div>
-{#if !embed && shareNoteOpen}
+{#if !viewer.embed && shareNoteOpen}
   <Portal>
     <Modal onclose={() => (shareNoteOpen = false)}>
       {#snippet title()}

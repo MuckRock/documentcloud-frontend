@@ -1,10 +1,9 @@
 <!-- 
   @component
   An embedded document viewer.
-  Assumes it's a child of a ViewerContext
+  Must be a child of a ViewerContext
 -->
 <script lang="ts">
-  import { setContext } from "svelte";
   import { _ } from "svelte-i18n";
   import { Alert16 } from "svelte-octicons";
 
@@ -14,22 +13,30 @@
   import { defaultSettings, type EmbedSettings } from "$lib/utils/embed";
   import { getUserName, isOrg, isUser } from "$lib/api/accounts";
   import { canonicalUrl } from "$lib/api/documents";
-  import { getDocument } from "../viewer/ViewerContext.svelte";
+  import { getViewerState } from "$lib/state/viewer.svelte";
 
-  export let settings: Partial<EmbedSettings> = defaultSettings;
+  interface Props {
+    settings?: Partial<EmbedSettings>;
+  }
 
-  const documentStore = getDocument();
+  let { settings = defaultSettings }: Props = $props();
 
-  $: document = $documentStore;
+  const viewer = getViewerState();
 
-  // if we're using this layout, we're embedded
-  setContext("embed", true);
+  // If we're using this layout, we're embedded. Declare it on the shared state
+  // so every descendant builds embed links (EMBED_URL) even if the provider
+  // wasn't told `embed`. Set synchronously, before children render.
+  viewer.embed = true;
 
-  $: user = isUser(document.user) ? getUserName(document.user) : undefined;
-  $: org = isOrg(document.organization)
-    ? document.organization.name
-    : undefined;
-  $: contributedBy = settings.onlyshoworg ? org : `${user} (${org})`;
+  let document = $derived(viewer.document!);
+
+  let user = $derived(
+    isUser(document.user) ? getUserName(document.user) : undefined,
+  );
+  let org = $derived(
+    isOrg(document.organization) ? document.organization.name : undefined,
+  );
+  let contributedBy = $derived(settings.onlyshoworg ? org : `${user} (${org})`);
 </script>
 
 <div class="container">

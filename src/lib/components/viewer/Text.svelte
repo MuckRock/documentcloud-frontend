@@ -2,33 +2,31 @@
   @component
   Text wraps a list of Page components with plain text contents
   
-  Assumes it's a child of a ViewerContext
+  Must be a child of a ViewerContext
 -->
 <script lang="ts">
   import { page } from "$app/state";
   import { onMount } from "svelte";
 
   import Page from "./Page.svelte";
-  import { getText, getCurrentPage, getZoom } from "./ViewerContext.svelte";
+  import { getViewerState } from "$lib/state/viewer.svelte";
   import { scrollToPage } from "$lib/utils/scroll";
   import { highlight } from "$lib/utils/search";
   import { getQuery } from "$lib/utils/search";
 
   let { query = getQuery(page.url, "q") } = $props();
 
-  const currentPage = getCurrentPage();
-  const text = getText();
-  const zoom = getZoom();
+  const viewer = getViewerState();
 
   onMount(async () => {
-    if ($currentPage > 1) {
-      scrollToPage($currentPage);
+    if (viewer.page > 1) {
+      scrollToPage(viewer.page);
     }
   });
 </script>
 
-<div class="textPages" style:--zoom={+$zoom || 1}>
-  {#await text then text}
+<div class="textPages" style:--zoom={+viewer.zoom || 1}>
+  {#await viewer.text then text}
     {#each text?.pages ?? [] as { page, contents }}
       <Page page_number={page + 1} track>
         <pre>

@@ -3,7 +3,7 @@
   Show a grid of thumbnail images for a single document.
   Each image should link to its respective page.
 
-  Assumes it's a child of a ViewerContext.
+  Must be a child of a ViewerContext.
 
   Pages are only rendered in the browser to limit server-side page size.
 -->
@@ -18,10 +18,7 @@
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import { pageImageUrl } from "$lib/api/documents";
   import { pageSizesFromSpec } from "$lib/utils/pageSize";
-  import {
-    getDocument,
-    getZoom,
-  } from "$lib/components/viewer/ViewerContext.svelte";
+  import { getViewerState } from "$lib/state/viewer.svelte";
   import { zoomToSize } from "$lib/utils/viewer";
 
   interface Props {
@@ -30,8 +27,7 @@
 
   let { size = "thumbnail" }: Props = $props();
 
-  const documentStore = getDocument();
-  const zoom = getZoom();
+  const viewer = getViewerState();
 
   const SCALE = {
     thumbnail: 1,
@@ -40,9 +36,9 @@
     large: 3,
   };
 
-  let document = $derived($documentStore);
+  let document = $derived(viewer.document!);
   $effect(() => {
-    size = zoomToSize($zoom);
+    size = zoomToSize(viewer.zoom);
   });
   let sizes = $derived(pageSizesFromSpec(document.page_spec));
   let scale = $derived(SCALE[size] ?? 1);

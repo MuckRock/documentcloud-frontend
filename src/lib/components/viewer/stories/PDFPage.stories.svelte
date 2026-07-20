@@ -1,9 +1,8 @@
 <script module lang="ts">
   import type { Document } from "$lib/api/types";
 
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 
-  import { writable } from "svelte/store";
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import PdfPage from "../PDFPage.svelte";
 
@@ -31,26 +30,22 @@
   const [width, height] = sizes[0]!;
   const query = "los angeles";
   const url = new URL(pdfFile, import.meta.url);
-
-  async function load(url: URL): Promise<pdfjs.PDFDocumentProxy> {
-    return pdfjs.getDocument(url).promise;
-  }
 </script>
 
 <Story name="fit width" parameters={{ layout: "fullscreen" }} asChild>
-  <ViewerContext {document} pdf={writable(load(url))}>
+  <ViewerContext {document} asset_url={url}>
     <PdfPage page_number={1} scale="width" {width} {height} />
   </ViewerContext>
 </Story>
 
 <Story name="embedded text" asChild>
-  <ViewerContext {document} pdf={writable(load(url))}>
+  <ViewerContext {document} asset_url={url}>
     <PdfPage page_number={1} scale={1.5} {width} {height} />
   </ViewerContext>
 </Story>
 
 <Story name="server text" asChild>
-  <ViewerContext {document} pdf={writable(load(url))}>
+  <ViewerContext {document} asset_url={url}>
     <PdfPage
       page_number={1}
       scale={1.5}
@@ -64,8 +59,11 @@
 <Story
   name="search results"
   parameters={{
+    // PDFPage derives its search query from `$app/state` (page.url). Storybook
+    // 8.6 doesn't mock `$app/state`, so this override is inert until Storybook
+    // is upgraded; the highlight demo won't reflect the query in the meantime.
     sveltekit_experimental: {
-      stores: {
+      state: {
         page: {
           url: new URL(
             `https://www.dev.documentcloud.org/documents/20000040-the-santa-anas/?q=${query}`,
@@ -76,15 +74,15 @@
   }}
   asChild
 >
-  <ViewerContext {document} pdf={writable(load(url))}>
+  <ViewerContext {document} asset_url={url}>
     <p>Query: {query}</p>
-    <p>URL: {$page.url}</p>
+    <p>URL: {page.url}</p>
     <PdfPage page_number={1} scale={1.5} {width} {height} />
   </ViewerContext>
 </Story>
 
 <Story name="long section start" parameters={{ layout: "fullscreen" }} asChild>
-  <ViewerContext {document} pdf={writable(load(url))}>
+  <ViewerContext {document} asset_url={url}>
     <PdfPage page_number={1} scale="width" {width} {height} />
   </ViewerContext>
 </Story>

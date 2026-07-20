@@ -1,11 +1,11 @@
 <!-- @component
-Assumes it's a child of a ViewerContext
+Must be a child of a ViewerContext
  -->
 
 <script lang="ts">
   import type { ReadMode, WriteMode } from "$lib/api/types";
 
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 
   import { _ } from "svelte-i18n";
   import {
@@ -32,19 +32,13 @@ Assumes it's a child of a ViewerContext
   import { remToPx } from "$lib/utils/layout";
   import { getQuery } from "$lib/utils/search";
   import { getViewerHref } from "$lib/utils/viewer";
-  import {
-    getCurrentMode,
-    getDocument,
-    isEmbedded,
-  } from "$lib/components/viewer/ViewerContext.svelte";
+  import { getViewerState } from "$lib/state/viewer.svelte";
 
-  let { query = getQuery($page.url, "q") } = $props();
+  let { query = getQuery(page.url, "q") } = $props();
 
   let width: number = $state(800);
 
-  const documentStore = getDocument();
-  const mode = getCurrentMode();
-  const embed = isEmbedded();
+  const viewer = getViewerState();
 
   const readModeTabs: Map<ReadMode, string> = new Map([
     ["document", $_("mode.document")],
@@ -76,8 +70,8 @@ Assumes it's a child of a ViewerContext
     search: Search16,
   };
 
-  let document = $derived($documentStore);
-  let canWrite = $derived(!embed && document.edit_access);
+  let document = $derived(viewer.document!);
+  let canWrite = $derived(!viewer.embed && document.edit_access);
   let BREAKPOINTS = $derived({
     READ_MENU: width > remToPx(52),
     WRITE_MENU: width < remToPx(37),
@@ -86,7 +80,7 @@ Assumes it's a child of a ViewerContext
 
   let current = $derived(
     Array.from(readModeDropdownItems ?? []).find(
-      ([value]) => value === $mode,
+      ([value]) => value === viewer.mode,
     )?.[1],
   );
 </script>
@@ -97,8 +91,13 @@ Assumes it's a child of a ViewerContext
       <div class="tabs" role="tablist">
         {#each readModeTabs.entries() as [value, name]}
           <Tab
-            active={$mode === value}
-            href={getViewerHref({ document, mode: value, embed, query })}
+            active={viewer.mode === value}
+            href={getViewerHref({
+              document,
+              mode: value,
+              embed: viewer.embed,
+              query,
+            })}
           >
             {@const TabIcon = icons[value]}
             {#if TabIcon}
@@ -113,7 +112,7 @@ Assumes it's a child of a ViewerContext
         {#snippet anchor()}
           <NavItem>
             {#snippet start()}
-              {@const CurrentModeIcon = icons[$mode]}
+              {@const CurrentModeIcon = icons[viewer.mode]}
               {#if CurrentModeIcon}
                 <CurrentModeIcon />
               {/if}
@@ -128,8 +127,13 @@ Assumes it's a child of a ViewerContext
           <Menu>
             {#each readModeDropdownItems.entries() as [value, name]}
               <MenuItem
-                selected={$mode === value}
-                href={getViewerHref({ document, mode: value, embed, query })}
+                selected={viewer.mode === value}
+                href={getViewerHref({
+                  document,
+                  mode: value,
+                  embed: viewer.embed,
+                  query,
+                })}
                 preserveQS
                 onclick={close}
               >
@@ -143,8 +147,12 @@ Assumes it's a child of a ViewerContext
             {#if BREAKPOINTS.WRITE_MENU && canWrite}
               {#each writeModes as [value, name]}
                 <MenuItem
-                  selected={$mode === value}
-                  href={getViewerHref({ document, mode: value, embed })}
+                  selected={viewer.mode === value}
+                  href={getViewerHref({
+                    document,
+                    mode: value,
+                    embed: viewer.embed,
+                  })}
                   onclick={close}
                 >
                   {@const WriteModeIcon = icons[value]}
@@ -166,7 +174,12 @@ Assumes it's a child of a ViewerContext
         {#each writeModes as [value, name]}
           <Button
             ghost
-            href={getViewerHref({ document, mode: value, embed, query })}
+            href={getViewerHref({
+              document,
+              mode: value,
+              embed: viewer.embed,
+              query,
+            })}
           >
             {@const WriteModeIcon = icons[value]}
             {#if WriteModeIcon}

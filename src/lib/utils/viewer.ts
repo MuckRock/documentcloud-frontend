@@ -224,8 +224,8 @@ export function getZoomLevels(mode: ViewerMode): ZoomLevels {
   }
 }
 
-export function getInitialZoom(url: URL, mode: ViewerMode): Maybe<Zoom> {
-  const zoom = url.searchParams?.get("zoom");
+export function getInitialZoom(url: Maybe<URL>, mode: ViewerMode): Maybe<Zoom> {
+  const zoom = url?.searchParams?.get("zoom");
 
   if (!zoom) return undefined;
 
