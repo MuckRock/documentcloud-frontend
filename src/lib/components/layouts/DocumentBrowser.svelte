@@ -48,7 +48,7 @@
   setVisibleFieldsContext(visibleFields);
 
   const embed: boolean = getContext("embed");
-  const me = getCurrentUser();
+  let me = $derived(getCurrentUser());
 
   interface Props {
     search?: SearchResultsState;
@@ -74,7 +74,7 @@
   }
 
   function onDrop(files: FileList) {
-    if (canUploadFiles($me)) {
+    if (canUploadFiles(me)) {
       $filesToUpload = Array.from(files).filter(isSupported);
       $uploadToProject = project;
       goto("/upload/");
@@ -87,7 +87,7 @@
 </script>
 
 <div class="container">
-  <Dropzone {onDrop} disabled={!canUploadFiles($me)}>
+  <Dropzone {onDrop} disabled={!canUploadFiles(me)}>
     {#snippet children({ active, disabled })}
       <div class:active class:disabled class="dropOverlay">
         <Empty
@@ -132,8 +132,8 @@
         {/snippet}
         <ResultsList {search} auto>
           {#snippet start()}
-            {#if $me && !canUploadFiles($me)}
-              <Unverified user={$me} />
+            {#if me && !canUploadFiles(me)}
+              <Unverified user={me} />
             {/if}
           {/snippet}
         </ResultsList>
@@ -163,7 +163,7 @@
                 <Dropdown position="top-start">
                   {#snippet anchor()}
                     <NavItem
-                      disabled={!$me ||
+                      disabled={!me ||
                         search.selected.length < 1 ||
                         !search.editable}
                     >

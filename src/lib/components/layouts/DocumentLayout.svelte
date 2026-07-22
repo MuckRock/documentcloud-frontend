@@ -24,7 +24,7 @@ Must be a child of a ViewerContext
   import { isOrg } from "$lib/api/accounts";
   import { getViewerState } from "$lib/state/viewer.svelte";
 
-  const me = getCurrentUser();
+  let me = $derived(getCurrentUser());
   const viewer = getViewerState();
 
   let document = $derived(viewer.document!);
@@ -32,7 +32,7 @@ Must be a child of a ViewerContext
   let projects = $derived((document.projects ?? []) as Project[]);
 </script>
 
-<SidebarLayout hideNavigation={!$me}>
+<SidebarLayout hideNavigation={!me}>
   {#snippet navigation()}
     <nav class="column">
       <Projects {projects} {document} />
@@ -59,7 +59,7 @@ Must be a child of a ViewerContext
             </Flex>
           </Metadata>
         {/if}
-        <ViewerActions {document} user={$me} />
+        <ViewerActions {document} user={me} />
         <SignedIn>
           <AddOns query="+document:{document.id}" />
         </SignedIn>

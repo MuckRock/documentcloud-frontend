@@ -26,7 +26,7 @@
 
   let { document }: Props = $props();
 
-  const me = getCurrentUser();
+  let me = $derived(getCurrentUser());
 
   let edit = $state(false);
   let width: number = $state(800);
@@ -46,7 +46,7 @@
 </script>
 
 <header bind:clientWidth={width}>
-  {#if $me && access}
+  {#if me && access}
     <div class="access">
       {#if document.edit_access}
         <Button ghost minW={false} onclick={() => (edit = true)}>

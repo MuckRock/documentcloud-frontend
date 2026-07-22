@@ -25,4 +25,10 @@
 </script>
 
 <Story name="Metadata" {args} />
-<Story name="Signed out" {args} parameters={{ signedOut: true }} />
+<Story
+  name="Signed out"
+  {args}
+  parameters={{
+    sveltekit_experimental: { state: { page: { data: { me: undefined } } } },
+  }}
+/>

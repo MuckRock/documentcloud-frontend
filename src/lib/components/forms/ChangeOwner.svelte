@@ -40,7 +40,7 @@ Change owner of one or more documents.
   import { canonicalUrl, edited } from "$lib/api/documents";
   import { userOrgs, orgUsers, getUserName, isOrg } from "$lib/api/accounts";
 
-  const me = getCurrentUser();
+  let me = $derived(getCurrentUser());
 
   interface Props {
     // one document or a list of documents
@@ -61,9 +61,9 @@ Change owner of one or more documents.
   );
 
   onMount(async () => {
-    if ($me) {
+    if (me) {
       // Load organizations the user belongs to
-      orgOptions = await getOrgOptions($me);
+      orgOptions = await getOrgOptions(me);
       // Set initial org value after options are loaded
       if (currentOrg) {
         org = orgOptions?.find((opt) => opt.value === currentOrg.id) ?? null;
@@ -110,7 +110,7 @@ Change owner of one or more documents.
 
   function onSubmit({ formData, cancel, submitter }) {
     submitter.disabled = true;
-    if (!$me) {
+    if (!me) {
       return cancel();
     }
     if (org) {
@@ -157,7 +157,7 @@ Change owner of one or more documents.
   let bulk = $derived(documents.length !== 1);
   let count = $derived(documents.length);
   let disabled = $derived(
-    count > MAX_EDIT_BATCH || count === 0 || !$me || (!user && !org),
+    count > MAX_EDIT_BATCH || count === 0 || !me || (!user && !org),
   );
   let action = $derived(
     bulk
@@ -167,7 +167,7 @@ Change owner of one or more documents.
         : "",
   );
 
-  let currentOrg = $derived(isOrg($me?.organization) ? $me.organization : null);
+  let currentOrg = $derived(isOrg(me?.organization) ? me.organization : null);
 </script>
 
 <form {action} method="post" use:enhance={onSubmit}>

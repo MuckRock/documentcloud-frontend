@@ -26,7 +26,7 @@
 
   import { getCurrentUser } from "$lib/utils/permissions";
 
-  const me = getCurrentUser();
+  let me = $derived(getCurrentUser());
 
   let { data } = $props();
 
@@ -121,7 +121,7 @@
   {/snippet}
 
   {#snippet action()}
-    {#if $me}
+    {#if me}
       <Button mode="primary" onclick={() => (create = true)}>
         {$_("projects.create")}
       </Button>

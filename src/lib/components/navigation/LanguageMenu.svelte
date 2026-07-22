@@ -49,7 +49,7 @@
         {/snippet}
       </NavItem>
     {/snippet}
-    {#snippet inner(close)}
+    {#snippet inner({ close })}
       <Menu>
         {#each LANGUAGES as [name, code, flag]}
           <NavItem

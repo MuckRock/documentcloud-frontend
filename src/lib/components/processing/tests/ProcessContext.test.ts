@@ -1,8 +1,14 @@
+import type { Nullable, User } from "$lib/api/types";
+
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render } from "@testing-library/svelte";
 
-import ProcessContextDemo from "./ProcessContext.demo.svelte";
-import { load } from "../ProcessContext.svelte";
+vi.mock("$app/state", () => ({
+  page: { data: {} as { me?: Nullable<User> } },
+}));
+
+import { page } from "$app/state";
+import ProcessContext, { load } from "../ProcessContext.svelte";
 import { me } from "@/test/fixtures/accounts";
 
 // ProcessContext calls invalidate() from $app/navigation in its $effect
@@ -56,7 +62,9 @@ describe("ProcessContext — auth-gated polling", () => {
   });
 
   it("polls pending documents and addon runs when signed in", async () => {
-    render(ProcessContextDemo, { props: { user: me } });
+    page.data.me = me;
+
+    render(ProcessContext);
 
     await vi.waitFor(() => {
       expect(mockPending).toHaveBeenCalled();
@@ -65,7 +73,9 @@ describe("ProcessContext — auth-gated polling", () => {
   });
 
   it("does not poll when signed out", async () => {
-    render(ProcessContextDemo, { props: { user: null } });
+    page.data.me = null;
+
+    render(ProcessContext);
 
     // give onMount and any effects a chance to run
     await new Promise((resolve) => setTimeout(resolve, 50));
@@ -92,8 +102,9 @@ describe("ProcessContext — visibility-gated polling", () => {
 
   it("does not poll when the tab is hidden, even signed in", async () => {
     stubVisibility("hidden");
+    page.data.me = me;
 
-    render(ProcessContextDemo, { props: { user: me } });
+    render(ProcessContext);
 
     // give onMount and any effects a chance to run
     await new Promise((resolve) => setTimeout(resolve, 50));
@@ -104,8 +115,9 @@ describe("ProcessContext — visibility-gated polling", () => {
 
   it("triggers a fresh load when a signed-in tab returns to visible", async () => {
     stubVisibility("hidden");
+    page.data.me = me;
 
-    render(ProcessContextDemo, { props: { user: me } });
+    render(ProcessContext);
 
     // hidden: nothing polled yet
     await new Promise((resolve) => setTimeout(resolve, 50));
@@ -132,8 +144,9 @@ describe("ProcessContext — visibility-gated polling", () => {
 
   it("does not poll on visibilitychange when signed out", async () => {
     stubVisibility("hidden");
+    page.data.me = null;
 
-    render(ProcessContextDemo, { props: { user: null } });
+    render(ProcessContext);
 
     stubVisibility("visible");
     document.dispatchEvent(new Event("visibilitychange"));
@@ -146,8 +159,9 @@ describe("ProcessContext — visibility-gated polling", () => {
 
   it("respects the throttle window when re-entering visible", async () => {
     stubVisibility("visible");
+    page.data.me = me;
 
-    render(ProcessContextDemo, { props: { user: me } });
+    render(ProcessContext);
 
     // initial visible load from onMount
     await vi.waitFor(() => {

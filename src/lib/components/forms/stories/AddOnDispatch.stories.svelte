@@ -140,5 +140,7 @@
     eventOptions: addons[4]?.parameters?.eventOptions,
   }}
   {template}
-  parameters={{ signedOut: true }}
+  parameters={{
+    sveltekit_experimental: { state: { page: { data: { me: undefined } } } },
+  }}
 />

@@ -1,8 +1,7 @@
 <script lang="ts">
-  import type { Org, SavedSearch } from "$lib/api/types";
-  import type { Writable } from "svelte/store";
+  import type { SavedSearch } from "$lib/api/types";
 
-  import { getContext, onMount } from "svelte";
+  import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
   import {
     Bookmark16,
@@ -30,19 +29,19 @@
   import { getCurrentUser, isSignedIn } from "$lib/utils/permissions";
   import { listAll } from "$lib/api/saved-searches";
 
-  const me = getCurrentUser();
-  const org: Writable<Org> = getContext("org");
+  let me = $derived(getCurrentUser());
+  let org = $derived(page.data.org);
 
   // Normalize: the search editor's trailing join operator encodes as "+"
   // in the URL, which URLSearchParams decodes as a space. Trim both.
   let normalizeQuery = (q: string) => q.replace(/[\s+]+$/, "");
   let query = $derived(normalizeQuery(page.url.searchParams?.get("q") || ""));
 
-  let mine = $derived($me ? userDocs($me) : "");
-  let minePublic = $derived($me ? userDocs($me, "public") : "");
-  let minePrivate = $derived($me ? userDocs($me, "private") : "");
+  let mine = $derived(me ? userDocs(me) : "");
+  let minePublic = $derived(me ? userDocs(me, "public") : "");
+  let minePrivate = $derived(me ? userDocs(me, "private") : "");
 
-  let orgDocs = $derived($org ? `organization:${$org.id}` : "");
+  let orgDocs = $derived(org ? `organization:${org.id}` : "");
 
   // Saved searches state
   let savedSearches: SavedSearch[] = $state([]);
@@ -72,7 +71,7 @@
   onMount(async () => {
     // The saved searches UI is only shown to signed-in users (see <SignedIn>),
     // so skip the request for anonymous visitors to save their API quota.
-    if (!isSignedIn($me)) {
+    if (!isSignedIn(me)) {
       loadingSavedSearches = false;
       return;
     }
@@ -148,7 +147,7 @@
         values: { access: "Public " },
       })}
     </NavItem>
-    {#if $org && !$org.individual}
+    {#if org && !org.individual}
       <NavItem
         small
         hover
@@ -159,7 +158,7 @@
           <Organization16 height={14} width={14} />
         {/snippet}
         {$_("documents.nameDocuments", {
-          values: { name: $org.name, access: "" },
+          values: { name: org.name, access: "" },
         })}
       </NavItem>
     {/if}

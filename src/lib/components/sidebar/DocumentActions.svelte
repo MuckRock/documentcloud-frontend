@@ -53,7 +53,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   let { afterClick = undefined }: Props = $props();
 
   const search = getSearchResults();
-  const me = getCurrentUser();
+  let me = $derived(getCurrentUser());
 
   const labels: Record<Action, string> = {
     share: "bulk.actions.share",
@@ -160,7 +160,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
     ghost
     mode="danger"
     onclick={() => show("change_owner")}
-    disabled={!canChangeOwner($me, search.selected)}
+    disabled={!canChangeOwner(me, search.selected)}
   >
     <Person16 />
     {$_("bulk.actions.change_owner")}

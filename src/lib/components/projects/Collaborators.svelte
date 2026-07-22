@@ -35,7 +35,7 @@
 
   let { project, users }: Props = $props();
 
-  const me = getCurrentUser();
+  let me = $derived(getCurrentUser());
 
   const accessLabels: Record<ProjectAccess, string> = {
     admin: "projects.access.admin",
@@ -53,7 +53,7 @@
   let user_to_update: Nullable<ProjectUser> = $state(null);
 
   // Do I belong to this project?
-  let isProjectUser = $derived(users.some((u) => u.user.id === $me?.id));
+  let isProjectUser = $derived(users.some((u) => u.user.id === me?.id));
 
   function isMe(user: ProjectUser, me: User | null): boolean {
     const id = typeof user.user === "object" ? user.user.id : user.user;
@@ -133,7 +133,7 @@
             {getUserName(user.user)}
             {#snippet end()}
               <Flex gap={0}>
-                {#if project.add_remove_access && !isMe(user, $me)}
+                {#if project.add_remove_access && !isMe(user, me)}
                   <Tooltip caption={actions.update}>
                     <Button
                       ghost

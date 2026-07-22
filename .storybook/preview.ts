@@ -1,13 +1,12 @@
-import type { Preview, StoryContext, StoryFn } from "@storybook/sveltekit";
+import type { Preview } from "@storybook/sveltekit";
 
 import "@/style/kit.css";
 import "$lib/i18n/index.js";
 
 import { initialize, mswLoader } from "msw-storybook-addon";
-import UserContextDecorator from "./decorators/UserContextDecorator.svelte";
-import OrgContextDecorator from "./decorators/OrgContextDecorator.svelte";
-import TipOfDayContextDecorator from "./decorators/TipOfDayContextDecorator.svelte";
 import ViewerContextDecorator from "./decorators/ViewerContextDecorator.svelte";
+
+import { me, myOrgs, organization, usersList } from "@/test/fixtures/accounts";
 
 // Initialize MSW (v2 API)
 initialize({
@@ -42,6 +41,18 @@ const preview: Preview = {
           route: { id: "/" },
           data: {
             breadcrumbs: [],
+            // Signed in as `me` by default; individual stories override
+            // `data.me` (e.g. to `undefined`) for signed-out scenarios.
+            me,
+            org: organization,
+            user_orgs: myOrgs.results,
+            org_users: usersList.results,
+            tipOfDay: {
+              url: "/tipofday/",
+              title: "Tip of the Day",
+              content:
+                '<p>Welcome to DocumentCloud, the <a href="#">SvelteKit</a> rewrite!</p>',
+            },
           },
         },
       },
@@ -60,14 +71,6 @@ const preview: Preview = {
 // Provide the MSW addon loader globally
 export const loaders = [mswLoader];
 
-export let decorators = [
-  () => ViewerContextDecorator,
-  (_story: StoryFn, context: StoryContext) => ({
-    Component: UserContextDecorator,
-    props: { context },
-  }),
-  () => OrgContextDecorator,
-  () => TipOfDayContextDecorator,
-];
+export let decorators = [() => ViewerContextDecorator];
 
 export default preview;

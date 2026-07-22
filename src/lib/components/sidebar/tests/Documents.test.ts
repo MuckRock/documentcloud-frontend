@@ -1,21 +1,27 @@
+import type { Nullable, Org, User } from "$lib/api/types";
+
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/svelte";
 
-import DocumentsDemo from "./Documents.demo.svelte";
+import Documents from "../Documents.svelte";
 import { me } from "@/test/fixtures/accounts";
 import { savedSearch, savedSearches } from "@/test/fixtures/saved-searches";
-import type { Org } from "$lib/api/types";
 
 const meOrg = me.organization as Org;
 
-// Mock $app/state to control the page URL
+// Mock $app/state to control the page URL and the signed-in user/org
 let mockQuery = "";
+let mockUser: Nullable<User> = null;
+let mockOrg: Nullable<Org> = null;
 vi.mock("$app/state", () => ({
   page: {
     get url() {
       return new URL(
         `https://www.documentcloud.org/documents/?q=${encodeURIComponent(mockQuery)}`,
       );
+    },
+    get data() {
+      return { me: mockUser, org: mockOrg };
     },
   },
 }));
@@ -33,14 +39,14 @@ describe("Documents sidebar — saved search detection", () => {
     vi.resetAllMocks();
     mockGetAll.mockResolvedValue([]);
     mockQuery = "";
+    mockUser = me;
+    mockOrg = null;
   });
 
   it("disables save button when query is empty", async () => {
     mockQuery = "";
 
-    render(DocumentsDemo, {
-      props: { user: me },
-    });
+    render(Documents);
 
     await vi.waitFor(() => {
       const btn = screen.getByRole("button", { name: /save current search/i });
@@ -51,9 +57,7 @@ describe("Documents sidebar — saved search detection", () => {
   it("enables save button for a new search query", async () => {
     mockQuery = "new search";
 
-    render(DocumentsDemo, {
-      props: { user: me },
-    });
+    render(Documents);
 
     await vi.waitFor(() => {
       const btn = screen.getByRole("button", { name: /save current search/i });
@@ -64,9 +68,7 @@ describe("Documents sidebar — saved search detection", () => {
   it("disables save button when viewing user's own documents (presaved)", async () => {
     mockQuery = `user:${me.id}`;
 
-    render(DocumentsDemo, {
-      props: { user: me },
-    });
+    render(Documents);
 
     await vi.waitFor(() => {
       const btn = screen.getByRole("button", { name: /save current search/i });
@@ -77,9 +79,7 @@ describe("Documents sidebar — saved search detection", () => {
   it("disables save button for private documents query", async () => {
     mockQuery = `user:${me.id} access:private`;
 
-    render(DocumentsDemo, {
-      props: { user: me },
-    });
+    render(Documents);
 
     await vi.waitFor(() => {
       const btn = screen.getByRole("button", { name: /save current search/i });
@@ -90,9 +90,7 @@ describe("Documents sidebar — saved search detection", () => {
   it("disables save button for public documents query", async () => {
     mockQuery = `user:${me.id} access:public`;
 
-    render(DocumentsDemo, {
-      props: { user: me },
-    });
+    render(Documents);
 
     await vi.waitFor(() => {
       const btn = screen.getByRole("button", { name: /save current search/i });
@@ -102,13 +100,9 @@ describe("Documents sidebar — saved search detection", () => {
 
   it("disables save button for org documents query", async () => {
     mockQuery = `organization:${meOrg.id}`;
+    mockOrg = meOrg;
 
-    render(DocumentsDemo, {
-      props: {
-        user: me,
-        org: meOrg,
-      },
-    });
+    render(Documents);
 
     await vi.waitFor(() => {
       const btn = screen.getByRole("button", { name: /save current search/i });
@@ -120,9 +114,7 @@ describe("Documents sidebar — saved search detection", () => {
     // URLSearchParams decodes bare "+" as space, so ?q=user:100012+ → "user:100012 "
     mockQuery = `user:${me.id} `;
 
-    render(DocumentsDemo, {
-      props: { user: me },
-    });
+    render(Documents);
 
     await vi.waitFor(() => {
       const btn = screen.getByRole("button", { name: /save current search/i });
@@ -133,9 +125,7 @@ describe("Documents sidebar — saved search detection", () => {
   it("disables save button when query has trailing + (matches presaved)", async () => {
     mockQuery = `user:${me.id}+`;
 
-    render(DocumentsDemo, {
-      props: { user: me },
-    });
+    render(Documents);
 
     await vi.waitFor(() => {
       const btn = screen.getByRole("button", { name: /save current search/i });
@@ -147,9 +137,7 @@ describe("Documents sidebar — saved search detection", () => {
     mockQuery = savedSearch.query + "+";
     mockGetAll.mockResolvedValue(savedSearches);
 
-    render(DocumentsDemo, {
-      props: { user: me },
-    });
+    render(Documents);
 
     await vi.waitFor(() => {
       const btn = screen.getByRole("button", { name: /save current search/i });
@@ -161,9 +149,7 @@ describe("Documents sidebar — saved search detection", () => {
     mockQuery = savedSearch.query;
     mockGetAll.mockResolvedValue(savedSearches);
 
-    render(DocumentsDemo, {
-      props: { user: me },
-    });
+    render(Documents);
 
     await vi.waitFor(() => {
       const btn = screen.getByRole("button", { name: /save current search/i });
@@ -174,9 +160,7 @@ describe("Documents sidebar — saved search detection", () => {
   it("shows loading state initially", () => {
     mockGetAll.mockReturnValue(new Promise(() => {}));
 
-    render(DocumentsDemo, {
-      props: { user: me },
-    });
+    render(Documents);
 
     expect(screen.getByText(/loading saved searches/i)).toBeInTheDocument();
   });
@@ -184,9 +168,7 @@ describe("Documents sidebar — saved search detection", () => {
   it("shows empty state when no saved searches exist", async () => {
     mockGetAll.mockResolvedValue([]);
 
-    render(DocumentsDemo, {
-      props: { user: me },
-    });
+    render(Documents);
 
     await vi.waitFor(() => {
       expect(
@@ -198,9 +180,7 @@ describe("Documents sidebar — saved search detection", () => {
   it("renders saved search items after loading", async () => {
     mockGetAll.mockResolvedValue(savedSearches);
 
-    render(DocumentsDemo, {
-      props: { user: me },
-    });
+    render(Documents);
 
     await vi.waitFor(() => {
       expect(screen.getByText("Police reports")).toBeInTheDocument();
@@ -209,9 +189,9 @@ describe("Documents sidebar — saved search detection", () => {
   });
 
   it("does not load saved searches when signed out", async () => {
-    render(DocumentsDemo, {
-      props: { user: null },
-    });
+    mockUser = null;
+
+    render(Documents);
 
     // give onMount a chance to run
     await new Promise((resolve) => setTimeout(resolve, 50));

@@ -12,10 +12,7 @@ const config: StorybookConfig = {
 
   staticDirs: ["../public", "../static"],
 
-  addons: [
-    { name: "@storybook/addon-svelte-csf" },
-    "@storybook/addon-docs",
-  ],
+  addons: [{ name: "@storybook/addon-svelte-csf" }, "@storybook/addon-docs"],
 
   framework: {
     name: "@storybook/sveltekit",

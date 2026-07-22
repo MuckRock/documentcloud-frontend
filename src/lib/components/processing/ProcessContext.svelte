@@ -105,7 +105,7 @@ This makes the state of those processes available via context.
 
   // Only signed-in users have pending documents or add-on runs to poll for.
   // Gating on auth keeps anonymous visitors from burning their API quota.
-  const me = getCurrentUser();
+  let me = $derived(getCurrentUser());
 
   // keep track of processed documents
   let started: Set<number> = new Set();
@@ -124,7 +124,7 @@ This makes the state of those processes available via context.
   });
 
   onMount(() => {
-    if (isSignedIn($me)) {
+    if (isSignedIn(me)) {
       load();
     }
     // started grows indefinitely, so we need to manage it here
@@ -134,7 +134,7 @@ This makes the state of those processes available via context.
   });
 
   $effect(() => {
-    if (isSignedIn($me) && ($documents.length > 0 || $addons.length > 0)) {
+    if (isSignedIn(me) && ($documents.length > 0 || $addons.length > 0)) {
       load();
     }
 
@@ -150,7 +150,7 @@ This makes the state of those processes available via context.
   // Refresh on tab focus; gate on auth here since _load() can't (module scope).
   function onVisibilityChange() {
     if (document.visibilityState === "visible") {
-      if (isSignedIn($me)) load();
+      if (isSignedIn(me)) load();
     } else {
       load.cancel(); // drop any queued trailing invocation for a hidden tab
     }

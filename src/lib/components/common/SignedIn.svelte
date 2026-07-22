@@ -15,10 +15,10 @@
 
   let { children, signedOut }: Props = $props();
 
-  const me = getCurrentUser();
+  let me = $derived(getCurrentUser());
 </script>
 
-{#if isSignedIn($me)}
+{#if isSignedIn(me)}
   {@render children?.()}
 {:else}
   {@render signedOut?.()}

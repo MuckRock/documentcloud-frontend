@@ -16,7 +16,7 @@
   import { getCurrentUser } from "$lib/utils/permissions";
   import { SIGN_IN_URL } from "@/config/config.js";
 
-  const me = getCurrentUser();
+  let me = $derived(getCurrentUser());
 
   interface Props {
     status?: Maybe<number>;
@@ -44,7 +44,7 @@
     {@render message?.()}
   </Error>
   {@render children?.()}
-  {#if status === 404 && !$me}
+  {#if status === 404 && !me}
     <p class="signInMessage">
       {@html $_("error.signIn", { values: { href: sign_in_url.href } })}
     </p>
@@ -68,7 +68,7 @@
         <h1>{$_("feedback.title")}</h1>
       {/snippet}
       <UserFeedback
-        user={$me}
+        user={me}
         feedbackType="Bug"
         onclose={() => (feedbackOpen = false)}
       />

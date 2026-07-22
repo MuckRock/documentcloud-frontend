@@ -16,9 +16,9 @@
 
   let { children, basic }: Props = $props();
 
-  const me = getCurrentUser();
+  let me = $derived(getCurrentUser());
 
-  let org = $derived($me?.organization);
+  let org = $derived(me?.organization);
   let isPremium = $derived(
     isOrg(org) && org.plan
       ? ["Organization", "Professional"].includes(org.plan)

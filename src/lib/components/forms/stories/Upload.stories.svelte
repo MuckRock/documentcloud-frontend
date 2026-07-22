@@ -1,5 +1,4 @@
 <script module lang="ts">
-  import { writable } from "svelte/store";
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import Upload from "../Upload.svelte";
   import Unverified from "../../accounts/Unverified.svelte";
@@ -52,7 +51,7 @@
   }}
 />
 
-<Story name="Unverified user" args={{ ...args, user: writable(user) }} />
+<Story name="Unverified user" args={{ ...args, user }} />
 
 <Story
   name="With Long File Name"

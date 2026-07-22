@@ -22,7 +22,7 @@
 
   let { data } = $props();
 
-  const me = getCurrentUser();
+  let me = $derived(getCurrentUser());
 
   let event = $derived(data.event);
   let addon = $derived(
@@ -31,7 +31,7 @@
   let query = $derived(data.query);
   let scheduled = $derived(data.scheduled);
   let organization = $derived(
-    typeof $me?.organization === "object" ? $me.organization : null,
+    typeof me?.organization === "object" ? me.organization : null,
   );
   let isPremiumUser = $derived(isPremiumOrg(organization));
   let creditBalance = $derived(getCreditBalance(organization) ?? 0);

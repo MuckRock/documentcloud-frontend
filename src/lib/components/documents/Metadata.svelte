@@ -25,7 +25,7 @@
 
   let { document, text }: Props = $props();
 
-  const me = getCurrentUser();
+  let me = $derived(getCurrentUser());
 
   const ocrEngineMap = {
     tess4: "Tesseract",
@@ -64,7 +64,7 @@
     </Metadata>
   {/if}
   <Metadata key={$_("sidebar.contributed")}>
-    {#if $me?.is_staff && typeof document.user == "object"}
+    {#if me?.is_staff && typeof document.user == "object"}
       <a
         href="{SQUARELET_BASE}/users/{document.user.username}"
         target="_blank"

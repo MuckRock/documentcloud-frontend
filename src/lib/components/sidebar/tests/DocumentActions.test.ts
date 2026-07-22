@@ -1,6 +1,13 @@
-import { describe, it, expect } from "vitest";
+import type { Nullable, User } from "$lib/api/types";
+
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/svelte";
 
+vi.mock("$app/state", () => ({
+  page: { data: {} as { me?: Nullable<User> } },
+}));
+
+import { page } from "$app/state";
 import DocumentActionsDemo from "./DocumentActions.demo.svelte";
 import { document } from "@/test/fixtures/documents";
 import { me } from "@/test/fixtures/accounts";
@@ -12,6 +19,8 @@ function btn(name: string) {
 
 describe("DocumentActions", () => {
   it("disables all action buttons when nothing is selected", () => {
+    page.data.me = null;
+
     render(DocumentActionsDemo);
 
     expect(btn("Share")).toBeDisabled();
@@ -23,6 +32,8 @@ describe("DocumentActions", () => {
   });
 
   it("enables Share only for a single selection", () => {
+    page.data.me = null;
+
     render(DocumentActionsDemo, {
       props: { docs: [document] },
     });
@@ -31,7 +42,9 @@ describe("DocumentActions", () => {
   });
 
   it("disables Share when multiple documents are selected", () => {
+    page.data.me = null;
     const second = { ...document, id: 99999 };
+
     render(DocumentActionsDemo, {
       props: { docs: [document, second] },
     });
@@ -40,7 +53,9 @@ describe("DocumentActions", () => {
   });
 
   it("enables Edit/Data/Reprocess/Delete when selection is editable", () => {
+    page.data.me = null;
     const editableDoc = { ...document, edit_access: true };
+
     render(DocumentActionsDemo, {
       props: { docs: [editableDoc] },
     });
@@ -52,7 +67,9 @@ describe("DocumentActions", () => {
   });
 
   it("disables Edit/Data/Reprocess/Delete when selection is not editable", () => {
+    page.data.me = null;
     const readonlyDoc = { ...document, edit_access: false };
+
     render(DocumentActionsDemo, {
       props: { docs: [readonlyDoc] },
     });
@@ -64,6 +81,8 @@ describe("DocumentActions", () => {
   });
 
   it("enables Move to Project when documents are selected", () => {
+    page.data.me = null;
+
     render(DocumentActionsDemo, {
       props: { docs: [document] },
     });
@@ -72,8 +91,10 @@ describe("DocumentActions", () => {
   });
 
   it("disables Change Owner when user does not own the documents", () => {
+    page.data.me = me;
+
     render(DocumentActionsDemo, {
-      props: { docs: [document], user: me },
+      props: { docs: [document] },
     });
 
     // me.id (100012) !== document.user.id (20080), so Change Owner is disabled
