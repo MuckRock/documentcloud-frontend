@@ -1,7 +1,7 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import type { ComponentProps } from "svelte";
   import { defineMeta } from "@storybook/addon-svelte-csf";
-  import { action } from "@storybook/addon-actions";
+  import { action } from "storybook/actions";
 
   import Paginator from "../Paginator.svelte";
 

@@ -1,17 +1,13 @@
-<script lang="ts" context="module">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import PremiumBadge from "../PremiumBadge.svelte";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Premium Credits / Premium Badge",
     tags: ["autodocs"],
     parameters: { layout: "centered" },
     component: PremiumBadge,
-  };
+  });
 </script>
-
-<Template>
-  <PremiumBadge />
-</Template>
 
 <Story name="Default" />

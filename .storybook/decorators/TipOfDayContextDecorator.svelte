@@ -1,6 +1,12 @@
 <script lang="ts">
-  import { setContext } from "svelte";
   import type { Flatpage } from "$lib/api/types";
+  import { type Snippet, setContext } from "svelte";
+
+  interface Props {
+    children?: Snippet;
+  }
+
+  let { children }: Props = $props();
   const tipOfDay: Flatpage = {
     url: "/tipofday/",
     title: "Tip of the Day",
@@ -10,4 +16,4 @@
   setContext("tipOfDay", tipOfDay);
 </script>
 
-<slot />
+{@render children?.()}

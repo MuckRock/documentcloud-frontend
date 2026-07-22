@@ -1,5 +1,5 @@
-<script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
 
   import type { Document } from "$lib/api/types";
   import PageHighlights from "../PageHighlights.svelte";
@@ -11,12 +11,12 @@
     (d) => d.id === "3913417",
   ) as unknown as Document;
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Documents / Page Highlights",
     component: PageHighlights,
     tags: ["autodocs"],
     parameters: { layout: "fullscreen" },
-  };
+  });
 </script>
 
 <script lang="ts">
@@ -31,10 +31,10 @@
   );
 </script>
 
-<Story name="closed">
+<Story name="closed" asChild>
   <PageHighlights {document} />
 </Story>
 
-<Story name="open">
+<Story name="open" asChild>
   <PageHighlights {document} open />
 </Story>

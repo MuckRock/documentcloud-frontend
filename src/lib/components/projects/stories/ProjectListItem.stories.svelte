@@ -1,21 +1,17 @@
-<script lang="ts" context="module">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
 
   import ProjectListItem from "../ProjectListItem.svelte";
   import { project, editableProject } from "@/test/fixtures/projects";
 
   const args = { project };
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Projects / List Item",
     component: ProjectListItem,
     parameters: { layout: "centered" },
-  };
+  });
 </script>
-
-<Template let:args>
-  <ProjectListItem {...args} />
-</Template>
 
 <Story name="Default" {args} />
 <Story

@@ -1,6 +1,6 @@
 <script module lang="ts">
   import { _ } from "svelte-i18n";
-  import { Story } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import Highlight from "../Highlight.svelte";
   import HighlightGroup from "../HighlightGroup.svelte";
 
@@ -12,13 +12,13 @@
 
   const getHref = (id: string) => id;
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Common / Highlight Group",
     component: HighlightGroup,
-  };
+  });
 </script>
 
-<Story name="With Highlights">
+<Story name="With Highlights" asChild>
   <HighlightGroup {highlights} {getHref}>
     {#snippet children({ id, highlight })}
       <Highlight title={id} segments={highlight} />
@@ -26,7 +26,7 @@
   </HighlightGroup>
 </Story>
 
-<Story name="With All Controls">
+<Story name="With All Controls" asChild>
   <HighlightGroup {highlights} {getHref} showAll>
     {#snippet children({ id, highlight })}
       <Highlight title={id} segments={highlight} />

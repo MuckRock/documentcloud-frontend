@@ -2,7 +2,7 @@
   import type { Page, APIResponse, AddOn, Event, Run } from "$lib/api/types";
 
   import { goto } from "$app/navigation";
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 
   import { _ } from "svelte-i18n";
   import { Hourglass24, Plug24 } from "svelte-octicons";
@@ -41,7 +41,7 @@
    *  current URL's searchParams value (there should be a smarter way to do this).
    */
   function paginate(pageUrl: string) {
-    const url = new URL($page.url); // make a copy
+    const url = new URL(page.url); // make a copy
     const cursor = new URL(pageUrl).searchParams.get("cursor");
     if (!cursor) return;
     url.searchParams.set("cursor", cursor);

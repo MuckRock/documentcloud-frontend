@@ -5,7 +5,7 @@
   import { FileDirectory24, SidebarExpand16 } from "svelte-octicons";
 
   import { goto } from "$app/navigation";
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 
   import Button from "$lib/components/common/Button.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
@@ -40,7 +40,7 @@
   function paginate(u: Nullable<URL | string>) {
     if (!u) return;
     const pageUrl = new URL(u);
-    const gotoUrl = new URL($page.url);
+    const gotoUrl = new URL(page.url);
     // get the cursor out of the pageUrl, pass it to the gotoUrl
     const cursor = pageUrl.searchParams.get("cursor");
     if (cursor) gotoUrl.searchParams.set("cursor", cursor);

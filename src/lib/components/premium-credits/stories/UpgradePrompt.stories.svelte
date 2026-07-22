@@ -1,6 +1,6 @@
-<script lang="ts" context="module">
+<script module lang="ts">
   import { _ } from "svelte-i18n";
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import UpgradePrompt from "../UpgradePrompt.svelte";
 
   const args = {
@@ -9,18 +9,14 @@
     callToAction: "Start Free Trial",
   };
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Premium Credits / Upgrade Prompt",
     tags: ["autodocs"],
     parameters: { layout: "centered" },
     component: UpgradePrompt,
-  };
+  });
 </script>
 
-<Template let:args>
-  <UpgradePrompt {...args} />
-</Template>
-
-<Story name="Upgrade Prompt" id="upgradePrompt" {args} />
+<Story name="Upgrade Prompt" {args} />
 
 <Story name="Hidden Action" args={{ ...args, callToAction: null }} />

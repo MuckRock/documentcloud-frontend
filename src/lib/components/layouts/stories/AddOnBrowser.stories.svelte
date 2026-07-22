@@ -9,9 +9,9 @@
     parameters: {
       layout: "fullscreen",
       sveltekit_experimental: {
-        stores: {
+        state: {
           page: {
-            url: "/",
+            url: new URL("https://www.documentcloud.org/"),
           },
         },
       },

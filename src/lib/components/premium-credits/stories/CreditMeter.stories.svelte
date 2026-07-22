@@ -1,5 +1,5 @@
-<script lang="ts" context="module">
-  import { Story, Template } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import CreditMeter from "../CreditMeter.svelte";
 
   let args = {
@@ -10,17 +10,13 @@
     helpText: "Monthly credits will reset in 2 weeks",
   };
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Premium Credits / Credit Meter",
     tags: ["autodocs"],
     parameters: { layout: "centered" },
     component: CreditMeter,
-  };
+  });
 </script>
-
-<Template let:args>
-  <CreditMeter {...args} />
-</Template>
 
 <Story name="Org Credits" {args} />
 

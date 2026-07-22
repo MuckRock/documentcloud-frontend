@@ -2,7 +2,7 @@
   import type { Nullable, User } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 
   import { _ } from "svelte-i18n";
   import { Bug16, Comment16, Question16 } from "svelte-octicons";
@@ -120,7 +120,7 @@
       </label>
     </fieldset>
   {/if}
-  <input type="text" name="url" value={$page.url.href} hidden />
+  <input type="text" name="url" value={page.url.href} hidden />
   <textarea class="feedback" name="message" bind:value={feedback} {placeholder}
   ></textarea>
 

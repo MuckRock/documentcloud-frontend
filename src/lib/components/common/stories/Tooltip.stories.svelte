@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import type { ComponentProps } from "svelte";
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import Button from "../Button.svelte";

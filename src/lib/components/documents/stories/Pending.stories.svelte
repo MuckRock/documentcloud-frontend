@@ -1,17 +1,17 @@
-<script context="module" lang="ts">
-  import { Story } from "@storybook/addon-svelte-csf";
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
   import Pending from "../Pending.svelte";
 
   import pending from "@/test/fixtures/documents/pending.json";
 
-  export const meta = {
+  const { Story } = defineMeta({
     title: "Documents / Pending",
     component: Pending,
     tags: ["autodocs"],
     parameters: { layout: "centered" },
-  };
+  });
 </script>
 
-<Story name="default">
+<Story name="default" asChild>
   <Pending {pending} />
 </Story>

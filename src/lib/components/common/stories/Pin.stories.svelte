@@ -1,6 +1,6 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
-  import { action } from "@storybook/addon-actions";
+  import { action } from "storybook/actions";
 
   import Pin from "../Pin.svelte";
 
