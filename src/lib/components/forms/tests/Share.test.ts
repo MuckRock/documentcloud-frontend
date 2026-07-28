@@ -4,7 +4,7 @@ import { userEvent } from "@testing-library/user-event";
 
 import Share from "../Share.svelte";
 
-import type { Document } from "$lib/api/types";
+import type { Access, Document } from "$lib/api/types";
 import documentFixture from "@/test/fixtures/documents/document-expanded.json";
 import {
   canonicalPageUrl,
@@ -95,5 +95,91 @@ describe("Share", () => {
     expect(docWithoutNotes.notes).toEqual([]);
     render(Share, { document: docWithoutNotes });
     expect(screen.getByText("Note")).toBeDisabled();
+  });
+
+  describe("access warnings", () => {
+    /** Replace the document's notes with a single note at `access` */
+    function withNote(access: Access, edit_access = false): Document {
+      const note = { ...document.notes![0]!, access, edit_access };
+      return { ...document, notes: [note] };
+    }
+
+    it("warns about the document, not the note, off the note tab", () => {
+      render(Share, { document: { ...document, access: "private" } });
+
+      expect(screen.getByText("This document is private.")).toBeInTheDocument();
+    });
+
+    it("warns about a restricted note on the note tab", async () => {
+      const user = userEvent.setup();
+      render(Share, { document: withNote("private") });
+
+      // the document itself is public, so nothing to warn about yet
+      expect(
+        screen.queryByText("This note is private."),
+      ).not.toBeInTheDocument();
+
+      await user.click(screen.getByText("Note"));
+
+      expect(screen.getByText("This note is private.")).toBeInTheDocument();
+    });
+
+    it("describes note organization access as edit access, not org membership", async () => {
+      const user = userEvent.setup();
+      render(Share, { document: withNote("organization") });
+      await user.click(screen.getByText("Note"));
+
+      expect(
+        screen.getByText(
+          "This note is only visible to people who can edit this document.",
+        ),
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByText(
+          "This note is only visible within your organization.",
+        ),
+      ).not.toBeInTheDocument();
+    });
+
+    it("warns about the document when it is more restrictive than the note", async () => {
+      const user = userEvent.setup();
+      const doc = { ...withNote("organization"), access: "private" as Access };
+      render(Share, { document: doc });
+      await user.click(screen.getByText("Note"));
+
+      expect(screen.getByText("This document is private.")).toBeInTheDocument();
+    });
+
+    it("offers a fix when the note is editable, even if the document isn't", async () => {
+      const user = userEvent.setup();
+      expect(document.edit_access).toBe(false);
+
+      render(Share, { document: withNote("private", true) });
+      await user.click(screen.getByText("Note"));
+
+      expect(screen.getByText("Make public")).toBeInTheDocument();
+    });
+
+    it("hides the fix when the note is not editable", async () => {
+      const user = userEvent.setup();
+      render(Share, { document: withNote("private", false) });
+      await user.click(screen.getByText("Note"));
+
+      expect(screen.queryByText("Make public")).not.toBeInTheDocument();
+    });
+
+    it("titles the edit modal for the note, not the document", async () => {
+      const user = userEvent.setup();
+      render(Share, { document: withNote("private", true) });
+      await user.click(screen.getByText("Note"));
+      await user.click(screen.getByText("Make public"));
+
+      expect(screen.getByText("Change note access")).toBeInTheDocument();
+      expect(
+        screen.queryByText("Change document access"),
+      ).not.toBeInTheDocument();
+      // note-specific level labels, same underlying values
+      expect(screen.getByText("Collaborators")).toBeInTheDocument();
+    });
   });
 });

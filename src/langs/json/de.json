@@ -194,6 +194,9 @@
     "selectDocuments": "Dokumente auswählen",
     "signedOut": "Sie müssen sich <a href=\"{href}\">anmelden</a>, bevor Sie dieses Add-On ausführen können."
   },
+  "share": {
+    "noteOrgWarning": "Diese Notiz ist nur für Personen sichtbar, die dieses Dokument bearbeiten können."
+  },
   "processing": {
     "document": "Dieses Dokument wird verarbeitet. Einige Funktionen sind möglicherweise noch nicht verfügbar."
   }

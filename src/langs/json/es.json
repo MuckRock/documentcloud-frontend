@@ -580,7 +580,13 @@
     "customize": "Personalizar el enlace",
     "privateWarning": "Esta {type} es privada.",
     "orgWarning": "Esto es solo visible dentro de su organizaci\u00f3n.",
+    "noteOrgWarning": "Esta nota solo es visible para quienes pueden editar este documento.",
     "privateFix": "Editar metadatos",
+    "types": {
+      "document": "documento",
+      "note": "nota",
+      "project": "proyecto"
+    },
     "fields": {
       "page": "Elegir p\u00e1gina",
       "note": "Selecione una nota"

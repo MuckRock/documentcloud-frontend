@@ -579,7 +579,13 @@
     "customize": "Personnaliser l'embed",
     "privateWarning": "Ce {type} est priv\u00e9.",
     "orgWarning": "Ceci est {type}. Il n'est pas accessible que dans votre organisation.",
+    "noteOrgWarning": "Cette note n'est accessible qu'aux personnes pouvant modifier ce document.",
     "privateFix": "Modifier les m\u00e9tadonn\u00e9es",
+    "types": {
+      "document": "document",
+      "note": "note",
+      "project": "projet"
+    },
     "fields": {
       "page": "Choisir page",
       "note": "Pouvez-vous prendre note"

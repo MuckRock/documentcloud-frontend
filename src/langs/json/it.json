@@ -579,7 +579,13 @@
     "customize": "Personalizzare l'embed",
     "privateWarning": "Questa {type} \u00e8 privata.",
     "orgWarning": "Questo {type} \u00e8 visibile solo all'interno della tua organizzazione.",
+    "noteOrgWarning": "Questa nota \u00e8 visibile solo a chi pu\u00f2 modificare questo documento.",
     "privateFix": "Cambia metadati",
+    "types": {
+      "document": "documento",
+      "note": "nota",
+      "project": "progetto"
+    },
     "fields": {
       "page": "Pessa pagina",
       "note": "Nota scelta"

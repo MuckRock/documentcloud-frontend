@@ -681,7 +681,13 @@
     "customize": "Customize Embed",
     "privateWarning": "This {type} is private.",
     "orgWarning": "This {type} is only visible within your organization.",
+    "noteOrgWarning": "This note is only visible to people who can edit this document.",
     "privateFix": "Make public",
+    "types": {
+      "document": "document",
+      "note": "note",
+      "project": "project"
+    },
     "fields": {
       "page": "Pick page",
       "note": "Pick note"

@@ -1,5 +1,5 @@
 <script module lang="ts">
-  import type { Document } from "$lib/api/types";
+  import type { Access, Document } from "$lib/api/types";
 
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import Share from "../Share.svelte";
@@ -35,6 +35,16 @@
       document ID that exists here. The live embed will render in its place.
     </p>
 </div>`;
+
+  // Every note on the fixture is public, so restrict the first one — the one the
+  // note tab selects by default — to see the note access warnings.
+  function withNote(access: Access, edit_access = false): Document {
+    const [first, ...rest] = document.notes ?? [];
+    return {
+      ...document,
+      notes: [{ ...first!, access, edit_access }, ...rest],
+    };
+  }
 
   const { Story } = defineMeta({
     title: "Forms / Share",
@@ -100,3 +110,27 @@
 <Story name="Page" args={{ document, currentTab: "page" }} />
 
 <Story name="Note" args={{ document, currentTab: "note" }} />
+
+<Story
+  name="Private Note"
+  args={{ document: withNote("private"), currentTab: "note" }}
+/>
+
+<Story
+  name="Collaborators Note"
+  args={{ document: withNote("organization"), currentTab: "note" }}
+/>
+
+<Story
+  name="Private Note with Edit Access"
+  args={{ document: withNote("private", true), currentTab: "note" }}
+/>
+
+<!-- The note is public but the document isn't, so the document is what needs fixing. -->
+<Story
+  name="Public Note on a Private Document"
+  args={{
+    document: { ...withNote("public"), access: "private", edit_access: true },
+    currentTab: "note",
+  }}
+/>
