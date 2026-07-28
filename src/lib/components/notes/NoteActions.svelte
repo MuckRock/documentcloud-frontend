@@ -2,15 +2,10 @@
   import type { Document, Note } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
-  import {
-    Globe16,
-    Lock16,
-    Pencil16,
-    People16,
-    Share16,
-  } from "svelte-octicons";
+  import { Pencil16, Share16 } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
+  import { getLevel } from "$lib/utils/access";
   import { getViewerHref } from "$lib/utils/viewer";
 
   interface Props {
@@ -33,31 +28,14 @@
     getViewerHref({ document: doc, note, mode: "annotating" }),
   );
 
-  const access = {
-    private: {
-      value: $_("access.private.value"),
-      title: $_("access.private.title"),
-      icon: Lock16,
-    },
-    organization: {
-      value: $_("access.organization.value"),
-      title: $_("access.organization.title"),
-      icon: People16,
-    },
-    public: {
-      value: $_("access.public.value"),
-      title: $_("access.public.title"),
-      icon: Globe16,
-    },
-  };
-
-  const Icon = $derived(access[note.access].icon);
+  let level = $derived(getLevel(note.access, "note")!);
+  const Icon = $derived(level.icon);
 </script>
 
 <div class="actions">
   <span class="access {note.access}">
-    <Icon />
-    {$_(`access.${access[note.access].value}.title`)}
+    <Icon height="1rem" width="1rem" />
+    {$_(level.title)}
   </span>
   {#if canEdit}
     <Button ghost minW={false} mode="primary" size="small" href={edit_link}>

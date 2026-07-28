@@ -10,6 +10,23 @@
     "signUp": "Registrieren",
     "goToApp": "Zur App gehen"
   },
+  "access": {
+    "note": {
+      "private": {
+        "title": "Privat",
+        "description": "Die Notiz ist nur für Sie sichtbar"
+      },
+      "organization": {
+        "title": "Mitarbeitende",
+        "description": "Die Notiz ist für alle sichtbar, die dieses Dokument bearbeiten können"
+      },
+      "public": {
+        "title": "Öffentlich",
+        "description": "Die Notiz ist öffentlich für alle sichtbar"
+      }
+    },
+    "editNote": "Notizzugriff ändern"
+  },
   "appearanceDimension": {
     "responsive": "Automatisch (standardmäßig)",
     "fixed": "Fix"

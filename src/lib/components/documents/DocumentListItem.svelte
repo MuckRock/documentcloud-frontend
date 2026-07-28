@@ -11,12 +11,13 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
 
-  import DocAccess, { getLevel } from "../common/Access.svelte";
+  import DocAccess from "../common/Access.svelte";
   import KV from "../common/KV.svelte";
   import Thumbnail from "./Thumbnail.svelte";
 
   import { canonicalUrl, userOrgString } from "$lib/api/documents";
   import { canonicalUrl as projectUrl } from "$lib/api/projects";
+  import { getLevel } from "$lib/utils/access";
   import { searchUrl, kv } from "$lib/utils/search";
   import {
     defaultVisibleFields,

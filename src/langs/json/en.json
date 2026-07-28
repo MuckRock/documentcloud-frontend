@@ -37,21 +37,33 @@
   },
   "access": {
     "private": {
-      "value": "private",
       "title": "Private",
       "description": "Documents will only be visible to you"
     },
     "organization": {
-      "value": "organization",
       "title": "Organization",
       "description": "Documents will only be visible to your organization"
     },
     "public": {
-      "value": "public",
       "title": "Public",
       "description": "Documents will be publicly visible to everyone"
     },
-    "edit": "Change document access"
+    "note": {
+      "private": {
+        "title": "Private",
+        "description": "Note will only be visible to you"
+      },
+      "organization": {
+        "title": "Collaborators",
+        "description": "Note will be visible to anyone who can edit this document"
+      },
+      "public": {
+        "title": "Public",
+        "description": "Note will be publicly visible to everyone"
+      }
+    },
+    "edit": "Change document access",
+    "editNote": "Change note access"
   },
   "notfound": {
     "content": "Please try another URL"

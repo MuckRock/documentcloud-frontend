@@ -43,20 +43,32 @@
   },
   "access": {
     "private": {
-      "value": "private",
       "title": "Priv\u00e9",
       "description": "Les documents seront accessibles uniquement \u00e0 vous"
     },
     "organization": {
-      "value": "organization",
       "title": "Organisation",
       "description": "Documents seront accessibles uniquement \u00e0 votre organisation."
     },
     "public": {
-      "value": "public",
       "title": "Publique",
       "description": "Les documents seront accessibles \u00e0 tous publiquement."
-    }
+    },
+    "note": {
+      "private": {
+        "title": "Priv\u00e9",
+        "description": "La note sera accessible uniquement \u00e0 vous"
+      },
+      "organization": {
+        "title": "Collaborateurs",
+        "description": "La note sera accessible \u00e0 toute personne pouvant modifier ce document"
+      },
+      "public": {
+        "title": "Publique",
+        "description": "La note sera accessible \u00e0 tous publiquement"
+      }
+    },
+    "editNote": "Modifier l'acc\u00e8s \u00e0 la note"
   },
   "notfound": {
     "content": "Veuillez essayer une autre URL"

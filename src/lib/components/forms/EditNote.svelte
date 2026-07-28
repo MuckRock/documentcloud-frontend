@@ -167,7 +167,12 @@ Positioning and generating coordinates should happen outside of this form.
       <TextArea name="content" bind:value={content} />
     </Field>
 
-    <AccessLevel name="access" bind:selected={access} direction="row" />
+    <AccessLevel
+      name="access"
+      kind="note"
+      bind:selected={access}
+      direction="row"
+    />
 
     {#if error}
       <p class="error" role="alert">{error}</p>

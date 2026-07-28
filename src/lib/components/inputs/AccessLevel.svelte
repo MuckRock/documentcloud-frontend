@@ -1,58 +1,30 @@
-<script module lang="ts">
-  export interface Level {
-    value: Access;
-    title: string;
-    description: string;
-    icon: typeof SvgComponent;
-  }
-</script>
-
 <script lang="ts">
   import type { Access } from "$lib/api/types";
-  import {
-    Globe24,
-    Lock24,
-    Organization24,
-    type SvgComponent,
-  } from "svelte-octicons";
+  import type { AccessKind } from "$lib/utils/access";
+
   import { _ } from "svelte-i18n";
 
   import Flex from "../common/Flex.svelte";
-
-  export const levels: Level[] = [
-    {
-      value: $_("access.private.value") as Access,
-      title: $_("access.private.title"),
-      description: $_("access.private.description"),
-      icon: Lock24,
-    },
-    {
-      value: $_("access.organization.value") as Access,
-      title: $_("access.organization.title"),
-      description: $_("access.organization.description"),
-      icon: Organization24,
-    },
-    {
-      value: $_("access.public.value") as Access,
-      title: $_("access.public.title"),
-      description: $_("access.public.description"),
-      icon: Globe24,
-    },
-  ];
+  import { getLevels, VALUES } from "$lib/utils/access";
 
   interface Props {
     name: string;
     selected?: Access | null;
     direction?: "column" | "row";
     required?: boolean;
+    /** Notes label `organization` access as "Collaborators" */
+    kind?: AccessKind;
   }
 
   let {
     name,
-    selected = $bindable(levels[0]!.value),
+    selected = $bindable(VALUES[0]!),
     direction = "column",
     required = false,
+    kind = "document",
   }: Props = $props();
+
+  let levels = $derived(getLevels(kind));
 </script>
 
 <Flex direction="column">
@@ -68,8 +40,8 @@
           <Flex gap={0.5}>
             <level.icon />
             <Flex direction="column" gap={0.125}>
-              <p class="title">{level.title}</p>
-              <p class="description">{level.description}</p>
+              <p class="title">{$_(level.title)}</p>
+              <p class="description">{$_(level.description)}</p>
             </Flex>
           </Flex>
           <input

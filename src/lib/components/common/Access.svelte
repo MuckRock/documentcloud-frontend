@@ -1,36 +1,7 @@
-<script lang="ts" module>
-  import type { Access, Maybe } from "$lib/api/types";
-  import type { Level } from "$lib/components/inputs/AccessLevel.svelte";
-
-  import { Globe24, Lock24, Organization24 } from "svelte-octicons";
-
-  export const levels: Level[] = [
-    {
-      value: "private",
-      title: "access.private.title",
-      description: "access.private.description",
-      icon: Lock24,
-    },
-    {
-      value: "organization",
-      title: "access.organization.title",
-      description: "access.organization.description",
-      icon: Organization24,
-    },
-    {
-      value: "public",
-      title: "access.public.title",
-      description: "access.public.description",
-      icon: Globe24,
-    },
-  ];
-
-  export function getLevel(access: Access): Maybe<Level> {
-    return levels.find((level) => level.value === access);
-  }
-</script>
-
 <script lang="ts">
+  import type { Maybe } from "$lib/api/types";
+  import type { Level } from "$lib/utils/access";
+
   import { _ } from "svelte-i18n";
 
   interface Props {

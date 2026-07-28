@@ -9,13 +9,14 @@
 
   import { _ } from "svelte-i18n";
 
-  import Access, { getLevel } from "$lib/components/common/Access.svelte";
+  import Access from "$lib/components/common/Access.svelte";
   import Button from "../common/Button.svelte";
   import EditAccess from "../forms/EditAccess.svelte";
 
   import Modal from "../layouts/Modal.svelte";
   import Portal from "../layouts/Portal.svelte";
 
+  import { getLevel } from "$lib/utils/access";
   import { remToPx } from "$lib/utils/layout";
   import { clean } from "$lib/utils/markup";
   import { getCurrentUser } from "$lib/utils/permissions";
