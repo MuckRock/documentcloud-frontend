@@ -29,15 +29,12 @@ const SETTLE_MS = 2_500;
  */
 function pagesOffTarget(page: Page, n: number): Promise<number> {
   return page.evaluate((n) => {
-    const pages = document.querySelector(".pages");
-    if (!pages) throw new Error(".pages has not rendered");
-
     const el = document.getElementById(`document/p${n}`);
     const first = document.getElementById("document/p1");
     if (!el || !first) throw new Error(`page ${n} has not rendered`);
 
     // The viewer scrolls a wrapper around the pages, not the window.
-    let scroller = pages.parentElement;
+    let scroller = el.parentElement;
     while (scroller && scroller !== document.body) {
       if (/auto|scroll/.test(getComputedStyle(scroller).overflowY)) break;
       scroller = scroller.parentElement;
@@ -45,10 +42,11 @@ function pagesOffTarget(page: Page, n: number): Promise<number> {
     const scrollTop =
       scroller?.scrollTop ?? document.scrollingElement?.scrollTop ?? 0;
 
-    // A page plus the gap below it: the distance one page of error covers.
-    const pitch =
-      first.getBoundingClientRect().height +
-      parseFloat(getComputedStyle(pages).rowGap);
+    // A page plus the gap below it: the distance one page of error covers. Read
+    // it off whichever container holds the pages, so this works in text mode
+    // (`.textPages`) as well as document mode (`.pages`).
+    const gap = parseFloat(getComputedStyle(el.parentElement!).rowGap) || 0;
+    const pitch = first.getBoundingClientRect().height + gap;
 
     return (el.offsetTop - scrollTop) / pitch;
   }, n);
@@ -159,6 +157,58 @@ test.describe("deep linking on a wide screen", () => {
     const n = target(multiPageDoc.pageCount);
     await openAtPage(page, multiPageDoc.viewerUrl, n);
 
+    await expectAlignedTo(page, n);
+  });
+});
+
+test.describe("deep linking into text mode", () => {
+  // Text mode renders its pages behind a promise, so the target doesn't exist
+  // when the deep link fires. Wider than the other cases on purpose: a
+  // logged-in reading toolbar has more buttons, and below ~1440 it collapses
+  // the mode switcher into a dropdown whose links aren't clickable.
+  test.use({ viewport: { width: 1440, height: 900 } });
+
+  /** Text pages render as `<pre>` blocks once the text response arrives. */
+  const textRendered = (page: Page) =>
+    expect(page.locator("pre").first()).toBeVisible({ timeout: 30_000 });
+
+  /**
+   * A mode tab, by href. Their accessible name isn't the visible label (the
+   * octicon inside contributes to it), so `getByRole` doesn't find them, and the
+   * collapsed dropdown holds a hidden copy of each — hence `:visible`.
+   */
+  const modeTab = (page: Page, mode: string) =>
+    page.locator(`a[href*="mode=${mode}"]:visible`).first();
+
+  test("lands on the requested page", async ({ page, multiPageDoc }) => {
+    const n = target(multiPageDoc.pageCount);
+
+    await page.goto(`${multiPageDoc.viewerUrl}?mode=text#document/p${n}`);
+    await textRendered(page);
+    await page.waitForTimeout(SETTLE_MS);
+
+    await expectAlignedTo(page, n);
+  });
+
+  test("switching modes keeps your place", async ({ page, multiPageDoc }) => {
+    // Three loads, each waiting out the settle window.
+    test.setTimeout(120_000);
+
+    const n = target(multiPageDoc.pageCount);
+    await openAtPage(page, multiPageDoc.viewerUrl, n);
+    await expectAlignedTo(page, n);
+
+    // Mode links carry no page hash, so holding your place is up to the mode
+    // that mounts. Keeping the raw pixel offset isn't enough: text pages are a
+    // different height than PDF pages, so it lands on a different page.
+    await modeTab(page, "text").click();
+    await textRendered(page);
+    await page.waitForTimeout(SETTLE_MS);
+    await expectAlignedTo(page, n);
+
+    await modeTab(page, "document").click();
+    await expectPdfRendered(page);
+    await page.waitForTimeout(SETTLE_MS);
     await expectAlignedTo(page, n);
   });
 });
