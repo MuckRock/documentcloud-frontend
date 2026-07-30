@@ -19,6 +19,7 @@ layouts, stories, and tests.
 
   import { pageFromHash, pdfUrl, shouldPaginate } from "$lib/api/documents";
   import { noteFromHash } from "$lib/api/notes";
+  import { scrollToElement } from "$lib/utils/scroll";
 
   import { ViewerState, setViewerState } from "$lib/state/viewer.svelte";
 
@@ -97,9 +98,10 @@ layouts, stories, and tests.
         el = window?.document.getElementById(id);
       }
     }
-    // Scroll to the element, if it's available, and update the current page
+    // Scroll to the element, if it's available, and update the current page.
+    // `scrollToElement` holds it in view while the viewer finishes laying out.
     if (el && page) {
-      el.scrollIntoView();
+      scrollToElement(el);
       viewer.page = page;
     }
   }
