@@ -6,7 +6,7 @@
   let { data, children } = $props();
 
   onMount(async () => {
-    if (data.me) {
+    if (data.me && !window.plausible) {
       const { init } = await import("@plausible-analytics/tracker");
       init({
         domain: "documentcloud.org",
