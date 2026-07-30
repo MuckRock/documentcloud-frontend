@@ -41,7 +41,7 @@ export function scrollToId(id: string): void {
   if (el) return scrollToElement(el);
 
   if (typeof MutationObserver !== "function") {
-    return console.warn(`Missing page ${id}`);
+    return console.warn(`Missing scroll target ${id}`);
   }
 
   const observer = new MutationObserver(() => {
@@ -53,7 +53,7 @@ export function scrollToId(id: string): void {
 
   const timer = setTimeout(() => {
     stop();
-    console.warn(`Missing page ${id}`);
+    console.warn(`Missing scroll target ${id}`);
   }, APPEAR_TIMEOUT);
 
   function stop() {
@@ -82,7 +82,7 @@ export function scrollToId(id: string): void {
  *
  * @param el the element to scroll to
  */
-export function scrollToElement(el: HTMLElement): void {
+function scrollToElement(el: HTMLElement): void {
   el.scrollIntoView();
 
   // No frames to settle over in a non-visual environment (jsdom, SSR).

@@ -91,9 +91,9 @@ Selectable text can be rendered in one of two ways:
     canvas.width = Math.floor(viewport.width * dpr);
     canvas.height = Math.floor(viewport.height * dpr);
 
-    // The container is sized declaratively from `layoutWidth`, which already
-    // accounts for the zoom. Setting it here too would size a page only once it
-    // renders, which is the bug in the comment on `layoutWidth`.
+    // Don't set the container's `--width` here. It comes from `layoutWidth`,
+    // which already accounts for the zoom, and setting it on render too would
+    // size a page correctly only once pdf.js reaches it.
 
     // store the task, return the promise
     renderTask = page.render({

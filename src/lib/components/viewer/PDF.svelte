@@ -48,6 +48,10 @@
     if (!pdf) return;
     pdf
       .then((p) => {
+        // This is what holds your place when you switch into document mode:
+        // mode links carry no page hash, so nothing else scrolls here. On a
+        // fresh load `viewer.pdf` is still the placeholder promise at this
+        // point, and ViewerContext's afterNavigate does the scrolling instead.
         if (viewer.page > 1) {
           scrollToPage(viewer.page);
         }

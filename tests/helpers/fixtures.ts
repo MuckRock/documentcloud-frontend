@@ -1,6 +1,9 @@
 import { test as base } from "@playwright/test";
 
-import { STORAGE_STATE, baseURL } from "../../playwright.config";
+import {
+  STORAGE_STATE,
+  baseURL as configuredBaseURL,
+} from "../../playwright.config";
 import {
   deleteDocument,
   uniqueTitle,
@@ -40,7 +43,6 @@ interface WorkerFixtures {
 
 const FIXTURE = "tests/fixtures/Small pdf.pdf";
 const MULTIPAGE_FIXTURE = "tests/fixtures/the-nature-of-the-firm-CPEC11.pdf";
-const MULTIPAGE_PAGE_COUNT = 17;
 
 export const test = base.extend<Fixtures, WorkerFixtures>({
   processedDoc: async ({ page, baseURL }, use) => {
@@ -74,10 +76,12 @@ export const test = base.extend<Fixtures, WorkerFixtures>({
           id,
           docApiUrl,
           viewerUrl: `/documents/${id}-${processed.slug}/`,
-          pageCount: MULTIPAGE_PAGE_COUNT,
+          // Read off the processed document rather than hardcoded, so swapping
+          // the fixture can't leave tests deep linking past its last page.
+          pageCount: processed.page_count,
         });
 
-        await deleteDocument(page, docApiUrl, baseURL);
+        await deleteDocument(page, docApiUrl, configuredBaseURL);
       } finally {
         await context.close();
       }

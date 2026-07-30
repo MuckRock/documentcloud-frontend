@@ -7,7 +7,7 @@ import { expect } from "@playwright/test";
 // `Document` type so the status union etc. stay in sync.
 export type DocDetail = Pick<
   Document,
-  "id" | "slug" | "title" | "status" | "access" | "description"
+  "id" | "slug" | "title" | "status" | "access" | "description" | "page_count"
 >;
 
 /**

@@ -67,7 +67,7 @@ If these are unset, the auth setup is skipped and authenticated tests don't run.
 `helpers/fixtures.ts` extends Playwright's `test` with document fixtures. Import `test` and `expect` from here rather than `@playwright/test` to use them:
 
 - `processedDoc` — a freshly uploaded, fully processed single-page throwaway document, deleted in teardown. Test-scoped, so each test gets its own. Tests that assert on the title should upload their own instead, to control it.
-- `multiPageDoc` — the same, but the 17-page fixture, plus its `pageCount`. **Worker**-scoped: a multi-page upload is slow to process, so it's shared across the tests in a worker rather than re-uploaded per test. Worker fixtures can't use the test-scoped `page` or `baseURL`, so it drives a context of its own (from the exported `STORAGE_STATE` and `baseURL` in `playwright.config.ts`) and sets a longer fixture `timeout`.
+- `multiPageDoc` — the same, but the multi-page fixture, plus its `pageCount` (read off the processed document, so it can't drift from the file). **Worker**-scoped: a multi-page upload is slow to process, so it's shared across the tests in a worker rather than re-uploaded per test. Worker fixtures can't use the test-scoped `page` or `baseURL`, so it drives a context of its own (from the exported `STORAGE_STATE` and `baseURL` in `playwright.config.ts`) and sets a longer fixture `timeout`.
 
 `helpers/projects.ts`:
 
