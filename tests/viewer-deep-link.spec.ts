@@ -161,6 +161,59 @@ test.describe("deep linking on a wide screen", () => {
   });
 });
 
+test.describe("deep linking at a numeric zoom", () => {
+  // Fit-width is the default, and it sizes pages in CSS. A numeric zoom sizes
+  // them from the page dimensions instead, which is where the two could — and
+  // did — disagree about how big a page is.
+  test.use({ viewport: { width: 1280, height: 900 } });
+
+  for (const zoom of ["0.5", "2"]) {
+    test(`lands on the requested page at zoom ${zoom}`, async ({
+      page,
+      multiPageDoc,
+    }) => {
+      const n = target(multiPageDoc.pageCount);
+
+      await page.goto(`${multiPageDoc.viewerUrl}?zoom=${zoom}#document/p${n}`);
+      await expectPdfRendered(page);
+      await page.waitForTimeout(SETTLE_MS);
+
+      await expectAlignedTo(page, n);
+    });
+  }
+
+  test("sizes a page the same whether or not it has rendered", async ({
+    page,
+    multiPageDoc,
+  }) => {
+    // pdf.js only renders pages as they come into view, so at any moment most
+    // are still placeholders. If a placeholder is a different size than the
+    // rendered article, every page below it moves when pdf.js gets to it.
+    await page.goto(`${multiPageDoc.viewerUrl}?zoom=0.5`);
+    await expectPdfRendered(page);
+    await page.waitForTimeout(SETTLE_MS);
+
+    const sizes = await page.evaluate(() => {
+      const distinct = (loaded: boolean) => [
+        ...new Set(
+          [...document.querySelectorAll<HTMLElement>(".page-container")]
+            .filter((c) => (c.dataset.loaded === "true") === loaded)
+            .map((c) => {
+              const { width, height } = c.getBoundingClientRect();
+              return `${Math.round(width)}x${Math.round(height)}`;
+            }),
+        ),
+      ];
+      return { rendered: distinct(true), pending: distinct(false) };
+    });
+
+    // Every page in the fixture is 595x842, so each group holds one size.
+    expect(sizes.rendered, "no page has rendered yet").toHaveLength(1);
+    expect(sizes.pending, "every page has already rendered").toHaveLength(1);
+    expect(sizes.pending).toEqual(sizes.rendered);
+  });
+});
+
 test.describe("deep linking into text mode", () => {
   // Text mode renders its pages behind a promise, so the target doesn't exist
   // when the deep link fires. Wider than the other cases on purpose: a

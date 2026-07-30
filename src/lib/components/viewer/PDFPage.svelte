@@ -91,10 +91,9 @@ Selectable text can be rendered in one of two ways:
     canvas.width = Math.floor(viewport.width * dpr);
     canvas.height = Math.floor(viewport.height * dpr);
 
-    // set the container size, if using a numeric zoom
-    if (typeof scale === "number") {
-      container.style.setProperty("--width", Math.floor(viewport.width) + "px");
-    }
+    // The container is sized declaratively from `layoutWidth`, which already
+    // accounts for the zoom. Setting it here too would size a page only once it
+    // renders, which is the bug in the comment on `layoutWidth`.
 
     // store the task, return the promise
     renderTask = page.render({
@@ -218,6 +217,12 @@ Selectable text can be rendered in one of two ways:
   // Recomputed reactively when its inputs change; `onResize` also writes to
   // it directly to pick up window resizes, which don't emit a reactive signal.
   let numericScale = $derived(fitPage(width, height, container, scale));
+  // The box this page occupies, at the zoom it will render at. Sizing it from
+  // the intrinsic page width instead would lay every not-yet-rendered page out
+  // at 100% while rendered ones sit at the real zoom, so boxes — and everything
+  // below them — jump as pdf.js works through the document (#1203). Only used
+  // for numeric zoom; fit-width and fit-height size the container in CSS.
+  let layoutWidth = $derived(Math.floor(width * numericScale));
   // we need to wait on both promises to render on initial load
   $effect(() => {
     // Read `scale` synchronously so the effect tracks it as a dependency;
@@ -283,7 +288,7 @@ Selectable text can be rendered in one of two ways:
       class:debug
       style:--aspect={aspect}
       style:--scale-factor={numericScale.toFixed(2)}
-      style:--width="{width}px"
+      style:--width="{layoutWidth}px"
       style:--height="{height}px"
       data-loaded={loaded}
       onclick={checkForHighlightClick}
