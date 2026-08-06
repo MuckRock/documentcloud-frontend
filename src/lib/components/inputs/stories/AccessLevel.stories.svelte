@@ -15,3 +15,7 @@
 <Story name="Public" args={{ selected: "public" }} />
 <Story name="Row" args={{ selected: "private", direction: "row" }} />
 <Story name="Required" args={{ required: true, selected: null }} />
+<Story
+  name="Note"
+  args={{ kind: "note", selected: "organization", direction: "row" }}
+/>

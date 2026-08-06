@@ -3,9 +3,11 @@
 
   import { _ } from "svelte-i18n";
 
-  import Access, { getLevel } from "../common/Access.svelte";
+  import Access from "../common/Access.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
   import ProjectPin from "./ProjectPin.svelte";
+
+  import { getLevel } from "$lib/utils/access";
   import { remToPx } from "$lib/utils/layout";
   import { renderMarkdown } from "$lib/utils/markup";
 

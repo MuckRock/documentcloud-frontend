@@ -27,13 +27,14 @@
   import Modal from "../layouts/Modal.svelte";
   import Share from "../forms/Share.svelte";
 
-  import { width, height, isPageLevel } from "$lib/api/notes";
-  import { getViewerState } from "$lib/state/viewer.svelte";
+  import NoteActions from "./NoteActions.svelte";
   import NoteContent from "./NoteContent.svelte";
   import NoteExcerpt from "./NoteExcerpt.svelte";
-  import NoteActions from "./NoteActions.svelte";
-  import NoteTitle from "./NoteTitle.svelte";
   import NoteMetadata from "./NoteMetadata.svelte";
+  import NoteTitle from "./NoteTitle.svelte";
+
+  import { width, height, isPageLevel } from "$lib/api/notes";
+  import { getViewerState } from "$lib/state/viewer.svelte";
 
   const viewer = getViewerState();
 

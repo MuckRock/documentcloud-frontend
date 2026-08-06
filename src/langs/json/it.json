@@ -28,20 +28,32 @@
   },
   "access": {
     "private": {
-      "value": "private",
       "title": "Privato",
       "description": "Documenti solo saranno visibili per te"
     },
     "organization": {
-      "value": "organization",
       "title": "Organizzazione",
       "description": "Documenti visibili solo per la tua organizzazione"
     },
     "public": {
-      "value": "public",
       "title": "Pubblico",
       "description": "Documenti saranno visibili pubblicamente a tutti"
-    }
+    },
+    "note": {
+      "private": {
+        "title": "Privato",
+        "description": "La nota sar\u00e0 visibile solo a te"
+      },
+      "organization": {
+        "title": "Collaboratori",
+        "description": "La nota sar\u00e0 visibile a chiunque possa modificare questo documento"
+      },
+      "public": {
+        "title": "Pubblico",
+        "description": "La nota sar\u00e0 visibile pubblicamente a tutti"
+      }
+    },
+    "editNote": "Cambia l'accesso alla nota"
   },
   "notfound": {
     "content": "Perci\u00f2 prova un altro indirizzo URL."
@@ -567,7 +579,13 @@
     "customize": "Personalizzare l'embed",
     "privateWarning": "Questa {type} \u00e8 privata.",
     "orgWarning": "Questo {type} \u00e8 visibile solo all'interno della tua organizzazione.",
+    "noteOrgWarning": "Questa nota \u00e8 visibile solo a chi pu\u00f2 modificare questo documento.",
     "privateFix": "Cambia metadati",
+    "types": {
+      "document": "documento",
+      "note": "nota",
+      "project": "progetto"
+    },
     "fields": {
       "page": "Pessa pagina",
       "note": "Nota scelta"

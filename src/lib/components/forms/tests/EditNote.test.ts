@@ -179,6 +179,20 @@ describe("EditNote", () => {
     );
   });
 
+  it("labels organization access for notes, not documents", () => {
+    render(EditNote, { document: mockDocument });
+
+    // Same `organization` value, note-specific wording.
+    expect(screen.getByText("Collaborators")).toBeInTheDocument();
+    expect(screen.queryByText("Organization")).not.toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Note will be visible to anyone who can edit this document",
+      ),
+    ).toBeInTheDocument();
+    expect(screen.getByDisplayValue("organization")).toBeInTheDocument();
+  });
+
   it("submits the selected access level", async () => {
     vi.mocked(notesApi.create).mockResolvedValue({ data: noteFixture });
 

@@ -1,10 +1,17 @@
 <script module lang="ts">
-  import type { Document } from "$lib/api/types";
+  import type { Access, Document, Note } from "$lib/api/types";
 
   interface NoteOption {
     value: string | number;
     label: string;
   }
+
+  /** How restrictive each access level is, most permissive first */
+  const RESTRICTION: Record<Access, number> = {
+    public: 0,
+    organization: 1,
+    private: 2,
+  };
 </script>
 
 <script lang="ts">
@@ -36,6 +43,7 @@
   import Portal from "$lib/components/layouts/Portal.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
   import EditAccess from "$lib/components/forms/EditAccess.svelte";
+  import EditNoteAccess from "$lib/components/forms/EditNoteAccess.svelte";
 
   import {
     canonicalPageUrl,
@@ -81,9 +89,47 @@
   let customizeEmbedOpen = $state(false);
   let editOpen = $state(false);
 
+  // `document.notes` doesn't hear about our own note edits, so track them here
+  // the way the `edited` store tracks document edits.
+  let noteEdits: Record<string, Access> = $state({});
+
   let access = $derived(
     $edited.get(String(document.id))?.access ?? document.access,
   );
+  let noteAccess = $derived(
+    note ? (noteEdits[String(note.id)] ?? note.access) : undefined,
+  );
+
+  /**
+   * Which resource the access warning is about.
+   *
+   * A note embed is only as visible as the more restrictive of the note and
+   * the document it lives on, so on the note tab we warn about whichever that
+   * is. Fixing it surfaces the other one, if there is one.
+   */
+  let warning = $derived.by(() => {
+    if (
+      currentTab === "note" &&
+      note &&
+      noteAccess &&
+      RESTRICTION[noteAccess] >= RESTRICTION[access]
+    ) {
+      return {
+        kind: "note" as const,
+        access: noteAccess,
+        canEdit: Boolean(note.edit_access),
+      };
+    }
+
+    return {
+      kind: "document" as const,
+      access,
+      canEdit: Boolean(document.edit_access),
+    };
+  });
+
+  // captured when the modal opens so switching tabs behind it can't swap forms
+  let editTarget: "document" | "note" = $state("document");
   let embedUrlParams = $derived(createEmbedSearchParams($embedSettings));
 
   // permalink, embed src, and iframe snippet for the selected tab
@@ -138,20 +184,27 @@
   }
 
   function openEditing() {
+    editTarget = warning.kind;
     editOpen = true;
+  }
+
+  function onNoteUpdated(updated: Note) {
+    noteEdits[String(updated.id)] = updated.access;
   }
 </script>
 
 <div class="container">
-  {#if access === "private"}
+  {#if warning.access === "private"}
     <div class="banner">
       <Tip mode="danger">
         {#snippet icon()}<ShieldLock24 />{/snippet}
         <div class="privateWarning">
           <div style:flex="1 1 auto">
-            {$_("share.privateWarning", { values: { type: "document" } })}
+            {$_("share.privateWarning", {
+              values: { type: $_(`share.types.${warning.kind}`) },
+            })}
           </div>
-          {#if document.edit_access}
+          {#if warning.canEdit}
             <Button mode="danger" size="small" onclick={openEditing}>
               {$_("share.privateFix")}
             </Button>
@@ -159,15 +212,20 @@
         </div>
       </Tip>
     </div>
-  {:else if access === "organization"}
+  {:else if warning.access === "organization"}
     <div class="banner">
       <Tip mode="premium">
         {#snippet icon()}<Organization24 />{/snippet}
         <div class="privateWarning">
           <div style:flex="1 1 auto">
-            {$_("share.orgWarning", { values: { type: "document" } })}
+            <!-- "your organization" is wrong for a note: it's whoever can edit the document -->
+            {warning.kind === "note"
+              ? $_("share.noteOrgWarning")
+              : $_("share.orgWarning", {
+                  values: { type: $_("share.types.document") },
+                })}
           </div>
-          {#if document.edit_access}
+          {#if warning.canEdit}
             <Button mode="danger" size="small" onclick={openEditing}>
               {$_("share.privateFix")}
             </Button>
@@ -310,9 +368,20 @@
   <Portal>
     <Modal onclose={closeEditing}>
       {#snippet title()}
-        <h1>{$_("access.edit")}</h1>
+        <h1>
+          {editTarget === "note" ? $_("access.editNote") : $_("access.edit")}
+        </h1>
       {/snippet}
-      <EditAccess {document} onclose={closeEditing} />
+      {#if editTarget === "note" && note}
+        <EditNoteAccess
+          {document}
+          {note}
+          onclose={closeEditing}
+          onsuccess={onNoteUpdated}
+        />
+      {:else}
+        <EditAccess {document} onclose={closeEditing} />
+      {/if}
     </Modal>
   </Portal>
 {/if}

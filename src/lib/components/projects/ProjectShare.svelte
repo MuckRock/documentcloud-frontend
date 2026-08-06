@@ -49,7 +49,9 @@
           {#snippet icon()}<ShieldLock24 />{/snippet}
           <div class="privateWarning">
             <div style:flex="1 1 auto">
-              {$_("share.privateWarning", { values: { type: "project" } })}
+              {$_("share.privateWarning", {
+                values: { type: $_("share.types.project") },
+              })}
             </div>
             {#if project.edit_access}
               <Button mode="danger" size="small" onclick={openEditing}>

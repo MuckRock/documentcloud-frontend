@@ -28,20 +28,32 @@
   },
   "access": {
     "private": {
-      "value": "private",
       "title": "Seguro",
       "description": "Los documentos solo estar\u00e1n visibles para ti"
     },
     "organization": {
-      "value": "organization",
       "title": "Organizaci\u00f3n",
       "description": "Los documentos solo ser\u00e1n visibles para tu organizaci\u00f3n."
     },
     "public": {
-      "value": "public",
       "title": "P\u00fablico",
       "description": "Los documentos ser\u00e1n p\u00fablicos y visibles para todos"
-    }
+    },
+    "note": {
+      "private": {
+        "title": "Privado",
+        "description": "La nota solo ser\u00e1 visible para ti"
+      },
+      "organization": {
+        "title": "Colaboradores",
+        "description": "La nota ser\u00e1 visible para cualquiera que pueda editar este documento"
+      },
+      "public": {
+        "title": "P\u00fablico",
+        "description": "La nota ser\u00e1 p\u00fablica y visible para todos"
+      }
+    },
+    "editNote": "Cambiar el acceso a la nota"
   },
   "notfound": {
     "content": "Por favor intenta otro enlace"
@@ -568,7 +580,13 @@
     "customize": "Personalizar el enlace",
     "privateWarning": "Esta {type} es privada.",
     "orgWarning": "Esto es solo visible dentro de su organizaci\u00f3n.",
+    "noteOrgWarning": "Esta nota solo es visible para quienes pueden editar este documento.",
     "privateFix": "Editar metadatos",
+    "types": {
+      "document": "documento",
+      "note": "nota",
+      "project": "proyecto"
+    },
     "fields": {
       "page": "Elegir p\u00e1gina",
       "note": "Selecione una nota"
