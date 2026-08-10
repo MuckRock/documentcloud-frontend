@@ -84,7 +84,7 @@ describe("embed utilities", () => {
 
     for (const [original, rewritten] of paths) {
       const url = new URL(original, "https://www.documentcloud.org");
-      expect(reroute({ url })).toEqual(rewritten);
+      expect(reroute({ url, fetch: globalThis.fetch })).toEqual(rewritten);
     }
   });
 });

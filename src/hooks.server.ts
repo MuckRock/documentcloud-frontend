@@ -1,5 +1,5 @@
 // https://kit.svelte.dev/docs/hooks#server-hooks
-import type { Handle } from "@sveltejs/kit";
+import type { Handle, HandleFetch } from "@sveltejs/kit";
 
 import { env } from "$env/dynamic/private";
 
@@ -9,8 +9,7 @@ import { sequence } from "@sveltejs/kit/hooks";
 import { DC_BASE } from "./config/config.js";
 import { log } from "$lib/utils/logging";
 
-/** @type {import('@sveltejs/kit').HandleFetch} */
-export async function handleFetch({ event, request, fetch }) {
+export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
   if (request.url.startsWith(DC_BASE)) {
     // handle docker issues
     event.url.protocol = "https";
@@ -28,10 +27,9 @@ export async function handleFetch({ event, request, fetch }) {
   }
 
   return fetch(request);
-}
+};
 
-/** @type {import('@sveltejs/kit').Handle} */
-async function language({ event, resolve }) {
+const language: Handle = async ({ event, resolve }) => {
   const lang =
     event.request.headers.get("accept-language")?.split(",")[0] ?? "en";
 
@@ -45,15 +43,14 @@ async function language({ event, resolve }) {
   return resolve(event, {
     transformPageChunk: ({ html }) => html.replace("%lang%", lang),
   });
-}
+};
 
-/** @type {import('@sveltejs/kit').Handle} */
-async function logRequest({ event, resolve }) {
+const logRequest: Handle = async ({ event, resolve }) => {
   const response = await resolve(event);
 
   // logging happens after the response is generated
   log(event, response);
   return response;
-}
+};
 
 export const handle: Handle = sequence(language, logRequest);
