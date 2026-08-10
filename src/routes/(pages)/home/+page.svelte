@@ -40,11 +40,13 @@
   });
 
   onMount(async () => {
-    const { init } = await import("@plausible-analytics/tracker");
-    init({
-      domain: "documentcloud.org",
-      autoCapturePageviews: true,
-    });
+    if (!window.plausible) {
+      const { init } = await import("@plausible-analytics/tracker");
+      init({
+        domain: "documentcloud.org",
+        autoCapturePageviews: true,
+      });
+    }
   });
 
   /* Handle search submission */
