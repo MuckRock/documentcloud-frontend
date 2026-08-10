@@ -1,12 +1,7 @@
 <!-- Assumes its a child of ViewerContext -->
 <script module lang="ts">
   type Action =
-    | "share"
-    | "edit"
-    | "revisions"
-    | "reprocess"
-    | "delete"
-    | "change_owner";
+    "share" | "edit" | "revisions" | "reprocess" | "delete" | "change_owner";
 </script>
 
 <script lang="ts">

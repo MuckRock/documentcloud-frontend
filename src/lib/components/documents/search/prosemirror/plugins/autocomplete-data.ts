@@ -11,10 +11,7 @@ import { search as searchDocuments } from "$lib/api/documents";
 
 /** How a field selection is inserted into the editor. */
 export type InsertBehavior =
-  | "field-value-atom"
-  | "sort-atom"
-  | "range-atom"
-  | "text";
+  "field-value-atom" | "sort-atom" | "range-atom" | "text";
 
 export interface FieldDef {
   name: string;

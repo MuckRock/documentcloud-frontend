@@ -392,11 +392,7 @@ export interface AddOn {
 }
 
 export type RunStatus =
-  | "success"
-  | "failure"
-  | "queued"
-  | "in_progress"
-  | "cancelled";
+  "success" | "failure" | "queued" | "in_progress" | "cancelled";
 
 // https://api.www.documentcloud.org/api/addon_runs/?expand=addon
 export interface Run {
