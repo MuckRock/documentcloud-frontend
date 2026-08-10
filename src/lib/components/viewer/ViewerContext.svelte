@@ -19,6 +19,7 @@ layouts, stories, and tests.
 
   import { pageFromHash, pdfUrl, shouldPaginate } from "$lib/api/documents";
   import { noteFromHash } from "$lib/api/notes";
+  import { scrollToId } from "$lib/utils/scroll";
 
   import { ViewerState, setViewerState } from "$lib/state/viewer.svelte";
 
@@ -90,18 +91,13 @@ layouts, stories, and tests.
 
   function scrollToHash(hash?: string) {
     const page: Nullable<number> = hash ? pageFromHash(hash) : null;
-    let el: Maybe<Nullable<HTMLElement>>;
-    if (hash) {
-      const id = hash.split("#")[1];
-      if (id) {
-        el = window?.document.getElementById(id);
-      }
-    }
-    // Scroll to the element, if it's available, and update the current page
-    if (el && page) {
-      el.scrollIntoView();
-      viewer.page = page;
-    }
+    const id = hash?.split("#")[1];
+    if (!id || !page) return;
+
+    viewer.page = page;
+    // `scrollToId` waits for the target to render if it hasn't yet, then holds
+    // it in view while the viewer finishes laying out.
+    scrollToId(id);
   }
 
   function onHashChange() {

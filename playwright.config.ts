@@ -10,7 +10,9 @@ dotenv.config({
 });
 
 // The site under test. CI (deploy previews) sets URL to the preview target.
-const baseURL = process.env.URL || "https://www.dev.documentcloud.org";
+// Exported for worker-scoped fixtures, which can't depend on Playwright's
+// test-scoped `baseURL`.
+export const baseURL = process.env.URL || "https://www.dev.documentcloud.org";
 
 // Where the logged-in browser session is persisted by the auth setup project.
 export const STORAGE_STATE = "playwright/.auth/user.json";

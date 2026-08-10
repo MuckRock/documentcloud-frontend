@@ -14,14 +14,11 @@
   import PdfPage from "./PDFPage.svelte";
 
   import { scrollToPage } from "$lib/utils/scroll";
-  import { remToPx } from "$lib/utils/layout";
   import { getSections, pageSizes, zoomToScale } from "$lib/utils/viewer";
   import { getViewerState } from "$lib/state/viewer.svelte";
   import Error from "../common/Error.svelte";
 
   const viewer = getViewerState();
-
-  let width: number = $state(800);
 
   let document = $derived(viewer.document!);
   let scale = $derived(zoomToScale(viewer.zoom));
@@ -51,6 +48,10 @@
     if (!pdf) return;
     pdf
       .then((p) => {
+        // This is what holds your place when you switch into document mode:
+        // mode links carry no page hash, so nothing else scrolls here. On a
+        // fresh load `viewer.pdf` is still the placeholder promise at this
+        // point, and ViewerContext's afterNavigate does the scrolling instead.
         if (viewer.page > 1) {
           scrollToPage(viewer.page);
         }
@@ -72,27 +73,35 @@
     {/each}
   </Error>
 {:else}
-  <div
-    class="pages"
-    bind:clientWidth={width}
-    class:sm={width < remToPx(35)}
-    class:lg={width > remToPx(70)}
-  >
-    {#if browser}
-      {#each sizes as [width, height], n}
-        {@const page_number = n + 1}
-        {#if sections[n]}
-          <h3 class="section">
-            {sections[n].title}
-          </h3>
-        {/if}
-        <PdfPage {page_number} {scale} {width} {height} />
-      {/each}
-    {/if}
+  <!--
+    Page spacing scales with the width of the viewer (the window minus any open
+    sidebars), not the window. Container queries against this wrapper resolve
+    during the first layout, so pages are never laid out at one spacing and then
+    resized — which would shift every page below the change (#1203).
+  -->
+  <div class="sizer">
+    <div class="pages">
+      {#if browser}
+        {#each sizes as [width, height], n}
+          {@const page_number = n + 1}
+          {#if sections[n]}
+            <h3 class="section">
+              {sections[n].title}
+            </h3>
+          {/if}
+          <PdfPage {page_number} {scale} {width} {height} />
+        {/each}
+      {/if}
+    </div>
   </div>
 {/if}
 
 <style>
+  /* An element can't respond to its own size, so `.pages` queries this. */
+  .sizer {
+    container-type: inline-size;
+    width: 100%;
+  }
   .pages {
     display: flex;
     flex-direction: column;
@@ -103,13 +112,17 @@
     overflow-x: auto;
     overflow-y: hidden;
   }
-  .sm.pages {
-    padding: 1.5rem;
-    gap: 0.75rem;
+  @container (width < 35rem) {
+    .pages {
+      padding: 1.5rem;
+      gap: 0.75rem;
+    }
   }
-  .lg.pages {
-    padding: 4.5rem;
-    gap: 2.25rem;
+  @container (width > 70rem) {
+    .pages {
+      padding: 4.5rem;
+      gap: 2.25rem;
+    }
   }
   .section {
     color: var(--gray-4);
