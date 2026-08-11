@@ -32,7 +32,10 @@ Must be a child of a ViewerContext
     {/if}
     <select name="zoom" bind:value={viewer.zoom}>
       {#each zoomLevels as [value, label]}
-        <option {value}>{$_(label)}</option>
+        <option {value}>
+          {$_(label)}
+          {#if value === "auto"}({Math.round(viewer.autoZoomScale * 100)}%){/if}
+        </option>
       {/each}
     </select>
   </label>

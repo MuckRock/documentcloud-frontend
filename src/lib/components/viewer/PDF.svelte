@@ -14,15 +14,14 @@
   import PdfPage from "./PDFPage.svelte";
 
   import { scrollToPage } from "$lib/utils/scroll";
-  import { getSections, pageSizes, zoomToScale } from "$lib/utils/viewer";
+  import { getSections } from "$lib/utils/viewer";
   import { getViewerState } from "$lib/state/viewer.svelte";
   import Error from "../common/Error.svelte";
 
   const viewer = getViewerState();
 
   let document = $derived(viewer.document!);
-  let scale = $derived(zoomToScale(viewer.zoom));
-  let sizes = $derived(document.page_spec ? pageSizes(document.page_spec) : []);
+  let sizes = $derived(viewer.pageSizes);
   let sections = $derived(getSections(document));
 
   // handle missing page_spec
@@ -81,17 +80,23 @@
   -->
   <div class="sizer">
     <div class="pages">
-      {#if browser}
-        {#each sizes as [width, height], n}
-          {@const page_number = n + 1}
-          {#if sections[n]}
-            <h3 class="section">
-              {sections[n].title}
-            </h3>
-          {/if}
-          <PdfPage {page_number} {scale} {width} {height} />
-        {/each}
-      {/if}
+      <div
+        class="inner"
+        style:--scale-factor={viewer.scale.toFixed(2)}
+        bind:clientWidth={viewer.width}
+      >
+        {#if browser}
+          {#each sizes as [width, height], n}
+            {@const page_number = n + 1}
+            {#if sections[n]}
+              <h3 class="section">
+                {sections[n].title}
+              </h3>
+            {/if}
+            <PdfPage {page_number} {width} {height} />
+          {/each}
+        {/if}
+      </div>
     </div>
   </div>
 {/if}
@@ -103,24 +108,31 @@
     width: 100%;
   }
   .pages {
+    padding: 3rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    width: 100%;
+  }
+  .inner {
     display: flex;
     flex-direction: column;
     margin: 0 auto;
-    padding: 3rem;
     gap: 1.5rem;
     width: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
   }
   @container (width < 35rem) {
     .pages {
       padding: 1.5rem;
+    }
+    .inner {
       gap: 0.75rem;
     }
   }
   @container (width > 70rem) {
     .pages {
       padding: 4.5rem;
+    }
+    .inner {
       gap: 2.25rem;
     }
   }

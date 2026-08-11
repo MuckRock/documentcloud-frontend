@@ -55,28 +55,6 @@ export function getViewerHref(options: ViewerHrefOptions = {}) {
 }
 
 /**
- * Return a numeric scale based on intrinsic page size and container size
- * @param width Original document width
- * @param height Original document height
- * @param container
- * @param scale
- */
-export function fitPage(
-  width: number,
-  height: number,
-  container: HTMLElement | undefined,
-  scale: number | "width" | "height",
-): number {
-  if (typeof scale === "number") return scale;
-  if (!container) return 1;
-
-  // const [x1, y1, width, height] = page.view;
-  const { clientWidth, clientHeight } = container;
-
-  return scale === "width" ? clientWidth / width : clientHeight / height;
-}
-
-/**
  * Parse page_spec into width and height of each page
  *
  * @param pageSpec A string encoding page dimensions in a compact format
@@ -141,15 +119,6 @@ export function sortedSections(document: Document): Section[] {
   );
 }
 
-// for typescript
-export function zoomToScale(zoom: any): number | "width" | "height" {
-  if (zoom === "width" || zoom === "height") {
-    return zoom;
-  }
-
-  return +zoom || 1;
-}
-
 export function zoomToSize(zoom: any): Sizes {
   if (IMAGE_WIDTHS_MAP.has(zoom)) {
     return zoom;
@@ -165,13 +134,13 @@ export function zoomToSize(zoom: any): Sizes {
 export function getDefaultZoom(mode: ViewerMode): Zoom {
   switch (mode) {
     case "document":
-      return "width";
+      return "auto";
 
     case "annotating":
-      return "width";
+      return "auto";
 
     case "redacting":
-      return "width";
+      return "auto";
 
     case "grid":
       return "small";
@@ -190,8 +159,7 @@ export function getZoomLevels(mode: ViewerMode): ZoomLevels {
     case "annotating":
     case "redacting":
       return [
-        ["width", "zoom.fitWidth"],
-        ["height", "zoom.fitHeight"],
+        ["auto", "zoom.auto"],
         [0.5, "50%"],
         [0.75, "75%"],
         [1, "100%"],

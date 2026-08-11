@@ -23,7 +23,7 @@ export type WriteMode = "redacting" | "annotating";
 
 export type ViewerMode = ReadMode | WriteMode;
 
-export type Zoom = number | Sizes | "width" | "height";
+export type Zoom = number | Sizes | "auto";
 
 export type ZoomLevels = [string | number, string][];
 

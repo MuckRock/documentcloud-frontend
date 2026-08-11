@@ -21,8 +21,6 @@ Must be a child of a ViewerContext
 
   interface Props {
     page_number: number;
-    wide?: boolean;
-    tall?: boolean;
     track?: boolean | "once";
     width?: number | undefined;
     title?: Snippet;
@@ -32,8 +30,6 @@ Must be a child of a ViewerContext
 
   let {
     page_number,
-    wide = false,
-    tall = false,
     track = false,
     width = $bindable(undefined),
     title,
@@ -123,14 +119,7 @@ Must be a child of a ViewerContext
   });
 </script>
 
-<div
-  {id}
-  bind:this={container}
-  bind:clientWidth={width}
-  class="page"
-  class:wide
-  class:tall
->
+<div {id} bind:this={container} bind:clientWidth={width} class="page">
   <div class="title">{@render title?.()}</div>
   <header>
     <h4 class="pageNumber">
@@ -156,10 +145,6 @@ Must be a child of a ViewerContext
     position: relative;
     max-width: 100%;
     scroll-margin-top: 6rem;
-  }
-
-  .page.wide {
-    width: 100%;
   }
 
   header {

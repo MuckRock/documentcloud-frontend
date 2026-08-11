@@ -28,13 +28,12 @@ Selectable text can be rendered in one of two ways:
   import { isPageLevel } from "$lib/api/notes";
   import { getViewerState } from "$lib/state/viewer.svelte";
   import { getQuery } from "$lib/utils/search";
-  import { fitPage, getNotes } from "$lib/utils/viewer";
+  import { getNotes } from "$lib/utils/viewer";
 
   const viewer = getViewerState();
 
   interface Props {
     page_number: number; // 1-indexed
-    scale: number | "width" | "height";
     width: number;
     height: number;
     text?: TextPosition[];
@@ -45,7 +44,6 @@ Selectable text can be rendered in one of two ways:
 
   let {
     page_number,
-    scale,
     width = $bindable(),
     height = $bindable(),
     text = [],
@@ -66,11 +64,12 @@ Selectable text can be rendered in one of two ways:
   // visibility, for loading optimization
   let visible: boolean = $state(false);
 
+  // global document scale
+  let scale = $derived(viewer.scale);
+
   async function render(
     page, // pdf.getPage
     canvas: Maybe<HTMLCanvasElement>,
-    container: Maybe<HTMLElement>,
-    scale: number | "width" | "height",
   ) {
     // only one render task at a time;
     if (renderTask) {
@@ -78,11 +77,10 @@ Selectable text can be rendered in one of two ways:
     }
 
     // check that we have things
-    if (!canvas || !container || !scale || !page) return;
+    if (!canvas || !page) return;
 
-    const numericScale = fitPage(width, height, container, scale);
     const context = canvas.getContext("2d");
-    const viewport = page.getViewport({ scale: numericScale });
+    const viewport = page.getViewport({ scale });
     const dpr = window?.devicePixelRatio ?? 1;
 
     const transform = dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : null;
@@ -108,20 +106,14 @@ Selectable text can be rendered in one of two ways:
   async function renderTextLayer(
     page, // PdfPageProxy
     textContainer: Maybe<HTMLElement>,
-    pageContainer: Maybe<HTMLElement>,
-    scale: number | "width" | "height",
   ) {
     if (text.length > 0) return;
     if (!textContainer) return;
 
     if (!page) return;
 
-    const numericScale = fitPage(width, height, pageContainer, scale);
-    const viewport = page.getViewport({ scale: numericScale });
+    const viewport = page.getViewport({ scale });
     const content = await page.getTextContent();
-
-    // svelte's reactivity ends up a step behind, so do this here
-    container?.style.setProperty("--scale-factor", numericScale.toFixed(2));
 
     textLayer = new pdfjs.TextLayer({
       textContentSource: content,
@@ -170,10 +162,6 @@ Selectable text can be rendered in one of two ways:
     });
   }
 
-  function onResize() {
-    numericScale = fitPage(width, height, container, scale);
-  }
-
   function onVisibilityChange() {
     if (
       window.document.visibilityState === "visible" &&
@@ -181,7 +169,7 @@ Selectable text can be rendered in one of two ways:
       !canvas.hidden
     ) {
       Promise.all([viewer.pdf, page]).then(([pdf, page]) => {
-        render(page, canvas, container, scale);
+        render(page, canvas);
       });
     }
   }
@@ -214,29 +202,16 @@ Selectable text can be rendered in one of two ways:
   });
   let aspect = $derived(height / width);
   let orientation = $derived(height > width ? "vertical" : "horizontal");
-  // Recomputed reactively when its inputs change; `onResize` also writes to
-  // it directly to pick up window resizes, which don't emit a reactive signal.
-  let numericScale = $derived(fitPage(width, height, container, scale));
   // The box this page occupies, at the zoom it will render at. Sizing it from
   // the intrinsic page width instead would lay every not-yet-rendered page out
   // at 100% while rendered ones sit at the real zoom, so boxes — and everything
-  // below them — jump as pdf.js works through the document (#1203). Only used
-  // for numeric zoom; fit-width and fit-height size the container in CSS.
-  let layoutWidth = $derived(Math.floor(width * numericScale));
+  // below them — jump as pdf.js works through the document (#1203).
+  let layoutWidth = $derived(Math.floor(width * scale));
   // we need to wait on both promises to render on initial load
   $effect(() => {
-    // Read `scale` synchronously so the effect tracks it as a dependency;
-    // reading it only inside the async `.then` below would not register it,
-    // and numeric zoom changes (which flow through `scale`) wouldn't re-render.
-    const currentScale = scale;
     Promise.all([viewer.pdf, page]).then(([pdf, page]) => {
-      render(page, canvas, container, currentScale);
-      textPromise = renderTextLayer(
-        page,
-        textContainer,
-        container,
-        currentScale,
-      );
+      render(page, canvas);
+      textPromise = renderTextLayer(page, textContainer);
     });
   });
   $effect(() => {
@@ -258,14 +233,10 @@ Selectable text can be rendered in one of two ways:
   );
 </script>
 
-<svelte:window onresize={onResize} />
-
 <svelte:document onvisibilitychange={onVisibilityChange} />
 
 <Page
   {page_number}
-  wide={scale === "width"}
-  tall={scale === "height"}
   track
   onvisible={() => {
     visible = true;
@@ -282,12 +253,10 @@ Selectable text can be rendered in one of two ways:
     {/if}
 
     <div
-      bind:this={container}
-      class="page-container scale-{scale} {orientation}"
+      class="page-container {orientation}"
       class:visible
       class:debug
       style:--aspect={aspect}
-      style:--scale-factor={numericScale.toFixed(2)}
       style:--width="{layoutWidth}px"
       style:--height="{height}px"
       data-loaded={loaded}
@@ -337,16 +306,6 @@ Selectable text can be rendered in one of two ways:
     background-color: var(--white, white);
     box-shadow: var(--shadow-1);
     width: var(--width, "100%");
-  }
-
-  .page-container.scale-width {
-    width: 100%;
-  }
-
-  .page-container.scale-height {
-    aspect-ratio: 1 / var(--aspect);
-    height: 90vh;
-    width: inherit;
   }
 
   .page-notes {
