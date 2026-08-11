@@ -10,29 +10,22 @@
   import doc from "@/test/fixtures/documents/document-expanded.json";
   const document = doc as Document;
 
-  // The fixture is a real production document. It only exists in whichever
-  // environment its canonical URL points at, so compare that origin against
-  // the environment Storybook is currently pointed at.
-  const fixtureExistsHere = (() => {
-    try {
-      return new URL(document.canonical_url).origin === new URL(APP_URL).origin;
-    } catch {
-      return false;
-    }
-  })();
-
-  // When the fixture exists in this environment, let its iframe load the live
-  // embed. Otherwise mock the preview so the iframe doesn't request a document
-  // that isn't there, and tell the user how to load a real one.
-  const previewSrcdoc = fixtureExistsHere
-    ? undefined
-    : `<div style="font:14px/1.5 sans-serif;color:#333;padding:1rem;height:100%;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;gap:.5rem">
+  // The fixture is a real production document, so a live preview iframe would
+  // pull the embed from embed.documentcloud.org and its PDF from
+  // s3.documentcloud.org. Those requests make the story depend on the network:
+  // they are unavailable or non-deterministic wherever Storybook is built
+  // without access to production (Chromatic snapshots, offline work), which
+  // shows up as blank or flickering embed previews. Always mock the preview so
+  // every story in this file renders from local state only. Setting
+  // `documentId` in the Controls panel opts back into a live embed.
+  const previewSrcdoc = `<div style="font:14px/1.5 sans-serif;color:#333;padding:1rem;height:100%;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;gap:.5rem">
     <strong>Embed preview (mocked)</strong>
     <p style="margin:0">
-      This fixture document doesn't exist in the current environment
-      (<code>${new URL(APP_URL).host}</code>). To load a real embed, set the
-      <code>documentId</code> field in the <strong>Controls</strong> panel to a
-      document ID that exists here. The live embed will render in its place.
+      The preview iframe is mocked so this story never depends on the network.
+      To load a real embed, set the <code>documentId</code> field in the
+      <strong>Controls</strong> panel to a document ID that exists in the
+      current environment (<code>${new URL(APP_URL).host}</code>). The live
+      embed will render in its place.
     </p>
 </div>`;
 

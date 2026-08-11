@@ -4,7 +4,6 @@ import "@/style/kit.css";
 import "$lib/i18n/index.js";
 
 import { mswLoader } from "msw-storybook-addon/csf3";
-import ViewerContextDecorator from "./decorators/ViewerContextDecorator.svelte";
 
 import { me, myOrgs, organization, usersList } from "@/test/fixtures/accounts";
 
@@ -81,6 +80,10 @@ const preview: Preview = {
 // Provide the MSW addon loader globally
 export const loaders = [mswLoader(setupMsw)];
 
-export let decorators = [() => ViewerContextDecorator];
+// No global decorators. The viewer state provider used to live here, but only
+// the handful of stories whose components call `getViewerState()` need it, and
+// those now wrap themselves in <ViewerContext>. A global provider handed every
+// story a fake document it never read, and masked which components actually
+// depend on viewer state.
 
 export default preview;
