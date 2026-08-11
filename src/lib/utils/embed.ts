@@ -1,3 +1,5 @@
+import type { Reroute } from "@sveltejs/kit";
+
 interface EmbedSettingOption {
   label: string;
   help: string;
@@ -182,11 +184,9 @@ export function isEmbed(url: URL): Boolean {
 }
 
 /**
- * @type {import('@sveltejs/kit').Reroute}
- *
  * Point embedded routes to the proper component
  */
-export function reroute({ url }) {
+export const reroute: Reroute = ({ url }) => {
   // you can still go to embed routes directly
   if (url.pathname.startsWith("/embed/")) return url.pathname;
 
@@ -195,7 +195,7 @@ export function reroute({ url }) {
   if (isEmbed(url)) {
     return "/embed" + url.pathname;
   }
-}
+};
 
 export function timeoutify(fn: Function, timeout = 100) {
   let timer: null | ReturnType<typeof setTimeout> = null;
