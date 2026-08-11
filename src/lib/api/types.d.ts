@@ -25,7 +25,7 @@ export type ViewerMode = ReadMode | WriteMode;
 
 export type Zoom = number | Sizes | "auto";
 
-export type ZoomLevels = [string | number, string][];
+export type ZoomLevels = [Zoom, string][];
 
 export type Maybe<T> = T | undefined;
 
