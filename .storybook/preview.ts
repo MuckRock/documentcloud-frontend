@@ -3,18 +3,27 @@ import type { Preview } from "@storybook/sveltekit";
 import "@/style/kit.css";
 import "$lib/i18n/index.js";
 
-import { initialize, mswLoader } from "msw-storybook-addon";
-import ViewerContextDecorator from "./decorators/ViewerContextDecorator.svelte";
+import { mswLoader } from "msw-storybook-addon/csf3";
 
 import { me, myOrgs, organization, usersList } from "@/test/fixtures/accounts";
 
-// Initialize MSW (v2 API)
-initialize({
-  onUnhandledRequest: "bypass",
-  serviceWorker: {
-    url: "./mockServiceWorker.js",
-  },
-});
+// msw-storybook-addon 3 dropped `initialize()`; worker setup now happens in a
+// function handed to the loader. The `/csf3` entry point is the supported
+// integration for CSF 3.0 stories and keeps `parameters.msw.handlers` working —
+// the CSF Next `addonMsw()` API ignores that parameter.
+async function setupMsw() {
+  const { setupWorker } = await import("msw/browser");
+  const worker = setupWorker();
+
+  await worker.start({
+    onUnhandledRequest: "bypass",
+    serviceWorker: {
+      url: "./mockServiceWorker.js",
+    },
+  });
+
+  return worker;
+}
 
 // Set a mock CSRF token cookie for MSW-backed stories that hit the API
 // (getCsrfToken() reads `csrftoken` from document.cookie). This replaces
@@ -69,8 +78,7 @@ const preview: Preview = {
 };
 
 // Provide the MSW addon loader globally
-export const loaders = [mswLoader];
+export const loaders = [mswLoader(setupMsw)];
 
-export let decorators = [() => ViewerContextDecorator];
 
 export default preview;

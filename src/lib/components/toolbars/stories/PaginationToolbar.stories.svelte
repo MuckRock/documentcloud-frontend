@@ -1,6 +1,8 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import PaginationToolbar from "../PaginationToolbar.svelte";
+  import ViewerContext from "$lib/components/viewer/ViewerContext.svelte";
+  import { document } from "@/test/fixtures/documents";
 
   const { Story } = defineMeta({
     title: "Toolbars / Pagination",
@@ -12,10 +14,14 @@
   });
 </script>
 
+<!-- This toolbar reads the viewer state, so it needs a provider. `loadPdf` is
+     off because the toolbar renders from state alone and never draws a page. -->
 {#snippet template()}
-  <div class="vh justify-end">
-    <PaginationToolbar />
-  </div>
+  <ViewerContext {document} loadPdf={false}>
+    <div class="vh justify-end">
+      <PaginationToolbar />
+    </div>
+  </ViewerContext>
 {/snippet}
 
 <Story name="Default" />

@@ -4,12 +4,7 @@
 
   interface Props extends HTMLButtonAttributes {
     mode?:
-      | "standard"
-      | "success"
-      | "failure"
-      | "primary"
-      | "danger"
-      | "premium";
+      "standard" | "success" | "failure" | "primary" | "danger" | "premium";
     ghost?: boolean;
     full?: boolean;
     size?: "small" | "normal";
