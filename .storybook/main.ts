@@ -12,11 +12,23 @@ const config: StorybookConfig = {
 
   staticDirs: ["../public", "../static"],
 
-  addons: [{ name: "@storybook/addon-svelte-csf" }, "@storybook/addon-docs"],
+  addons: [
+    { name: "@storybook/addon-svelte-csf" },
+    "@storybook/addon-docs",
+    "@storybook/addon-mcp",
+  ],
 
   framework: {
     name: "@storybook/sveltekit",
     options: {},
+  },
+
+  refs: {
+    "chromatic-published-storybook": {
+      title: "Storybook",
+      // Permalink for our main branch
+      url: "https://main--6567908438a7a23eba571d04.chromatic.",
+    },
   },
 
   async viteFinal(config) {

@@ -39,6 +39,7 @@
   "devDependencies": {
     "@playwright/test": "^1.60.0",
     "@storybook/addon-docs": "10.5.0",
+    "@storybook/addon-mcp": "^0.7.0",
     "@storybook/addon-svelte-csf": "^5.1.2",
     "@storybook/sveltekit": "10.5.0",
     "@testing-library/jest-dom": "^7.0.0",
