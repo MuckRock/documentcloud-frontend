@@ -69,6 +69,7 @@ Selectable text can be rendered in one of two ways:
   async function render(
     page, // pdf.getPage
     canvas: Maybe<HTMLCanvasElement>,
+    scale: number,
   ) {
     // only one render task at a time;
     if (renderTask) {
@@ -105,6 +106,7 @@ Selectable text can be rendered in one of two ways:
   async function renderTextLayer(
     page, // PdfPageProxy
     textContainer: Maybe<HTMLElement>,
+    scale: number,
   ) {
     if (text.length > 0) return;
     if (!textContainer) return;
@@ -174,7 +176,7 @@ Selectable text can be rendered in one of two ways:
       !canvas.hidden
     ) {
       Promise.all([viewer.pdf, page]).then(([pdf, page]) => {
-        render(page, canvas);
+        render(page, canvas, scale);
       });
     }
   }
@@ -219,8 +221,8 @@ Selectable text can be rendered in one of two ways:
     // and numeric zoom changes (which flow through `scale`) wouldn't re-render.
     scale;
     Promise.all([viewer.pdf, page]).then(([pdf, page]) => {
-      render(page, canvas);
-      textPromise = renderTextLayer(page, textContainer);
+      render(page, canvas, scale);
+      textPromise = renderTextLayer(page, textContainer, scale);
     });
   });
   $effect(() => {
