@@ -23,6 +23,7 @@
   let document = $derived(viewer.document!);
   let sizes = $derived(viewer.pageSizes);
   let sections = $derived(getSections(document));
+  let scale = $derived(viewer.scale);
 
   // handle missing page_spec
   // (PDF normally only renders when the viewer loads one, but guard `pdf` in
@@ -82,7 +83,7 @@
     <div class="pages">
       <div
         class="inner"
-        style:--scale-factor={viewer.scale.toFixed(2)}
+        style:--scale-factor={scale.toFixed(2)}
         bind:clientWidth={viewer.width}
       >
         {#if browser}
@@ -93,7 +94,7 @@
                 {sections[n].title}
               </h3>
             {/if}
-            <PdfPage {page_number} {width} {height} />
+            <PdfPage {page_number} {scale} {width} {height} />
           {/each}
         {/if}
       </div>

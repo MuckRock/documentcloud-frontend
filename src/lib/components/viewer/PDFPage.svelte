@@ -34,6 +34,7 @@ Selectable text can be rendered in one of two ways:
 
   interface Props {
     page_number: number; // 1-indexed
+    scale: number;
     width: number;
     height: number;
     text?: TextPosition[];
@@ -44,6 +45,7 @@ Selectable text can be rendered in one of two ways:
 
   let {
     page_number,
+    scale,
     width = $bindable(),
     height = $bindable(),
     text = [],
@@ -63,9 +65,6 @@ Selectable text can be rendered in one of two ways:
 
   // visibility, for loading optimization
   let visible: boolean = $state(false);
-
-  // global document scale
-  let scale = $derived(viewer.scale);
 
   async function render(
     page, // pdf.getPage
@@ -209,6 +208,10 @@ Selectable text can be rendered in one of two ways:
   let layoutWidth = $derived(Math.floor(width * scale));
   // we need to wait on both promises to render on initial load
   $effect(() => {
+    // Read `scale` synchronously so the effect tracks it as a dependency;
+    // reading it only inside the async `.then` below would not register it,
+    // and numeric zoom changes (which flow through `scale`) wouldn't re-render.
+    scale;
     Promise.all([viewer.pdf, page]).then(([pdf, page]) => {
       render(page, canvas);
       textPromise = renderTextLayer(page, textContainer);

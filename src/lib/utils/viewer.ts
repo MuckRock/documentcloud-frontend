@@ -56,6 +56,28 @@ export function getViewerHref(options: ViewerHrefOptions = {}) {
 }
 
 /**
+ * Return a numeric scale based on intrinsic page size and container size
+ * @param width Original document width
+ * @param height Original document height
+ * @param container
+ * @param scale
+ */
+export function fitPage(
+  width: number,
+  height: number,
+  container: HTMLElement | undefined,
+  scale: number | "width" | "height",
+): number {
+  if (typeof scale === "number") return scale;
+  if (!container) return 1;
+
+  // const [x1, y1, width, height] = page.view;
+  const { clientWidth, clientHeight } = container;
+
+  return scale === "width" ? clientWidth / width : clientHeight / height;
+}
+
+/**
  * Parse page_spec into width and height of each page
  *
  * @param pageSpec A string encoding page dimensions in a compact format
@@ -118,6 +140,15 @@ export function sortedSections(document: Document): Section[] {
   return [...(document.sections ?? [])].sort(
     (a, b) => a.page_number - b.page_number,
   );
+}
+
+// for typescript
+export function zoomToScale(zoom: any): number | "width" | "height" {
+  if (zoom === "width" || zoom === "height") {
+    return zoom;
+  }
+
+  return +zoom || 1;
 }
 
 export function zoomToSize(zoom: any): Sizes {
@@ -220,7 +251,7 @@ export function getInitialZoom(url: Maybe<URL>, mode: ViewerMode): Maybe<Zoom> {
 export function getZoomInOut(
   mode: ViewerMode,
   zoom: Zoom,
-  autoZoomScale: number,
+  scale: number,
 ): [Nullable<Zoom>, Nullable<Zoom>] {
   const zoomValues = getZoomLevels(mode).map(([value]) => value);
 
@@ -235,9 +266,8 @@ export function getZoomInOut(
     // Other modes use numeric zoom levels.
     // If zoom is 'auto', use the calculated auto zoom scale.
     // Otherwise, use the numeric value of zoom.
-    const zoomLevel = zoom === "auto" ? autoZoomScale : (zoom as number);
-    zoomOut = (zoomValues as number[]).findLast((val) => val < zoomLevel);
-    zoomIn = (zoomValues as number[]).find((val) => val > zoomLevel);
+    zoomOut = (zoomValues as number[]).findLast((val) => val < scale);
+    zoomIn = (zoomValues as number[]).find((val) => val > scale);
   }
 
   return [zoomOut || null, zoomIn || null];

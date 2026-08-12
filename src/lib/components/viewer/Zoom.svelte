@@ -24,7 +24,7 @@ Must be a child of a ViewerContext
   let initial = $derived(getInitialZoom(page.url, viewer.mode));
 
   let [zoomOut, zoomIn] = $derived(
-    getZoomInOut(viewer.mode, viewer.zoom, viewer.autoZoomScale),
+    getZoomInOut(viewer.mode, viewer.zoom, viewer.scale),
   );
 
   $effect(() => {
