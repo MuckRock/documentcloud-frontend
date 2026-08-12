@@ -434,7 +434,9 @@
     "thumbnail": "Tiny",
     "small": "Small",
     "normal": "Medium",
-    "large": "Large"
+    "large": "Large",
+    "zoomOut": "Zoom Out",
+    "zoomIn": "Zoom In"
   },
   "embed": {
     "download": "Download",

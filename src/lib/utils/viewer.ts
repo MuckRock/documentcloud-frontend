@@ -2,6 +2,7 @@ import type {
   Document,
   Maybe,
   Note,
+  Nullable,
   Section,
   Sizes,
   ViewerMode,
@@ -214,4 +215,30 @@ export function getInitialZoom(url: Maybe<URL>, mode: ViewerMode): Maybe<Zoom> {
 
   // fallback
   return undefined;
+}
+
+export function getZoomInOut(
+  mode: ViewerMode,
+  zoom: Zoom,
+  autoZoomScale: number,
+): [Nullable<Zoom>, Nullable<Zoom>] {
+  const zoomValues = getZoomLevels(mode).map(([value]) => value);
+
+  let zoomOut: Maybe<Zoom>, zoomIn: Maybe<Zoom>;
+
+  // If the viewer is in grid mode, look up the string index
+  if (mode === "grid") {
+    const index = zoomValues.indexOf(zoom as Sizes);
+    zoomOut = zoomValues[index - 1];
+    zoomIn = zoomValues[index + 1];
+  } else {
+    // Other modes use numeric zoom levels.
+    // If zoom is 'auto', use the calculated auto zoom scale.
+    // Otherwise, use the numeric value of zoom.
+    const zoomLevel = zoom === "auto" ? autoZoomScale : (zoom as number);
+    zoomOut = (zoomValues as number[]).findLast((val) => val < zoomLevel);
+    zoomIn = (zoomValues as number[]).find((val) => val > zoomLevel);
+  }
+
+  return [zoomOut || null, zoomIn || null];
 }
