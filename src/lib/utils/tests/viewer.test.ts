@@ -13,6 +13,7 @@ import {
   getZoomLevels,
   getDefaultZoom,
   getInitialZoom,
+  getZoomInOut,
 } from "../viewer";
 import {
   canonicalUrl,
@@ -114,12 +115,24 @@ describe("zoom", () => {
   });
 
   test("getDefaultZoom", () => {
-    expect(getDefaultZoom("document")).toEqual("width");
+    expect(getDefaultZoom("document")).toEqual("auto");
     expect(getDefaultZoom("text")).toEqual(1);
     expect(getDefaultZoom("grid")).toEqual("small");
     expect(getDefaultZoom("notes")).toEqual(1);
-    expect(getDefaultZoom("annotating")).toEqual("width");
-    expect(getDefaultZoom("redacting")).toEqual("width");
+    expect(getDefaultZoom("annotating")).toEqual("auto");
+    expect(getDefaultZoom("redacting")).toEqual("auto");
+  });
+
+  test("getZoomLevels offers auto plus percentages in page modes", () => {
+    // "auto" replaced the old fit-width/fit-height options
+    (["document", "annotating", "redacting"] as ViewerMode[]).forEach(
+      (mode) => {
+        const values = getZoomLevels(mode).map(([value]) => value);
+        expect(values).toEqual(["auto", 0.5, 0.75, 1, 1.25, 1.5, 2]);
+        expect(values).not.toContain("width");
+        expect(values).not.toContain("height");
+      },
+    );
   });
 
   test("getZoomLevels", () => {
@@ -201,6 +214,70 @@ describe("zoom", () => {
 
       expect(result).toBeUndefined();
     });
+  });
+});
+
+describe("getZoomInOut", () => {
+  // The zoom in/out buttons step through the mode's zoom levels. For page
+  // modes the step is chosen by comparing against the *rendered* scale, so
+  // that stepping away from "auto" lands on a neighbouring percentage rather
+  // than on a fixed index.
+  describe("page modes", () => {
+    const modes: ViewerMode[] = ["document", "annotating", "redacting", "text"];
+
+    it("steps to the neighbouring levels of the current scale", () => {
+      modes.forEach((mode) => {
+        expect(getZoomInOut(mode, 1, 1)).toEqual([0.75, 1.25]);
+        expect(getZoomInOut(mode, 0.75, 0.75)).toEqual([0.5, 1]);
+        expect(getZoomInOut(mode, 1.5, 1.5)).toEqual([1.25, 2]);
+      });
+    });
+
+    it("returns null at the bottom and top of the range", () => {
+      modes.forEach((mode) => {
+        // nothing below 50%
+        expect(getZoomInOut(mode, 0.5, 0.5)).toEqual([null, 0.75]);
+        // nothing above 200%
+        expect(getZoomInOut(mode, 2, 2)).toEqual([1.5, null]);
+      });
+    });
+
+    it("uses the computed scale, not the literal zoom, for 'auto'", () => {
+      // "auto" is not a number, so the neighbours come from the scale it
+      // resolved to — a document rendered at 42% steps up to 50%.
+      expect(getZoomInOut("document", "auto", 0.42)).toEqual([null, 0.5]);
+      expect(getZoomInOut("document", "auto", 0.8)).toEqual([0.75, 1]);
+      expect(getZoomInOut("document", "auto", 1)).toEqual([0.75, 1.25]);
+    });
+
+    it("never offers 'auto' itself as a step", () => {
+      // "auto" is in the zoom levels list but must be skipped when stepping,
+      // since comparing a string to a number is never true.
+      const steps = [0.42, 0.5, 1, 2].flatMap((scale) =>
+        getZoomInOut("document", "auto", scale),
+      );
+      expect(steps).not.toContain("auto");
+    });
+
+    it("snaps to the surrounding levels for an off-grid scale", () => {
+      expect(getZoomInOut("document", 1.1, 1.1)).toEqual([1, 1.25]);
+    });
+  });
+
+  describe("grid mode", () => {
+    it("steps through the size presets by index", () => {
+      expect(getZoomInOut("grid", "small", 1)).toEqual(["thumbnail", "normal"]);
+      expect(getZoomInOut("grid", "normal", 1)).toEqual(["small", "large"]);
+    });
+
+    it("returns null at each end of the presets", () => {
+      expect(getZoomInOut("grid", "thumbnail", 1)).toEqual([null, "small"]);
+      expect(getZoomInOut("grid", "large", 1)).toEqual(["normal", null]);
+    });
+  });
+
+  it("returns no steps in notes mode, which has no zoom levels", () => {
+    expect(getZoomInOut("notes", 1, 1)).toEqual([null, null]);
   });
 });
 
