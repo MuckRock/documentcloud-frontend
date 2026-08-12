@@ -34,7 +34,7 @@
     pdf
       .then((p) => {
         if (sizes.length === 0) {
-          sizes = Array(p.numPages).fill([0, 0]);
+          viewer.pageSizes = Array(p.numPages).fill([0, 0]);
         }
       })
       .catch((e) => {
@@ -83,10 +83,10 @@
     <div class="pages">
       <div
         class="inner"
-        style:--scale-factor={scale.toFixed(2)}
+        style:--scale-factor={scale}
         bind:clientWidth={viewer.width}
       >
-        {#if browser}
+        {#if browser && viewer.width !== undefined}
           {#each sizes as [width, height], n}
             {@const page_number = n + 1}
             {#if sections[n]}

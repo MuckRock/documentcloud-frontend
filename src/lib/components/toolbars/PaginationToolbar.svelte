@@ -171,7 +171,7 @@
   }
   .sections,
   .zoom {
-    flex: 1 1 8em;
+    flex: 1 1 12em;
   }
   .toolbar.twoRows {
     flex-wrap: wrap;

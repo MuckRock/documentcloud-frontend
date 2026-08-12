@@ -256,6 +256,7 @@ Selectable text can be rendered in one of two ways:
     {/if}
 
     <div
+      bind:this={container}
       class="page-container {orientation}"
       class:visible
       class:debug

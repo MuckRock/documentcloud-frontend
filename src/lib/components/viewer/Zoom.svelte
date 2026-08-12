@@ -32,8 +32,8 @@ Must be a child of a ViewerContext
   });
 </script>
 
-<div class="zoom">
-  {#if zoomLevels.length}
+{#if zoomLevels.length}
+  <div class="zoom">
     <Button
       mode="primary"
       size="small"
@@ -75,8 +75,8 @@ Must be a child of a ViewerContext
         {/each}
       </select>
     </label>
-  {/if}
-</div>
+  </div>
+{/if}
 
 <style>
   .zoom {

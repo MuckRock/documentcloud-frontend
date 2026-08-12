@@ -270,5 +270,5 @@ export function getZoomInOut(
     zoomIn = (zoomValues as number[]).find((val) => val > scale);
   }
 
-  return [zoomOut || null, zoomIn || null];
+  return [zoomOut ?? null, zoomIn ?? null];
 }
