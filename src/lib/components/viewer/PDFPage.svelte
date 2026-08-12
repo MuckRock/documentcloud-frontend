@@ -112,6 +112,12 @@ Selectable text can be rendered in one of two ways:
     if (!page) return;
 
     const viewport = page.getViewport({ scale });
+
+    if (textLayer) {
+      textLayer.update({ viewport });
+      return;
+    }
+
     const content = await page.getTextContent();
 
     textLayer = new pdfjs.TextLayer({
