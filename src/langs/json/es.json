@@ -361,10 +361,13 @@
     "size": "Tama\u00f1o",
     "fitWidth": "Largo de ajuste",
     "fitHeight": "Altura de ejercicio",
+    "auto": "Autom\u00e1tico",
     "thumbnail": "Peque\u00f1o",
     "small": "Peque\u00f1o",
     "normal": "Medio",
-    "large": "Grande"
+    "large": "Grande",
+    "zoomOut": "Alejar",
+    "zoomIn": "Acercar"
   },
   "embed": {
     "download": "Descargar",
