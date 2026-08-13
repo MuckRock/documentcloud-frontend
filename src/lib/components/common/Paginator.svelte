@@ -214,4 +214,14 @@
   .pageNumber.error {
     outline-color: var(--caution);
   }
+
+  @media (max-width: 40rem) {
+    .page {
+      display: none;
+    }
+
+    .current {
+      margin: 0 0.25rem;
+    }
+  }
 </style>

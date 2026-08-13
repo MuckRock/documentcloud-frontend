@@ -95,4 +95,10 @@ Must be a child of a ViewerContext
     box-shadow: none;
     margin-left: 0.25rem;
   }
+
+  @media (max-width: 40rem) {
+    select {
+      display: none;
+    }
+  }
 </style>

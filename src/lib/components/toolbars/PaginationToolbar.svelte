@@ -21,7 +21,6 @@
   import Zoom from "../viewer/Zoom.svelte";
 
   import { pageHashUrl, shouldPaginate } from "$lib/api/documents";
-  import { remToPx } from "$lib/utils/layout";
   import { scrollToPage } from "$lib/utils/scroll";
   import { sortedSections } from "$lib/utils/viewer";
   import { getViewerState } from "$lib/state/viewer.svelte";
@@ -30,10 +29,6 @@
 
   let sectionsOpen = $state(false);
   let width: number = $state(800);
-
-  let BREAKPOINTS = $derived({
-    TWO_ROWS: width <= remToPx(34),
-  });
 
   let document = $derived(viewer.document!);
   let sections = $derived(sortedSections(document));
@@ -63,11 +58,7 @@
   }
 </script>
 
-<div
-  class="toolbar"
-  class:twoRows={BREAKPOINTS.TWO_ROWS}
-  bind:clientWidth={width}
->
+<div class="toolbar" bind:clientWidth={width}>
   <div class="sections">
     {#if showPDF && (sections.length > 0 || canEditSections)}
       <Dropdown position="top-start" --offset="5px">
@@ -77,7 +68,7 @@
               {#snippet start()}
                 <ListOrdered16 />
               {/snippet}
-              Sections
+              <span class="sections-label"> Sections </span>
               {#snippet end()}
                 <ChevronUp12 />
               {/snippet}
@@ -173,12 +164,16 @@
   .zoom {
     flex: 1 1 12em;
   }
-  .toolbar.twoRows {
-    flex-wrap: wrap;
-    padding: 0.25rem;
-  }
-  .toolbar.twoRows .paginator {
-    order: -1;
-    flex: 1 1 100%;
+
+  @media (max-width: 40rem) {
+    .sections-label {
+      position: absolute;
+      clip: rect(1px, 1px, 1px, 1px);
+      padding: 0;
+      border: 0;
+      height: 1px;
+      width: 1px;
+      overflow: hidden;
+    }
   }
 </style>
