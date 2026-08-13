@@ -154,6 +154,7 @@ Must be a child of a ViewerContext
     justify-content: space-between;
     align-items: center;
     align-self: stretch;
+    transform: translateX(var(--scroll-left));
   }
 
   .pageNumber {

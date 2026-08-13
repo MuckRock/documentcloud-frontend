@@ -25,6 +25,8 @@
   let sections = $derived(getSections(document));
   let scale = $derived(viewer.scale);
 
+  let scrollLeft = $state(0);
+
   // handle missing page_spec
   // (PDF normally only renders when the viewer loads one, but guard `pdf` in
   // case this component ends up in a viewer that never loads a PDF)
@@ -80,7 +82,12 @@
     resized — which would shift every page below the change (#1203).
   -->
   <div class="sizer">
-    <div class="pages">
+    <div
+      class="pages"
+      onscroll={({ target }: { target: HTMLDivElement }) =>
+        (scrollLeft = target.scrollLeft)}
+      style:--scroll-left="{scrollLeft}px"
+    >
       <div
         class="inner"
         style:--scale-factor={scale}
@@ -144,5 +151,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    transform: translateX(var(--scroll-left));
   }
 </style>

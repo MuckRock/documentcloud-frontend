@@ -326,6 +326,7 @@ Selectable text can be rendered in one of two ways:
     gap: 1rem;
     width: 100%;
     margin-bottom: 1rem;
+    transform: translateX(var(--scroll-left));
   }
 
   .selectable-text {

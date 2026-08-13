@@ -319,6 +319,7 @@ Must be a child of a ViewerContext
     background: var(--white);
     border: 1px solid var(--gray-2);
     box-shadow: var(--shadow-2);
+    transform: translateX(var(--scroll-left));
   }
 
   .card {
