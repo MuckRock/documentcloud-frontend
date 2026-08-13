@@ -16,6 +16,7 @@ Must be a child of a ViewerContext
   import { getViewerState } from "$lib/state/viewer.svelte";
 
   import Button from "$lib/components/common/Button.svelte";
+  import ZoomFit16 from "$lib/components/icons/ZoomFit16.svelte";
   import { ZoomIn16, ZoomOut16 } from "svelte-octicons";
 
   const viewer = getViewerState();
@@ -45,6 +46,21 @@ Must be a child of a ViewerContext
     >
       <ZoomOut16 />
     </Button>
+    {#if viewer.mode === "document"}
+      <div class="auto">
+        <Button
+          mode="primary"
+          size="small"
+          ghost
+          minW={false}
+          hover={viewer.zoom === "auto"}
+          aria-label={$_("zoom.auto")}
+          onclick={() => (viewer.zoom = "auto")}
+        >
+          <ZoomFit16 />
+        </Button>
+      </div>
+    {/if}
     <Button
       mode="primary"
       size="small"
@@ -96,9 +112,17 @@ Must be a child of a ViewerContext
     margin-left: 0.25rem;
   }
 
+  .auto {
+    display: none;
+  }
+
   @media (max-width: 40rem) {
     select {
       display: none;
+    }
+
+    .auto {
+      display: block;
     }
   }
 </style>
