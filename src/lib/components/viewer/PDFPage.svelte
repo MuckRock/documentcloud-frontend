@@ -311,7 +311,6 @@ Selectable text can be rendered in one of two ways:
     aspect-ratio: 1 / var(--aspect);
     margin: 0;
     position: relative;
-    content-visibility: auto;
 
     background-color: var(--white, white);
     box-shadow: var(--shadow-1);
