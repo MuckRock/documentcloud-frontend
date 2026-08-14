@@ -84,7 +84,6 @@
     <div class="pages" {@attach pinX}>
       <div
         class="inner"
-        style:--scale-factor={scale}
         bind:clientWidth={viewer.width}
       >
         {#if browser && viewer.width !== undefined}

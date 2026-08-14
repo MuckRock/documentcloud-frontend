@@ -271,6 +271,7 @@ Selectable text can be rendered in one of two ways:
       style:--aspect={aspect}
       style:--width="{layoutWidth}px"
       style:--height="{height}px"
+      style:--scale-factor={scale}
       data-loaded={loaded}
       onclick={checkForHighlightClick}
       onkeydown={checkForHighlightClick}
