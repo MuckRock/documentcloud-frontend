@@ -57,6 +57,23 @@ describe("PDF", () => {
     );
   });
 
+  it("publishes the measurements that `pin-x` descendants read", () => {
+    const { container } = renderInViewer(PDF, {
+      context: { document, mode: "document" },
+    });
+
+    const pages = container.querySelector(".pages") as HTMLElement;
+
+    expect(pages.style.getPropertyValue("--scroll-range")).toMatch(/px$/);
+    expect(pages.style.getPropertyValue("--pin-width")).toMatch(/px$/);
+    // CSS.supports is stubbed false in vitest-setup, so this is the fallback
+    // path, which tracks scroll position as well
+    expect(pages.style.getPropertyValue("--scroll-left")).toMatch(/px$/);
+    expect(
+      container.querySelector(".section, .page-notes, header"),
+    ).toHaveClass("pin-x");
+  });
+
   it("shows an error view instead of pages when loading failed", () => {
     const { container } = renderInViewer(PDF, {
       context: {

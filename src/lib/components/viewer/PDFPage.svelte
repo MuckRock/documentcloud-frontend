@@ -256,7 +256,7 @@ Selectable text can be rendered in one of two ways:
 >
   {#snippet children({ visible })}
     {#if page_level_notes.length}
-      <div class="page-notes">
+      <div class="page-notes pin-x">
         {#each page_level_notes as note}
           <Note {note} />
         {/each}
@@ -326,7 +326,6 @@ Selectable text can be rendered in one of two ways:
     gap: 1rem;
     width: 100%;
     margin-bottom: 1rem;
-    transform: translateX(var(--scroll-left));
   }
 
   .selectable-text {

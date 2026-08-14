@@ -229,7 +229,7 @@ Must be a child of a ViewerContext
 
   {#if viewer.currentNote && !Boolean(viewer.newNote) && viewer.currentNote.page_number === page_number}
     <div
-      class="note card"
+      class="note card pin-x"
       style={positionNote(viewer.currentNote, 1.5)}
       transition:fly={{ duration: 250, y: "-1.1rem" }}
     >
@@ -265,7 +265,7 @@ Must be a child of a ViewerContext
 
     {#if !drawing}
       <div
-        class="note card"
+        class="note card pin-x"
         style={positionNote(viewer.newNote, 1.5)}
         transition:fly={{ duration: 250, y: "-1.1rem" }}
       >
@@ -314,12 +314,10 @@ Must be a child of a ViewerContext
     position: absolute;
     left: -1.5rem;
     width: 44rem;
-    max-width: 100%;
     z-index: var(--z-note);
     background: var(--white);
     border: 1px solid var(--gray-2);
     box-shadow: var(--shadow-2);
-    transform: translateX(var(--scroll-left));
   }
 
   .card {

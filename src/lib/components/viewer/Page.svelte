@@ -121,7 +121,7 @@ Must be a child of a ViewerContext
 
 <div {id} bind:this={container} bind:clientWidth={width} class="page">
   <div class="title">{@render title?.()}</div>
-  <header>
+  <header class="pin-x">
     <h4 class="pageNumber">
       <a href={documentHref}>
         {$_("documents.pageAbbrev")}
@@ -154,7 +154,6 @@ Must be a child of a ViewerContext
     justify-content: space-between;
     align-items: center;
     align-self: stretch;
-    transform: translateX(var(--scroll-left));
     z-index: 1;
   }
 

@@ -16,6 +16,7 @@
   import { scrollToPage } from "$lib/utils/scroll";
   import { getSections } from "$lib/utils/viewer";
   import { getViewerState } from "$lib/state/viewer.svelte";
+  import { pinX } from "$lib/utils/pinX.svelte";
   import Error from "../common/Error.svelte";
 
   const viewer = getViewerState();
@@ -24,8 +25,6 @@
   let sizes = $derived(viewer.pageSizes);
   let sections = $derived(getSections(document));
   let scale = $derived(viewer.scale);
-
-  let scrollLeft = $state(0);
 
   // handle missing page_spec
   // (PDF normally only renders when the viewer loads one, but guard `pdf` in
@@ -82,12 +81,7 @@
     resized — which would shift every page below the change (#1203).
   -->
   <div class="sizer">
-    <div
-      class="pages"
-      onscroll={({ target }: { target: HTMLDivElement }) =>
-        (scrollLeft = target.scrollLeft)}
-      style:--scroll-left="{scrollLeft}px"
-    >
+    <div class="pages" {@attach pinX}>
       <div
         class="inner"
         style:--scale-factor={scale}
@@ -97,7 +91,7 @@
           {#each sizes as [width, height], n}
             {@const page_number = n + 1}
             {#if sections[n]}
-              <h3 class="section">
+              <h3 class="section pin-x">
                 {sections[n].title}
               </h3>
             {/if}
@@ -151,6 +145,5 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    transform: translateX(var(--scroll-left));
   }
 </style>
