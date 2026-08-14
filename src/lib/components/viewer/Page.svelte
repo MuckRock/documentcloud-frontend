@@ -25,7 +25,7 @@ Must be a child of a ViewerContext
     width?: number | undefined;
     title?: Snippet;
     children?: Snippet<[any]>;
-    onvisible?: () => void;
+    visible?: boolean;
   }
 
   let {
@@ -34,14 +34,13 @@ Must be a child of a ViewerContext
     width = $bindable(undefined),
     title,
     children,
-    onvisible,
+    visible = $bindable(false),
   }: Props = $props();
 
   const viewer = getViewerState();
 
   let io: IntersectionObserver;
   let container: Maybe<HTMLElement> = $state();
-  let visible = $state(false);
 
   let document = $derived(viewer.document!);
   let id = $derived(pageHashUrl(page_number).replace("#", ""));
@@ -70,7 +69,6 @@ Must be a child of a ViewerContext
           if (entry.isIntersecting) {
             // update state
             visible = true;
-            onvisible?.();
 
             if (once) {
               observer.unobserve(el);

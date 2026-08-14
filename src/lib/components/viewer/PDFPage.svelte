@@ -11,6 +11,7 @@ Selectable text can be rendered in one of two ways:
 -->
 <script lang="ts">
   import type { Maybe, TextPosition } from "$lib/api/types";
+  import type { PDFPageProxy } from "pdfjs-dist/types/web/interfaces";
 
   import { page as pageState } from "$app/state";
 
@@ -186,14 +187,15 @@ Selectable text can be rendered in one of two ways:
     query = getQuery(pageState.url, "q");
   });
   let document = $derived(viewer.document!);
+  let page = $state<Promise<PDFPageProxy>>();
   // render when anything changes
   // (PDFPage normally only renders when the viewer loads a PDF, but guard `pdf`
   // in case this component ends up in a viewer that never loads a PDF)
-  let page = $derived(
-    visible && viewer.pdf
-      ? Promise.resolve(viewer.pdf).then((pdf) => pdf.getPage(page_number))
-      : undefined,
-  );
+  $effect(() => {
+    if (!visible || !viewer.pdf || page) return;
+    page = Promise.resolve(viewer.pdf).then((pdf) => pdf.getPage(page_number));
+  });
+
   // handle 0 sizing when page_spec is unavailable
   $effect(() => {
     // Capture the derived value in a local so TS can narrow it; reading the
@@ -220,6 +222,7 @@ Selectable text can be rendered in one of two ways:
     // reading it only inside the async `.then` below would not register it,
     // and numeric zoom changes (which flow through `scale`) wouldn't re-render.
     scale;
+    if (!visible) return;
     Promise.all([viewer.pdf, page]).then(([pdf, page]) => {
       render(page, canvas, scale);
       textPromise = renderTextLayer(page, textContainer, scale);
@@ -246,14 +249,7 @@ Selectable text can be rendered in one of two ways:
 
 <svelte:document onvisibilitychange={onVisibilityChange} />
 
-<Page
-  {page_number}
-  track
-  onvisible={() => {
-    visible = true;
-  }}
-  bind:width={pageWidth}
->
+<Page {page_number} track bind:width={pageWidth} bind:visible>
   {#snippet children({ visible })}
     {#if page_level_notes.length}
       <div class="page-notes pin-x">
@@ -315,6 +311,7 @@ Selectable text can be rendered in one of two ways:
     aspect-ratio: 1 / var(--aspect);
     margin: 0;
     position: relative;
+    content-visibility: auto;
 
     background-color: var(--white, white);
     box-shadow: var(--shadow-1);
