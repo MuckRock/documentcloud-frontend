@@ -1,7 +1,8 @@
 <script module lang="ts">
+  import type { Document, Org } from "$lib/api/types";
   import { defineMeta } from "@storybook/addon-svelte-csf";
+
   import MetadataComponent from "../Metadata.svelte";
-  import type { Document } from "$lib/api/types";
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
   const document = doc as Document;
@@ -22,9 +23,26 @@
         "https://www.nytimes.com/live/2024/12/10/nyregion/unitedhealthcare-ceo-luigi-mangione",
     },
   };
+
+  const individual: Document = {
+    ...document,
+    organization: {
+      ...(document.organization as Org),
+      individual: true,
+    },
+  };
 </script>
 
 <Story name="Metadata" {args} />
+
+<Story
+  name="Individual org"
+  args={{
+    ...args,
+    document: individual,
+  }}
+/>
+
 <Story
   name="Signed out"
   {args}

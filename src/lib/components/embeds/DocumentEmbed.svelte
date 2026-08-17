@@ -12,7 +12,7 @@
 
   import { defaultSettings, type EmbedSettings } from "$lib/utils/embed";
   import { getUserName, isOrg, isUser } from "$lib/api/accounts";
-  import { canonicalUrl } from "$lib/api/documents";
+  import { canonicalUrl, userOrgString } from "$lib/api/documents";
   import { getViewerState } from "$lib/state/viewer.svelte";
 
   interface Props {
@@ -30,13 +30,12 @@
 
   let document = $derived(viewer.document!);
 
-  let user = $derived(
-    isUser(document.user) ? getUserName(document.user) : undefined,
-  );
   let org = $derived(
     isOrg(document.organization) ? document.organization.name : undefined,
   );
-  let contributedBy = $derived(settings.onlyshoworg ? org : `${user} (${org})`);
+  let contributedBy = $derived(
+    settings.onlyshoworg ? org : userOrgString(document),
+  );
 </script>
 
 <div class="container">
