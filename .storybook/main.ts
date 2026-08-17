@@ -27,7 +27,7 @@ const config: StorybookConfig = {
     "chromatic-published-storybook": {
       title: "Storybook",
       // Permalink for our main branch
-      url: "https://main--6567908438a7a23eba571d04.chromatic.",
+      url: "https://main--6567908438a7a23eba571d04.chromatic.com",
     },
   },
 
