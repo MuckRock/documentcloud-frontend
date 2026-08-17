@@ -8,7 +8,7 @@ import {
   MAX_PER_PAGE,
   SQUARELET_BASE,
 } from "@/config/config.js";
-import { getAll, getApiResponse } from "../utils";
+import { getAll, getApiResponse } from "../utils/api";
 
 /** Get the logged-in user */
 export async function getMe(fetch = globalThis.fetch): Promise<Maybe<User>> {
