@@ -154,7 +154,6 @@ src/lib/api/
 │   ├── collaborators.test.ts
 │   ├── documents.test.ts
 │   ├── embed.test.ts
-│   ├── flatpages.test.ts
 │   ├── notes.test.ts
 │   ├── projects.test.ts
 │   └── sections.test.ts

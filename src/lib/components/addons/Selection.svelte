@@ -1,6 +1,7 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
   import { getSearchResults } from "$lib/state/search.svelte";
+  import { HELP } from "@/config/config.js";
 
   interface Props {
     documents?: any;
@@ -75,7 +76,7 @@
   </fieldset>
   <p class="help">
     {$_("addonDispatchDialog.selectionHelp")}
-    <a data-sveltekit-preload-data="off" href="/help/add-ons/">
+    <a data-sveltekit-preload-data="off" href={HELP.addons}>
       {$_("addonDispatchDialog.selectionLearnMore")}
     </a>
   </p>
