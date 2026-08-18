@@ -16,10 +16,26 @@
   import { scrollToPage } from "$lib/utils/scroll";
   import { getSections } from "$lib/utils/viewer";
   import { getViewerState } from "$lib/state/viewer.svelte";
+  import { pinchZoom, type PinchZoomOptions } from "$lib/utils/pinchZoom";
   import { pinX } from "$lib/utils/pinX.svelte";
   import Error from "../common/Error.svelte";
 
   const viewer = getViewerState();
+
+  let pinching = $state(false);
+  let pinchEnabled = $derived(viewer.mode === "document");
+
+  let pinchZoomOptions = $derived<PinchZoomOptions>({
+    enabled: () => pinchEnabled,
+    getScale: () => viewer.scale,
+    setZoom: (scale) => {
+      viewer.zoom = scale;
+    },
+    min: 0.4,
+    max: 2.5,
+    onPinchStart: () => (pinching = true),
+    onPinchEnd: () => (pinching = false),
+  });
 
   let document = $derived(viewer.document!);
   let sizes = $derived(viewer.pageSizes);
@@ -81,10 +97,11 @@
     resized — which would shift every page below the change (#1203).
   -->
   <div class="sizer">
-    <div class="pages" {@attach pinX}>
+    <div class="pages" class:pinch={pinchEnabled} {@attach pinX}>
       <div
         class="inner"
         bind:clientWidth={viewer.width}
+        {@attach pinchZoom(pinchZoomOptions)}
       >
         {#if browser && viewer.width !== undefined}
           {#each sizes as [width, height], n}
@@ -94,7 +111,7 @@
                 {sections[n].title}
               </h3>
             {/if}
-            <PdfPage {page_number} {scale} {width} {height} />
+            <PdfPage {page_number} {scale} {width} {height} {pinching} />
           {/each}
         {/if}
       </div>
@@ -121,6 +138,10 @@
     gap: 1.5rem;
     width: 100%;
   }
+  .pinch {
+    touch-action: pan-x pan-y;
+  }
+
   @container (width < 35rem) {
     .pages {
       padding: 1.5rem;
