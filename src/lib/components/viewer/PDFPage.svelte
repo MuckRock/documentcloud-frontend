@@ -68,7 +68,7 @@ Selectable text can be rendered in one of two ways:
   let visible: boolean = $state(false);
 
   async function render(
-    page, // pdf.getPage
+    page: Maybe<PDFPageProxy>,
     canvas: Maybe<HTMLCanvasElement>,
     scale: number,
   ) {
@@ -84,7 +84,7 @@ Selectable text can be rendered in one of two ways:
     const viewport = page.getViewport({ scale });
     const dpr = window?.devicePixelRatio ?? 1;
 
-    const transform = dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : null;
+    const transform = dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : undefined;
 
     // set the pixel dimensions of the canvas
     canvas.width = Math.floor(viewport.width * dpr);
@@ -96,7 +96,7 @@ Selectable text can be rendered in one of two ways:
 
     // store the task, return the promise
     renderTask = page.render({
-      canvasContext: context,
+      canvasContext: context!,
       viewport,
       transform,
     });
@@ -105,7 +105,7 @@ Selectable text can be rendered in one of two ways:
   }
 
   async function renderTextLayer(
-    page, // PdfPageProxy
+    page: Maybe<PDFPageProxy>,
     textContainer: Maybe<HTMLElement>,
     scale: number,
   ) {
