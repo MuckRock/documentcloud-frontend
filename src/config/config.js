@@ -62,6 +62,19 @@ export const VERIFICATION_FORM_URL =
 export const SQUARELET_ORGS_URL =
   "https://accounts.muckrock.com/organizations/";
 
+export const HELP = {
+  faq: "https://help.muckrock.com/Frequently-Asked-Questions-19ef889269638193975edda45199e14e",
+  search: "https://help.muckrock.com/Search-19ef8892696381b7a95ccfbb4693d92b",
+  api: "https://help.muckrock.com/API-19ef889269638147bbb7d8cc8af8e0fc",
+  addons: "https://help.muckrock.com/Add-Ons-19ef88926963810c9df9e46762194322",
+  "add-ons":
+    "https://help.muckrock.com/Add-Ons-19ef88926963810c9df9e46762194322", // for catching redirects
+  premium: "https://help.muckrock.com/Premium-19ef8892696381088b31fad2f3080cc2",
+  email: "mailto:info@documentcloud.org",
+  donate: "https://www.muckrock.com/donate/",
+  home: "https://help.muckrock.com/DocumentCloud-19ef8892696381ee8fc4de8d62aa4704",
+};
+
 export const LANGUAGES = [
   ["US English", "en", "🇺🇸"],
   ["Deutsche", "de", "🇩🇪"],

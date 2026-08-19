@@ -24,6 +24,7 @@
   import NavItem from "$lib/components/common/NavItem.svelte";
 
   import { startTour, isTourAvailable } from "../onboarding/GuidedTour.svelte";
+  import { HELP } from "@/config/config.js";
 
   interface Props {
     position?: Placement;
@@ -67,47 +68,43 @@
           Guided Tour
         </NavItem>
       {/if}
-      <NavItem href="/help/faq/" onclick={close}>
+      <NavItem href={HELP.faq} target="_blank" onclick={close}>
         {#snippet start()}
           <CommentDiscussion16 />
         {/snippet}
         {$_("authSection.help.faq")}
       </NavItem>
-      <NavItem href="/help/search/" onclick={close}>
+      <NavItem href={HELP.search} target="_blank" onclick={close}>
         {#snippet start()}
           <Search16 />
         {/snippet}
         {$_("authSection.help.searchDocs")}
       </NavItem>
-      <NavItem href="/help/api/" onclick={close}>
+      <NavItem href={HELP.api} target="_blank" onclick={close}>
         {#snippet start()}
           <Code16 />
         {/snippet}
         {$_("authSection.help.apiDocs")}
       </NavItem>
-      <NavItem href="/help/add-ons/" onclick={close}>
+      <NavItem href={HELP.addons} target="_blank" onclick={close}>
         {#snippet start()}
           <Plug16 />
         {/snippet}
         {$_("authSection.help.addOns")}
       </NavItem>
-      <NavItem href="/help/premium/" onclick={close}>
+      <NavItem href={HELP.premium} target="_blank" onclick={close}>
         {#snippet start()}
           <Premium />
         {/snippet}
         {$_("authSection.help.premium")}
       </NavItem>
-      <NavItem href="https://www.muckrock.com/donate/" onclick={close}>
+      <NavItem href={HELP.donate} target="_blank" onclick={close}>
         {#snippet start()}
           <Gift16 />
         {/snippet}
         {$_("authSection.help.donate")}
       </NavItem>
-      <NavItem
-        href="mailto:info@documentcloud.org"
-        target="_blank"
-        onclick={close}
-      >
+      <NavItem href={HELP.email} target="_blank" onclick={close}>
         {#snippet start()}
           <Mail16 />
         {/snippet}

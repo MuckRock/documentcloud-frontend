@@ -23,6 +23,11 @@ const config: StorybookConfig = {
     options: {},
   },
 
+  features: {
+    componentsManifest: true,
+    changeDetection: true,
+  },
+
   refs: {
     "chromatic-published-storybook": {
       title: "Storybook",
