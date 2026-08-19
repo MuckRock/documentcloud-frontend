@@ -14,6 +14,7 @@ import {
   getDefaultZoom,
   getInitialZoom,
   getZoomInOut,
+  PT_TO_PX,
 } from "../viewer";
 import {
   canonicalUrl,
@@ -78,10 +79,10 @@ describe("pageSizes", () => {
   });
   it("checks each part for a comma-delimited value", () => {
     expect(pageSizes("1x1:0;2x2:1-3")).toEqual([
-      [1, 1],
-      [2, 2],
-      [2, 2],
-      [2, 2],
+      [1 * PT_TO_PX, 1 * PT_TO_PX],
+      [2 * PT_TO_PX, 2 * PT_TO_PX],
+      [2 * PT_TO_PX, 2 * PT_TO_PX],
+      [2 * PT_TO_PX, 2 * PT_TO_PX],
     ]);
   });
 });

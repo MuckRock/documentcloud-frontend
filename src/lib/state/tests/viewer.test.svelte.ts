@@ -30,6 +30,7 @@ vi.mock("pdfjs-dist/legacy/build/pdf.mjs", () => ({
 vi.mock("$lib/api/documents", () => ({ assetUrl }));
 
 import { ViewerState } from "$lib/state/viewer.svelte";
+import { PT_TO_PX } from "$lib/utils/viewer";
 import documentFixture from "@/test/fixtures/documents/document.json";
 
 const doc = documentFixture as unknown as Document;
@@ -163,7 +164,8 @@ describe("ViewerState", () => {
   // renders at one uniform scale. The fixture's page_spec is
   // "595.0x842.0:0-6" — seven A4 pages 595pt wide.
   describe("zoom", () => {
-    const PAGE_WIDTH = 595;
+    const PAGE_WIDTH = 595 * PT_TO_PX;
+    const PAGE_HEIGHT = 842 * PT_TO_PX;
 
     /** A viewer showing the fixture document, laid out at `width` px. */
     function viewerWithWidth(width?: number) {
@@ -176,9 +178,9 @@ describe("ViewerState", () => {
     it("derives pageSizes from the document's page_spec", () => {
       const v = viewerWithWidth();
       expect(v.pageSizes).toHaveLength(doc.page_count);
-      expect(v.pageSizes.every(([w, h]) => w === PAGE_WIDTH && h === 842)).toBe(
-        true,
-      );
+      expect(
+        v.pageSizes.every(([w, h]) => w === PAGE_WIDTH && h === PAGE_HEIGHT),
+      ).toBe(true);
     });
 
     it("derives empty pageSizes when the document has no page_spec", () => {
@@ -219,7 +221,7 @@ describe("ViewerState", () => {
       // one landscape page twice as wide as the rest drives the scale
       const v = new ViewerState();
       v.document = { ...doc, page_spec: "595x842:0-5;1190x842:6" } as Document;
-      v.width = 595;
+      v.width = PAGE_WIDTH;
       expect(v.autoZoomScale).toBe(0.5);
     });
 
