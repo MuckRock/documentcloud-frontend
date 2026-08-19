@@ -23,6 +23,11 @@ interface ViewerHrefOptions {
   query?: string;
 }
 
+/**
+ * Multiplier to convert PDF points (1/72 inch) to CSS pixels (1/96 inch)
+ */
+export const PT_TO_PX = 96 / 72;
+
 export function getViewerHref(options: ViewerHrefOptions = {}) {
   const {
     document,
@@ -90,7 +95,8 @@ export function pageSizes(pageSpec: string): [width: number, height: number][] {
   const parts = pageSpec.split(";");
   return parts.reduce((sizes, part) => {
     const [size, range] = part?.split(":");
-    const [width, height] = size?.split("x").map(parseFloat) ?? [];
+    const [width, height] =
+      size?.split("x").map((d) => parseFloat(d) * PT_TO_PX) ?? [];
 
     range?.split(",").forEach((rangePart) => {
       if (rangePart.includes("-")) {

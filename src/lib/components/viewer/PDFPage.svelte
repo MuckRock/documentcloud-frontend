@@ -29,7 +29,7 @@ Selectable text can be rendered in one of two ways:
   import { isPageLevel } from "$lib/api/notes";
   import { getViewerState } from "$lib/state/viewer.svelte";
   import { getQuery } from "$lib/utils/search";
-  import { getNotes } from "$lib/utils/viewer";
+  import { getNotes, PT_TO_PX } from "$lib/utils/viewer";
 
   const viewer = getViewerState();
 
@@ -66,6 +66,11 @@ Selectable text can be rendered in one of two ways:
 
   // visibility, for loading optimization
   let visible: boolean = $state(false);
+
+  // Width and height props have already been converted from pt to px in `pageSizes`,
+  // but the PDF.js render methods use the unconverted pt values, so we need to pass
+  // them a converted scale
+  let pxScale = $derived(scale * PT_TO_PX);
 
   async function render(
     page: Maybe<PDFPageProxy>,
@@ -218,14 +223,14 @@ Selectable text can be rendered in one of two ways:
   let layoutWidth = $derived(Math.floor(width * scale));
   // we need to wait on both promises to render on initial load
   $effect(() => {
-    // Read `scale` synchronously so the effect tracks it as a dependency;
+    // Read `pxScale` synchronously so the effect tracks it as a dependency;
     // reading it only inside the async `.then` below would not register it,
-    // and numeric zoom changes (which flow through `scale`) wouldn't re-render.
-    scale;
+    // and numeric zoom changes (which flow through `pxScale`) wouldn't re-render.
+    pxScale;
     if (!visible) return;
     Promise.all([viewer.pdf, page]).then(([pdf, page]) => {
-      render(page, canvas, scale);
-      textPromise = renderTextLayer(page, textContainer, scale);
+      render(page, canvas, pxScale);
+      textPromise = renderTextLayer(page, textContainer, pxScale);
     });
   });
   $effect(() => {
@@ -267,7 +272,7 @@ Selectable text can be rendered in one of two ways:
       style:--aspect={aspect}
       style:--width="{layoutWidth}px"
       style:--height="{height}px"
-      style:--scale-factor={scale}
+      style:--scale-factor={pxScale}
       data-loaded={loaded}
       onclick={checkForHighlightClick}
       onkeydown={checkForHighlightClick}
