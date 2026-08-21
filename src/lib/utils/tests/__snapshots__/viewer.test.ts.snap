@@ -3,12 +3,8 @@
 exports[`zoom > getZoomLevels 1`] = `
 [
   [
-    "width",
-    "zoom.fitWidth",
-  ],
-  [
-    "height",
-    "zoom.fitHeight",
+    "auto",
+    "zoom.auto",
   ],
   [
     0.5,
@@ -92,12 +88,8 @@ exports[`zoom > getZoomLevels 4`] = `[]`;
 exports[`zoom > getZoomLevels 5`] = `
 [
   [
-    "width",
-    "zoom.fitWidth",
-  ],
-  [
-    "height",
-    "zoom.fitHeight",
+    "auto",
+    "zoom.auto",
   ],
   [
     0.5,
@@ -129,12 +121,8 @@ exports[`zoom > getZoomLevels 5`] = `
 exports[`zoom > getZoomLevels 6`] = `
 [
   [
-    "width",
-    "zoom.fitWidth",
-  ],
-  [
-    "height",
-    "zoom.fitHeight",
+    "auto",
+    "zoom.auto",
   ],
   [
     0.5,

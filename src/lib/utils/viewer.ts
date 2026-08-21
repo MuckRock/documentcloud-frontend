@@ -2,6 +2,7 @@ import type {
   Document,
   Maybe,
   Note,
+  Nullable,
   Section,
   Sizes,
   ViewerMode,
@@ -21,6 +22,11 @@ interface ViewerHrefOptions {
   embed?: boolean;
   query?: string;
 }
+
+/**
+ * Multiplier to convert PDF points (1/72 inch) to CSS pixels (1/96 inch)
+ */
+export const PT_TO_PX = 96 / 72;
 
 export function getViewerHref(options: ViewerHrefOptions = {}) {
   const {
@@ -89,7 +95,8 @@ export function pageSizes(pageSpec: string): [width: number, height: number][] {
   const parts = pageSpec.split(";");
   return parts.reduce((sizes, part) => {
     const [size, range] = part?.split(":");
-    const [width, height] = size?.split("x").map(parseFloat) ?? [];
+    const [width, height] =
+      size?.split("x").map((d) => parseFloat(d) * PT_TO_PX) ?? [];
 
     range?.split(",").forEach((rangePart) => {
       if (rangePart.includes("-")) {
@@ -165,13 +172,13 @@ export function zoomToSize(zoom: any): Sizes {
 export function getDefaultZoom(mode: ViewerMode): Zoom {
   switch (mode) {
     case "document":
-      return "width";
+      return "auto";
 
     case "annotating":
-      return "width";
+      return "auto";
 
     case "redacting":
-      return "width";
+      return "auto";
 
     case "grid":
       return "small";
@@ -190,8 +197,7 @@ export function getZoomLevels(mode: ViewerMode): ZoomLevels {
     case "annotating":
     case "redacting":
       return [
-        ["width", "zoom.fitWidth"],
-        ["height", "zoom.fitHeight"],
+        ["auto", "zoom.auto"],
         [0.5, "50%"],
         [0.75, "75%"],
         [1, "100%"],
@@ -246,4 +252,29 @@ export function getInitialZoom(url: Maybe<URL>, mode: ViewerMode): Maybe<Zoom> {
 
   // fallback
   return undefined;
+}
+
+export function getZoomInOut(
+  mode: ViewerMode,
+  zoom: Zoom,
+  scale: number,
+): [Nullable<Zoom>, Nullable<Zoom>] {
+  const zoomValues = getZoomLevels(mode).map(([value]) => value);
+
+  let zoomOut: Maybe<Zoom>, zoomIn: Maybe<Zoom>;
+
+  // If the viewer is in grid mode, look up the string index
+  if (mode === "grid") {
+    const index = zoomValues.indexOf(zoom as Sizes);
+    zoomOut = zoomValues[index - 1];
+    zoomIn = zoomValues[index + 1];
+  } else {
+    // Other modes use numeric zoom levels.
+    // If zoom is 'auto', use the calculated auto zoom scale.
+    // Otherwise, use the numeric value of zoom.
+    zoomOut = (zoomValues as number[]).findLast((val) => val < scale);
+    zoomIn = (zoomValues as number[]).find((val) => val > scale);
+  }
+
+  return [zoomOut ?? null, zoomIn ?? null];
 }

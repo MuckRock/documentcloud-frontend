@@ -21,31 +21,26 @@ Must be a child of a ViewerContext
 
   interface Props {
     page_number: number;
-    wide?: boolean;
-    tall?: boolean;
     track?: boolean | "once";
     width?: number | undefined;
     title?: Snippet;
     children?: Snippet<[any]>;
-    onvisible?: () => void;
+    visible?: boolean;
   }
 
   let {
     page_number,
-    wide = false,
-    tall = false,
     track = false,
     width = $bindable(undefined),
     title,
     children,
-    onvisible,
+    visible = $bindable(false),
   }: Props = $props();
 
   const viewer = getViewerState();
 
   let io: IntersectionObserver;
   let container: Maybe<HTMLElement> = $state();
-  let visible = $state(false);
 
   let document = $derived(viewer.document!);
   let id = $derived(pageHashUrl(page_number).replace("#", ""));
@@ -74,7 +69,6 @@ Must be a child of a ViewerContext
           if (entry.isIntersecting) {
             // update state
             visible = true;
-            onvisible?.();
 
             if (once) {
               observer.unobserve(el);
@@ -123,16 +117,9 @@ Must be a child of a ViewerContext
   });
 </script>
 
-<div
-  {id}
-  bind:this={container}
-  bind:clientWidth={width}
-  class="page"
-  class:wide
-  class:tall
->
+<div {id} bind:this={container} bind:clientWidth={width} class="page">
   <div class="title">{@render title?.()}</div>
-  <header>
+  <header class={visible && "pin-x"}>
     <h4 class="pageNumber">
       <a href={documentHref}>
         {$_("documents.pageAbbrev")}
@@ -158,10 +145,6 @@ Must be a child of a ViewerContext
     scroll-margin-top: 6rem;
   }
 
-  .page.wide {
-    width: 100%;
-  }
-
   header {
     display: flex;
     padding: 0.5rem;
@@ -169,6 +152,7 @@ Must be a child of a ViewerContext
     justify-content: space-between;
     align-items: center;
     align-self: stretch;
+    z-index: 1;
   }
 
   .pageNumber {

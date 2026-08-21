@@ -21,6 +21,7 @@ import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
 import { createContext } from "svelte";
 
 import { assetUrl } from "$lib/api/documents";
+import { pageSizes } from "$lib/utils/viewer";
 
 if (!pdfjs.GlobalWorkerOptions.workerSrc) {
   pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -54,6 +55,23 @@ export class ViewerState {
   // internal PDF loading state
   #task: Nullable<pdfjs.PDFDocumentLoadingTask> = null;
   #retriesOn403Error = 0;
+
+  // state and deriveds for zoom calculations
+  // regardless of zoom mode, we always calculate auto zoom scale to display in select menu
+  width = $state<number>();
+  pageSizes = $derived(
+    this.document?.page_spec ? pageSizes(this.document.page_spec) : [],
+  );
+  autoZoomScale = $derived.by(() => {
+    if (!this.width) return 1;
+    const maxPageWidth = Math.max(...this.pageSizes.map(([w]) => w));
+    return Math.min(1, this.width / maxPageWidth);
+  });
+  scale = $derived.by(() => {
+    if (typeof this.zoom === "number") return this.zoom;
+    if (this.zoom === "auto") return this.autoZoomScale;
+    return 1;
+  });
 
   get loadingProgress(): number {
     if (this.progress.total === 0) return 0;

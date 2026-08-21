@@ -237,6 +237,26 @@ hr.divider {
   }
 }
 
+/* Horizontal pinning for sticky UI inside of PDF viewer */
+@keyframes pin-x {
+  to {
+    translate: var(--scroll-range, 0px) 0;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .pin-x {
+    animation: pin-x linear both;
+    animation-timeline: scroll(nearest inline);
+  }
+}
+
+/* Fallback for browsers that don't support animation-timeline */
+.pin-x {
+  max-width: var(--pin-width, none);
+  translate: var(--scroll-left, 0px) 0;
+}
+
 /* svelecte styles */
 .svelecte .indicator {
   fill: var(--gray-5, #233944);

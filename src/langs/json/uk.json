@@ -187,7 +187,10 @@
   },
   "zoom": {
     "fitWidth": "Вмістити за шириною",
-    "fitHeight": "Вмістити за висотою"
+    "fitHeight": "Вмістити за висотою",
+    "auto": "Авто",
+    "zoomOut": "Зменшити",
+    "zoomIn": "Збільшити"
   },
   "titleHeader": {
     "contributedBy": "Внесено {name}"
