@@ -62,10 +62,10 @@ export class ViewerState {
   pageSizes = $derived(
     this.document?.page_spec ? pageSizes(this.document.page_spec) : [],
   );
+  maxPageWidth = $derived(Math.max(...this.pageSizes.map(([w]) => w)));
   autoZoomScale = $derived.by(() => {
     if (!this.width) return 1;
-    const maxPageWidth = Math.max(...this.pageSizes.map(([w]) => w));
-    return Math.min(1, this.width / maxPageWidth);
+    return Math.min(1, this.width / this.maxPageWidth);
   });
   scale = $derived.by(() => {
     if (typeof this.zoom === "number") return this.zoom;

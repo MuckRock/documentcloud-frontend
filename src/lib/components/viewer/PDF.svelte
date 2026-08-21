@@ -49,9 +49,7 @@
   // Virtua's container uses `contain: size` and each item is `width: 100%`, so
   // wider-than-viewport pages can't push it out on their own. Set the widest
   // scaled page as `width` on an inner div so `.pages` gets scrollable overflow.
-  let maxPageWidth = $derived(
-    sizes.reduce((max, [w]) => (w > max ? w : max), 0) * scale,
-  );
+  let maxPageWidth = $derived(viewer.maxPageWidth * scale);
 
   // handle missing page_spec
   // (PDF normally only renders when the viewer loads one, but guard `pdf` in
