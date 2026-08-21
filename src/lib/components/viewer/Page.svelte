@@ -119,7 +119,7 @@ Must be a child of a ViewerContext
 
 <div {id} bind:this={container} bind:clientWidth={width} class="page">
   <div class="title">{@render title?.()}</div>
-  <header class={visible && "pin-x"}>
+  <header class="pin-x">
     <h4 class="pageNumber">
       <a href={documentHref}>
         {$_("documents.pageAbbrev")}

@@ -10,21 +10,45 @@
 <script lang="ts">
   import { browser } from "$app/environment";
   import { onMount } from "svelte";
+  import { Virtualizer } from "virtua/svelte";
 
   import PdfPage from "./PDFPage.svelte";
 
   import { scrollToPage } from "$lib/utils/scroll";
   import { getSections } from "$lib/utils/viewer";
   import { getViewerState } from "$lib/state/viewer.svelte";
-  import { pinX } from "$lib/utils/pinX.svelte";
+  import { pinchZoom, type PinchZoomOptions } from "$lib/utils/pinchZoom";
   import Error from "../common/Error.svelte";
 
   const viewer = getViewerState();
+
+  let pinching = $state(false);
+  let pinchEnabled = $derived(viewer.mode === "document");
+
+  let pinchZoomOptions = $derived<PinchZoomOptions>({
+    enabled: () => pinchEnabled,
+    getScale: () => viewer.scale,
+    setZoom: (scale) => {
+      viewer.zoom = scale;
+    },
+    min: 0.4,
+    max: 2.5,
+    onPinchStart: () => (pinching = true),
+    onPinchEnd: () => (pinching = false),
+  });
 
   let document = $derived(viewer.document!);
   let sizes = $derived(viewer.pageSizes);
   let sections = $derived(getSections(document));
   let scale = $derived(viewer.scale);
+
+  // The scrolling ancestor is div#content in SidebarLayout.svelte
+  let scrollRef = $derived(window.document.getElementById("content")!);
+
+  // Virtua's container uses `contain: size` and each item is `width: 100%`, so
+  // wider-than-viewport pages can't push it out on their own. Set the widest
+  // scaled page as `width` on an inner div so `.pages` gets scrollable overflow.
+  let maxPageWidth = $derived(viewer.maxPageWidth * scale);
 
   // handle missing page_spec
   // (PDF normally only renders when the viewer loads one, but guard `pdf` in
@@ -81,22 +105,34 @@
     resized — which would shift every page below the change (#1203).
   -->
   <div class="sizer">
-    <div class="pages" {@attach pinX}>
+    <div class="pages" class:pinch={pinchEnabled}>
       <div
         class="inner"
         bind:clientWidth={viewer.width}
+        style:--pin-width="{viewer.width}px"
+        {@attach pinchZoom(pinchZoomOptions)}
       >
-        {#if browser && viewer.width !== undefined}
-          {#each sizes as [width, height], n}
-            {@const page_number = n + 1}
-            {#if sections[n]}
-              <h3 class="section pin-x">
-                {sections[n].title}
-              </h3>
-            {/if}
-            <PdfPage {page_number} {scale} {width} {height} />
-          {/each}
-        {/if}
+        <div style:width="{maxPageWidth}px">
+          {#if browser && viewer.width !== undefined}
+            <Virtualizer
+              data={sizes}
+              {scrollRef}
+              itemProps={() => ({ style: { width: "auto" } })}
+            >
+              {#snippet children([width, height], n)}
+                {@const page_number = n + 1}
+                <div class={["page", n === sizes.length - 1 && "last"]}>
+                  {#if sections[n]}
+                    <h3 class="section pin-x">
+                      {sections[n].title}
+                    </h3>
+                  {/if}
+                  <PdfPage {page_number} {scale} {width} {height} {pinching} />
+                </div>
+              {/snippet}
+            </Virtualizer>
+          {/if}
+        </div>
       </div>
     </div>
   </div>
@@ -115,26 +151,41 @@
     width: 100%;
   }
   .inner {
-    display: flex;
-    flex-direction: column;
     margin: 0 auto;
-    gap: 1.5rem;
     width: 100%;
+    display: flex;
+    justify-content: center;
   }
+
+  .page,
+  .section {
+    margin-bottom: 1.5rem;
+  }
+
+  .page.last {
+    margin-bottom: 0;
+  }
+
+  .pinch {
+    touch-action: pan-x pan-y;
+  }
+
   @container (width < 35rem) {
     .pages {
       padding: 1.5rem;
     }
-    .inner {
-      gap: 0.75rem;
+    .page,
+    .section {
+      margin-bottom: 0.75rem;
     }
   }
   @container (width > 70rem) {
     .pages {
       padding: 4.5rem;
     }
-    .inner {
-      gap: 2.25rem;
+    .page,
+    .section {
+      margin-bottom: 2.25rem;
     }
   }
   .section {
