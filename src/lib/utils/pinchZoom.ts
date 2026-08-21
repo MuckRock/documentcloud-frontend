@@ -39,6 +39,15 @@ export interface PinchZoomOptions {
 /** Ignore touch pinches that start with the fingers closer than this (px). */
 const MIN_DISTANCE = 8;
 
+/** Exponential rate at which wheel deltas translate to scale change. */
+const WHEEL_SENSITIVITY = 0.01;
+
+/** Clamp the per-event wheel factor so one large delta can't jump wildly. */
+const MAX_WHEEL_FACTOR = 1.25;
+
+/** A ctrl+wheel stream is treated as one gesture if events arrive this often. */
+const WHEEL_SETTLE_MS = 150;
+
 function distance(a: Touch, b: Touch): number {
   return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
 }
@@ -130,6 +139,11 @@ export function pinchZoom(options: PinchZoomOptions): Attachment<HTMLElement> {
     let startDistance = 0;
     let startScale = 0;
 
+    // Trackpad pinch arrives as discrete ctrl+wheel events with no explicit
+    // start/end, so we settle the gesture after a short gap with no events.
+    let wheelActive = false;
+    let wheelEndTimer: ReturnType<typeof setTimeout> | null = null;
+
     function beginPinch(touches: TouchList): boolean {
       if (touches.length !== 2) return false;
       const dist = distance(touches[0]!, touches[1]!);
@@ -185,16 +199,59 @@ export function pinchZoom(options: PinchZoomOptions): Attachment<HTMLElement> {
       if (e.touches.length < 2) endPinch();
     }
 
+    // Trackpad pinch gestures arrive as wheel events with ctrlKey set; the browser
+    // would otherwise page-zoom, so claim them. Plain (non-ctrl) wheel stays a
+    // normal scroll.
+    function onWheel(e: WheelEvent): void {
+      if (!options.enabled() || !e.ctrlKey) return;
+      e.preventDefault();
+
+      // A ctrl+wheel stream is a single gesture; start on the first event and
+      // settle once events stop arriving.
+      if (!wheelActive) {
+        wheelActive = true;
+        options.onPinchStart?.();
+      }
+      if (wheelEndTimer) clearTimeout(wheelEndTimer);
+      wheelEndTimer = setTimeout(() => {
+        wheelActive = false;
+        wheelEndTimer = null;
+        options.onPinchEnd?.();
+      }, WHEEL_SETTLE_MS);
+
+      const factor = clamp(
+        Math.exp(-e.deltaY * WHEEL_SENSITIVITY),
+        1 / MAX_WHEEL_FACTOR,
+        MAX_WHEEL_FACTOR,
+      );
+      const newScale = clamp(
+        options.getScale() * factor,
+        options.min,
+        options.max,
+      );
+      applyAnchoredZoom(
+        element,
+        e.clientX,
+        e.clientY,
+        newScale,
+        options.getScale,
+        options.setZoom,
+      );
+    }
+
     element.addEventListener("touchstart", onTouchStart, { passive: false });
     element.addEventListener("touchmove", onTouchMove, { passive: false });
     element.addEventListener("touchend", onTouchEnd, { passive: true });
     element.addEventListener("touchcancel", onTouchEnd, { passive: true });
+    element.addEventListener("wheel", onWheel, { passive: false });
 
     return () => {
       element.removeEventListener("touchstart", onTouchStart);
       element.removeEventListener("touchmove", onTouchMove);
       element.removeEventListener("touchend", onTouchEnd);
       element.removeEventListener("touchcancel", onTouchEnd);
+      element.removeEventListener("wheel", onWheel);
+      if (wheelEndTimer) clearTimeout(wheelEndTimer);
     };
   };
 }
