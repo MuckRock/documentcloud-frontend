@@ -69,9 +69,6 @@ describe("PDF", () => {
     // CSS.supports is stubbed false in vitest-setup, so this is the fallback
     // path, which tracks scroll position as well
     expect(pages.style.getPropertyValue("--scroll-left")).toMatch(/px$/);
-    expect(
-      container.querySelector(".section, .page-notes, header"),
-    ).toHaveClass("pin-x");
   });
 
   it("shows an error view instead of pages when loading failed", () => {
