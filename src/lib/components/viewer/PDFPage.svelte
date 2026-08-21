@@ -261,7 +261,7 @@ Selectable text can be rendered in one of two ways:
 <Page {page_number} track bind:width={pageWidth} bind:visible>
   {#snippet children({ visible })}
     {#if page_level_notes.length}
-      <div class={["page-notes", visible && "pin-x"]}>
+      <div class="page-notes pin-x">
         {#each page_level_notes as note}
           <Note {note} />
         {/each}

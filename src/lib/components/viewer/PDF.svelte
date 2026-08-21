@@ -18,7 +18,6 @@
   import { getSections } from "$lib/utils/viewer";
   import { getViewerState } from "$lib/state/viewer.svelte";
   import { pinchZoom, type PinchZoomOptions } from "$lib/utils/pinchZoom";
-  import { pinX } from "$lib/utils/pinX.svelte";
   import Error from "../common/Error.svelte";
 
   const viewer = getViewerState();
@@ -106,10 +105,11 @@
     resized — which would shift every page below the change (#1203).
   -->
   <div class="sizer">
-    <div class="pages" class:pinch={pinchEnabled} {@attach pinX}>
+    <div class="pages" class:pinch={pinchEnabled}>
       <div
         class="inner"
         bind:clientWidth={viewer.width}
+        style:--pin-width="{viewer.width}px"
         {@attach pinchZoom(pinchZoomOptions)}
       >
         <div style:width="{maxPageWidth}px">
