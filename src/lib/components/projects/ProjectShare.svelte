@@ -26,6 +26,7 @@
   let { project }: Props = $props();
 
   let editing = $state(false);
+  let customizeEmbedOpen = $state(false);
 
   let isPrivate = $derived(project.private);
   let permalink = $derived(canonicalUrl(project));
@@ -40,65 +41,78 @@
   }
 </script>
 
-<div class="share">
-  <iframe class="embed" title="Embed Preview" src={embedSrc.href}></iframe>
-  <div class="fields">
-    {#if isPrivate}
-      <div class="banner">
-        <Tip mode="danger">
-          {#snippet icon()}<ShieldLock24 />{/snippet}
-          <div class="privateWarning">
-            <div style:flex="1 1 auto">
-              {$_("share.privateWarning", {
-                values: { type: $_("share.types.project") },
-              })}
-            </div>
-            {#if project.edit_access}
-              <Button mode="danger" size="small" onclick={openEditing}>
-                {$_("share.privateFix")}
-              </Button>
-            {/if}
+<div class="container">
+  {#if isPrivate}
+    <div class="banner">
+      <Tip mode="danger">
+        {#snippet icon()}<ShieldLock24 />{/snippet}
+        <div class="privateWarning">
+          <div style:flex="1 1 auto">
+            {$_("share.privateWarning", {
+              values: { type: $_("share.types.project") },
+            })}
           </div>
-        </Tip>
-      </div>
-    {/if}
+          {#if project.edit_access}
+            <Button mode="danger" size="small" onclick={openEditing}>
+              {$_("share.privateFix")}
+            </Button>
+          {/if}
+        </div>
+      </Tip>
+    </div>
+  {/if}
 
-    <Field>
-      <FieldLabel>
-        {$_("share.permalink")}
-        {#snippet action()}<Copy text={permalink.href} />{/snippet}
-      </FieldLabel>
-      <Text
-        value={permalink.href}
-        --font-family="var(--font-mono)"
-        --font-size="var(--font-sm)"
-      />
-    </Field>
+  <div class="left">
+    <div class="fields">
+      <Field>
+        <FieldLabel>
+          {$_("share.permalink")}
+          {#snippet action()}<Copy text={permalink.href} />{/snippet}
+        </FieldLabel>
+        <Text
+          value={permalink.href}
+          --font-family="var(--font-mono)"
+          --font-size="var(--font-sm)"
+        />
+      </Field>
 
-    <Field>
-      <FieldLabel>
-        {$_("share.embed")}
-        {#snippet action()}<Copy text={embedSrc.href} />{/snippet}
-      </FieldLabel>
-      <Text
-        value={embedSrc.href}
-        --font-family="var(--font-mono)"
-        --font-size="var(--font-sm)"
-      />
-    </Field>
+      <Field>
+        <FieldLabel>
+          {$_("share.embed")}
+          {#snippet action()}<Copy text={embedSrc.href} />{/snippet}
+        </FieldLabel>
+        <Text
+          value={embedSrc.href}
+          --font-family="var(--font-mono)"
+          --font-size="var(--font-sm)"
+        />
+      </Field>
 
-    <Field>
+      <Field>
+        <FieldLabel>
+          {$_("share.iframe")}
+          {#snippet action()}<Copy text={iframe} />{/snippet}
+        </FieldLabel>
+        <TextArea
+          value={iframe}
+          --font-family="var(--font-mono)"
+          --font-size="var(--font-sm)"
+          --resize="vertical"
+        />
+      </Field>
+    </div>
+  </div>
+
+  <div class="right">
+    <header>
       <FieldLabel>
-        {$_("share.iframe")}
-        {#snippet action()}<Copy text={iframe} />{/snippet}
+        {$_("share.preview")}
       </FieldLabel>
-      <TextArea
-        value={iframe}
-        --font-family="var(--font-mono)"
-        --font-size="var(--font-sm)"
-        --resize="vertical"
-      />
-    </Field>
+    </header>
+
+    <main>
+      <iframe class="embed" title="Embed Preview" src={embedSrc.href}></iframe>
+    </main>
   </div>
 </div>
 {#if editing}
@@ -113,8 +127,18 @@
 {/if}
 
 <style>
+  .container {
+    width: 100%;
+    height: 32rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 0 1rem;
+  }
+
   .banner {
-    flex: 1 1 100%;
+    grid-column: 1/3;
+    grid-row: 1/2;
     margin-bottom: 1rem;
   }
   .privateWarning {
@@ -123,31 +147,45 @@
     align-items: center;
     gap: 1rem;
   }
-  .share {
-    flex: 1 1 auto;
-    height: min(50vh, 100%);
-    width: min(70vw, 100%);
-    display: flex;
-    flex-flow: row-reverse wrap-reverse;
-    align-items: flex-end;
-    justify-content: center;
-    gap: 1rem;
-    overflow-y: auto;
-  }
   .fields {
     flex: 1 1 auto;
-    max-height: min-content;
+    display: flex;
+    padding: var(--font-md, 1rem);
+    flex-direction: column;
+    gap: var(--font-md, 1rem);
+    flex: 1 0 0;
+    align-self: stretch;
+    border-radius: 0.5rem;
+    border: 1px solid var(--gray-2);
+    background: var(--gray-1);
+    overflow-y: auto;
+  }
+
+  .right,
+  .left {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    flex: 1 1 12rem;
+    grid-row: 2/3;
+    min-width: 0;
   }
-  .embed {
-    min-height: 24rem;
-    flex: 1 1 26rem;
+  .right {
+    flex: 2 1 24rem;
+  }
+  .right header {
+    padding: 0.375rem 0;
+    /* margin-bottom: .25rem; */
+  }
+  .right main {
+    min-height: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  iframe.embed {
+    height: 100%;
+    width: 100%;
+    border-radius: 0.5rem;
     border: 1px solid var(--gray-2);
-    border-radius: 1rem;
-    box-shadow: inset var(--shadow-2);
-    background: var(--gray-1);
-    overflow: hidden;
   }
 </style>
