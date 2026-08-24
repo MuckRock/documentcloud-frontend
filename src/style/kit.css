@@ -237,7 +237,6 @@ hr.divider {
   }
 }
 
-/* Fallback for browsers that don't support animation-timeline */
 .pin-x {
   max-width: var(--pin-width, none);
   position: sticky;

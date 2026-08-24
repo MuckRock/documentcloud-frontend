@@ -1,3 +1,4 @@
+import type { Nullable } from "$lib/api/types";
 import { tick } from "svelte";
 import type { Attachment } from "svelte/attachments";
 
@@ -34,6 +35,7 @@ export interface PinchZoomOptions {
   onPinchStart?: () => void;
   /** Called when a pinch gesture ends. */
   onPinchEnd?: () => void;
+  findItemByOffset: (offset: number) => Nullable<HTMLElement>;
 }
 
 /** Ignore touch pinches that start with the fingers closer than this (px). */
@@ -99,26 +101,6 @@ async function settleLayout(): Promise<void> {
 }
 
 /**
- * Find the .page-container whose box contains (x, y). We can't use
- * document.elementFromPoint here: virtua sets `pointer-events: none` on its
- * scroll container while it thinks it's scrolling (which our own scroll
- * adjustments trigger), so elementFromPoint skips the whole page subtree and
- * returns an outer wrapper.
- */
-function findPageAt(
-  root: HTMLElement,
-  x: number,
-  y: number,
-): HTMLElement | null {
-  const pages = root.querySelectorAll<HTMLElement>(".page-container");
-  for (const page of pages) {
-    const r = page.getBoundingClientRect();
-    if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) return page;
-  }
-  return null;
-}
-
-/**
  * Apply a new scale, keeping the document point at (anchorX, anchorY) fixed on screen.
  */
 async function applyAnchoredZoom(
@@ -126,14 +108,13 @@ async function applyAnchoredZoom(
   anchorX: number,
   anchorY: number,
   newScale: number,
-  getScale: () => number,
-  setZoom: (scale: number) => void,
+  { getScale, setZoom, findItemByOffset }: PinchZoomOptions,
 ) {
   const currentScale = getScale();
   if (currentScale <= 0 || newScale === currentScale) return;
   const k = newScale / currentScale;
 
-  const pageEl = findPageAt(element, anchorX, anchorY);
+  const pageEl = findItemByOffset(anchorY);
   const rect0 = pageEl?.getBoundingClientRect();
 
   // If there's no anchor page, just zoom.
@@ -217,14 +198,7 @@ export function pinchZoom(options: PinchZoomOptions): Attachment<HTMLElement> {
       const ratio = distance(e.touches[0]!, e.touches[1]!) / startDistance;
       const newScale = clamp(startScale * ratio, options.min, options.max);
       const { x, y } = midpoint(e.touches[0]!, e.touches[1]!);
-      await applyAnchoredZoom(
-        element,
-        x,
-        y,
-        newScale,
-        options.getScale,
-        options.setZoom,
-      );
+      await applyAnchoredZoom(element, x, y, newScale, options);
     }
 
     function onTouchEnd(e: TouchEvent) {
@@ -261,14 +235,7 @@ export function pinchZoom(options: PinchZoomOptions): Attachment<HTMLElement> {
         options.min,
         options.max,
       );
-      await applyAnchoredZoom(
-        element,
-        e.clientX,
-        e.clientY,
-        newScale,
-        options.getScale,
-        options.setZoom,
-      );
+      await applyAnchoredZoom(element, e.clientX, e.clientY, newScale, options);
     }
 
     element.addEventListener("touchstart", onTouchStart, { passive: false });

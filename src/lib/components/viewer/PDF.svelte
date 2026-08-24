@@ -10,7 +10,7 @@
 <script lang="ts">
   import { browser } from "$app/environment";
   import { onMount } from "svelte";
-  import { Virtualizer } from "virtua/svelte";
+  import { Virtualizer, type VirtualizerHandle } from "virtua/svelte";
 
   import PdfPage from "./PDFPage.svelte";
 
@@ -21,6 +21,8 @@
   import Error from "../common/Error.svelte";
 
   const viewer = getViewerState();
+
+  let virtualizer = $state<VirtualizerHandle>();
 
   let pinching = $state(false);
   let pinchEnabled = $derived(viewer.mode === "document");
@@ -35,6 +37,13 @@
     max: 2.5,
     onPinchStart: () => (pinching = true),
     onPinchEnd: () => (pinching = false),
+    findItemByOffset: (offset) => {
+      if (!virtualizer) return null;
+      const index = virtualizer.findItemIndex(
+        offset + virtualizer.getScrollOffset(),
+      );
+      return globalThis.document.getElementById(`document/p${index + 1}`);
+    },
   });
 
   let document = $derived(viewer.document!);
@@ -114,6 +123,7 @@
         >
           {#if browser && viewer.width !== undefined}
             <Virtualizer
+              bind:this={virtualizer}
               data={sizes}
               {scrollRef}
               itemProps={() => ({
