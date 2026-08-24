@@ -33,7 +33,7 @@
     setZoom: (scale) => {
       viewer.zoom = scale;
     },
-    min: 0.4,
+    min: Math.min(0.4, viewer.autoZoomScale),
     max: 2.5,
     onPinchStart: () => (pinching = true),
     onPinchEnd: () => (pinching = false),
