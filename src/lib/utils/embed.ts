@@ -1,4 +1,7 @@
 import type { Reroute } from "@sveltejs/kit";
+import type { Writable } from "svelte/store";
+
+import type { StorageManager } from "$lib/utils/storage";
 
 interface EmbedSettingOption {
   label: string;
@@ -23,7 +26,7 @@ interface DimensionField {
   fixed: EmbedSettingOption;
 }
 
-interface EmbedSettingConfig {
+export interface EmbedSettingConfig {
   storageIndex: number;
   defaultValue: null | number;
   field: ToggleField | DimensionField | HiddenField;
@@ -44,6 +47,25 @@ export const defaultSettings: EmbedSettings = {
   fullscreen: 1,
   onlyshoworg: 0,
 };
+
+export function loadSettings<T extends Record<string, null | number>>(
+  storageManager: StorageManager,
+  config: Record<string, EmbedSettingConfig>,
+  store: Writable<T>,
+) {
+  store.update((current) => {
+    const next = current as Record<string, null | number>;
+    Object.entries(config).forEach(([key, setting]) => {
+      if (next[key] === null) {
+        next[key] = storageManager.get(
+          String(setting.storageIndex),
+          setting.defaultValue,
+        );
+      }
+    });
+    return current;
+  });
+}
 
 export function createEmbedSearchParams(
   params: Partial<EmbedSettings>,
