@@ -1,4 +1,4 @@
-import { flushSync } from "svelte";
+import { tick } from "svelte";
 import type { Attachment } from "svelte/attachments";
 
 /**
@@ -71,7 +71,7 @@ function findScrollAncestors(el: HTMLElement): {
 } {
   let horizontal: HTMLElement | null = null;
   let vertical: HTMLElement | null = null;
-  let node: HTMLElement | null = el.parentElement;
+  let node: HTMLElement | null = el;
   while (node && (!horizontal || !vertical)) {
     const style = getComputedStyle(node);
     if (!horizontal && isScrollable(style.overflowX)) horizontal = node;
@@ -85,38 +85,70 @@ function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
 
+function nextFrame(): Promise<void> {
+  return new Promise((resolve) => requestAnimationFrame(() => resolve()));
+}
+
+/**
+ * Wait for the Virtua layout to fully settle after a scale change before measuring.
+ */
+async function settleLayout(): Promise<void> {
+  await tick();
+  await nextFrame();
+  await tick();
+}
+
+/**
+ * Find the .page-container whose box contains (x, y). We can't use
+ * document.elementFromPoint here: virtua sets `pointer-events: none` on its
+ * scroll container while it thinks it's scrolling (which our own scroll
+ * adjustments trigger), so elementFromPoint skips the whole page subtree and
+ * returns an outer wrapper.
+ */
+function findPageAt(
+  root: HTMLElement,
+  x: number,
+  y: number,
+): HTMLElement | null {
+  const pages = root.querySelectorAll<HTMLElement>(".page-container");
+  for (const page of pages) {
+    const r = page.getBoundingClientRect();
+    if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) return page;
+  }
+  return null;
+}
+
 /**
  * Apply a new scale, keeping the document point at (anchorX, anchorY) fixed on screen.
  */
-function applyAnchoredZoom(
+async function applyAnchoredZoom(
   element: HTMLElement,
   anchorX: number,
   anchorY: number,
   newScale: number,
   getScale: () => number,
   setZoom: (scale: number) => void,
-): void {
+) {
   const currentScale = getScale();
   if (currentScale <= 0 || newScale === currentScale) return;
   const k = newScale / currentScale;
 
-  const pageEl = document
-    .elementFromPoint(anchorX, anchorY)
-    ?.closest(".page-container") as HTMLElement | null;
+  const pageEl = findPageAt(element, anchorX, anchorY);
+  const rect0 = pageEl?.getBoundingClientRect();
+
+  // If there's no anchor page, just zoom.
+  if (!pageEl || !rect0) {
+    setZoom(newScale);
+    return;
+  }
 
   // Offset of the focal point within the page, in scaled CSS px (pre-change).
-  const rect0 = pageEl?.getBoundingClientRect();
-  const px = rect0 ? anchorX - rect0.left : 0;
-  const py = rect0 ? anchorY - rect0.top : 0;
+  const px = anchorX - rect0.left;
+  const py = anchorY - rect0.top;
 
   setZoom(newScale);
 
-  // Without a page to anchor against (focal point over a gap/margin), just zoom.
-  if (!pageEl || !rect0) return;
-
-  // Flush so page boxes reflow before we measure the post-change geometry
-  // and adjust scroll to keep the pinch anchor fixed.
-  flushSync();
+  await settleLayout();
 
   // After the layout reflows, scroll so the same document point sits under the
   // focal point. A single page scales uniformly, so the anchor's new offset
@@ -155,7 +187,7 @@ export function pinchZoom(options: PinchZoomOptions): Attachment<HTMLElement> {
       return true;
     }
 
-    function endPinch(): void {
+    function endPinch() {
       if (!active) return;
       active = false;
       startDistance = 0;
@@ -163,7 +195,7 @@ export function pinchZoom(options: PinchZoomOptions): Attachment<HTMLElement> {
       options.onPinchEnd?.();
     }
 
-    function onTouchStart(e: TouchEvent): void {
+    function onTouchStart(e: TouchEvent) {
       if (!options.enabled()) return;
       if (e.touches.length === 2 && beginPinch(e.touches)) {
         // Claim the gesture so the browser doesn't pan while we pinch.
@@ -171,7 +203,7 @@ export function pinchZoom(options: PinchZoomOptions): Attachment<HTMLElement> {
       }
     }
 
-    function onTouchMove(e: TouchEvent): void {
+    async function onTouchMove(e: TouchEvent) {
       if (!options.enabled()) return;
       if (e.touches.length !== 2) {
         if (active) endPinch();
@@ -185,7 +217,7 @@ export function pinchZoom(options: PinchZoomOptions): Attachment<HTMLElement> {
       const ratio = distance(e.touches[0]!, e.touches[1]!) / startDistance;
       const newScale = clamp(startScale * ratio, options.min, options.max);
       const { x, y } = midpoint(e.touches[0]!, e.touches[1]!);
-      applyAnchoredZoom(
+      await applyAnchoredZoom(
         element,
         x,
         y,
@@ -195,14 +227,14 @@ export function pinchZoom(options: PinchZoomOptions): Attachment<HTMLElement> {
       );
     }
 
-    function onTouchEnd(e: TouchEvent): void {
+    function onTouchEnd(e: TouchEvent) {
       if (e.touches.length < 2) endPinch();
     }
 
     // Trackpad pinch gestures arrive as wheel events with ctrlKey set; the browser
     // would otherwise page-zoom, so claim them. Plain (non-ctrl) wheel stays a
     // normal scroll.
-    function onWheel(e: WheelEvent): void {
+    async function onWheel(e: WheelEvent) {
       if (!options.enabled() || !e.ctrlKey) return;
       e.preventDefault();
 
@@ -229,7 +261,7 @@ export function pinchZoom(options: PinchZoomOptions): Attachment<HTMLElement> {
         options.min,
         options.max,
       );
-      applyAnchoredZoom(
+      await applyAnchoredZoom(
         element,
         e.clientX,
         e.clientY,

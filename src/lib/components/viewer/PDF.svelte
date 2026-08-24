@@ -43,7 +43,7 @@
   let scale = $derived(viewer.scale);
 
   // The scrolling ancestor is div#content in SidebarLayout.svelte
-  let scrollRef = $derived(window.document.getElementById("content")!);
+  let scrollRef = $derived(globalThis.document.getElementById("content")!);
 
   // Virtua's container uses `contain: size` and each item is `width: 100%`, so
   // wider-than-viewport pages can't push it out on their own. Set the widest
@@ -104,24 +104,25 @@
     during the first layout, so pages are never laid out at one spacing and then
     resized — which would shift every page below the change (#1203).
   -->
-  <div class="sizer">
-    <div class="pages" class:pinch={pinchEnabled}>
-      <div
-        class="inner"
-        bind:clientWidth={viewer.width}
-        style:--pin-width="{viewer.width}px"
-        {@attach pinchZoom(pinchZoomOptions)}
-      >
-        <div style:width="{maxPageWidth}px">
+  <div class={["sizer", { pinch: pinchEnabled }]}>
+    <div class="pages" {@attach pinchZoom(pinchZoomOptions)}>
+      <div class="inner" bind:clientWidth={viewer.width}>
+        <div
+          class="column"
+          style:width="{maxPageWidth}px"
+          style:--pin-width="{viewer.width}px"
+        >
           {#if browser && viewer.width !== undefined}
             <Virtualizer
               data={sizes}
               {scrollRef}
-              itemProps={() => ({ style: { width: "auto" } })}
+              itemProps={() => ({
+                style: { display: "flex", "justify-content": "center" },
+              })}
             >
               {#snippet children([width, height], n)}
                 {@const page_number = n + 1}
-                <div class={["page", n === sizes.length - 1 && "last"]}>
+                <div class={["page", { last: n === sizes.length - 1 }]}>
                   {#if sections[n]}
                     <h3 class="section pin-x">
                       {sections[n].title}
@@ -154,9 +155,17 @@
     margin: 0 auto;
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: safe center;
+  }
+  .column {
+    flex: none;
   }
 
+  .page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
   .page,
   .section {
     margin-bottom: 1.5rem;
