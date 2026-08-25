@@ -55,6 +55,7 @@
   import * as embed from "$lib/api/embed";
   import { noteUrl, canonicalNoteUrl } from "$lib/api/notes";
   import { createEmbedSearchParams } from "$lib/utils/embed";
+  import { documentDefaults } from "$lib/utils/embedConfig";
   import { onMount } from "svelte";
 
   interface Props {
@@ -130,7 +131,9 @@
 
   // captured when the modal opens so switching tabs behind it can't swap forms
   let editTarget: "document" | "note" = $state("document");
-  let embedUrlParams = $derived(createEmbedSearchParams($embedSettings));
+  let embedUrlParams = $derived(
+    createEmbedSearchParams($embedSettings, documentDefaults),
+  );
 
   // permalink, embed src, and iframe snippet for the selected tab
   let links = $derived.by(() => {

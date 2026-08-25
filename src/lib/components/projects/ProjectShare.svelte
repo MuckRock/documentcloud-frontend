@@ -22,6 +22,7 @@
   import { canonicalUrl, embedUrl } from "$lib/api/projects";
   import * as embed from "$lib/api/embed";
   import { createEmbedSearchParams } from "$lib/utils/embed";
+  import { projectDefaults } from "$lib/utils/embedConfig";
 
   interface Props {
     project: Project;
@@ -34,7 +35,9 @@
 
   let isPrivate = $derived(project.private);
   let permalink = $derived(canonicalUrl(project));
-  let embedUrlParams = $derived(createEmbedSearchParams($embedSettings));
+  let embedUrlParams = $derived(
+    createEmbedSearchParams($embedSettings, projectDefaults),
+  );
   let embedSrc = $derived(embedUrl(project, embedUrlParams));
   let iframe = $derived(embed.project(project));
 

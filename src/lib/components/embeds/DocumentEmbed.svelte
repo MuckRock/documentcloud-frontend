@@ -10,16 +10,19 @@
   import Metadata from "../common/Metadata.svelte";
   import Viewer from "../viewer/Viewer.svelte";
 
-  import { defaultSettings, type EmbedSettings } from "$lib/utils/embed";
+  import {
+    documentDefaults,
+    type DocumentSettings,
+  } from "$lib/utils/embedConfig";
   import { getUserName, isOrg, isUser } from "$lib/api/accounts";
   import { canonicalUrl, userOrgString } from "$lib/api/documents";
   import { getViewerState } from "$lib/state/viewer.svelte";
 
   interface Props {
-    settings?: Partial<EmbedSettings>;
+    settings?: DocumentSettings;
   }
 
-  let { settings = defaultSettings }: Props = $props();
+  let { settings = documentDefaults }: Props = $props();
 
   const viewer = getViewerState();
 

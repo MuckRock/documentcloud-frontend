@@ -3,7 +3,8 @@ import type { ReadMode } from "$lib/api/types";
 import { redirect } from "@sveltejs/kit";
 
 import { EMBED_MAX_AGE } from "@/config/config.js";
-import { getEmbedSettings, type EmbedSettings } from "$lib/utils/embed";
+import { getEmbedSettings } from "$lib/utils/embed";
+import { documentDefaults } from "$lib/utils/embedConfig";
 import loadDocument from "$lib/load/document";
 import * as documents from "$lib/api/documents";
 
@@ -22,7 +23,7 @@ export async function load({ fetch, url, params, depends, setHeaders }) {
     return redirect(302, url.pathname);
   }
 
-  let settings: Partial<EmbedSettings> = getEmbedSettings(url.searchParams);
+  let settings = getEmbedSettings(url.searchParams, documentDefaults);
 
   setHeaders({
     "cache-control": `public, max-age=${EMBED_MAX_AGE}`,

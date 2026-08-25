@@ -1,8 +1,8 @@
 <script lang="ts" module>
   import { writable } from "svelte/store";
-  import { settings } from "$lib/utils/projectEmbed";
+  import { projectDefaults } from "$lib/utils/embedConfig";
 
-  export const embedSettings = writable(settings);
+  export const embedSettings = writable(projectDefaults);
 </script>
 
 <script lang="ts">
@@ -10,18 +10,13 @@
 
   import Settings from "$lib/components/common/Settings.svelte";
 
-  import { loadSettings } from "$lib/utils/embed";
-  import { settingsConfig } from "$lib/utils/projectEmbed";
-  import { StorageManager } from "$lib/utils/storage";
+  import { projectSettings } from "$lib/utils/embedConfig";
+  import { saveStore } from "$lib/utils/storage";
 
-  interface Props {
-    storageManager?: any;
-  }
-
-  let { storageManager = new StorageManager("projectembed") }: Props = $props();
-
-  // initialize settings with loaded values
-  onMount(() => loadSettings(storageManager, settingsConfig, embedSettings));
+  // initialize and sync settings with localStorage
+  onMount(() =>
+    saveStore(embedSettings, "projectoptions", { storage: localStorage }),
+  );
 </script>
 
-<Settings settings={settingsConfig} values={embedSettings} />
+<Settings settings={projectSettings} values={embedSettings} />

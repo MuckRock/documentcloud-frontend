@@ -1,7 +1,4 @@
 import type { Reroute } from "@sveltejs/kit";
-import type { Writable } from "svelte/store";
-
-import type { StorageManager } from "$lib/utils/storage";
 
 interface EmbedSettingOption {
   label: string;
@@ -26,59 +23,35 @@ interface DimensionField {
   fixed: EmbedSettingOption;
 }
 
-export interface EmbedSettingConfig {
-  storageIndex: number;
-  defaultValue: null | number;
+type DefaultValue = number | null;
+
+interface EmbedSettingConfig {
+  defaultValue: DefaultValue;
   field: ToggleField | DimensionField | HiddenField;
 }
 
-export let settings = {
-  title: null,
-  pdf: null,
-  fullscreen: null,
-  onlyshoworg: null,
-};
+type EmbedConfigDefaults<T> = {
+  [K in keyof T]: DefaultValue;
+} & {};
 
-export type EmbedSettings = Record<keyof typeof settings, null | number>;
+export type EmbedConfig = Record<string, EmbedSettingConfig>;
 
-export const defaultSettings: EmbedSettings = {
-  title: 1,
-  pdf: 1,
-  fullscreen: 1,
-  onlyshoworg: 0,
-};
-
-export function loadSettings<T extends Record<string, null | number>>(
-  storageManager: StorageManager,
-  config: Record<string, EmbedSettingConfig>,
-  store: Writable<T>,
-) {
-  store.update((current) => {
-    const next = current as Record<string, null | number>;
-    Object.entries(config).forEach(([key, setting]) => {
-      if (next[key] === null) {
-        next[key] = storageManager.get(
-          String(setting.storageIndex),
-          setting.defaultValue,
-        );
-      }
-    });
-    return current;
-  });
-}
-
-export function createEmbedSearchParams(
-  params: Partial<EmbedSettings>,
+export function createEmbedSearchParams<T>(
+  params: Record<string, DefaultValue>,
+  defaultSettings: EmbedConfigDefaults<T>,
 ): URLSearchParams {
   let searchParams: Record<string, string> = {};
   Object.entries(params).forEach(([key, value]) => {
-    if (value === null) return;
+    if (value === null || value === defaultSettings[key]) return;
     searchParams[key] = String(value);
   });
   return new URLSearchParams(searchParams);
 }
 
-export function getEmbedSettings(searchParams: URLSearchParams): EmbedSettings {
+export function getEmbedSettings<T>(
+  searchParams: URLSearchParams,
+  defaultSettings: EmbedConfigDefaults<T>,
+) {
   const embedSettings = Object.assign({}, defaultSettings);
   Object.keys(embedSettings).forEach((key) => {
     if (searchParams.has(key)) {
@@ -110,88 +83,19 @@ export function truthy(
   return false;
 }
 
-export const settingsConfig: Record<keyof EmbedSettings, EmbedSettingConfig> = {
-  title: {
-    storageIndex: 3,
-    defaultValue: 1,
-    field: {
-      type: "toggle",
-      label: "dialogDocumentEmbedDialog.titleBehavior",
-      options: [
-        {
-          label: "dialogDocumentEmbedDialog.visibleDefault",
-          help: "dialogDocumentEmbedDialog.tVisibleHelp",
-          value: 1,
-        },
-        {
-          label: "dialogDocumentEmbedDialog.hidden",
-          help: "dialogDocumentEmbedDialog.tHiddenHelp",
-          value: 0,
-        },
-      ],
-    },
-  },
-  pdf: {
-    storageIndex: 4,
-    defaultValue: null,
-    field: {
-      type: "toggle",
-      label: "dialogDocumentEmbedDialog.pdfLink",
-      options: [
-        {
-          label: "dialogDocumentEmbedDialog.visibleDefault",
-          help: "dialogDocumentEmbedDialog.plVisibleHelp",
-          value: null,
-        },
-        {
-          label: "dialogDocumentEmbedDialog.hidden",
-          help: "dialogDocumentEmbedDialog.plHiddenHelp",
-          value: 0,
-        },
-      ],
-    },
-  },
-  fullscreen: {
-    storageIndex: 5,
-    defaultValue: null,
-    field: {
-      type: "toggle",
-      label: "dialogDocumentEmbedDialog.fullscreenOption",
-      options: [
-        {
-          label: "dialogDocumentEmbedDialog.visibleDefault",
-          help: "dialogDocumentEmbedDialog.fsVisibleHelp",
-          value: null,
-        },
-        {
-          label: "dialogDocumentEmbedDialog.hidden",
-          help: "dialogDocumentEmbedDialog.fsHiddenHelp",
-          value: 0,
-        },
-      ],
-    },
-  },
-  onlyshoworg: {
-    storageIndex: 7,
-    defaultValue: null,
-    field: {
-      type: "toggle",
-      label: "dialogDocumentEmbedDialog.contributedByFormat",
-      options: [
-        {
-          label: "dialogDocumentEmbedDialog.cbfUserAndOrg",
-          help: "dialogDocumentEmbedDialog.cbfUserAndOrgHelp",
-          value: null,
-        },
-        {
-          label: "dialogDocumentEmbedDialog.cbfOrgOnly",
-          help: "dialogDocumentEmbedDialog.cbfOrgOnlyHelp",
-          value: 1,
-        },
-      ],
-    },
-  },
-};
+/**
+ * Extract default values from a config object to initialize a store
+ */
+export function getConfigDefaults<T extends EmbedConfig>(
+  config: T,
+): EmbedConfigDefaults<T> {
+  return Object.fromEntries(
+    Object.entries(config).map(([key, { defaultValue }]) => [
+      key,
+      defaultValue,
+    ]),
+  ) as EmbedConfigDefaults<T>;
+}
 
 /**
  * Is this URL an embed or a regular view

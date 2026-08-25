@@ -1,25 +1,31 @@
 import { describe, test, expect } from "vitest";
 import {
-  settingsConfig,
   createEmbedSearchParams,
   getEmbedSettings,
-  defaultSettings,
   isEmbed,
   reroute,
   truthy,
 } from "../embed";
+import { documentSettings, documentDefaults } from "../embedConfig";
 
 describe("embed settings", () => {
   test("settingsConfig", () => {
-    expect(settingsConfig).toMatchSnapshot();
+    expect(documentSettings).toMatchSnapshot();
   });
 
   test("createEmbedSearchParams", () => {
-    expect(createEmbedSearchParams({ title: null }).toString()).toEqual("");
-    expect(createEmbedSearchParams({ title: 1 }).toString()).toEqual("title=1");
-    expect(createEmbedSearchParams({ title: 1, pdf: 0 }).toString()).toEqual(
-      "title=1&pdf=0",
-    );
+    expect(
+      createEmbedSearchParams({ title: null }, documentDefaults).toString(),
+    ).toEqual("");
+    expect(
+      createEmbedSearchParams({ title: 0 }, documentDefaults).toString(),
+    ).toEqual("title=0");
+    expect(
+      createEmbedSearchParams(
+        { title: 1, pdf: 0 },
+        documentDefaults,
+      ).toString(),
+    ).toEqual("pdf=0");
   });
 
   test("getEmbedSettings", () => {
@@ -27,8 +33,8 @@ describe("embed settings", () => {
     url.searchParams.set("pdf", "false");
     url.searchParams.set("onlyshoworg", "true");
     url.searchParams.set("title", "0");
-    expect(getEmbedSettings(url.searchParams)).toEqual({
-      ...defaultSettings,
+    expect(getEmbedSettings(url.searchParams, documentDefaults)).toEqual({
+      ...documentDefaults,
       pdf: false,
       onlyshoworg: true,
       title: 0,
