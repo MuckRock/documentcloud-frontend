@@ -17,7 +17,7 @@
   } = $props();
 </script>
 
-<div>
+<div class="settings">
   {#each Object.entries(settings) as [name, config]}
     {#if config.field.type === "hidden"}
       <input type="hidden" {name} value={config.defaultValue} />
@@ -107,6 +107,14 @@
 </div>
 
 <style>
+  .settings {
+    padding: 0 0.5em;
+    background: var(--gray-1);
+    border-radius: 0.5rem;
+    border: 1px solid var(--gray-2);
+    height: 100%;
+    overflow-y: auto;
+  }
   fieldset {
     margin: 0.5em 0;
     border: 1px solid var(--gray-2);

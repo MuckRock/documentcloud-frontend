@@ -25,7 +25,7 @@ interface DimensionField {
 
 type DefaultValue = number | null;
 
-interface EmbedSettingConfig {
+export interface EmbedSettingConfig {
   defaultValue: DefaultValue;
   field: ToggleField | DimensionField | HiddenField;
 }
