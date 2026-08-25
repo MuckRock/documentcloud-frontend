@@ -14,7 +14,7 @@
     canonicalPageUrl,
     pageImageUrl,
     pageUrl,
-    textUrl,
+    pageTextUrl,
     userOrgString,
   } from "$lib/api/documents";
   import { embedUrl } from "$lib/api/embed";
@@ -184,7 +184,7 @@
     or
     <a
       style="color: #5a76a0; text-decoration: underline;"
-      href={textUrl(doc, page).href}
+      href={pageTextUrl(doc, page).href}
       title="Read the text of page {page} of {doc.title} on DocumentCloud in
       new window or tab"
       target="_blank"

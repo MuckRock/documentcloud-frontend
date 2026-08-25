@@ -651,9 +651,16 @@ export function pageImageUrl(
  *
  * @export
  */
-export function textUrl(document: Document, page: number): URL {
+export function pageTextUrl(document: Document, page: number): URL {
   return new URL(
     `documents/${document.id}/pages/${document.slug}-p${page}.txt`,
+    document.asset_url,
+  );
+}
+
+export function textUrl(document): URL {
+  return new URL(
+    `documents/${document.id}/${document.slug}.txt`,
     document.asset_url,
   );
 }
