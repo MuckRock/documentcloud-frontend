@@ -2,10 +2,13 @@
   import type { Project } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
-  import { ShieldLock24 } from "svelte-octicons";
+  import { ShieldLock24, Check16, Sliders16 } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
   import Copy from "../common/Copy.svelte";
+  import CustomizeEmbed, {
+    embedSettings,
+  } from "$lib/components/projects/CustomizeProjectEmbed.svelte";
   import Field from "$lib/components/common/Field.svelte";
   import FieldLabel from "$lib/components/common/FieldLabel.svelte";
   import Text from "$lib/components/inputs/Text.svelte";
@@ -18,6 +21,7 @@
 
   import { canonicalUrl, embedUrl } from "$lib/api/projects";
   import * as embed from "$lib/api/embed";
+  import { createEmbedSearchParams } from "$lib/utils/embed";
 
   interface Props {
     project: Project;
@@ -30,7 +34,8 @@
 
   let isPrivate = $derived(project.private);
   let permalink = $derived(canonicalUrl(project));
-  let embedSrc = $derived(embedUrl(project));
+  let embedUrlParams = $derived(createEmbedSearchParams($embedSettings));
+  let embedSrc = $derived(embedUrl(project, embedUrlParams));
   let iframe = $derived(embed.project(project));
 
   function closeEditing() {
@@ -107,11 +112,43 @@
     <header>
       <FieldLabel>
         {$_("share.preview")}
+        {#snippet action()}
+          <div>
+            {#if customizeEmbedOpen}
+              <Button
+                size="small"
+                ghost
+                mode="primary"
+                onclick={() => (customizeEmbedOpen = false)}
+              >
+                <Check16 />
+                {$_("share.save")}
+              </Button>
+            {:else}
+              <Button
+                size="small"
+                ghost
+                mode="primary"
+                onclick={() => (customizeEmbedOpen = true)}
+              >
+                <Sliders16 />
+                {$_("share.customize")}
+              </Button>
+            {/if}
+          </div>
+        {/snippet}
       </FieldLabel>
     </header>
 
     <main>
-      <iframe class="embed" title="Embed Preview" src={embedSrc.href}></iframe>
+      {#if customizeEmbedOpen}
+        <div class="embedSettings">
+          <CustomizeEmbed />
+        </div>
+      {:else}
+        <iframe class="embed" title="Embed Preview" src={embedSrc.href}>
+        </iframe>
+      {/if}
     </main>
   </div>
 </div>
@@ -187,5 +224,13 @@
     width: 100%;
     border-radius: 0.5rem;
     border: 1px solid var(--gray-2);
+  }
+  .embedSettings {
+    padding: 0 0.5em;
+    background: var(--gray-1);
+    border-radius: 0.5rem;
+    border: 1px solid var(--gray-2);
+    height: 100%;
+    overflow-y: auto;
   }
 </style>

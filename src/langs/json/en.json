@@ -173,6 +173,14 @@
     "success": "Upload complete. Your documents will process in the background.",
     "error": "Error during upload. See upload list for more details."
   },
+  "projectEmbedDialog": {
+    "hidden": "Hidden",
+    "visible": "Visible",
+    "visibleDefault": "Visible",
+    "titleBehavior": "Title behavior",
+    "tVisibleHelp": "Display the title in the header of the viewer",
+    "tHiddenHelp": "Hide the title in the header of the viewer"
+  },
   "authSection": {
     "help": {
       "faq": "FAQ",
