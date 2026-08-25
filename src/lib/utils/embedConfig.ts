@@ -122,6 +122,31 @@ export const projectSettings = {
       ],
     },
   },
+  sort: {
+    defaultValue: "none",
+    field: {
+      type: "select",
+      label: "projectEmbedDialog.sort",
+      options: [
+        {
+          label: "projectEmbedDialog.sortNone",
+          value: "none",
+        },
+        {
+          label: "projectEmbedDialog.sortTitle",
+          value: "title",
+        },
+        {
+          label: "projectEmbedDialog.sortNewest",
+          value: "created_at",
+        },
+        {
+          label: "projectEmbedDialog.sortOldest",
+          value: "-created_at",
+        },
+      ],
+    },
+  },
 } satisfies EmbedConfig;
 
 export const projectDefaults = getConfigDefaults(projectSettings);
