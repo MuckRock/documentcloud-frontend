@@ -21,6 +21,8 @@
     show = {
       pin: true,
       access: true,
+      title: true,
+      description: true,
     },
   }: Props = $props();
 
@@ -33,22 +35,26 @@
   class:sm={width < remToPx(32)}
   class:twoColumn={width > remToPx(48)}
 >
-  <Flex align="baseline" wrap justify="between">
-    {#if show.pin}
-      <ProjectPin {project} />
-    {/if}
-    <h1>{project.title}</h1>
-    {#if show.access}
-      <div class="access">
-        {#if project.private}
-          <Access level={getLevel("private")} />
-        {:else}
-          <Access level={getLevel("public")} />
-        {/if}
-      </div>
-    {/if}
-  </Flex>
-  {#if project.description}
+  {#if show.pin || show.title || show.access}
+    <Flex align="baseline" wrap justify="between">
+      {#if show.pin}
+        <ProjectPin {project} />
+      {/if}
+      {#if show.title}
+        <h1>{project.title}</h1>
+      {/if}
+      {#if show.access}
+        <div class="access">
+          {#if project.private}
+            <Access level={getLevel("private")} />
+          {:else}
+            <Access level={getLevel("public")} />
+          {/if}
+        </div>
+      {/if}
+    </Flex>
+  {/if}
+  {#if project.description && show.description}
     <div class="description">{@html renderMarkdown(project.description)}</div>
   {/if}
 </div>

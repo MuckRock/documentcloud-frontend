@@ -10,6 +10,7 @@
     SearchResultsState,
     setSearchResults,
   } from "$lib/state/search.svelte";
+  import { showTip } from "$lib/components/common/TipOfDay.svelte";
 
   setContext("embed", true);
 
@@ -22,6 +23,7 @@
     search.setResults(data.documents);
   });
   let project = $derived(data.project);
+  let { title, description } = $derived(data.settings);
 </script>
 
 <svelte:head>
@@ -30,9 +32,14 @@
 
 <EmbedLayout canonicalUrl={canonicalUrl(project).href}>
   <article>
-    <header>
-      <ProjectHeader {project} show={{ pin: false, access: false }} />
-    </header>
+    {#if title || description}
+      <header>
+        <ProjectHeader
+          {project}
+          show={{ pin: false, access: false, title, description }}
+        />
+      </header>
+    {/if}
     <main>
       <DocumentBrowser />
     </main>

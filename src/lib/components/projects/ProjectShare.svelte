@@ -40,7 +40,7 @@
     createEmbedSearchParams($embedSettings, projectDefaults),
   );
   let embedSrc = $derived(embedUrl(project, embedUrlParams));
-  let iframe = $derived(embed.project(project));
+  let iframe = $derived(embed.project(project, embedUrlParams));
 
   function closeEditing() {
     editing = false;

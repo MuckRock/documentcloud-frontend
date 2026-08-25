@@ -6,6 +6,8 @@ import { error, redirect } from "@sveltejs/kit";
 import { EMBED_MAX_AGE } from "@/config/config.js";
 import { search } from "$lib/api/documents";
 import { get, embedUrl } from "$lib/api/projects";
+import { getEmbedSettings } from "$lib/utils/embed";
+import { projectDefaults } from "$lib/utils/embedConfig";
 
 const OLD_PATTERN = /(\D+)-(\d+)/;
 
@@ -49,6 +51,8 @@ export async function load({ params, fetch, url, setHeaders }) {
     return redirect(302, embedUrl(project.data));
   }
 
+  let settings = getEmbedSettings(url.searchParams, projectDefaults);
+
   setHeaders({
     "cache-control": `public, max-age=${EMBED_MAX_AGE}`,
     "last-modified": new Date(project.data.updated_at).toUTCString(),
@@ -58,5 +62,6 @@ export async function load({ params, fetch, url, setHeaders }) {
     documents,
     error: project.error,
     project: project.data,
+    settings,
   };
 }

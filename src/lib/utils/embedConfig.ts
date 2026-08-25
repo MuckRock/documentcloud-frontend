@@ -103,6 +103,25 @@ export const projectSettings = {
       ],
     },
   },
+  description: {
+    defaultValue: 1,
+    field: {
+      type: "toggle",
+      label: "projectEmbedDialog.descriptionBehavior",
+      options: [
+        {
+          label: "projectEmbedDialog.visibleDefault",
+          help: "projectEmbedDialog.dVisibleHelp",
+          value: 1,
+        },
+        {
+          label: "projectEmbedDialog.hidden",
+          help: "projectEmbedDialog.dHiddenHelp",
+          value: 0,
+        },
+      ],
+    },
+  },
 } satisfies EmbedConfig;
 
 export const projectDefaults = getConfigDefaults(projectSettings);

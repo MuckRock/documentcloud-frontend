@@ -178,8 +178,11 @@
     "visible": "Visible",
     "visibleDefault": "Visible",
     "titleBehavior": "Title behavior",
-    "tVisibleHelp": "Display the title in the header of the viewer",
-    "tHiddenHelp": "Hide the title in the header of the viewer"
+    "tVisibleHelp": "Display the project title in the header of the viewer",
+    "tHiddenHelp": "Hide the project title in the header of the viewer",
+    "descriptionBehavior": "Description behavior",
+    "dVisibleHelp": "Display the project description in the header of the viewer",
+    "dHiddenHelp": "Hide the project description in the header of the viewer"
   },
   "authSection": {
     "help": {
