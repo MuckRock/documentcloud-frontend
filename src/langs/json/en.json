@@ -487,6 +487,10 @@
       "pageAbbrev": "p.",
       "sections": "Sections",
       "cta": "Add Sections"
+    },
+    "file": {
+      "pdf": "Download PDF",
+      "text": "Download extracted text"
     }
   },
   "notes": {

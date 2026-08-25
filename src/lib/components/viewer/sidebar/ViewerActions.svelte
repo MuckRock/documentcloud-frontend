@@ -1,7 +1,13 @@
-<!-- Assumes its a child of ViewerContext -->
+<!-- Must be a child of ViewerContext -->
 <script module lang="ts">
   type Action =
-    "share" | "edit" | "revisions" | "reprocess" | "delete" | "change_owner";
+    | "download"
+    | "share"
+    | "edit"
+    | "revisions"
+    | "reprocess"
+    | "delete"
+    | "change_owner";
 </script>
 
 <script lang="ts">
@@ -22,6 +28,7 @@
   import ChangeOwner from "$lib/components/forms/ChangeOwner.svelte";
   import ConfirmDelete from "$lib/components/forms/ConfirmDelete.svelte";
   import Edit from "$lib/components/forms/Edit.svelte";
+  import Flex from "$lib/components/common/Flex.svelte";
   import Reprocess from "$lib/components/forms/Reprocess.svelte";
   import RevisionControl from "$lib/components/forms/RevisionControl.svelte";
   import Premium from "$lib/components/icons/Premium.svelte";
@@ -38,7 +45,7 @@
   import { getPendingDocuments } from "$lib/components/processing/ProcessContext.svelte";
 
   import { getUpgradeUrl } from "$lib/api/accounts";
-  import { pdfUrl } from "$lib/api/documents";
+  import { pdfUrl, textUrl } from "$lib/api/documents";
   import { canChangeOwner } from "$lib/utils/permissions";
 
   interface Props {
@@ -52,6 +59,7 @@
   const pending = getPendingDocuments();
 
   const labels: Record<Action, string> = {
+    download: "sidebar.download",
     share: "sidebar.shareEmbed",
     edit: "edit.title",
     revisions: "dialogRevisionsDialog.heading",
@@ -81,10 +89,11 @@
 
 <div class="actions wideGap">
   <div class="actions">
-    <Button ghost href={pdfUrl(document).href} download target="_blank">
+    <Button ghost onclick={() => show("download")}>
       <Download16 />
       {$_("sidebar.download")}
     </Button>
+
     <Button ghost onclick={() => show("share")}>
       <Share16 />
       {$_("sidebar.shareEmbed")}
@@ -162,6 +171,32 @@
           {/if}
         </h1>
       {/snippet}
+
+      {#if visible === "download"}
+        <Flex>
+          <Button
+            ghost
+            href={pdfUrl(document).href}
+            download
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Download16 />
+            {$_("sidebar.file.pdf")}
+          </Button>
+
+          <Button
+            ghost
+            href={textUrl(document).href}
+            download
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Download16 />
+            {$_("sidebar.file.text")}
+          </Button>
+        </Flex>
+      {/if}
 
       {#if visible === "share"}
         <Share {document} page={viewer.page} />

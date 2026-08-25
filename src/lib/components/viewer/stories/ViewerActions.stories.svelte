@@ -3,7 +3,7 @@
 
   import { defineMeta } from "@storybook/addon-svelte-csf";
 
-  import ViewerActions from "../ViewerActions.svelte";
+  import ViewerActions from "../sidebar/ViewerActions.svelte";
   import ViewerContext from "$lib/components/viewer/ViewerContext.svelte";
   import doc from "@/test/fixtures/documents/document-expanded.json";
 

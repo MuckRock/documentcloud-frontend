@@ -756,7 +756,16 @@ describe("document helper methods", () => {
   });
 
   test("textUrl", ({ document }) => {
-    expect(documents.textUrl(document, 1)).toStrictEqual(
+    expect(documents.textUrl(document)).toStrictEqual(
+      new URL(
+        `documents/${document.id}/${document.slug}.txt`,
+        document.asset_url,
+      ),
+    );
+  });
+
+  test("pageTextUrl", ({ document }) => {
+    expect(documents.pageTextUrl(document, 1)).toStrictEqual(
       new URL(
         `documents/${document.id}/pages/${document.slug}-p1.txt`,
         document.asset_url,
