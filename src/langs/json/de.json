@@ -203,5 +203,11 @@
   },
   "processing": {
     "document": "Dieses Dokument wird verarbeitet. Einige Funktionen sind möglicherweise noch nicht verfügbar."
+  },
+  "homepage": {
+    "muckrock": {
+      "about": "Über MuckRock",
+      "jobs": "Stellenangebote"
+    }
   }
 }
