@@ -18,7 +18,7 @@ Must be a child of a ViewerContext
   import SidebarLayout from "./SidebarLayout.svelte";
   import SignedIn from "../common/SignedIn.svelte";
   import Viewer from "../viewer/Viewer.svelte";
-  import ViewerActions from "$lib/components/sidebar/ViewerActions.svelte";
+  import ViewerActions from "$lib/components/viewer/sidebar/ViewerActions.svelte";
 
   import { getCurrentUser } from "$lib/utils/permissions";
   import { isOrg } from "$lib/api/accounts";

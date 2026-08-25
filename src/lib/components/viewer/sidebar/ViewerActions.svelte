@@ -1,4 +1,4 @@
-<!-- Assumes its a child of ViewerContext -->
+<!-- Must be a child of ViewerContext -->
 <script module lang="ts">
   type Action =
     "share" | "edit" | "revisions" | "reprocess" | "delete" | "change_owner";
