@@ -7,6 +7,7 @@
   import Flex from "$lib/components/common/Flex.svelte";
   import Field from "$lib/components/common/Field.svelte";
   import NumberInput from "$lib/components/inputs/Number.svelte";
+  import Select from "$lib/components/inputs/Select.svelte";
 
   let {
     settings,
@@ -78,7 +79,7 @@
               <NumberInput min={1} {name} bind:value={$values[name]} />
             </div>
           {/if}
-        {:else}
+        {:else if config.field.type === "toggle"}
           <Flex>
             {#each config.field.options as option}
               <div class="flexItem">
@@ -100,6 +101,15 @@
               </div>
             {/each}
           </Flex>
+        {:else if config.field.type === "select"}
+          <Select
+            {name}
+            bind:value={$values[name]}
+            options={config.field.options.map(({ label, value }) => ({
+              label: $_(label),
+              value,
+            }))}
+          />
         {/if}
       </fieldset>
     {/if}

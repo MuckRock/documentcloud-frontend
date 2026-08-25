@@ -6,6 +6,11 @@ interface EmbedSettingOption {
   value: null | number;
 }
 
+interface EmbedSelectOption {
+  label: string;
+  value: string;
+}
+
 interface HiddenField {
   type: "hidden";
 }
@@ -16,6 +21,12 @@ interface ToggleField {
   options: EmbedSettingOption[];
 }
 
+interface SelectField {
+  type: "select";
+  label: string;
+  options: EmbedSelectOption[];
+}
+
 interface DimensionField {
   type: "dimension";
   label: string;
@@ -23,11 +34,11 @@ interface DimensionField {
   fixed: EmbedSettingOption;
 }
 
-type DefaultValue = number | null;
+type DefaultValue = number | string | null;
 
 export interface EmbedSettingConfig {
   defaultValue: DefaultValue;
-  field: ToggleField | DimensionField | HiddenField;
+  field: ToggleField | DimensionField | SelectField | HiddenField;
 }
 
 type EmbedConfigDefaults<T> = {
