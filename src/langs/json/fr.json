@@ -415,6 +415,10 @@
       "pageAbbrev": "p",
       "sections": "S\u00e9ctions",
       "cta": "Ajouter des sections"
+    },
+    "file": {
+      "pdf": "T\u00e9l\u00e9charger le PDF",
+      "text": "T\u00e9l\u00e9charger le texte extrait"
     }
   },
   "notes": {

@@ -183,7 +183,11 @@
     "contributed": "Beitrag von {name}",
     "share": "Teilen",
     "data": "Tags und Daten bearbeiten",
-    "processing": "Verarbeitung"
+    "processing": "Verarbeitung",
+    "file": {
+      "pdf": "PDF herunterladen",
+      "text": "Extrahierten Text herunterladen"
+    }
   },
   "addonDispatchDialog": {
     "select": "Wählen Sie die Dokumente aus, mit denen dieses Add-on ausgeführt werden soll:",
