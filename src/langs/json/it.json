@@ -627,5 +627,11 @@
       "shareAnonymously": "Condividi anonimamente"
     },
     "success": "Riceviamo il vostro feedback. Grazie!"
+  },
+  "homepage": {
+    "muckrock": {
+      "about": "Informazioni su MuckRock",
+      "jobs": "Posizioni aperte"
+    }
   }
 }

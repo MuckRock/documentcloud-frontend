@@ -4,7 +4,7 @@ import { PAGE_MAX_AGE } from "@/config/config.js";
 import { getMe } from "$lib/api/accounts";
 import { search } from "$lib/api/documents.js";
 
-export const trailingSlash = "ignore";
+export const trailingSlash = "always";
 
 export async function load({ fetch, cookies, setHeaders }) {
   const sessionId = cookies.get("sessionid");

@@ -764,7 +764,9 @@
     },
     "muckrock": {
       "logoLabel": "MuckRock Foundation",
-      "content": "<p>DocumentCloud is a project of the <a href=\"https://www.muckrock.com\" target=\"_blank\" rel=\"noopener noreferrer\">MuckRock Foundation</a>, a 501c3 organization that is committed to trust, transparency, and civic engagement.</p><p>Our <a href=\"https://www.muckrock.com/privacy-policy/\" target=\"_blank\" rel=\"noopener noreferrer\">privacy policy</a> and <a href=\"https://www.muckrock.com/tos/\" target=\"_blank\" rel=\"noopener noreferrer\">terms of service</a> apply to all users on this site.</p>"
+      "content": "<p>DocumentCloud is a project of the <a href=\"https://www.muckrock.com\" target=\"_blank\" rel=\"noopener noreferrer\">MuckRock Foundation</a>, a 501c3 organization that is committed to trust, transparency, and civic engagement.</p><p>Our <a href=\"https://www.muckrock.com/privacy-policy/\" target=\"_blank\" rel=\"noopener noreferrer\">privacy policy</a> and <a href=\"https://www.muckrock.com/tos/\" target=\"_blank\" rel=\"noopener noreferrer\">terms of service</a> apply to all users on this site.</p>",
+      "about": "About MuckRock",
+      "jobs": "Job Openings"
     },
     "donate": {
       "heading": "Together, we hold power to account and shine a light on government transparency",

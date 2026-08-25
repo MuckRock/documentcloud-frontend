@@ -213,6 +213,20 @@
         </a>
         {@html $_("homepage.muckrock.content")}
       </div>
+      <div class="column" style:--width="36%">
+        <ul class="links">
+          <li>
+            <a href="https://www.muckrock.com/">
+              {$_("homepage.muckrock.about")}
+            </a>
+          </li>
+          <li>
+            <a href="https://www.muckrock.com/jobs/">
+              {$_("homepage.muckrock.jobs")}
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -508,6 +522,15 @@
 
   .muckrock :global(a) {
     color: var(--gray-5);
+  }
+
+  .muckrock .links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
   /* Section: Donate */
