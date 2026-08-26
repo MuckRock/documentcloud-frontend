@@ -147,6 +147,25 @@ export const projectSettings = {
       ],
     },
   },
+  view: {
+    defaultValue: 1,
+    field: {
+      type: "toggle",
+      label: "projectEmbedDialog.view",
+      options: [
+        {
+          label: "projectEmbedDialog.viewDetailed",
+          help: "projectEmbedDialog.viewDetailedHelp",
+          value: 1,
+        },
+        {
+          label: "projectEmbedDialog.viewConcise",
+          help: "projectEmbedDialog.viewConciseHelp",
+          value: 0,
+        },
+      ],
+    },
+  },
 } satisfies EmbedConfig;
 
 export const projectDefaults = getConfigDefaults(projectSettings);

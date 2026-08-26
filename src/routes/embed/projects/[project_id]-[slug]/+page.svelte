@@ -10,7 +10,7 @@
     SearchResultsState,
     setSearchResults,
   } from "$lib/state/search.svelte";
-  import { showTip } from "$lib/components/common/TipOfDay.svelte";
+  import { defaultViews } from "$lib/components/documents/VisibleFields.svelte";
 
   setContext("embed", true);
 
@@ -23,7 +23,7 @@
     search.setResults(data.documents);
   });
   let project = $derived(data.project);
-  let { title, description } = $derived(data.settings);
+  let { title, description, view } = $derived(data.settings);
 </script>
 
 <svelte:head>
@@ -41,7 +41,7 @@
       </header>
     {/if}
     <main>
-      <DocumentBrowser />
+      <DocumentBrowser visibleFieldsOverride={defaultViews[view ?? 1].fields} />
     </main>
   </article>
 </EmbedLayout>
