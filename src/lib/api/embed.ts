@@ -71,6 +71,7 @@ export function project(
   project: Project,
   params: Maybe<URLSearchParams> = undefined,
 ) {
+  const style = "border: 1px solid #d8dee2; border-radius: 0.5rem;";
   const embedSrc = projects.embedUrl(project, params);
-  return `<iframe src="${embedSrc.href}" width="100%" height="600px"></iframe>`;
+  return `<iframe src="${embedSrc.href}" width="100%" height="600px" style="${style}"></iframe>`;
 }
