@@ -1,5 +1,92 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`embed settings > projectSettingsConfig 1`] = `
+{
+  "description": {
+    "defaultValue": 1,
+    "field": {
+      "label": "projectEmbedDialog.descriptionBehavior",
+      "options": [
+        {
+          "help": "projectEmbedDialog.dVisibleHelp",
+          "label": "projectEmbedDialog.visibleDefault",
+          "value": 1,
+        },
+        {
+          "help": "projectEmbedDialog.dHiddenHelp",
+          "label": "projectEmbedDialog.hidden",
+          "value": 0,
+        },
+      ],
+      "type": "toggle",
+    },
+  },
+  "sort": {
+    "defaultValue": "none",
+    "field": {
+      "label": "projectEmbedDialog.sort",
+      "options": [
+        {
+          "label": "projectEmbedDialog.sortNone",
+          "value": "none",
+        },
+        {
+          "label": "projectEmbedDialog.sortTitle",
+          "value": "title",
+        },
+        {
+          "label": "projectEmbedDialog.sortNewest",
+          "value": "created_at",
+        },
+        {
+          "label": "projectEmbedDialog.sortOldest",
+          "value": "-created_at",
+        },
+      ],
+      "type": "select",
+    },
+  },
+  "title": {
+    "defaultValue": 1,
+    "field": {
+      "label": "projectEmbedDialog.titleBehavior",
+      "options": [
+        {
+          "help": "projectEmbedDialog.tVisibleHelp",
+          "label": "projectEmbedDialog.visibleDefault",
+          "value": 1,
+        },
+        {
+          "help": "projectEmbedDialog.tHiddenHelp",
+          "label": "projectEmbedDialog.hidden",
+          "value": 0,
+        },
+      ],
+      "type": "toggle",
+    },
+  },
+  "view": {
+    "defaultValue": 1,
+    "field": {
+      "label": "projectEmbedDialog.view",
+      "options": [
+        {
+          "help": "projectEmbedDialog.viewDetailedHelp",
+          "label": "projectEmbedDialog.viewDetailed",
+          "value": 1,
+        },
+        {
+          "help": "projectEmbedDialog.viewConciseHelp",
+          "label": "projectEmbedDialog.viewConcise",
+          "value": 0,
+        },
+      ],
+      "type": "toggle",
+    },
+  },
+}
+`;
+
 exports[`embed settings > settingsConfig 1`] = `
 {
   "fullscreen": {

@@ -1,16 +1,27 @@
 import { describe, test, expect } from "vitest";
 import {
   createEmbedSearchParams,
+  getConfigDefaults,
   getEmbedSettings,
   isEmbed,
   reroute,
   truthy,
+  type EmbedConfig,
 } from "../embed";
-import { documentSettings, documentDefaults } from "../embedConfig";
+import {
+  documentSettings,
+  documentDefaults,
+  projectSettings,
+  projectDefaults,
+} from "../embedConfig";
 
 describe("embed settings", () => {
   test("settingsConfig", () => {
     expect(documentSettings).toMatchSnapshot();
+  });
+
+  test("projectSettingsConfig", () => {
+    expect(projectSettings).toMatchSnapshot();
   });
 
   test("createEmbedSearchParams", () => {
@@ -28,6 +39,30 @@ describe("embed settings", () => {
     ).toEqual("pdf=0");
   });
 
+  test("createEmbedSearchParams with select field", () => {
+    // the default option is omitted from the query string
+    expect(
+      createEmbedSearchParams({ sort: "none" }, projectDefaults).toString(),
+    ).toEqual("");
+    // non-default string values are serialized
+    expect(
+      createEmbedSearchParams({ sort: "title" }, projectDefaults).toString(),
+    ).toEqual("sort=title");
+    expect(
+      createEmbedSearchParams(
+        { sort: "-created_at" },
+        projectDefaults,
+      ).toString(),
+    ).toEqual("sort=-created_at");
+    // mixes select and toggle fields, dropping defaults
+    expect(
+      createEmbedSearchParams(
+        { title: 1, description: 0, sort: "created_at", view: 0 },
+        projectDefaults,
+      ).toString(),
+    ).toEqual("description=0&sort=created_at&view=0");
+  });
+
   test("getEmbedSettings", () => {
     const url = new URL("https://www.documentcloud.org");
     url.searchParams.set("pdf", "false");
@@ -39,6 +74,70 @@ describe("embed settings", () => {
       onlyshoworg: true,
       title: 0,
       fullscreen: 1,
+    });
+  });
+
+  test("getEmbedSettings returns defaults when no params are set", () => {
+    const url = new URL("https://www.documentcloud.org");
+    expect(getEmbedSettings(url.searchParams, projectDefaults)).toEqual(
+      projectDefaults,
+    );
+  });
+
+  test("getEmbedSettings reads project toggle params", () => {
+    const url = new URL("https://www.documentcloud.org");
+    url.searchParams.set("title", "0");
+    url.searchParams.set("view", "0");
+    expect(getEmbedSettings(url.searchParams, projectDefaults)).toEqual({
+      ...projectDefaults,
+      title: 0,
+      view: 0,
+    });
+  });
+
+  test("getEmbedSettings preserves string select values", () => {
+    const url = new URL("https://www.documentcloud.org");
+    // string-valued fields (select) must survive untouched, not be coerced
+    url.searchParams.set("sort", "-created_at");
+    url.searchParams.set("view", "0");
+    expect(getEmbedSettings(url.searchParams, projectDefaults)).toEqual({
+      ...projectDefaults,
+      sort: "-created_at",
+      view: 0,
+    });
+  });
+});
+
+describe("getConfigDefaults", () => {
+  test("extracts defaultValue from each setting", () => {
+    const config = {
+      title: { defaultValue: 1, field: { type: "hidden" } },
+      sort: { defaultValue: "none", field: { type: "hidden" } },
+      width: { defaultValue: null, field: { type: "hidden" } },
+    } satisfies EmbedConfig;
+
+    expect(getConfigDefaults(config)).toEqual({
+      title: 1,
+      sort: "none",
+      width: null,
+    });
+  });
+
+  test("documentDefaults matches documentSettings", () => {
+    expect(documentDefaults).toEqual({
+      title: 1,
+      pdf: 1,
+      fullscreen: 1,
+      onlyshoworg: 0,
+    });
+  });
+
+  test("projectDefaults matches projectSettings", () => {
+    expect(projectDefaults).toEqual({
+      title: 1,
+      description: 1,
+      sort: "none",
+      view: 1,
     });
   });
 });
