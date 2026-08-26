@@ -21,7 +21,7 @@
       {message}
     </div>
     {#if buttonAction && buttonLabel}
-      <Button mode="danger" size="small" onClick={buttonAction}>
+      <Button mode="danger" size="small" onclick={buttonAction}>
         {buttonLabel}
       </Button>
     {/if}
