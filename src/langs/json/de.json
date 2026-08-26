@@ -100,6 +100,27 @@
     "cbfOrgOnly": "Nur für die Organisation",
     "cbfOrgOnlyHelp": "Das Dokument nur der Organisation zuordnen"
   },
+  "projectEmbedDialog": {
+    "hidden": "Ausgeblendet",
+    "visible": "Sichtbar",
+    "visibleDefault": "Sichtbar",
+    "titleBehavior": "Titelverhalten",
+    "tVisibleHelp": "Den Projekttitel in der Kopfzeile des Viewers anzeigen",
+    "tHiddenHelp": "Den Projekttitel in der Kopfzeile des Viewers ausblenden",
+    "descriptionBehavior": "Beschreibungsverhalten",
+    "dVisibleHelp": "Die Projektbeschreibung in der Kopfzeile des Viewers anzeigen",
+    "dHiddenHelp": "Die Projektbeschreibung in der Kopfzeile des Viewers ausblenden",
+    "sort": "Sortierreihenfolge der Dokumente",
+    "sortNone": "Keine",
+    "sortTitle": "Titel (A–Z)",
+    "sortOldest": "Erstellt (älteste)",
+    "sortNewest": "Erstellt (neueste)",
+    "view": "Ansichtsmodus",
+    "viewDetailed": "Detailliert",
+    "viewConcise": "Kompakt",
+    "viewDetailedHelp": "Dokument-Miniaturansichten und Metadaten anzeigen",
+    "viewConciseHelp": "Nur Dokumenttitel anzeigen"
+  },
   "authSection": {
     "help": "Hilfe"
   },

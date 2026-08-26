@@ -171,6 +171,27 @@
       "wrapTitle": "Ajustar título"
     }
   },
+  "projectEmbedDialog": {
+    "hidden": "Oculto",
+    "visible": "Visible",
+    "visibleDefault": "Visible",
+    "titleBehavior": "Comportamiento del título",
+    "tVisibleHelp": "Mostrar el título del proyecto en el encabezado del visor",
+    "tHiddenHelp": "Ocultar el título del proyecto en el encabezado del visor",
+    "descriptionBehavior": "Comportamiento de la descripción",
+    "dVisibleHelp": "Mostrar la descripción del proyecto en el encabezado del visor",
+    "dHiddenHelp": "Ocultar la descripción del proyecto en el encabezado del visor",
+    "sort": "Orden de los documentos",
+    "sortNone": "Ninguno",
+    "sortTitle": "Título (A–Z)",
+    "sortOldest": "Creado (más antiguo)",
+    "sortNewest": "Creado (más reciente)",
+    "view": "Modo de visualización",
+    "viewDetailed": "Detallado",
+    "viewConcise": "Conciso",
+    "viewDetailedHelp": "Mostrar miniaturas y metadatos de los documentos",
+    "viewConciseHelp": "Mostrar solo los títulos de los documentos"
+  },
   "authSection": {
     "help": {
       "faq": "Preguntas Frecuentes",
