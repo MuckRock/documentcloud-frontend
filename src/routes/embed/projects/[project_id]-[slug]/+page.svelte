@@ -24,6 +24,9 @@
   });
   let project = $derived(data.project);
   let { title, description, view } = $derived(data.settings);
+
+  // [0] is concise, [1] is detailed
+  let visibleFieldsOverride = $derived(defaultViews[view ? 1 : 0]?.fields);
 </script>
 
 <svelte:head>
@@ -41,7 +44,7 @@
       </header>
     {/if}
     <main>
-      <DocumentBrowser visibleFieldsOverride={defaultViews[view ?? 1].fields} />
+      <DocumentBrowser {visibleFieldsOverride} />
     </main>
   </article>
 </EmbedLayout>

@@ -1,12 +1,13 @@
 <script lang="ts">
   import { createEmbedSearchParams } from "$lib/utils/embed";
+  import { documentDefaults } from "$lib/utils/embedConfig";
   import * as embed from "$lib/api/embed";
 
   let { data } = $props();
 
   let document = $derived(data.document);
   let settings = $derived(data.settings);
-  let params = $derived(createEmbedSearchParams(settings));
+  let params = $derived(createEmbedSearchParams(settings, documentDefaults));
   let iframe = $derived(embed.document(document, params));
 </script>
 

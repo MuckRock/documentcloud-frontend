@@ -66,7 +66,10 @@ export function getEmbedSettings<T>(
   const embedSettings = Object.assign({}, defaultSettings);
   Object.keys(embedSettings).forEach((key) => {
     if (searchParams.has(key)) {
-      embedSettings[key] = truthy(searchParams.get(key));
+      const value = searchParams.get(key);
+      // pass through string settings (e.g. select fields) without parsing
+      embedSettings[key] =
+        typeof defaultSettings[key] === "string" ? value : truthy(value);
     }
   });
   return embedSettings;
