@@ -124,6 +124,7 @@
     border: 1px solid var(--gray-2);
     height: 100%;
     overflow-y: auto;
+    flex: 1 0 0;
   }
   fieldset {
     margin: 0.5em 0;

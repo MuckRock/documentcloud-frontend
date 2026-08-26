@@ -27,26 +27,36 @@
 <style>
   .container {
     width: 100%;
-    height: 32rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto 1fr;
-    gap: 0 1rem;
+    grid-auto-rows: max-content;
+    gap: 1rem;
   }
 
   .banner {
     grid-column: 1/3;
-    grid-row: 1/2;
-    margin-bottom: 1rem;
   }
 
   .fields,
   .preview {
     display: flex;
     flex-direction: column;
-    flex: 1 1 12rem;
-    grid-row: 2/3;
+    width: 100%;
+    height: 40vh;
     min-width: 0;
+    grid-column: 1/3;
+  }
+
+  @media (min-width: 48rem) {
+    .container {
+      height: auto;
+    }
+
+    .fields,
+    .preview {
+      height: 32rem;
+      grid-column: auto;
+    }
   }
 
   .fields :global(fieldset) {
@@ -64,10 +74,6 @@
     margin: 0;
   }
 
-  .preview {
-    flex: 2 1 24rem;
-  }
-
   .preview :global(header) {
     padding: 0.375rem 0;
   }
@@ -76,6 +82,8 @@
     min-height: 0;
     height: 100%;
     width: 100%;
+    display: flex;
+    flex-direction: column;
   }
 
   .preview :global(iframe) {
