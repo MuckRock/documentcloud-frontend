@@ -15,8 +15,11 @@
 
 <Story name="Default">
   {#snippet template()}
-    <pre><code>{createEmbedSearchParams($embedSettings, projectDefaults)}</code
-      ></pre>
+    <pre>
+      <code>
+        {createEmbedSearchParams($embedSettings, projectDefaults)}
+      </code>
+    </pre>
     <CustomizeProjectEmbed />
   {/snippet}
 </Story>
