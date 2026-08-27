@@ -7,6 +7,7 @@
   import Field from "$lib/components/common/Field.svelte";
   import FieldLabel from "$lib/components/common/FieldLabel.svelte";
   import Text from "$lib/components/inputs/Text.svelte";
+  import Button from "$lib/components/common/Button.svelte";
 
   const { Story } = defineMeta({
     title: "Layout / Share",
@@ -47,13 +48,11 @@
 <Story name="With banner" asChild>
   <Share {fields} {preview}>
     {#snippet banner()}
-      <Banner
-        mode="danger"
-        message="This document is private."
-        buttonLabel="Make public"
-        buttonAction={() => {}}
-      >
+      <Banner mode="danger" message="This document is private.">
         {#snippet icon()}<ShieldLock24 />{/snippet}
+        {#snippet action()}
+          <Button>Make public</Button>
+        {/snippet}
       </Banner>
     {/snippet}
   </Share>

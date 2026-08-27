@@ -5,6 +5,7 @@
 
   import Banner from "../Banner.svelte";
   import Flex from "../Flex.svelte";
+  import Button from "../Button.svelte";
 
   const { Story } = defineMeta({
     title: "Common / Banner",
@@ -16,13 +17,11 @@
 </script>
 
 <Story name="With action" asChild>
-  <Banner
-    mode="danger"
-    message="This document is private."
-    buttonLabel="Make public"
-    buttonAction={fix}
-  >
+  <Banner mode="danger" message="This document is private.">
     {#snippet icon()}<ShieldLock24 />{/snippet}
+    {#snippet action()}
+      <Button onclick={fix}>Make public</Button>
+    {/snippet}
   </Banner>
 </Story>
 
@@ -43,17 +42,10 @@
     <Banner
       mode="premium"
       message="This project is only visible within your organization."
-      buttonLabel="Make public"
-      buttonAction={fix}
     >
       {#snippet icon()}<Organization24 />{/snippet}
     </Banner>
-    <Banner
-      mode="danger"
-      message="This project is private."
-      buttonLabel="Make public"
-      buttonAction={fix}
-    >
+    <Banner mode="danger" message="This project is private.">
       {#snippet icon()}<ShieldLock24 />{/snippet}
     </Banner>
   </Flex>

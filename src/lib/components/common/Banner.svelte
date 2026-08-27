@@ -1,35 +1,28 @@
 <script lang="ts">
   import type { ComponentProps, Snippet } from "svelte";
   import Tip from "./Tip.svelte";
-  import Button from "./Button.svelte";
 
   interface BannerProps {
     icon: Snippet;
     mode: ComponentProps<typeof Tip>["mode"];
     message: string;
-    buttonLabel?: string;
-    buttonAction?: () => void;
+    action?: Snippet;
   }
 
-  let { icon, mode, message, buttonLabel, buttonAction }: BannerProps =
-    $props();
+  let { icon, mode, message, action }: BannerProps = $props();
 </script>
 
 <Tip {mode} {icon}>
-  <div class="privateWarning">
+  <div class="container">
     <div class="message">
       {message}
     </div>
-    {#if buttonAction && buttonLabel}
-      <Button mode="danger" size="small" onclick={buttonAction}>
-        {buttonLabel}
-      </Button>
-    {/if}
+    {@render action?.()}
   </div>
 </Tip>
 
 <style>
-  .privateWarning {
+  .container {
     width: 100%;
     display: flex;
     align-items: center;

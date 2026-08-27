@@ -197,6 +197,14 @@
   }
 </script>
 
+{#snippet action()}
+  {#if warning.canEdit}
+    <Button mode="danger" size="small" onclick={openEditing}>
+      {$_("share.privateFix")}
+    </Button>
+  {/if}
+{/snippet}
+
 {#snippet banner()}
   {#if warning.access === "private"}
     <Banner
@@ -204,8 +212,7 @@
       message={$_("share.privateWarning", {
         values: { type: $_(`share.types.${warning.kind}`) },
       })}
-      buttonAction={warning.canEdit ? openEditing : undefined}
-      buttonLabel={$_("share.privateFix")}
+      {action}
     >
       {#snippet icon()}<ShieldLock24 />{/snippet}
     </Banner>
@@ -217,8 +224,7 @@
         : $_("share.orgWarning", {
             values: { type: $_("share.types.document") },
           })}
-      buttonAction={warning.canEdit ? openEditing : undefined}
-      buttonLabel={$_("share.privateFix")}
+      {action}
     >
       {#snippet icon()}<Organization24 />{/snippet}
     </Banner>

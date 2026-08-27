@@ -56,10 +56,15 @@
     message={$_("share.privateWarning", {
       values: { type: $_("share.types.project") },
     })}
-    buttonLabel={$_("share.privateFix")}
-    buttonAction={project.edit_access ? openEditing : undefined}
   >
     {#snippet icon()}<ShieldLock24 />{/snippet}
+    {#snippet action()}
+      {#if project.edit_access}
+        <Button mode="danger" size="small" onclick={openEditing}>
+          {$_("share.privateFix")}
+        </Button>
+      {/if}
+    {/snippet}
   </Banner>
 {/snippet}
 
