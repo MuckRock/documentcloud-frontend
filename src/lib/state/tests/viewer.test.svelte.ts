@@ -30,6 +30,7 @@ vi.mock("pdfjs-dist/legacy/build/pdf.mjs", () => ({
 vi.mock("$lib/api/documents", () => ({ assetUrl }));
 
 import { ViewerState } from "$lib/state/viewer.svelte";
+import { PT_TO_PX } from "$lib/utils/viewer";
 import documentFixture from "@/test/fixtures/documents/document.json";
 
 const doc = documentFixture as unknown as Document;
@@ -62,6 +63,9 @@ describe("ViewerState", () => {
     expect(v.currentNote).toBeNull();
     expect(v.newNote).toBeNull();
     expect(v.progress).toEqual({ loaded: 0, total: 0 });
+    // the viewport width is only known once the PDF pane has laid out
+    expect(v.width).toBeUndefined();
+    expect(v.pageSizes).toEqual([]);
   });
 
   it("loadingProgress guards against a zero total", () => {
@@ -154,5 +158,105 @@ describe("ViewerState", () => {
     // 1 initial + 5 retries
     await vi.waitFor(() => expect(getDocument).toHaveBeenCalledTimes(6));
     await vi.waitFor(() => expect(v.errors).toContain(err));
+  });
+
+  // Zoom is computed here rather than per-page so every page in the document
+  // renders at one uniform scale. The fixture's page_spec is
+  // "595.0x842.0:0-6" — seven A4 pages 595pt wide.
+  describe("zoom", () => {
+    const PAGE_WIDTH = 595 * PT_TO_PX;
+    const PAGE_HEIGHT = 842 * PT_TO_PX;
+
+    /** A viewer showing the fixture document, laid out at `width` px. */
+    function viewerWithWidth(width?: number) {
+      const v = new ViewerState();
+      v.document = doc;
+      v.width = width;
+      return v;
+    }
+
+    it("derives pageSizes from the document's page_spec", () => {
+      const v = viewerWithWidth();
+      expect(v.pageSizes).toHaveLength(doc.page_count);
+      expect(
+        v.pageSizes.every(([w, h]) => w === PAGE_WIDTH && h === PAGE_HEIGHT),
+      ).toBe(true);
+    });
+
+    it("derives empty pageSizes when the document has no page_spec", () => {
+      const v = new ViewerState();
+      v.document = { ...doc, page_spec: undefined } as Document;
+      expect(v.pageSizes).toEqual([]);
+    });
+
+    it("allows pageSizes to be overridden when page_spec is missing", () => {
+      // PDF.svelte falls back to placeholder sizes from the pdfjs page count
+      const v = new ViewerState();
+      v.document = { ...doc, page_spec: undefined } as Document;
+      v.pageSizes = Array(3).fill([0, 0]);
+      expect(v.pageSizes).toEqual([
+        [0, 0],
+        [0, 0],
+        [0, 0],
+      ]);
+    });
+
+    it("autoZoomScale is 1 until the viewport width is measured", () => {
+      expect(viewerWithWidth(undefined).autoZoomScale).toBe(1);
+      // a zero width means the pane hasn't laid out yet, not "infinitely small"
+      expect(viewerWithWidth(0).autoZoomScale).toBe(1);
+    });
+
+    it("autoZoomScale shrinks the document to fit a narrow viewport", () => {
+      expect(viewerWithWidth(PAGE_WIDTH / 2).autoZoomScale).toBe(0.5);
+      expect(viewerWithWidth(PAGE_WIDTH).autoZoomScale).toBe(1);
+    });
+
+    it("autoZoomScale never enlarges past the intrinsic page size", () => {
+      // a wide viewport caps at 100% rather than blowing the pages up
+      expect(viewerWithWidth(PAGE_WIDTH * 4).autoZoomScale).toBe(1);
+    });
+
+    it("autoZoomScale fits the widest page in a mixed-size document", () => {
+      // one landscape page twice as wide as the rest drives the scale
+      const v = new ViewerState();
+      v.document = { ...doc, page_spec: "595x842:0-5;1190x842:6" } as Document;
+      v.width = PAGE_WIDTH;
+      expect(v.autoZoomScale).toBe(0.5);
+    });
+
+    it("scale uses a numeric zoom verbatim", () => {
+      const v = viewerWithWidth(PAGE_WIDTH / 2);
+      v.zoom = 1.5;
+      expect(v.scale).toBe(1.5);
+      v.zoom = 0.75;
+      expect(v.scale).toBe(0.75);
+    });
+
+    it("scale follows autoZoomScale when zoom is 'auto'", () => {
+      const v = viewerWithWidth(PAGE_WIDTH / 2);
+      v.zoom = "auto";
+      expect(v.scale).toBe(0.5);
+    });
+
+    it("scale recomputes when the viewport is resized in 'auto'", () => {
+      const v = viewerWithWidth(PAGE_WIDTH / 2);
+      v.zoom = "auto";
+      expect(v.scale).toBe(0.5);
+
+      v.width = PAGE_WIDTH / 4;
+      expect(v.scale).toBe(0.25);
+
+      // ...but a fixed zoom ignores the viewport entirely
+      v.zoom = 1;
+      expect(v.scale).toBe(1);
+    });
+
+    it("scale falls back to 1 for a non-numeric, non-auto zoom", () => {
+      // grid mode uses size names ("small"), which don't map to a PDF scale
+      const v = viewerWithWidth(PAGE_WIDTH / 2);
+      v.zoom = "small";
+      expect(v.scale).toBe(1);
+    });
   });
 });

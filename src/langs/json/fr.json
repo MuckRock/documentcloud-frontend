@@ -361,10 +361,13 @@
     "size": "Taille",
     "fitWidth": "Largeur de forme",
     "fitHeight": "Hauteur",
+    "auto": "Automatique",
     "thumbnail": "Petit",
     "small": "Petit",
     "normal": "Moyen",
-    "large": "Grande"
+    "large": "Grande",
+    "zoomOut": "Zoom arri\u00e8re",
+    "zoomIn": "Zoom avant"
   },
   "embed": {
     "download": "T\u00e9l\u00e9charger",

@@ -174,7 +174,10 @@
   },
   "zoom": {
     "fitWidth": "Breite anpassen",
-    "fitHeight": "Höhe anpassen"
+    "fitHeight": "Höhe anpassen",
+    "auto": "Automatisch",
+    "zoomOut": "Verkleinern",
+    "zoomIn": "Vergrößern"
   },
   "titleHeader": {
     "contributedBy": "Beitrag von {name}"

@@ -361,10 +361,13 @@
     "size": "Dimensione",
     "fitWidth": "Larghezza di corpo",
     "fitHeight": "Altezza di corrispondenza",
+    "auto": "Automatico",
     "thumbnail": "Piccolo",
     "small": "Piccolo",
     "normal": "Medium",
-    "large": "Grande"
+    "large": "Grande",
+    "zoomOut": "Riduci zoom",
+    "zoomIn": "Ingrandisci"
   },
   "embed": {
     "download": "Scarica",

@@ -32,9 +32,11 @@
   const url = new URL(pdfFile, import.meta.url);
 </script>
 
-<Story name="fit width" parameters={{ layout: "fullscreen" }} asChild>
+<!-- PDFPage always renders at a numeric scale now; the viewer resolves "auto"
+     to one before passing it down. -->
+<Story name="full size" parameters={{ layout: "fullscreen" }} asChild>
   <ViewerContext {document} asset_url={url}>
-    <PdfPage page_number={1} scale="width" {width} {height} />
+    <PdfPage page_number={1} scale={1} {width} {height} />
   </ViewerContext>
 </Story>
 
@@ -82,6 +84,6 @@
 
 <Story name="long section start" parameters={{ layout: "fullscreen" }} asChild>
   <ViewerContext {document} asset_url={url}>
-    <PdfPage page_number={1} scale="width" {width} {height} />
+    <PdfPage page_number={1} scale={1} {width} {height} />
   </ViewerContext>
 </Story>

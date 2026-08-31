@@ -87,15 +87,19 @@ test.describe("deep linking to a page", () => {
     page,
     multiPageDoc,
   }) => {
-    // Sample `.pages` spacing every frame. Any change means pages were laid out
+    // Sample the page spacing every frame. Any change means pages were laid out
     // at one size and then resized — which moves every page below the change.
+    // Padding is on the scroll container (`.pages`) and the gap is on the flex
+    // column inside it (`.inner`), so both have to be read.
     await page.addInitScript(() => {
       const seen: string[] = ((window as any).__spacing = []);
       (function sample() {
         requestAnimationFrame(sample);
         const pages = document.querySelector(".pages");
-        if (!pages) return;
-        const { paddingLeft, rowGap } = getComputedStyle(pages);
+        const inner = pages?.querySelector(".inner");
+        if (!pages || !inner) return;
+        const { paddingLeft } = getComputedStyle(pages);
+        const { rowGap } = getComputedStyle(inner);
         const spacing = `${paddingLeft}/${rowGap}`;
         if (seen.at(-1) !== spacing) seen.push(spacing);
       })();
@@ -162,9 +166,9 @@ test.describe("deep linking on a wide screen", () => {
 });
 
 test.describe("deep linking at a numeric zoom", () => {
-  // Fit-width is the default, and it sizes pages in CSS. A numeric zoom sizes
-  // them from the page dimensions instead, which is where the two could — and
-  // did — disagree about how big a page is.
+  // "auto" is the default: the viewer measures its own width and derives one
+  // scale for the whole document. An explicit `?zoom=` pins that scale instead,
+  // so these cover the other side of the branch that sizes a page.
   test.use({ viewport: { width: 1280, height: 900 } });
 
   for (const zoom of ["0.5", "2"]) {

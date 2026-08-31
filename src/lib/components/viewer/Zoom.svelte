@@ -11,51 +11,95 @@ Must be a child of a ViewerContext
     getDefaultZoom,
     getZoomLevels,
     getInitialZoom,
+    getZoomInOut,
   } from "$lib/utils/viewer";
   import { getViewerState } from "$lib/state/viewer.svelte";
+
+  import Button from "$lib/components/common/Button.svelte";
+  import ZoomFit16 from "$lib/components/icons/ZoomFit16.svelte";
+  import { ZoomIn16, ZoomOut16 } from "svelte-octicons";
 
   const viewer = getViewerState();
 
   let zoomLevels = $derived(getZoomLevels(viewer.mode));
   let initial = $derived(getInitialZoom(page.url, viewer.mode));
+
+  let [zoomOut, zoomIn] = $derived(
+    getZoomInOut(viewer.mode, viewer.zoom, viewer.scale),
+  );
+
   $effect(() => {
     viewer.zoom = initial || getDefaultZoom(viewer.mode);
   });
 </script>
 
 {#if zoomLevels.length}
-  <label class="zoom">
-    {#if viewer.mode === "grid"}
-      {$_("zoom.size")}
-    {:else}
-      {$_("zoom.zoom")}
+  <div class="zoom">
+    <Button
+      mode="primary"
+      size="small"
+      ghost
+      minW={false}
+      aria-label={$_("zoom.zoomOut")}
+      disabled={zoomOut === null}
+      onclick={() => (viewer.zoom = zoomOut!)}
+    >
+      <ZoomOut16 />
+    </Button>
+    {#if viewer.mode === "document"}
+      <div class="auto">
+        <Button
+          mode="primary"
+          size="small"
+          ghost
+          minW={false}
+          hover={viewer.zoom === "auto"}
+          aria-label={$_("zoom.auto")}
+          onclick={() => (viewer.zoom = "auto")}
+        >
+          <ZoomFit16 />
+        </Button>
+      </div>
     {/if}
-    <select name="zoom" bind:value={viewer.zoom}>
-      {#each zoomLevels as [value, label]}
-        <option {value}>{$_(label)}</option>
-      {/each}
-    </select>
-  </label>
+    <Button
+      mode="primary"
+      size="small"
+      ghost
+      minW={false}
+      aria-label={$_("zoom.zoomIn")}
+      disabled={zoomIn === null}
+      onclick={() => (viewer.zoom = zoomIn!)}
+    >
+      <ZoomIn16 />
+    </Button>
+    <label>
+      <span class="sr-only">
+        {#if viewer.mode === "grid"}
+          {$_("zoom.size")}
+        {:else}
+          {$_("zoom.zoom")}
+        {/if}
+      </span>
+      <select name="zoom" bind:value={viewer.zoom}>
+        {#each zoomLevels as [value, label]}
+          <option {value}>
+            {$_(label)}
+            {#if value === "auto"}
+              ({Math.round(viewer.autoZoomScale * 100)}%)
+            {/if}
+          </option>
+        {/each}
+      </select>
+    </label>
+  </div>
 {/if}
 
 <style>
-  label {
-    visibility: hidden;
-  }
-
-  select {
-    visibility: visible;
-  }
-
-  label.zoom {
+  .zoom {
     display: flex;
+    flex-direction: row;
     align-items: center;
-    gap: 0.5rem;
-    font-size: var(--font-md);
-  }
-
-  label.zoom {
-    justify-content: right;
+    justify-content: end;
   }
 
   select {
@@ -65,5 +109,20 @@ Must be a child of a ViewerContext
     font-family: var(--font-sans);
     font-size: var(--font-md);
     box-shadow: none;
+    margin-left: 0.25rem;
+  }
+
+  .auto {
+    display: none;
+  }
+
+  @media (max-width: 40rem) {
+    select {
+      display: none;
+    }
+
+    .auto {
+      display: block;
+    }
   }
 </style>

@@ -46,9 +46,9 @@
       mode: "document",
       asset_url: pdfUrl(document),
     },
-    props: {
-      scale: "width",
-    },
+    // PDF takes no props: zoom is read from the viewer state, so stories set
+    // it through ViewerContext's `zoom` instead.
+    props: {},
   };
 </script>
 
@@ -68,15 +68,15 @@
 />
 
 <Story
-  name="Fit width"
+  name="Auto zoom"
   parameters={{ layout: "fullscreen" }}
-  args={{ ...args, props: { scale: "width" } }}
+  args={{ ...args, context: { ...args.context, zoom: "auto" } }}
 />
 
 <Story
   name="Zoom 200%"
   parameters={{ layout: "fullscreen" }}
-  args={{ ...args, props: { scale: 2 } }}
+  args={{ ...args, context: { ...args.context, zoom: 2 } }}
 />
 
 <Story
