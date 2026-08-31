@@ -171,6 +171,27 @@
       "done": "Fatto"
     }
   },
+  "projectEmbedDialog": {
+    "hidden": "Nascosto",
+    "visible": "Visibile",
+    "visibleDefault": "Visibile",
+    "titleBehavior": "Comportamento del titolo",
+    "tVisibleHelp": "Mostra il titolo del progetto nell'intestazione del visualizzatore",
+    "tHiddenHelp": "Nascondi il titolo del progetto nell'intestazione del visualizzatore",
+    "descriptionBehavior": "Comportamento della descrizione",
+    "dVisibleHelp": "Mostra la descrizione del progetto nell'intestazione del visualizzatore",
+    "dHiddenHelp": "Nascondi la descrizione del progetto nell'intestazione del visualizzatore",
+    "sort": "Ordinamento dei documenti",
+    "sortNone": "Nessuno",
+    "sortTitle": "Titolo (A–Z)",
+    "sortOldest": "Creato (meno recente)",
+    "sortNewest": "Creato (più recente)",
+    "view": "Modalità di visualizzazione",
+    "viewDetailed": "Dettagliata",
+    "viewConcise": "Concisa",
+    "viewDetailedHelp": "Mostra le miniature e i metadati dei documenti",
+    "viewConciseHelp": "Mostra solo i titoli dei documenti"
+  },
   "authSection": {
     "help": {
       "faq": "FAQ \u00e8",
@@ -579,7 +600,7 @@
     "note": "Nota",
     "copy": "Copia",
     "copiedToClipboard": "Copiato nella sezione di riferimento",
-    "permalink": "Permalink in italiano \u00e8: Permalink",
+    "permalink": "Permalink",
     "iframe": "Inserisci un iframe HTML",
     "preview": "Prevedere embed",
     "save": "Salva Impostazioni",

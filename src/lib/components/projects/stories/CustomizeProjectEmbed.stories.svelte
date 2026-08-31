@@ -1,12 +1,14 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
-  import CustomizeEmbed, { embedSettings } from "../CustomizeEmbed.svelte";
+  import CustomizeProjectEmbed, {
+    embedSettings,
+  } from "../CustomizeProjectEmbed.svelte";
   import { createEmbedSearchParams } from "$lib/utils/embed";
-  import { documentDefaults } from "$lib/utils/embedConfig";
+  import { projectDefaults } from "$lib/utils/embedConfig";
 
   const { Story } = defineMeta({
-    title: "Documents / Customize Embed",
-    component: CustomizeEmbed,
+    title: "Projects / Customize Embed",
+    component: CustomizeProjectEmbed,
     parameters: { layout: "centered" },
   });
 </script>
@@ -15,9 +17,9 @@
   {#snippet template()}
     <pre>
       <code>
-        {createEmbedSearchParams($embedSettings, documentDefaults)}
+        {createEmbedSearchParams($embedSettings, projectDefaults)}
       </code>
     </pre>
-    <CustomizeEmbed />
+    <CustomizeProjectEmbed />
   {/snippet}
 </Story>

@@ -7,6 +7,7 @@
   import documents from "@/test/fixtures/documents/documents-expanded.json";
   import project from "@/test/fixtures/projects/project.json";
   import { projects } from "@/test/handlers/projects";
+  import { projectDefaults } from "$lib/utils/embedConfig";
 
   const { Story } = defineMeta({
     title: "Embed / Project",
@@ -29,6 +30,7 @@
     breadcrumbs: [],
     tipOfDay: null,
     error: undefined,
+    settings: projectDefaults,
   };
 </script>
 

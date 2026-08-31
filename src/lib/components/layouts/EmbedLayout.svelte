@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Maybe } from "$lib/api/types";
-  import type { EmbedSettings } from "$lib/utils/embed";
+  import type { DocumentSettings } from "$lib/utils/embedConfig";
   import type { Snippet } from "svelte";
 
   import { onMount } from "svelte";
@@ -15,7 +15,7 @@
   interface Props {
     canonicalUrl: string;
     downloadUrl?: string;
-    settings?: Partial<EmbedSettings>;
+    settings?: DocumentSettings;
     type?: "document" | "page" | "note" | "project" | undefined;
     children?: Snippet;
   }

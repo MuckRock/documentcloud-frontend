@@ -173,6 +173,27 @@
     "success": "Upload complete. Your documents will process in the background.",
     "error": "Error during upload. See upload list for more details."
   },
+  "projectEmbedDialog": {
+    "hidden": "Hidden",
+    "visible": "Visible",
+    "visibleDefault": "Visible",
+    "titleBehavior": "Title behavior",
+    "tVisibleHelp": "Display the project title in the header of the viewer",
+    "tHiddenHelp": "Hide the project title in the header of the viewer",
+    "descriptionBehavior": "Description behavior",
+    "dVisibleHelp": "Display the project description in the header of the viewer",
+    "dHiddenHelp": "Hide the project description in the header of the viewer",
+    "sort": "Document sort order",
+    "sortNone": "None",
+    "sortTitle": "Title (A–Z)",
+    "sortOldest": "Created (oldest)",
+    "sortNewest": "Created (newest)",
+    "view": "View mode",
+    "viewDetailed": "Detailed",
+    "viewConcise": "Concise",
+    "viewDetailedHelp": "Show document thumbnails and metadata",
+    "viewConciseHelp": "Show document titles only"
+  },
   "authSection": {
     "help": {
       "faq": "FAQ",

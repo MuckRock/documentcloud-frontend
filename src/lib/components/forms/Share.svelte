@@ -26,6 +26,7 @@
     Organization24,
   } from "svelte-octicons";
 
+  import Banner from "$lib/components/common/Banner.svelte";
   import Button from "$lib/components/common/Button.svelte";
   import Copy from "../common/Copy.svelte";
   import CustomizeEmbed, {
@@ -38,8 +39,8 @@
   import Tab from "$lib/components/common/Tab.svelte";
   import Text from "$lib/components/inputs/Text.svelte";
   import TextArea from "$lib/components/inputs/TextArea.svelte";
-  import Tip from "$lib/components/common/Tip.svelte";
 
+  import Share from "$lib/components/layouts/Share.svelte";
   import Portal from "$lib/components/layouts/Portal.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
   import EditAccess from "$lib/components/forms/EditAccess.svelte";
@@ -55,6 +56,7 @@
   import * as embed from "$lib/api/embed";
   import { noteUrl, canonicalNoteUrl } from "$lib/api/notes";
   import { createEmbedSearchParams } from "$lib/utils/embed";
+  import { documentDefaults } from "$lib/utils/embedConfig";
   import { onMount } from "svelte";
 
   interface Props {
@@ -130,7 +132,9 @@
 
   // captured when the modal opens so switching tabs behind it can't swap forms
   let editTarget: "document" | "note" = $state("document");
-  let embedUrlParams = $derived(createEmbedSearchParams($embedSettings));
+  let embedUrlParams = $derived(
+    createEmbedSearchParams($embedSettings, documentDefaults),
+  );
 
   // permalink, embed src, and iframe snippet for the selected tab
   let links = $derived.by(() => {
@@ -193,48 +197,42 @@
   }
 </script>
 
-<div class="container">
-  {#if warning.access === "private"}
-    <div class="banner">
-      <Tip mode="danger">
-        {#snippet icon()}<ShieldLock24 />{/snippet}
-        <div class="privateWarning">
-          <div style:flex="1 1 auto">
-            {$_("share.privateWarning", {
-              values: { type: $_(`share.types.${warning.kind}`) },
-            })}
-          </div>
-          {#if warning.canEdit}
-            <Button mode="danger" size="small" onclick={openEditing}>
-              {$_("share.privateFix")}
-            </Button>
-          {/if}
-        </div>
-      </Tip>
-    </div>
-  {:else if warning.access === "organization"}
-    <div class="banner">
-      <Tip mode="premium">
-        {#snippet icon()}<Organization24 />{/snippet}
-        <div class="privateWarning">
-          <div style:flex="1 1 auto">
-            <!-- "your organization" is wrong for a note: it's whoever can edit the document -->
-            {warning.kind === "note"
-              ? $_("share.noteOrgWarning")
-              : $_("share.orgWarning", {
-                  values: { type: $_("share.types.document") },
-                })}
-          </div>
-          {#if warning.canEdit}
-            <Button mode="danger" size="small" onclick={openEditing}>
-              {$_("share.privateFix")}
-            </Button>
-          {/if}
-        </div>
-      </Tip>
-    </div>
+{#snippet action()}
+  {#if warning.canEdit}
+    <Button mode="danger" size="small" onclick={openEditing}>
+      {$_("share.privateFix")}
+    </Button>
   {/if}
-  <div class="left">
+{/snippet}
+
+{#snippet banner()}
+  {#if warning.access === "private"}
+    <Banner
+      mode="danger"
+      message={$_("share.privateWarning", {
+        values: { type: $_(`share.types.${warning.kind}`) },
+      })}
+      {action}
+    >
+      {#snippet icon()}<ShieldLock24 />{/snippet}
+    </Banner>
+  {:else if warning.access === "organization"}
+    <Banner
+      mode="premium"
+      message={warning.kind === "note"
+        ? $_("share.noteOrgWarning")
+        : $_("share.orgWarning", {
+            values: { type: $_("share.types.document") },
+          })}
+      {action}
+    >
+      {#snippet icon()}<Organization24 />{/snippet}
+    </Banner>
+  {/if}
+{/snippet}
+
+<Share banner={warning.access === "public" ? undefined : banner}>
+  {#snippet fields()}
     <div class="tabs" role="tablist">
       <Tab
         onclick={() => (currentTab = "document")}
@@ -256,7 +254,7 @@
         {$_("share.note")}
       </Tab>
     </div>
-    <div class="fields {currentTab}">
+    <fieldset class={currentTab}>
       {#if currentTab === "page"}
         <div class="subselection">
           <Field>
@@ -315,9 +313,9 @@
           --resize="vertical"
         />
       </Field>
-    </div>
-  </div>
-  <div class="right">
+    </fieldset>
+  {/snippet}
+  {#snippet preview()}
     <header>
       <FieldLabel>
         {$_("share.preview")}
@@ -351,9 +349,7 @@
     </header>
     <main>
       {#if customizeEmbedOpen}
-        <div class="embedSettings">
-          <CustomizeEmbed />
-        </div>
+        <CustomizeEmbed />
       {:else if previewSrcdoc}
         <iframe class="embed" title="Embed Preview" srcdoc={previewSrcdoc}
         ></iframe>
@@ -362,8 +358,9 @@
         ></iframe>
       {/if}
     </main>
-  </div>
-</div>
+  {/snippet}
+</Share>
+
 {#if editOpen}
   <Portal>
     <Modal onclose={closeEditing}>
@@ -387,63 +384,11 @@
 {/if}
 
 <style>
-  .container {
-    width: 100%;
-    height: 32rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto 1fr;
-    gap: 0 1rem;
-  }
-  .banner {
-    grid-column: 1/3;
-    grid-row: 1/2;
-    margin-bottom: 1rem;
-  }
-  .privateWarning {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
   .tabs {
     display: flex;
     gap: 0.5rem;
     flex: 0 1 auto;
     padding: 0 1rem;
-  }
-  .fields {
-    flex: 1 1 auto;
-    display: flex;
-    padding: var(--font-md, 1rem);
-    flex-direction: column;
-    gap: var(--font-md, 1rem);
-    flex: 1 0 0;
-    align-self: stretch;
-    border-radius: 0.5rem;
-    border: 1px solid var(--gray-2);
-    background: var(--gray-1);
-    overflow-y: auto;
-  }
-  .right,
-  .left {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 12rem;
-    grid-row: 2/3;
-    min-width: 0;
-  }
-  .right {
-    flex: 2 1 24rem;
-  }
-  .right header {
-    padding: 0.375rem 0;
-    /* margin-bottom: .25rem; */
-  }
-  .right main {
-    min-height: 0;
-    height: 100%;
-    width: 100%;
   }
   .subselection {
     background: var(--white);
@@ -451,19 +396,5 @@
     border-radius: 0.5rem;
     border: 1px solid var(--gray-2);
     box-shadow: var(--shadow-1);
-  }
-  iframe.embed {
-    height: 100%;
-    width: 100%;
-    border-radius: 0.5rem;
-    border: 1px solid var(--gray-2);
-  }
-  .embedSettings {
-    padding: 0 0.5em;
-    background: var(--gray-1);
-    border-radius: 0.5rem;
-    border: 1px solid var(--gray-2);
-    height: 100%;
-    overflow-y: auto;
   }
 </style>

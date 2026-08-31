@@ -17,7 +17,10 @@
   import ResultsList, {
     visibleFields,
   } from "$lib/components/documents/ResultsList.svelte";
-  import { setVisibleFieldsContext } from "$lib/components/documents/VisibleFields.svelte";
+  import {
+    type VisibleFields,
+    setVisibleFieldsContext,
+  } from "$lib/components/documents/VisibleFields.svelte";
   import {
     getSearchResults,
     SearchResultsState,
@@ -54,9 +57,15 @@
     search?: SearchResultsState;
     query?: string;
     project?: Nullable<Project>;
+    visibleFieldsOverride?: VisibleFields;
   }
 
-  let { search: searchProp, query = "", project = null }: Props = $props();
+  let {
+    search: searchProp,
+    query = "",
+    project = null,
+    visibleFieldsOverride,
+  }: Props = $props();
 
   // this lets us pass in non-global search results, for testing
   // will error if neither is present
@@ -130,7 +139,7 @@
             </Flex>
           {/if}
         {/snippet}
-        <ResultsList {search} auto>
+        <ResultsList {search} {visibleFieldsOverride} auto>
           {#snippet start()}
             {#if me && !canUploadFiles(me)}
               <Unverified user={me} />

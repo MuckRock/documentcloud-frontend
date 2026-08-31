@@ -10,6 +10,7 @@
     SearchResultsState,
     setSearchResults,
   } from "$lib/state/search.svelte";
+  import { defaultViews } from "$lib/components/documents/VisibleFields.svelte";
 
   setContext("embed", true);
 
@@ -22,6 +23,10 @@
     search.setResults(data.documents);
   });
   let project = $derived(data.project);
+  let { title, description, view } = $derived(data.settings);
+
+  // [0] is concise, [1] is detailed
+  let visibleFieldsOverride = $derived(defaultViews[view ? 1 : 0]?.fields);
 </script>
 
 <svelte:head>
@@ -30,11 +35,16 @@
 
 <EmbedLayout canonicalUrl={canonicalUrl(project).href}>
   <article>
-    <header>
-      <ProjectHeader {project} show={{ pin: false, access: false }} />
-    </header>
+    {#if title || description}
+      <header>
+        <ProjectHeader
+          {project}
+          show={{ pin: false, access: false, title, description }}
+        />
+      </header>
+    {/if}
     <main>
-      <DocumentBrowser />
+      <DocumentBrowser {visibleFieldsOverride} />
     </main>
   </article>
 </EmbedLayout>

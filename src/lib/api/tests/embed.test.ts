@@ -66,7 +66,7 @@ describe("embed tests", () => {
 
   test("project embed", () => {
     const iframe = embed.project(project);
-    const result = `<iframe src="${EMBED_URL}projects/215178-ocr-reprise/?embed=1" width="100%" height="600px"></iframe>`;
+    const result = `<iframe src="${EMBED_URL}projects/215178-ocr-reprise/?embed=1" width="100%" height="600px" style="border: 1px solid #d8dee2; border-radius: 0.5rem;"></iframe>`;
 
     expect(iframe).toEqual(result);
   });
@@ -76,7 +76,7 @@ describe("embed tests", () => {
       project,
       new URLSearchParams("test=yes&first=1"),
     );
-    const result = `<iframe src="${EMBED_URL}projects/215178-ocr-reprise/?embed=1&test=yes&first=1" width="100%" height="600px"></iframe>`;
+    const result = `<iframe src="${EMBED_URL}projects/215178-ocr-reprise/?embed=1&test=yes&first=1" width="100%" height="600px" style="border: 1px solid #d8dee2; border-radius: 0.5rem;"></iframe>`;
 
     expect(iframe).toEqual(result);
   });

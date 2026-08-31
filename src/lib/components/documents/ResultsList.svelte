@@ -50,6 +50,7 @@
     start?: Snippet;
     end?: Snippet;
     onNext?: () => Promise<Maybe<APIError<any>>>; // can return an error
+    visibleFieldsOverride?: VisibleFields;
   }
 
   let {
@@ -59,6 +60,7 @@
     end,
     onNext: onNextProp,
     search,
+    visibleFieldsOverride,
   }: Props = $props();
 
   let endEl: Maybe<HTMLElement> = $state();
@@ -160,7 +162,10 @@
           </label>
         {/if}
         <div class="result-content">
-          <DocumentListItem {document} visibleFields={$visibleFields} />
+          <DocumentListItem
+            {document}
+            visibleFields={visibleFieldsOverride ?? $visibleFields}
+          />
           {#if document.highlights}
             <PageHighlights
               {document}
