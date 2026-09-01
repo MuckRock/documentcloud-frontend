@@ -72,23 +72,28 @@ and we don't want to do that everywhere.
     return Promise.all(documents.map((d) => invalidate(`document:${d.id}`)));
   }
 
-  async function toggle(
-    project: Project,
-    e: Event & { currentTarget: HTMLInputElement },
-  ) {
-    const { checked } = e.currentTarget;
-    const ids = documents.map((d) => d.id);
+  function projectId(project: Project | number) {
+    return typeof project === "number" ? project : project.id;
+  }
+
+  async function toggle(project: Project, added: boolean) {
+    // Exclude documents that are already in the project if adding,
+    // and ones that aren't in it if removing
+    const docsToToggle = documents.filter(
+      (d) => d.projects?.map(projectId).includes(project.id) !== added,
+    );
+    const ids = docsToToggle.map((d) => d.id);
     const csrf_token = getCsrfToken();
     if (!csrf_token) {
       console.error("No CSRF token found");
       return;
     }
-    if (checked) {
+    if (added) {
       await add(project.id, ids, csrf_token);
     } else {
       await remove(project.id, ids, csrf_token);
     }
-    await invalidateDocs(documents);
+    await invalidateDocs(docsToToggle);
   }
 
   function onCreateSuccess(project: Project) {
@@ -134,7 +139,7 @@ and we don't want to do that everywhere.
           name="project"
           value={project.id}
           checked={common.has(project.id)}
-          onchange={(e) => toggle(project, e)}
+          onchange={(e) => toggle(project, e.currentTarget.checked)}
           {disabled}
         />
         {project.title}
