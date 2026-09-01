@@ -21,6 +21,8 @@ Wrapper for Svelecte: https://github.com/mskocik/svelecte
     disabled?: boolean;
   }
 
+  export type CreateHandler = Props["createHandler"];
+
   let {
     name,
     value = $bindable(null),
