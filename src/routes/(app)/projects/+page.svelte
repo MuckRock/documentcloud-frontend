@@ -1,17 +1,17 @@
 <script lang="ts">
-  import type { Nullable } from "$lib/api/types";
+  import type { Project } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
-  import { FileDirectory24, SidebarExpand16 } from "svelte-octicons";
-
-  import { goto } from "$app/navigation";
-  import { page } from "$app/state";
+  import {
+    FileDirectory24,
+    Hourglass24,
+    SidebarExpand16,
+  } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
   import PageToolbar from "$lib/components/toolbars/PageToolbar.svelte";
-  import Paginator from "$lib/components/common/Paginator.svelte";
   import EditProject from "$lib/components/forms/EditProject.svelte";
   import Search from "$lib/components/forms/Search.svelte";
   import ContentLayout from "$lib/components/layouts/ContentLayout.svelte";
@@ -22,8 +22,10 @@
   import Documents from "$lib/components/sidebar/Documents.svelte";
   import Projects from "$lib/components/sidebar/Projects.svelte";
   import AddOns from "$lib/components/sidebar/AddOns.svelte";
+  import InfiniteScrollTrigger from "$lib/components/layouts/InfiniteScrollTrigger.svelte";
   import { sidebars } from "$lib/components/layouts/Sidebar.svelte";
 
+  import { SearchResultsState } from "$lib/state/search.svelte.js";
   import { getCurrentUser } from "$lib/utils/permissions";
 
   let me = $derived(getCurrentUser());
@@ -33,19 +35,12 @@
   let create = $state(false);
 
   let query = $derived(data.query);
-  let projects = $derived(data.projects.results);
-  let next = $derived(data.projects.next); // this will be an API url with a cursor
-  let previous = $derived(data.projects.previous); // this will be an API url with a cursor
 
-  function paginate(u: Nullable<URL | string>) {
-    if (!u) return;
-    const pageUrl = new URL(u);
-    const gotoUrl = new URL(page.url);
-    // get the cursor out of the pageUrl, pass it to the gotoUrl
-    const cursor = pageUrl.searchParams.get("cursor");
-    if (cursor) gotoUrl.searchParams.set("cursor", cursor);
-    goto(gotoUrl);
-  }
+  const search = new SearchResultsState<Project>({ loading: true });
+
+  $effect(() => {
+    search.setResults(data.projects);
+  });
 </script>
 
 <svelte:head>
@@ -99,21 +94,28 @@
         </Flex>
       {/snippet}
 
-      {#each projects as project}
+      {#each search.results as project}
         <ProjectListItem {project} />
       {:else}
-        <Empty icon={FileDirectory24}>{$_("projects.none")}</Empty>
+        {#if search.loading}
+          <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
+        {:else}
+          <Empty icon={FileDirectory24}>{$_("projects.none")}</Empty>
+        {/if}
       {/each}
+
+      <InfiniteScrollTrigger {search} />
 
       {#snippet footer()}
         <PageToolbar>
-          {#snippet center()}
-            <Paginator
-              has_next={Boolean(next)}
-              has_previous={Boolean(previous)}
-              onnext={() => paginate(next)}
-              onprevious={() => paginate(previous)}
-            />
+          {#snippet right()}
+            {#if search.visible && search.total}
+              <p class="resultsCount">
+                {$_("inputs.resultsCount", {
+                  values: { n: search.visible.size, total: search.total },
+                })}
+              </p>
+            {/if}
           {/snippet}
         </PageToolbar>
       {/snippet}
@@ -152,5 +154,12 @@
   }
   .w-auto {
     width: auto;
+  }
+
+  .resultsCount {
+    flex: 1 1 auto;
+    text-align: right;
+    font-size: var(--font-sm);
+    margin: 0.25rem 0.5rem;
   }
 </style>
