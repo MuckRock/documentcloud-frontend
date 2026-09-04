@@ -89,28 +89,6 @@ export class SearchResultsState {
   }
 
   /**
-   * Load initial search results, clearing any previous results
-   */
-  async load(query: string, options?: SearchOptions, fetch = globalThis.fetch) {
-    this.query = query;
-    this.loading = true;
-
-    const { data } = await search(this.query, options, fetch);
-
-    if (data) {
-      this.visible.clear();
-      for (const d of data.results) {
-        this.visible.set(String(d.id), d);
-      }
-      this.total = data.count ?? data.results.length;
-      this.next = data.next;
-      this.applyWatched();
-    }
-
-    this.loading = false;
-  }
-
-  /**
    * Handle initial search results, synchronously.
    * This kicks off downstream updates.
    */
