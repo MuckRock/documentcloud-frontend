@@ -29,17 +29,6 @@ vi.mock("$app/state", () => ({
 }));
 vi.mock("$app/navigation", () => ({ afterNavigate: vi.fn() }));
 
-beforeAll(() => {
-  vi.stubGlobal(
-    "IntersectionObserver",
-    class {
-      observe() {}
-      unobserve() {}
-      disconnect() {}
-    },
-  );
-});
-
 import PDF from "../PDF.svelte";
 import { renderInViewer } from "./renderInViewer";
 import { document } from "@/test/fixtures/documents";
