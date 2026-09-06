@@ -22,7 +22,8 @@
   import Documents from "$lib/components/sidebar/Documents.svelte";
   import Projects from "$lib/components/sidebar/Projects.svelte";
   import AddOns from "$lib/components/sidebar/AddOns.svelte";
-  import InfiniteScrollTrigger from "$lib/components/layouts/InfiniteScrollTrigger.svelte";
+  import InfiniteScrollTrigger from "$lib/components/search/InfiniteScrollTrigger.svelte";
+  import SearchResultsCount from "$lib/components/search/SearchResultsCount.svelte";
   import { sidebars } from "$lib/components/layouts/Sidebar.svelte";
 
   import { SearchResultsState } from "$lib/state/search.svelte.js";
@@ -109,13 +110,7 @@
       {#snippet footer()}
         <PageToolbar>
           {#snippet right()}
-            {#if search.visible && search.total}
-              <p class="resultsCount">
-                {$_("inputs.resultsCount", {
-                  values: { n: search.visible.size, total: search.total },
-                })}
-              </p>
-            {/if}
+            <SearchResultsCount {search} />
           {/snippet}
         </PageToolbar>
       {/snippet}
@@ -154,12 +149,5 @@
   }
   .w-auto {
     width: auto;
-  }
-
-  .resultsCount {
-    flex: 1 1 auto;
-    text-align: right;
-    font-size: var(--font-sm);
-    margin: 0.25rem 0.5rem;
   }
 </style>
