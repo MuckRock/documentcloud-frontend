@@ -38,7 +38,7 @@
   import Flex from "../common/Flex.svelte";
   import NoteHighlights from "./NoteHighlights.svelte";
   import PageHighlights from "./PageHighlights.svelte";
-  import InfiniteScrollTrigger from "$lib/components/layouts/InfiniteScrollTrigger.svelte";
+  import InfiniteScrollTrigger from "$lib/components/search/InfiniteScrollTrigger.svelte";
 
   import { StorageManager } from "$lib/utils/storage";
   import { SearchResultsState } from "$lib/state/search.svelte";
