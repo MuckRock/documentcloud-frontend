@@ -6,6 +6,7 @@
  */
 
 import type {
+  AddOn,
   APIError,
   APIResponse,
   Document,
@@ -39,7 +40,9 @@ interface WatchStores {
 
 const EXPANDABLE_FIELDS = new Set(["user", "organization", "projects", "id"]);
 
-export class SearchResultsState<T extends Document | Project = Document> {
+export class SearchResultsState<
+  T extends Document | Project | AddOn = Document,
+> {
   visible: SvelteMap<string, T> = new SvelteMap();
   selectedIds: SvelteSet<string> = new SvelteSet();
   total: number = $state(0);
@@ -74,7 +77,8 @@ export class SearchResultsState<T extends Document | Project = Document> {
 
   get editable(): boolean {
     return (
-      this.selected.length > 0 && this.selected.every((d) => d.edit_access)
+      this.selected.length > 0 &&
+      this.selected.every((d) => "edit_access" in d && d.edit_access)
     );
   }
 

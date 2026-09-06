@@ -1,19 +1,16 @@
 <script lang="ts">
   import type { Page, APIResponse, AddOn, Event, Run } from "$lib/api/types";
 
-  import { goto } from "$app/navigation";
-  import { page } from "$app/state";
-
   import { _ } from "svelte-i18n";
   import { Hourglass24, Plug24 } from "svelte-octicons";
 
+  import { SearchResultsState } from "$lib/state/search.svelte";
+
   import Scheduled from "$lib/components/addons/Scheduled.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
-  import Error from "$lib/components/common/Error.svelte";
   import History from "$lib/components/addons/History.svelte";
   import ListItem from "$lib/components/addons/AddOnListItem.svelte";
   import PageToolbar from "$lib/components/toolbars/PageToolbar.svelte";
-  import Paginator from "$lib/components/common/Paginator.svelte";
   import Tip from "$lib/components/common/Tip.svelte";
   import Search from "$lib/components/forms/Search.svelte";
   import Pin from "$lib/components/icons/Pin.svelte";
@@ -24,6 +21,8 @@
   import Projects from "../sidebar/Projects.svelte";
   import AddOns from "$lib/components/sidebar/AddOns.svelte";
   import SidebarLayout from "./SidebarLayout.svelte";
+  import InfiniteScrollTrigger from "$lib/components/search/InfiniteScrollTrigger.svelte";
+  import SearchResultsCount from "$lib/components/search/SearchResultsCount.svelte";
 
   interface Props {
     addons: Promise<APIResponse<Page<AddOn>>>;
@@ -35,18 +34,11 @@
 
   let { addons, events, runs, active = "all", query = "" }: Props = $props();
 
-  // TODO: Improve cursor handling in page data responses
-  /** The pagination URL provided in the reponse corresponds to an API query.
-   *  This gets the cursor from the pagination URL and uses it to update the
-   *  current URL's searchParams value (there should be a smarter way to do this).
-   */
-  function paginate(pageUrl: string) {
-    const url = new URL(page.url); // make a copy
-    const cursor = new URL(pageUrl).searchParams.get("cursor");
-    if (!cursor) return;
-    url.searchParams.set("cursor", cursor);
-    goto(url);
-  }
+  const search = new SearchResultsState<AddOn>({ loading: true });
+
+  $effect(() => {
+    search.setResults(addons);
+  });
 
   let showTip = $derived(["active", "featured", "premium"].includes(active));
 </script>
@@ -106,34 +98,23 @@
               {/if}
             </div>
           {/if}
-          {#await addons}
-            <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
-          {:then { data: page }}
-            {#each page?.results ?? [] as addon}
-              <ListItem {addon} />
+
+          {#each search.results as addon}
+            <ListItem {addon} />
+          {:else}
+            {#if search.loading}
+              <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
             {:else}
               <Empty icon={Plug24}>{$_("addonBrowserDialog.empty")}</Empty>
-            {/each}
-          {:catch error}
-            <Error>{String(error)}</Error>
-          {/await}
+            {/if}
+          {/each}
+
+          <InfiniteScrollTrigger {search} />
+
           {#snippet footer()}
             <PageToolbar>
-              {#snippet center()}
-                {#await addons}
-                  <Paginator />
-                {:then { data: page }}
-                  <Paginator
-                    has_next={Boolean(page?.next)}
-                    has_previous={Boolean(page?.previous)}
-                    onnext={() => {
-                      if (page?.next) paginate(page.next);
-                    }}
-                    onprevious={() => {
-                      if (page?.previous) paginate(page.previous);
-                    }}
-                  />
-                {/await}
+              {#snippet right()}
+                <SearchResultsCount {search} />
               {/snippet}
             </PageToolbar>
           {/snippet}
