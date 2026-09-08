@@ -33,7 +33,7 @@
   };
 </script>
 
-<div {@attach handleInfiniteScroll}>
+<div data-testid="scroll-trigger" {@attach handleInfiniteScroll}>
   {#if search.loading && search.visible.size > 0}
     {$_("common.loading")}
   {:else if !auto && search.next}
