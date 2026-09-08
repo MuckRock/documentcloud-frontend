@@ -32,12 +32,10 @@ interface Args {
 // these should match the stores $lib/api/documents.ts
 interface WatchStores {
   deleted?: Writable<Set<string>>;
-  edited?: Writable<Map<string, Document>>;
+  edited?: Writable<Map<string, Partial<Document>>>;
   pending?: Writable<Pending[]>;
   finished?: Writable<Set<number>>;
 }
-
-const EXPANDABLE_FIELDS = new Set(["user", "organization", "projects", "id"]);
 
 export class SearchResultsState {
   visible: SvelteMap<string, Document> = new SvelteMap();
@@ -243,15 +241,12 @@ export class SearchResultsState {
     }
   }
 
-  handleEdited(edited: Map<string, Document>) {
+  handleEdited(edited: Map<string, Partial<Document>>) {
     for (const [id, edit] of edited) {
       const doc = this.visible.get(id);
       if (doc) {
         for (const [k, v] of Object.entries(edit)) {
-          // ignore expandable fields
-          if (!EXPANDABLE_FIELDS.has(k)) {
-            doc[k] = v;
-          }
+          doc[k] = v;
         }
         this.visible.set(id, { ...doc });
       }

@@ -37,7 +37,7 @@ Change owner of one or more documents.
 
   import { MAX_EDIT_BATCH } from "@/config/config.js";
   import { getCurrentUser } from "$lib/utils/permissions";
-  import { canonicalUrl, edited } from "$lib/api/documents";
+  import { applyEdits, canonicalUrl } from "$lib/api/documents";
   import { userOrgs, orgUsers, getUserName, isOrg } from "$lib/api/accounts";
 
   let me = $derived(getCurrentUser());
@@ -128,25 +128,14 @@ Change owner of one or more documents.
           break;
 
         case "success":
-          edited.update((m) => {
-            result.data.documents?.forEach((d: Document) => {
-              m.set(String(d.id), d);
-            });
-            return m;
-          });
-
+          applyEdits(result.data.documents);
           submitter.disabled = false;
           onclose?.();
           break;
 
         // if we're supposed to redirect, do it
         case "redirect":
-          edited.update((m) => {
-            result.data.documents?.forEach((d: Document) => {
-              m.set(String(d.id), d);
-            });
-            return m;
-          });
+          applyEdits(result.data.documents);
           update(result);
           onclose?.();
           break;

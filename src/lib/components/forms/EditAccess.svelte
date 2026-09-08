@@ -23,7 +23,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
   import Field from "../inputs/Field.svelte";
   import Tip from "../common/Tip.svelte";
 
-  import { canonicalUrl, edited } from "$lib/api/documents";
+  import { applyEdits, canonicalUrl } from "$lib/api/documents";
   import { toDatetimeLocal } from "$lib/utils/date";
 
   interface Props {
@@ -66,12 +66,9 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
 
       if (result.type === "success") {
         // save edits
-        edited.update((m) => {
-          const d = result.data.document;
-          d.access = formData.get("access"); // this is often a step behind, so force it here
-          m.set(String(d.id), d);
-          return m;
-        });
+        const d = result.data.document;
+        d.access = formData.get("access"); // this is often a step behind, so force it here
+        applyEdits(d);
         update(result);
         onclose?.();
       }
