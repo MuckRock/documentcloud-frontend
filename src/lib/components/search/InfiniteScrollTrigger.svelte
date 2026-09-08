@@ -17,16 +17,14 @@
   let auto = $state(true);
 
   const handleInfiniteScroll: Attachment = (trigger) => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(async (entry) => {
-        if (entry.isIntersecting && auto) {
-          const error = await onNextFn();
-          if (error) {
-            // don't keep trying if something fails
-            auto = false;
-          }
+    const observer = new IntersectionObserver(async ([entry]) => {
+      if (entry?.isIntersecting && auto) {
+        error = await onNextFn();
+        if (error) {
+          // don't retry if there's an error
+          auto = false;
         }
-      });
+      }
     });
 
     observer.observe(trigger);
