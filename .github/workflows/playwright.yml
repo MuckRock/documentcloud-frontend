@@ -27,9 +27,6 @@ jobs:
     steps:
       - uses: nev7n/wait_for_response@v1.2.0
         with:
-          # `/` redirects (307) to `/home/`; poll the page that returns 200.
-          # The preview deploy runs in parallel, so allow time for it to finish
-          # and for the Cloudflare custom domain to come up.
           url: ${{ env.URL }}/home/
           responseCode: "200"
           timeout: 300000
@@ -85,11 +82,18 @@ jobs:
               "${DC_API_URL}/accounts/login/squarelet"
           )"
           echo "Login chain ended at HTTP ${status}: ${final}"
-          grep -i '^cf-ray:' "$headers" | tr -d '\r' || true
+
+          # One header block per hop, so the last CF-Ray belongs to the final
+          # (challenged) response. Earlier hops are other zones, and looking
+          # those up finds their own unrelated events.
+          rays="$(grep -i '^cf-ray:' "$headers" | tr -d '\r' | awk '{print $2}')"
+          echo "CF-Ray per hop: $(echo "$rays" | tr '\n' ' ')"
+          final_ray="$(echo "$rays" | tail -1)"
+          final_ray="${final_ray:-unknown}"
 
           # Fail if we hit a bot challenge
           if grep -qiE 'challenge-platform|Performing security verification|Just a moment' "$body"; then
-            echo "::error::Cloudflare is serving a bot challenge at ${final}, so the Playwright auth setup cannot log in. Ask infra for a WAF skip rule covering this runner (quote the CF-Ray above)."
+            echo "::error::Cloudflare is serving a bot challenge at ${final}, so the Playwright auth setup cannot log in. Look up CF-Ray ${final_ray} in the zone serving that host (not the earlier hops) to find what acted."
             exit 1
           fi
 
