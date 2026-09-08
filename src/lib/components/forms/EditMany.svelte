@@ -28,7 +28,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
   import Tip from "../common/Tip.svelte";
 
   import { MAX_EDIT_BATCH } from "@/config/config.js";
-  import { applyEdits } from "$lib/api/documents";
+  import { applyEdits } from "$lib/utils/applyEdits";
 
   interface Props {
     documents: Document[];

@@ -45,7 +45,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 
   import { canChangeOwner, getCurrentUser } from "$lib/utils/permissions";
   import { getSearchResults } from "$lib/state/search.svelte";
-  import { applyEdits } from "$lib/api/documents";
+  import { applyEdits } from "$lib/utils/applyEdits";
 
   interface Props {
     afterClick?: Maybe<() => void>;
