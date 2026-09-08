@@ -45,6 +45,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
 
   import { canChangeOwner, getCurrentUser } from "$lib/utils/permissions";
   import { getSearchResults } from "$lib/state/search.svelte";
+  import { applyEdits } from "$lib/api/documents";
 
   interface Props {
     afterClick?: Maybe<() => void>;
@@ -205,7 +206,11 @@ Most actual actions are deferred to their own forms, so this is more of a switch
       {/if}
 
       {#if visible === "project"}
-        <Projects documents={search.selected} onclose={close} />
+        <Projects
+          documents={search.selected}
+          onchange={(edits) => applyEdits(edits, false)}
+          onclose={close}
+        />
       {/if}
 
       {#if visible === "change_owner"}
