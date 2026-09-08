@@ -88,7 +88,9 @@ jobs:
           # those up finds their own unrelated events.
           rays="$(grep -i '^cf-ray:' "$headers" | tr -d '\r' | awk '{print $2}')"
           echo "CF-Ray per hop: $(echo "$rays" | tr '\n' ' ')"
-          final_ray="$(echo "$rays" | tail -1)"
+          # Strip the `-IAD` colo suffix: dashboard and GraphQL `rayName`
+          # lookups match the bare 16-character ray only.
+          final_ray="$(echo "$rays" | tail -1 | cut -d- -f1)"
           final_ray="${final_ray:-unknown}"
 
           # Fail if we hit a bot challenge
