@@ -37,8 +37,9 @@ Change owner of one or more documents.
 
   import { MAX_EDIT_BATCH } from "@/config/config.js";
   import { getCurrentUser } from "$lib/utils/permissions";
-  import { applyEdits, canonicalUrl } from "$lib/api/documents";
+  import { canonicalUrl } from "$lib/api/documents";
   import { userOrgs, orgUsers, getUserName, isOrg } from "$lib/api/accounts";
+  import { applyEdits } from "$lib/utils/applyEdits";
 
   let me = $derived(getCurrentUser());
 
