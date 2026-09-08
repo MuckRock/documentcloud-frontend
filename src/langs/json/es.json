@@ -24,7 +24,8 @@
     "required": "Requerido",
     "selectAll": "Seguir todos",
     "selected": "Seleccionado",
-    "resultsCount": "Mostrando {n, number} de {total, number} resultados"
+    "resultsCount": "Mostrando {n, number} de {total, number} resultados",
+    "resultsCountShort": "Mostrando {n, number} resultados"
   },
   "access": {
     "private": {

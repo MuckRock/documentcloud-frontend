@@ -33,7 +33,8 @@
     "required": "Required",
     "selectAll": "Select All",
     "selected": "Selected",
-    "resultsCount": "Showing {n, number} of {total, number} Results"
+    "resultsCount": "Showing {n, number} of {total, number} Results",
+    "resultsCountShort": "Showing {n, number} Results"
   },
   "access": {
     "private": {

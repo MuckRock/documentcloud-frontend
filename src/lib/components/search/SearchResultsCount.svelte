@@ -7,7 +7,7 @@
 
 {#if search.visible && search.total}
   <p>
-    {$_("inputs.resultsCount", {
+    {$_(search.hasTotal ? "inputs.resultsCount" : "inputs.resultsCountShort", {
       values: { n: search.visible.size, total: search.total },
     })}
   </p>

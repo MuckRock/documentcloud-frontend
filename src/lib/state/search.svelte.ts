@@ -46,6 +46,7 @@ export class SearchResultsState<
   visible: SvelteMap<string, T> = new SvelteMap();
   selectedIds: SvelteSet<string> = new SvelteSet();
   total: number = $state(0);
+  hasTotal: boolean = $state(false);
   query: Maybe<string> = $state("");
   options: Maybe<SearchOptions> = $state();
   loading: boolean = $state(false);
@@ -109,6 +110,7 @@ export class SearchResultsState<
       this.visible.set(String(d.id), d);
     }
     this.total = searchResults.count ?? searchResults.results.length;
+    this.hasTotal = !!searchResults.count;
     this.next = searchResults.next;
     this.applyWatched();
     this.loading = false;
