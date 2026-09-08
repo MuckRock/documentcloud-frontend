@@ -31,10 +31,18 @@ and we don't want to do that everywhere.
   interface Props {
     documents?: Document[];
     projects?: Project[];
+    onchange?: (
+      edits: { id: string | number; projects: (number | Project)[] }[],
+    ) => void;
     onclose?: () => void;
   }
 
-  let { documents = [], projects = $bindable([]), onclose }: Props = $props();
+  let {
+    documents = [],
+    projects = $bindable([]),
+    onchange,
+    onclose,
+  }: Props = $props();
 
   let me = $derived(getCurrentUser());
 
@@ -88,6 +96,20 @@ and we don't want to do that everywhere.
       console.error("No CSRF token found");
       return;
     }
+
+    const updatedDocs = docsToToggle.map(({ id, projects }) => {
+      let newProjects = [...(projects ?? [])];
+      if (added) {
+        newProjects.push(project);
+      } else {
+        newProjects = newProjects.filter((p) => projectId(p) !== project.id);
+      }
+      return { id, projects: newProjects };
+    });
+
+    // Fire this now to avoid a delay while awaiting
+    onchange?.(updatedDocs);
+
     if (added) {
       await add(project.id, ids, csrf_token);
     } else {
