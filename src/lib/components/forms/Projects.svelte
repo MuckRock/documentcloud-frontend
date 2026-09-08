@@ -96,8 +96,9 @@ and we don't want to do that everywhere.
     await invalidateDocs(docsToToggle);
   }
 
-  function onCreateSuccess(project: Project) {
+  async function onCreateSuccess(project: Project) {
     projects = [...projects, project];
+    await toggle(project, true);
   }
 
   function sort(projects: Project[]) {
