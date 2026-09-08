@@ -55,35 +55,6 @@ export const edited: Writable<Map<string, Partial<Document>>> = writable(
   new Map(),
 );
 
-/**
- * Merge document edits in the edited store, optionally stripping expandable fields.
- */
-export const applyEdits = (
-  documents?: Partial<Document> | Partial<Document>[],
-  stripExpandable = true,
-) => {
-  edited.update((m) => {
-    if (!documents) return m;
-
-    if (!Array.isArray(documents)) {
-      documents = [documents];
-    }
-
-    documents.forEach((document) => {
-      const id = String(document.id);
-
-      if (stripExpandable) {
-        const { user, organization, projects, ...newDoc } = document;
-        document = newDoc;
-      }
-      const newEdits = Object.assign({}, m.get(id), document);
-      m.set(id, newEdits);
-    });
-
-    return m;
-  });
-};
-
 export const DEFAULT_EXPAND = ["user", "organization", "projects"];
 
 /**

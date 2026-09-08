@@ -17,7 +17,8 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
   import AccessLevel from "../inputs/AccessLevel.svelte";
   import Field from "../inputs/Field.svelte";
 
-  import { applyEdits, canonicalUrl } from "$lib/api/documents";
+  import { canonicalUrl } from "$lib/api/documents";
+  import { applyEdits } from "$lib/utils/applyEdits";
   import { toDatetimeLocal } from "$lib/utils/date";
 
   interface Props {
