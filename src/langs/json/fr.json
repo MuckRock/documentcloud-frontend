@@ -24,7 +24,8 @@
     "required": "Requis",
     "selectAll": "S\u00e9lectionner tout",
     "selected": "S\u00e9lectionn\u00e9",
-    "resultsCount": "Mostrando {n, number} de {total, number} r\u00e9sultats"
+    "resultsCount": "Affichage {n, number} de {total, number} r\u00e9sultats",
+    "resultsCountShort": "Affichage de {n, number} r\u00e9sultats"
   },
   "documentBrowser": {
     "fieldsAnchor": "Vue",

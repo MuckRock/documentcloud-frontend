@@ -6,6 +6,14 @@ import { vi } from "vitest";
 import ResizeObserver from "resize-observer-polyfill";
 
 vi.stubGlobal("ResizeObserver", ResizeObserver);
+vi.stubGlobal(
+  "IntersectionObserver",
+  class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  },
+);
 
 // https://github.com/dominikg/vitest-example-svelte5/blob/main/vitest-setup-client.ts
 // required for svelte5 + jsdom as jsdom does not support matchMedia
