@@ -286,5 +286,6 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
     gap: 0.25rem;
     max-width: 100%;
     overflow-x: auto;
+    flex: 1 1 100%;
   }
 </style>
