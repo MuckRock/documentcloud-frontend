@@ -52,7 +52,7 @@ To run the dev server locally against the staging API, take the following steps:
    npm run dev:remote
    ```
 
-Now, you should have a dev server accessible at `https://local.staging.documentcloud.org:5173` that connects to the staging DocumentCloud API (https://api.staging.documentcloud.org) and staging authentication service (https://squarelet-staging.herokuapp.com).
+Now, you should have a dev server accessible at `https://local.staging.documentcloud.org:5173` that connects to the staging DocumentCloud API (https://api.staging.documentcloud.org) and staging authentication service (https://staging-accounts.muckrock.com).
 
 ## Building for production
 

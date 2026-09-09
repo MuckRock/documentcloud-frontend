@@ -59,8 +59,12 @@ progress through the three-part upload process.
   import Dropzone from "../inputs/Dropzone.svelte";
   import FileInput from "../inputs/File.svelte";
   import Language from "../inputs/Language.svelte";
-  import Select from "../inputs/Select.svelte";
+  import Select, { type CreateHandler } from "../inputs/Select.svelte";
   import Switch from "../inputs/Switch.svelte";
+
+  import Portal from "$lib/components/layouts/Portal.svelte";
+  import Modal from "$lib/components/layouts/Modal.svelte";
+  import EditProject from "$lib/components/forms/EditProject.svelte";
 
   import UploadListItem, { type UploadStatus } from "./UploadListItem.svelte";
 
@@ -128,6 +132,25 @@ progress through the three-part upload process.
   let add_to_projects: Project[] = $state(
     [getProjectToUpload()].filter(Boolean) as Project[],
   );
+
+  let newProjectTitle = $state<string>("");
+  let createProjectPromise = $state<PromiseWithResolvers<Project>>();
+
+  const createProjectHandler: CreateHandler = ({ inputValue }) => {
+    newProjectTitle = inputValue;
+    createProjectPromise = Promise.withResolvers<Project>();
+    return createProjectPromise.promise;
+  };
+
+  const onProjectCreated = (project: Project) => {
+    createProjectPromise?.resolve(project);
+    createProjectPromise = undefined;
+  };
+
+  const onProjectCancel = () => {
+    createProjectPromise?.reject(new Error("cancelled"));
+    createProjectPromise = undefined;
+  };
 
   onMount(() => {
     if (!csrf_token) {
@@ -397,6 +420,8 @@ progress through the three-part upload process.
               labelField="title"
               bind:value={add_to_projects}
               valueAsObject
+              creatable
+              createHandler={createProjectHandler}
             />
           </Field>
           <hr class="divider" />
@@ -451,6 +476,21 @@ progress through the three-part upload process.
     </Flex>
   </form>
 </Dropzone>
+
+{#if createProjectPromise}
+  <Portal>
+    <Modal onclose={onProjectCancel}>
+      {#snippet title()}
+        <h1>{$_("projects.create")}</h1>
+      {/snippet}
+      <EditProject
+        project={{ title: newProjectTitle }}
+        onsuccess={onProjectCreated}
+        onclose={onProjectCancel}
+      />
+    </Modal>
+  </Portal>
+{/if}
 
 <style>
   header {

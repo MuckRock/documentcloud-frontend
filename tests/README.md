@@ -46,6 +46,12 @@ DC_TEST_PASSWORD=...
 
 If these are unset, the auth setup is skipped and authenticated tests don't run. The Squarelet login selectors in `auth.setup.ts` may need adjusting if Squarelet's markup changes.
 
+### In CI: a Cloudflare challenge on the login page looks like a selector bug
+
+Staging Squarelet (`staging-accounts.muckrock.com`) sits behind Cloudflare. When its bot protection challenges the runner, `/accounts/login/` answers 403 with an interstitial ("Performing security verification") that headless Chromium can't clear — so the auth setup fails 30s later on `waiting for locator('input[name=login]')`, as if the selector were wrong. Only the aria snapshot in `error-context.md` (or the trace's network list) shows the real cause.
+
+The workflow's "Verify the Squarelet login page is not blocked by Cloudflare" step walks the whole redirect chain (api → `/openid/authorize` → `/accounts/login/`) before Playwright runs and names this failure directly, with the CF-Ray to quote to infra. Checking only the first hop doesn't catch it: that hop returns its 302 normally. The fix is a WAF skip rule for the runner, not a change here.
+
 ## Fixtures
 
 `fixtures/` holds sample PDFs for use in tests (e.g. file-upload flows). Prefer a small file (`Small pdf.pdf`) so processing finishes quickly.
