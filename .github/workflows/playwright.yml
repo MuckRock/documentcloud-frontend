@@ -93,14 +93,15 @@ jobs:
           final_ray="$(echo "$rays" | tail -1 | cut -d- -f1)"
           final_ray="${final_ray:-unknown}"
 
-          # Fail if we hit a bot challenge
-          if grep -qiE 'challenge-platform|Performing security verification|Just a moment' "$body"; then
-            echo "::error::Cloudflare is serving a bot challenge at ${final}, so the Playwright auth setup cannot log in. Look up CF-Ray ${final_ray} in the zone serving that host (not the earlier hops) to find what acted."
-            exit 1
-          fi
-
+          # Interstitials answer 403 or 503, never 200 — and a served page carries
+          # an injected `challenge-platform/scripts/jsd` tag whenever JavaScript
+          # Detections is on, so body markers alone flag a healthy login page.
           if [ "$status" != "200" ]; then
-            echo "::error::Expected the Squarelet login page (HTTP 200); got HTTP ${status} at ${final}."
+            if grep -qiE 'challenge-platform/h/|Performing security verification|Just a moment' "$body"; then
+              echo "::error::Cloudflare is serving a bot challenge at ${final}, so the Playwright auth setup cannot log in. Look up CF-Ray ${final_ray} in the zone serving that host (not the earlier hops) to find what acted."
+            else
+              echo "::error::Expected the Squarelet login page (HTTP 200); got HTTP ${status} at ${final}."
+            fi
             exit 1
           fi
 
