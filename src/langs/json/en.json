@@ -747,11 +747,13 @@
       }
     },
     "userIdentity": {
-      "legend": "Attribution",
-      "anonymous": "Anonymous",
-      "shareAnonymously": "Share Anonymously"
+      "legend": "Your email address",
+      "email": "Email",
+      "emailHelp": "We'll only use this to follow up on your feedback.",
+      "emailPlaceholder": "you@example.com"
     },
-    "success": "We have received your feedback. Thank you!"
+    "success": "We have received your feedback. Thank you!",
+    "error": "Sorry, we couldn't send your feedback. Please try again or email us at info@documentcloud.org."
   },
   "homepage": {
     "header": {

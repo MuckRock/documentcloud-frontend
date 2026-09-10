@@ -106,6 +106,11 @@ export function getUpgradeUrl(org: Nullable<Org> = null): URL {
   return new URL(`/organizations/${org.slug}/payment/`, SQUARELET_BASE);
 }
 
+/** Link to a user's Squarelet profile, which is where support looks them up */
+export function getProfileUrl(user: User): URL {
+  return new URL(`/users/${user.username}/`, SQUARELET_BASE);
+}
+
 export function isUser(user?: null | number | User): user is User {
   return user !== undefined && user !== null && typeof user !== "number";
 }

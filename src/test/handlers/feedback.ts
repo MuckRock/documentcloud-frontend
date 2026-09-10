@@ -6,7 +6,7 @@ import {
   errorHandler,
 } from "./utils";
 
-const API_URL = "https://api.baserow.io/api/database/rows/table/*/*";
+const API_URL = "https://*.zendesk.com/api/v2/tickets.json";
 
 export const feedback = {
   data: http.post(API_URL, dataHandler({})),

@@ -71,6 +71,16 @@ DocumentCloud is tested and runs on recent versions of modern browsers -- Chrome
 
 _Learn more about using environment variables in [the SvelteKit learning docs](https://learn.svelte.dev/tutorial/env-static-private)._
 
+### Zendesk
+
+In-app feedback opens a ticket in Zendesk, which needs three private variables:
+
+- `ZENDESK_SUBDOMAIN` — the account subdomain, e.g. `documentcloud` for `documentcloud.zendesk.com`
+- `ZENDESK_EMAIL` — the email address of the agent whose API token we use
+- `ZENDESK_API_TOKEN` — an API token from Admin Center → Apps and integrations → Zendesk API
+
+Without them, feedback submissions fail with a "Zendesk is not configured" error.
+
 ## Developing
 
 ### Installing new packages
