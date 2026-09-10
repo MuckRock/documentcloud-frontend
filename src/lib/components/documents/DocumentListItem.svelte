@@ -10,6 +10,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
 
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
+  import { FileDirectory16, Tag16 } from "svelte-octicons";
 
   import DocAccess from "../common/Access.svelte";
   import KV from "../common/KV.svelte";
@@ -123,6 +124,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
               href={projectUrl(project).href}
               title={project.title}
               target={embed ? "_blank" : undefined}
+              icon={FileDirectory16}
             />
           {/each}
         {/if}
@@ -135,6 +137,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
                 tag={key === "_tag"}
                 href={searchUrl(kv(key, value)).href}
                 target={embed ? "_blank" : undefined}
+                icon={Tag16}
               />
             {/each}
           {/each}
