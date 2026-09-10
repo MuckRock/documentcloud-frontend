@@ -80,5 +80,4 @@ const preview: Preview = {
 // Provide the MSW addon loader globally
 export const loaders = [mswLoader(setupMsw)];
 
-
 export default preview;
