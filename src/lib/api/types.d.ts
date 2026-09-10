@@ -241,6 +241,7 @@ export interface SearchOptions {
 // add more as needed
 export interface DocumentFilters {
   id__in: string; // comma-separated list
+  per_page?: number;
 }
 
 export interface OEmbed {
