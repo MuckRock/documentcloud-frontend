@@ -21,6 +21,7 @@
   } from "@/config/config.js";
 
   import Projects from "$lib/components/home/Projects.svelte";
+  import TrendingDocuments from "$lib/components/home/TrendingDocuments.svelte";
   import SourceLogos from "$lib/components/home/SourceLogos/SourceLogos.svelte";
   import MuckRockLogo from "$lib/components/home/MuckRockLogo.svelte";
   import DonationForm from "$lib/components/home/DonationForm.svelte";
@@ -28,7 +29,7 @@
 
   let { data } = $props();
 
-  let { me, documentCount } = $derived(data);
+  let { me, documentCount, trendingDocuments } = $derived(data);
   let signInURL = $derived(new URL(`?next=${APP_URL}`, SIGN_IN_URL).toString());
 
   let count = $derived(
@@ -130,8 +131,13 @@
         <SearchEditor onsubmit={handleSearchSubmit} />
 
         <div class="documents-projects">
-          <h3>{$_("homepage.documents.projectsHeading")}</h3>
-          <Projects projects={HOMEPAGE_FEATURED_PROJECTS} />
+          {#if trendingDocuments && trendingDocuments.length > 0}
+            <h3>{$_("homepage.documents.trendingHeading")}</h3>
+            <TrendingDocuments documents={trendingDocuments} />
+          {:else}
+            <h3>{$_("homepage.documents.projectsHeading")}</h3>
+            <Projects projects={HOMEPAGE_FEATURED_PROJECTS} />
+          {/if}
         </div>
       </div>
     </div>

@@ -71,6 +71,21 @@ DocumentCloud is tested and runs on recent versions of modern browsers -- Chrome
 
 _Learn more about using environment variables in [the SvelteKit learning docs](https://learn.svelte.dev/tutorial/env-static-private)._
 
+### Trending documents (Cloudflare analytics)
+
+The homepage shows a "Trending documents" list powered by the [Cloudflare GraphQL Analytics API](https://developers.cloudflare.com/analytics/graphql-api/). It reads two server-only variables:
+
+- `CLOUDFLARE_ANALYTICS_TOKEN` — a Cloudflare API token with **Account Analytics: Read** permission. Store it as a Worker secret (see `docs/cloudflare.md`); never commit it.
+- `CLOUDFLARE_ANALYTICS_ACCOUNT_TAG` — the Cloudflare **account ID** (a 32-character hex string), not a domain name. Find it under the API heading in the sidebar of the `documentcloud.org` site in the Cloudflare dashboard, or via `curl -H "Authorization: Bearer $TOKEN" "https://api.cloudflare.com/client/v4/zones?name=documentcloud.org"` (the `account.id` field).
+
+We query the Web Analytics (RUM) `rumPageloadEventsAdaptiveGroups` dataset, which records real browser page loads, and filter to `/documents/%` paths server-side. The zone-level HTTP request dataset is not usable here: it counts every request on the zone, so the most-requested paths are static assets and document sub-resources (`.pdf`, `.txt.json`) rather than documents anyone actually viewed. The same query powers the [top-daily-docs Add-On](https://github.com/MuckRock/top-daily-docs-addon).
+
+When either variable is missing (e.g. in local dev), the homepage gracefully falls back to the static featured-projects list, so these are optional for local development.
+
+> **Local development:** analytics come from production traffic, but `npm run dev` points at the **dev** API (`api.dev.documentcloud.org`), which does not have those production documents. The trending list will therefore be empty locally even when both variables are set, and the page falls back to featured projects. To exercise it end to end, run `PUBLIC_ENV=production npm run dev` — the API base is selected by `PUBLIC_ENV` in `src/config/config.js`, so setting `PUBLIC_DC_BASE` has no effect. Note this also repoints auth and embeds at production, so treat it as a verification mode.
+>
+> Staging analytics cannot substitute: `staging.documentcloud.org` sees only a handful of page loads, and its document traffic is Playwright e2e fixtures that are deleted after each run.
+
 ## Developing
 
 ### Installing new packages
