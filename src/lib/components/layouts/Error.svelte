@@ -27,6 +27,7 @@
   let { status = undefined, message, children }: Props = $props();
 
   let feedbackOpen = $state(false);
+  let feedbackEnabled = $derived(page.data.feedbackEnabled);
 
   let sign_in_url = $derived(
     new URL(`?next=${encodeURIComponent(page.url.href)}`, SIGN_IN_URL),
@@ -49,19 +50,21 @@
       {@html $_("error.signIn", { values: { href: sign_in_url.href } })}
     </p>
   {/if}
-  <SignedIn>
-    <Button
-      ghost
-      size="small"
-      mode="primary"
-      onclick={() => (feedbackOpen = true)}
-    >
-      {$_("error.report")}
-    </Button>
-  </SignedIn>
+  {#if feedbackEnabled}
+    <SignedIn>
+      <Button
+        ghost
+        size="small"
+        mode="primary"
+        onclick={() => (feedbackOpen = true)}
+      >
+        {$_("error.report")}
+      </Button>
+    </SignedIn>
+  {/if}
 </div>
 
-{#if feedbackOpen}
+{#if feedbackEnabled && feedbackOpen}
   <Portal>
     <Modal onclose={() => (feedbackOpen = false)}>
       {#snippet title()}
