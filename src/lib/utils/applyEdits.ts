@@ -1,13 +1,13 @@
-import { edited, DEFAULT_EXPAND } from "$lib/api/documents";
 import type { Document } from "$lib/api/types";
+import { edited, DEFAULT_EXPAND } from "$lib/api/documents";
 
 /**
  * Merge document edits in the edited store, optionally stripping expandable fields.
  */
-export const applyEdits = (
+export function applyEdits(
   documents?: Partial<Document> | Partial<Document>[],
   stripExpandable = true,
-) => {
+) {
   edited.update((m) => {
     if (!documents) return m;
 
@@ -28,4 +28,4 @@ export const applyEdits = (
 
     return m;
   });
-};
+}
