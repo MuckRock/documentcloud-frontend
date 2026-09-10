@@ -27,6 +27,8 @@
 
 <Story name="Without User" args={{}} />
 
+<Story name="Reporting a Bug" args={{ user: me, feedbackType: "Bug" }} />
+
 <Story name="Loading" parameters={{ msw: { handlers: [feedback.loading] } }} />
 
 <Story name="With Error" parameters={{ msw: { handlers: [feedback.error] } }} />

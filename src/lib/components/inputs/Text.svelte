@@ -1,5 +1,6 @@
 <!-- @component
   The Text input provides styling to the default `<input type="text" … />`.
+  Pass `type` to use a related text-like input, such as `email` or `url`.
 -->
 
 <script lang="ts">
@@ -7,11 +8,11 @@
 
   interface Props extends HTMLInputAttributes {}
 
-  let { value = $bindable(""), ...rest }: Props = $props();
+  let { value = $bindable(""), type = "text", ...rest }: Props = $props();
 </script>
 
 <!-- svelte-ignore a11y_autofocus -->
-<input {...rest} type="text" bind:value />
+<input {...rest} {type} bind:value />
 
 <style>
   input {

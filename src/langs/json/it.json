@@ -646,9 +646,10 @@
       }
     },
     "userIdentity": {
-      "legend": "Attribuzione",
-      "anonymous": "Sconosciuto",
-      "shareAnonymously": "Condividi anonimamente"
+      "legend": "Il vostro indirizzo email",
+      "email": "Email",
+      "emailHelp": "La useremo solo per dare seguito al vostro feedback.",
+      "emailPlaceholder": "tu@esempio.com"
     },
     "success": "Riceviamo il vostro feedback. Grazie!"
   },

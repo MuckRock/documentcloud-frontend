@@ -37,6 +37,7 @@
   let user_orgs = $derived(page.data.user_orgs);
   let org_users = $derived(page.data.org_users);
   let tipOfDay = $derived(page.data.tipOfDay);
+  let feedbackEnabled = $derived(page.data.feedbackEnabled);
 
   let feedbackOpen = $state(false);
   let width: number = $state(800);
@@ -77,27 +78,29 @@
       <HelpMenu />
     {/if}
 
-    <SignedIn>
-      <Button
-        minW={false}
-        ghost
-        mode="primary"
-        onclick={() => (feedbackOpen = true)}
-        id="feedback"
-      >
-        {$_("common.feedback")}
-      </Button>
-    </SignedIn>
+    {#if feedbackEnabled}
+      <SignedIn>
+        <Button
+          minW={false}
+          ghost
+          mode="primary"
+          onclick={() => (feedbackOpen = true)}
+          id="feedback"
+        >
+          {$_("common.feedback")}
+        </Button>
+      </SignedIn>
 
-    {#if feedbackOpen}
-      <Portal>
-        <Modal onclose={() => (feedbackOpen = false)}>
-          {#snippet title()}
-            <h1>{$_("feedback.title")}</h1>
-          {/snippet}
-          <UserFeedback user={me} onclose={() => (feedbackOpen = false)} />
-        </Modal>
-      </Portal>
+      {#if feedbackOpen}
+        <Portal>
+          <Modal onclose={() => (feedbackOpen = false)}>
+            {#snippet title()}
+              <h1>{$_("feedback.title")}</h1>
+            {/snippet}
+            <UserFeedback user={me} onclose={() => (feedbackOpen = false)} />
+          </Modal>
+        </Portal>
+      {/if}
     {/if}
   </div>
 </nav>
