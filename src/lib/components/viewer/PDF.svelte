@@ -82,10 +82,7 @@
   -->
   <div class="sizer">
     <div class="pages" {@attach pinX}>
-      <div
-        class="inner"
-        bind:clientWidth={viewer.width}
-      >
+      <div class="inner" bind:clientWidth={viewer.width}>
         {#if browser && viewer.width !== undefined}
           {#each sizes as [width, height], n}
             {@const page_number = n + 1}
