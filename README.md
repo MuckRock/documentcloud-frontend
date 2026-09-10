@@ -86,6 +86,16 @@ When either variable is missing (e.g. in local dev), the homepage gracefully fal
 >
 > Staging analytics cannot substitute: `staging.documentcloud.org` sees only a handful of page loads, and its document traffic is Playwright e2e fixtures that are deleted after each run.
 
+### Zendesk
+
+In-app feedback opens a ticket in Zendesk, which needs three private variables:
+
+- `ZENDESK_SUBDOMAIN` — the account subdomain, e.g. `documentcloud` for `documentcloud.zendesk.com`
+- `ZENDESK_EMAIL` — the email address of the agent whose API token we use
+- `ZENDESK_API_TOKEN` — an API token from Admin Center → Apps and integrations → Zendesk API
+
+Without them, feedback submissions fail with a "Zendesk is not configured" error.
+
 ## Developing
 
 ### Installing new packages
