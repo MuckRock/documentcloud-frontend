@@ -7,6 +7,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
 -->
 <script lang="ts">
   import type { Document, Project } from "$lib/api/types";
+  import { page } from "$app/state";
 
   import { getContext } from "svelte";
   import { _ } from "svelte-i18n";
@@ -19,7 +20,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
   import { canonicalUrl, userOrgString } from "$lib/api/documents";
   import { canonicalUrl as projectUrl } from "$lib/api/projects";
   import { getLevel } from "$lib/utils/access";
-  import { searchUrl, kv } from "$lib/utils/search";
+  import { appendQuery, kv } from "$lib/utils/search";
   import {
     defaultVisibleFields,
     type VisibleFields,
@@ -135,7 +136,7 @@ If we're in an embed, we want to open links to documents in new tabs and hide th
                 {key}
                 {value}
                 tag={key === "_tag"}
-                href={searchUrl(kv(key, value)).href}
+                href={appendQuery(page.url, kv(key, value)).href}
                 target={embed ? "_blank" : undefined}
                 icon={Tag16}
               />
