@@ -21,16 +21,60 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Staging is behind the VPN; ask GitHub whether the preview deployed for this commit
   wait:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      checks: read
 
     steps:
-      - uses: nev7n/wait_for_response@v1.2.0
-        with:
-          url: ${{ env.URL }}/home/
-          responseCode: "200"
-          timeout: 300000
-          interval: 5000
+      - name: Wait for the preview deploy
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Checks attach to the PR head, not the merge commit `github.sha` names.
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          # The `deploy` job of `Preview Deploy`.
+          CHECK_NAME: deploy
+          TIMEOUT_SECONDS: "900"
+          INTERVAL_SECONDS: "10"
+        run: |
+          set -uo pipefail
+
+          # Newest check run wins, so a re-run supersedes; none yet is `missing`.
+          query='.check_runs | sort_by(.started_at) | last // {}
+                 | "\(.status // "missing") \(.conclusion // "none") \(.html_url // "-")"'
+
+          deadline=$(( $(date +%s) + TIMEOUT_SECONDS ))
+
+          while :; do
+            line="$(gh api "repos/${GITHUB_REPOSITORY}/commits/${HEAD_SHA}/check-runs?check_name=${CHECK_NAME}" --jq "$query")" \
+              || line=""
+            read -r status conclusion url <<<"${line:-missing none -}"
+
+            case "$status" in
+              completed)
+                if [ "$conclusion" = "success" ]; then
+                  echo "Preview deploy finished: ${url}"
+                  exit 0
+                fi
+                echo "::error::The preview deploy for ${HEAD_SHA} ended as '${conclusion}', so there is no preview to test against: ${url}"
+                exit 1
+                ;;
+              missing)
+                echo "No '${CHECK_NAME}' check on ${HEAD_SHA} yet; waiting."
+                ;;
+              *)
+                echo "Preview deploy is ${status}; waiting."
+                ;;
+            esac
+
+            if [ "$(date +%s)" -ge "$deadline" ]; then
+              echo "::error::Timed out after ${TIMEOUT_SECONDS}s waiting for the '${CHECK_NAME}' check on ${HEAD_SHA}. Check whether the Preview Deploy workflow ran for this commit."
+              exit 1
+            fi
+            sleep "$INTERVAL_SECONDS"
+          done
 
   test:
     timeout-minutes: 60
