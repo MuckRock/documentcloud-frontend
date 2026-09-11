@@ -58,7 +58,7 @@ describe("search utilities", () => {
 
     expect(
       appendQuery(new URL("/documents/?q=foo", APP_URL), "bar").href,
-    ).toStrictEqual(`${APP_URL}documents/?q=foo+bar`);
+    ).toStrictEqual(`${APP_URL}documents/?q=foo+AND+bar`);
 
     const urlWithKV = new URL(`/documents/`, APP_URL);
     urlWithKV.searchParams.set("q", kv("foo", "bar baz"));
