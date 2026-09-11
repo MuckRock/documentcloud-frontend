@@ -86,9 +86,14 @@ function tokenize(query: string): string[] {
 }
 
 /**
- * Add a term to the q param of the URL provided, unless the term is already present
+ * Add a term to the q param of the URL provided using the given operator,
+ * unless the term is already present
  */
-export function appendQuery(url: URL, value: string): URL {
+export function appendQuery(
+  url: URL,
+  value: string,
+  operator: "AND" | "OR" = "AND",
+): URL {
   const href = new URL(url);
   const query = href.searchParams.get("q");
 
@@ -96,7 +101,7 @@ export function appendQuery(url: URL, value: string): URL {
     href.searchParams.set("q", value);
     // If the query already includes the new value, don't repeat it
   } else if (!tokenize(query).includes(value)) {
-    href.searchParams.set("q", `${query} ${value}`);
+    href.searchParams.set("q", [query, operator, value].join(" "));
   }
 
   return href;
