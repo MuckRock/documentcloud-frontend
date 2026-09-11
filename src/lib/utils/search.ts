@@ -78,6 +78,30 @@ export function getQuery(url?: Nullable<URL>, param: string = "q"): string {
   return url?.searchParams?.get(param) ?? "";
 }
 
+/**
+ * Split a query into terms, keeping quoted phrases intact.
+ */
+function tokenize(query: string): string[] {
+  return query.match(/(?:[^\s"]+|"[^"]*"?)+/g) ?? [];
+}
+
+/**
+ * Add a term to the q param of the URL provided, unless the term is already present
+ */
+export function appendQuery(url: URL, value: string): URL {
+  const href = new URL(url);
+  const query = href.searchParams.get("q");
+
+  if (!query) {
+    href.searchParams.set("q", value);
+    // If the query already includes the new value, don't repeat it
+  } else if (!tokenize(query).includes(value)) {
+    href.searchParams.set("q", `${query} ${value}`);
+  }
+
+  return href;
+}
+
 /* Lucene is used to parse and construct Solr search queries. */
 /* We have a number of helpers that make it easier to work with the AST. */
 
