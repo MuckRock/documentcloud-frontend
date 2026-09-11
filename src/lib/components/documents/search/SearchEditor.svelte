@@ -149,7 +149,7 @@
     {/if}
   </div>
   {#each contextAtoms as atom}
-    <FieldValueAtom field={atom.field} value={atom.label} locked />
+    <FieldValueAtom field={atom.field} displayValue={atom.label} locked />
   {/each}
   <div
     bind:this={editorRef}
