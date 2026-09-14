@@ -144,6 +144,7 @@
     "accessDocuments": "Ваші {access}документи",
     "nameDocuments": "Документи {name} {access}",
     "allDocuments": "Всі {access}документи",
+    "explore": "Огляд документів",
     "upload": "Завантажити",
     "dropFile": "Перетягніть файл, щоб завантажити",
     "matchingPages": "{n, plural, one {# сторінка} few {# сторінки} many {# сторінок} other {# сторінки}}, що відповідають запиту",
@@ -187,7 +188,8 @@
     "processingDocuments": "Обробка {n, plural, one {документа} few {# документів} many {# документів} other {# документів}}"
   },
   "projects": {
-    "header": "Проекти"
+    "header": "Проекти",
+    "explore": "Огляд проектів"
   },
   "uploadDialog": {
     "beginUpload": "Почати завантаження",
@@ -222,6 +224,8 @@
     "data": "Редагувати теги та дані",
     "language": "Мова",
     "processing": "Обробка",
+    "documentActions": "Дії з документом",
+    "projectActions": "Дії з проектом",
     "file": {
       "pdf": "Завантажити PDF",
       "text": "Завантажити видобутий текст"

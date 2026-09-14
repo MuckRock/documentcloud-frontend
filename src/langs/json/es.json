@@ -238,6 +238,7 @@
     "accessDocuments": "Seguimiento de sus {access}Documentos",
     "nameDocuments": "Segnato como {name}'s Documentos",
     "allDocuments": "Todas las {access}Documentos",
+    "explore": "Explorar Documentos",
     "upload": "Cargar",
     "dropFile": "Ejectar archivo para subir",
     "matchingPages": "{n, plural, one {# página} other {# páginas}} que coinciden con la consulta",
@@ -299,6 +300,7 @@
     "edit": "Editar metadatos del proyecto",
     "share": "Compartir & enlazar este proyecto",
     "add": "Agrega {n, plural, one {este documento} other {# documentos}} a un proyecto",
+    "explore": "Explorar Proyectos",
     "access": {
       "public": "P\u00fablico",
       "private": "Privado",
@@ -419,6 +421,8 @@
     "language": "Lengua",
     "delete": "Eliminar",
     "ocr_engine": "Motor de OCR",
+    "documentActions": "Acciones del Documento",
+    "projectActions": "Acciones del Proyecto",
     "addons": {
       "title": "Agregados",
       "pinned": "A\u00f1adidos marcados se mostrar\u00e1n aqu\u00ed",
