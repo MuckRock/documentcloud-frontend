@@ -1,5 +1,5 @@
 <script module lang="ts">
-  import type { APIError, Document, ValidationError } from "$lib/api/types";
+  import type { APIError, APIErrors, Document } from "$lib/api/types";
 
   import { defineMeta } from "@storybook/addon-svelte-csf";
 
@@ -16,18 +16,45 @@
     parameters: { layout: "centered" },
   });
 
-  const error: APIError<ValidationError> = {
+  const error: APIError<APIErrors> = {
     status: 400,
     message: "Something went wrong",
     errors: {
       published_url: ["Published URL must be a valid URL"],
     },
   };
+
+  // Errors that aren't about one field come back as a bare array.
+  const processingError: APIError<APIErrors> = {
+    status: 400,
+    message: "Bad Request",
+    errors: ["You may not update `access` while the document is processing"],
+  };
 </script>
 
 <Story name="Edit one" asChild>
   <div style="min-width: 600px;">
     <EditForm {document}>
+      <header>
+        <h2>Edit Document Metadata</h2>
+      </header>
+    </EditForm>
+  </div>
+</Story>
+
+<Story name="Edit one, with error" asChild>
+  <div style="min-width: 600px;">
+    <EditForm {document} {error}>
+      <header>
+        <h2>Edit Document Metadata</h2>
+      </header>
+    </EditForm>
+  </div>
+</Story>
+
+<Story name="Edit one, with non-field error" asChild>
+  <div style="min-width: 600px;">
+    <EditForm {document} error={processingError}>
       <header>
         <h2>Edit Document Metadata</h2>
       </header>
@@ -45,10 +72,7 @@
   </div>
 </Story>
 
-{#snippet bulkTemplate(
-  documents: Document[],
-  bulkError?: APIError<ValidationError>,
-)}
+{#snippet bulkTemplate(documents: Document[], bulkError?: APIError<APIErrors>)}
   <div style="min-width: 600px;">
     <EditMany {documents} error={bulkError}>
       <header>

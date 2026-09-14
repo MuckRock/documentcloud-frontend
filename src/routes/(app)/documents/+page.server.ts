@@ -59,7 +59,7 @@ export const actions = {
     const { error, data } = await edit_many(docs, csrf_token, fetch);
 
     if (error) {
-      setFlash({ message: error.message, status: "error" }, cookies);
+      // No flash, render errors inline
       return fail(error.status, { ...error });
     }
 
