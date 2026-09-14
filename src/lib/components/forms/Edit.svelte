@@ -4,19 +4,14 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
 -->
 <script lang="ts">
   import type { Snippet } from "svelte";
-  import type {
-    Document,
-    Maybe,
-    APIError,
-    ValidationError,
-  } from "$lib/api/types";
+  import type { APIError, APIErrors, Document, Maybe } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
 
   import { _ } from "svelte-i18n";
-  import { Alert24 } from "svelte-octicons";
 
+  import ApiError from "../common/ApiError.svelte";
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
 
@@ -25,14 +20,13 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
   import Switch from "../inputs/Switch.svelte";
   import Text from "../inputs/Text.svelte";
   import TextArea from "../inputs/TextArea.svelte";
-  import Tip from "../common/Tip.svelte";
 
   import { canonicalUrl, edited } from "$lib/api/documents";
   import { toDatetimeLocal } from "$lib/utils/date";
 
   interface Props {
     document: Document;
-    error?: Maybe<APIError<ValidationError>>;
+    error?: Maybe<APIError<APIErrors>>;
     children?: Snippet;
     onclose?: () => void;
   }
@@ -90,19 +84,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
     {@render children?.()}
 
     {#if error}
-      <Tip mode="error">
-        {#snippet icon()}<Alert24 />{/snippet}
-        <p>{error.message}</p>
-        {#if Object.keys(error.errors ?? {}).length}
-          <ul>
-            {#each Object.entries(error.errors ?? {}) as [field, errs]}
-              <li>
-                <strong>{field}</strong>: {errs.join(";")}
-              </li>
-            {/each}
-          </ul>
-        {/if}
-      </Tip>
+      <ApiError {error} />
     {/if}
 
     <Field title={$_("edit.fields.title")} required>

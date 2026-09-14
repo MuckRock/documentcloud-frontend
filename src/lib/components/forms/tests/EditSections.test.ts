@@ -24,8 +24,9 @@ vi.mock("$app/navigation", () => ({
   invalidate: vi.fn(),
 }));
 
-// The CSRF token normally comes from a cookie.
-vi.mock("$lib/utils/api", () => ({
+// The CSRF token normally comes from a cookie; the rest of the module is real.
+vi.mock("$lib/utils/api", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("$lib/utils/api")>()),
   getCsrfToken: vi.fn(() => "test-csrf"),
 }));
 

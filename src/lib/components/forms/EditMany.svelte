@@ -3,12 +3,7 @@ Edit metadata for many documents. This touches all top-level data.
 Usually this will be rendered inside a modal, but it doesn't have to be.
 -->
 <script lang="ts">
-  import type {
-    APIError,
-    Document,
-    Maybe,
-    ValidationError,
-  } from "$lib/api/types";
+  import type { APIError, APIErrors, Document, Maybe } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
 
@@ -16,6 +11,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
   import { _ } from "svelte-i18n";
   import { Alert24 } from "svelte-octicons";
 
+  import ApiError from "../common/ApiError.svelte";
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
 
@@ -33,7 +29,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
   interface Props {
     documents: Document[];
     // exported for testing and demos
-    error?: Maybe<APIError<ValidationError>>;
+    error?: Maybe<APIError<APIErrors>>;
     children?: Snippet;
     onclose?: () => void;
   }
@@ -101,19 +97,7 @@ Usually this will be rendered inside a modal, but it doesn't have to be.
     </ShowSize>
 
     {#if error}
-      <Tip mode="error">
-        {#snippet icon()}<Alert24 />{/snippet}
-        <p>{error.message}</p>
-        {#if Object.keys(error.errors ?? {}).length}
-          <ul>
-            {#each Object.entries(error.errors ?? {}) as [field, errs]}
-              <li>
-                <strong>{field}</strong>: {errs.join(";")}
-              </li>
-            {/each}
-          </ul>
-        {/if}
-      </Tip>
+      <ApiError {error} />
     {/if}
 
     <Field

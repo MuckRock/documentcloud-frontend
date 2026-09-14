@@ -1,6 +1,6 @@
 <script module lang="ts">
   import type { ComponentProps } from "svelte";
-  import type { APIError, Document, ValidationError } from "$lib/api/types";
+  import type { APIError, APIErrors, Document } from "$lib/api/types";
 
   import { defineMeta } from "@storybook/addon-svelte-csf";
 
@@ -16,12 +16,19 @@
     parameters: { layout: "centered" },
   });
 
-  const error: APIError<ValidationError> = {
+  const error: APIError<APIErrors> = {
     status: 400,
     message: "Unable to change access level",
     errors: {
       access: ["You do not have permission to make this document public"],
     },
+  };
+
+  // Errors that aren't about one field come back as a bare array.
+  const processingError: APIError<APIErrors> = {
+    status: 400,
+    message: "Bad Request",
+    errors: ["You may not update `access` while the document is processing"],
   };
 </script>
 
@@ -38,6 +45,12 @@
 <Story name="Default" args={{ document }} {template} />
 
 <Story name="With error" args={{ document, error }} {template} />
+
+<Story
+  name="With non-field error"
+  args={{ document, error: processingError }}
+  {template}
+/>
 
 <Story name="Private document" asChild>
   <div style="min-width: 600px;">

@@ -322,7 +322,17 @@ export interface Flatpage {
 }
 
 // known errors
+/** Validation errors keyed by the field they apply to. */
 export interface ValidationError extends Record<string, string[]> {}
+
+/**
+ * Everything the API might put in an error response body: field-keyed
+ * validation errors, a bare array of errors that aren't about one field,
+ * a lone message, or `{detail}` and nested objects from DRF.
+ * Pass these through `normalizeErrors` in `$lib/utils/api` before rendering.
+ */
+export type APIErrors =
+  ValidationError | Record<string, unknown> | string[] | string;
 
 /** Addons */
 
