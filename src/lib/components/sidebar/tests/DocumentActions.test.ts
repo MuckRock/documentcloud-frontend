@@ -14,12 +14,12 @@ import { me } from "@/test/fixtures/accounts";
 
 /** Get a button by its translated label text. */
 function btn(name: string) {
-  return screen.getByRole("button", { name: new RegExp(name, "i") });
+  return screen.queryByRole("button", { name: new RegExp(name, "i") });
 }
 
 describe("DocumentActions", () => {
   it("disables all action buttons when nothing is selected", () => {
-    page.data.me = null;
+    page.data.me = me;
 
     render(DocumentActionsDemo);
 
@@ -32,7 +32,7 @@ describe("DocumentActions", () => {
   });
 
   it("enables Share only for a single selection", () => {
-    page.data.me = null;
+    page.data.me = me;
 
     render(DocumentActionsDemo, {
       props: { docs: [document] },
@@ -42,7 +42,7 @@ describe("DocumentActions", () => {
   });
 
   it("disables Share when multiple documents are selected", () => {
-    page.data.me = null;
+    page.data.me = me;
     const second = { ...document, id: 99999 };
 
     render(DocumentActionsDemo, {
@@ -53,7 +53,7 @@ describe("DocumentActions", () => {
   });
 
   it("enables Edit/Data/Reprocess/Delete when selection is editable", () => {
-    page.data.me = null;
+    page.data.me = me;
     const editableDoc = { ...document, edit_access: true };
 
     render(DocumentActionsDemo, {
@@ -67,7 +67,7 @@ describe("DocumentActions", () => {
   });
 
   it("disables Edit/Data/Reprocess/Delete when selection is not editable", () => {
-    page.data.me = null;
+    page.data.me = me;
     const readonlyDoc = { ...document, edit_access: false };
 
     render(DocumentActionsDemo, {
@@ -81,7 +81,7 @@ describe("DocumentActions", () => {
   });
 
   it("enables Move to Project when documents are selected", () => {
-    page.data.me = null;
+    page.data.me = me;
 
     render(DocumentActionsDemo, {
       props: { docs: [document] },
@@ -99,5 +99,22 @@ describe("DocumentActions", () => {
 
     // me.id (100012) !== document.user.id (20080), so Change Owner is disabled
     expect(btn("Change owner")).toBeDisabled();
+  });
+
+  it("only shows relevant actions to signed out users", () => {
+    page.data.me = null;
+
+    render(DocumentActionsDemo, {
+      props: { docs: [document] },
+    });
+
+    expect(btn("Share")).toBeInTheDocument();
+
+    expect(btn("Edit Metadata")).not.toBeInTheDocument();
+    expect(btn("Edit Tags")).not.toBeInTheDocument();
+    expect(btn("Move to Project")).not.toBeInTheDocument();
+    expect(btn("Reprocess")).not.toBeInTheDocument();
+    expect(btn("Delete")).not.toBeInTheDocument();
+    expect(btn("Change owner")).not.toBeInTheDocument();
   });
 });
