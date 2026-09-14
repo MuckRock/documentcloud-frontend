@@ -44,41 +44,41 @@
   }
 </script>
 
-<SidebarGroup name="addons">
-  {#snippet title()}
-    <NavItem>
-      {#snippet start()}
-        <Plug16 />
-      {/snippet}
-      {$_("sidebar.addons.title")}
-    </NavItem>
-  {/snippet}
-  {#snippet action()}
-    <Button
-      ghost
-      mode="primary"
-      size="small"
-      minW={false}
-      href={getHref(query)}
-    >
-      <Search16 width={14} height={14} />
-      {$_("common.explore")}
-    </Button>
-  {/snippet}
+<SignedIn>
+  <SidebarGroup name="addons">
+    {#snippet title()}
+      <NavItem>
+        {#snippet start()}
+          <Plug16 />
+        {/snippet}
+        {$_("sidebar.addons.title")}
+      </NavItem>
+    {/snippet}
+    {#snippet action()}
+      <Button
+        ghost
+        mode="primary"
+        size="small"
+        minW={false}
+        href={getHref(query)}
+      >
+        <Search16 width={14} height={14} />
+        {$_("common.explore")}
+      </Button>
+    {/snippet}
 
-  <NavItem small href="/add-ons/?featured=true">
-    {#snippet start()}
-      <Star16 width={14} height={14} />
-    {/snippet}
-    Featured
-  </NavItem>
-  <NavItem small href="/add-ons/?premium=true">
-    {#snippet start()}
-      <Zap16 width={14} height={14} />
-    {/snippet}
-    Premium
-  </NavItem>
-  <SignedIn>
+    <NavItem small href="/add-ons/?featured=true">
+      {#snippet start()}
+        <Star16 width={14} height={14} />
+      {/snippet}
+      Featured
+    </NavItem>
+    <NavItem small href="/add-ons/?premium=true">
+      {#snippet start()}
+        <Zap16 width={14} height={14} />
+      {/snippet}
+      Premium
+    </NavItem>
     {#await pinnedAddOns}
       <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
     {:then { data, error }}
@@ -104,5 +104,5 @@
     {:catch error}
       <Error>{error}</Error>
     {/await}
-  </SignedIn>
-</SidebarGroup>
+  </SidebarGroup>
+</SignedIn>

@@ -42,6 +42,7 @@ Most actual actions are deferred to their own forms, so this is more of a switch
   import Share from "../forms/Share.svelte";
   import Flex from "../common/Flex.svelte";
   import Button from "../common/Button.svelte";
+  import SignedIn from "../common/SignedIn.svelte";
 
   import { canChangeOwner, getCurrentUser } from "$lib/utils/permissions";
   import { getSearchResults } from "$lib/state/search.svelte";
@@ -104,67 +105,69 @@ Most actual actions are deferred to their own forms, so this is more of a switch
     {$_("bulk.actions.share")}
   </Button>
 
-  <Button
-    ghost
-    mode="primary"
-    onclick={() => show("edit")}
-    disabled={!search.editable}
-  >
-    <Pencil16 />
-    {$_("bulk.actions.edit")}
-  </Button>
+  <SignedIn>
+    <Button
+      ghost
+      mode="primary"
+      onclick={() => show("edit")}
+      disabled={!search.editable}
+    >
+      <Pencil16 />
+      {$_("bulk.actions.edit")}
+    </Button>
 
-  <Button
-    ghost
-    mode="primary"
-    onclick={() => show("data")}
-    disabled={!search.editable}
-  >
-    <Tag16 />
-    {$_("bulk.actions.data")}
-  </Button>
+    <Button
+      ghost
+      mode="primary"
+      onclick={() => show("data")}
+      disabled={!search.editable}
+    >
+      <Tag16 />
+      {$_("bulk.actions.data")}
+    </Button>
 
-  <Button
-    ghost
-    mode="primary"
-    onclick={() => show("project")}
-    disabled={!search.selected || search.selected?.length < 1}
-  >
-    <FileDirectory16 />
-    {$_("bulk.actions.project")}
-  </Button>
+    <Button
+      ghost
+      mode="primary"
+      onclick={() => show("project")}
+      disabled={!search.selected || search.selected?.length < 1}
+    >
+      <FileDirectory16 />
+      {$_("bulk.actions.project")}
+    </Button>
 
-  <Button
-    ghost
-    mode="danger"
-    onclick={() => show("reprocess")}
-    disabled={!search.editable}
-  >
-    <IssueReopened16 />
-    {$_("bulk.actions.reprocess")}
-  </Button>
+    <Button
+      ghost
+      mode="danger"
+      onclick={() => show("reprocess")}
+      disabled={!search.editable}
+    >
+      <IssueReopened16 />
+      {$_("bulk.actions.reprocess")}
+    </Button>
 
-  <hr class="divider" />
+    <hr class="divider" />
 
-  <Button
-    ghost
-    mode="danger"
-    onclick={() => show("delete")}
-    disabled={!search.editable}
-  >
-    <Alert16 />
-    {$_("bulk.actions.delete")}
-  </Button>
+    <Button
+      ghost
+      mode="danger"
+      onclick={() => show("delete")}
+      disabled={!search.editable}
+    >
+      <Alert16 />
+      {$_("bulk.actions.delete")}
+    </Button>
 
-  <Button
-    ghost
-    mode="danger"
-    onclick={() => show("change_owner")}
-    disabled={!canChangeOwner(me, search.selected)}
-  >
-    <Person16 />
-    {$_("bulk.actions.change_owner")}
-  </Button>
+    <Button
+      ghost
+      mode="danger"
+      onclick={() => show("change_owner")}
+      disabled={!canChangeOwner(me, search.selected)}
+    >
+      <Person16 />
+      {$_("bulk.actions.change_owner")}
+    </Button>
+  </SignedIn>
 </Flex>
 
 {#if visible}
