@@ -20,6 +20,9 @@
   let instructions = $derived(
     addon.parameters.instructions ? clean(addon.parameters.instructions) : "",
   );
+  let disclosures = $derived(
+    addon.parameters.disclosures ? clean(addon.parameters.disclosures) : "",
+  );
 </script>
 
 <div class="container">
@@ -34,6 +37,16 @@
           {$_("addonDispatchDialog.instructions")}
         </summary>
         {@html instructions}
+      </details>
+    </div>
+  {/if}
+  {#if disclosures}
+    <div class="disclosures">
+      <details>
+        <summary>
+          {$_("addonDispatchDialog.disclosures")}
+        </summary>
+        {@html disclosures}
       </details>
     </div>
   {/if}
@@ -66,7 +79,8 @@
   }
 
   .description,
-  .instructions {
+  .instructions,
+  .disclosures {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
