@@ -371,6 +371,7 @@ interface AddOnParameters {
   title: string;
   description: string;
   instructions: string;
+  disclosures: string;
   categories: AddOnCategory[];
   documents: string[];
   required: string[];
