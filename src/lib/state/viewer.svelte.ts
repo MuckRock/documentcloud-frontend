@@ -56,6 +56,23 @@ export class ViewerState {
   #task: Nullable<pdfjs.PDFDocumentLoadingTask> = null;
   #retriesOn403Error = 0;
 
+  // The scrolling ancestor of the document
+  scrollContainer = $state<HTMLElement>();
+  innerContainer = $state<HTMLElement>();
+
+  // Height of the sticky toolbar header above the page content
+  headerHeight = $state(0);
+
+  startMargin = $derived.by(() => {
+    // The vertical offset depends on the viewer width, so recalculate when it changes
+    this.width;
+    return (
+      (this.innerContainer?.getBoundingClientRect().top ?? 0) -
+      (this.scrollContainer?.getBoundingClientRect().top ?? 0) +
+      (this.scrollContainer?.scrollTop ?? 0)
+    );
+  });
+
   // state and deriveds for zoom calculations
   // regardless of zoom mode, we always calculate auto zoom scale to display in select menu
   width = $state<number>();
@@ -71,6 +88,14 @@ export class ViewerState {
     if (typeof this.zoom === "number") return this.zoom;
     if (this.zoom === "auto") return this.autoZoomScale;
     return 1;
+  });
+
+  // Props object to spread onto the Virtualizer in PDF.svelte
+  virtualizerProps = $derived({
+    scrollRef: this.scrollContainer,
+    data: this.pageSizes,
+    startMargin: this.startMargin,
+    keepMounted: [Math.max(0, this.page - 2)],
   });
 
   get loadingProgress(): number {

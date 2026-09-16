@@ -51,12 +51,6 @@
   let sections = $derived(getSections(document));
   let scale = $derived(viewer.scale);
 
-  // The scrolling ancestor is div#content in SidebarLayout.svelte
-  let scrollRef = $derived(globalThis.document.getElementById("content")!);
-
-  // Virtua's container uses `contain: size` and each item is `width: 100%`, so
-  // wider-than-viewport pages can't push it out on their own. Set the widest
-  // scaled page as `width` on an inner div so `.pages` gets scrollable overflow.
   let maxPageWidth = $derived(viewer.maxPageWidth * scale);
 
   // handle missing page_spec
@@ -117,6 +111,7 @@
     <div class="pages" {@attach pinchZoom(pinchZoomOptions)}>
       <div class="inner" bind:clientWidth={viewer.width}>
         <div
+          bind:this={viewer.innerContainer}
           class="column"
           style:width="{maxPageWidth}px"
           style:--pin-width="{viewer.width}px"
@@ -124,9 +119,7 @@
           {#if browser && viewer.width !== undefined}
             <Virtualizer
               bind:this={virtualizer}
-              data={sizes}
-              {scrollRef}
-              keepMounted={[Math.max(0, viewer.page - 2)]}
+              {...viewer.virtualizerProps}
               itemProps={() => ({
                 style: { display: "flex", "justify-content": "center" },
               })}

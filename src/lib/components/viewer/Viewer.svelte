@@ -52,42 +52,44 @@ Must be a child of a ViewerContext
 <div class="container">
   <ContentLayout noBgColor>
     {#snippet header()}
-      <!-- toolbars -->
-      <Flex>
-        {#if !embed && $sidebars["navigation"] === false}
-          <div class="toolbar w-auto">
-            <Button
-              ghost
-              minW={false}
-              onclick={() => ($sidebars["navigation"] = true)}
-            >
-              <span class="flipV">
+      <div bind:clientHeight={viewer.headerHeight}>
+        <!-- toolbars -->
+        <Flex>
+          {#if !embed && $sidebars["navigation"] === false}
+            <div class="toolbar w-auto">
+              <Button
+                ghost
+                minW={false}
+                onclick={() => ($sidebars["navigation"] = true)}
+              >
+                <span class="flipV">
+                  <SidebarExpand16 />
+                </span>
+              </Button>
+            </div>
+          {/if}
+          {#if showLoading && loading && loading < 1}
+            <LoadingToolbar progress={loading} />
+          {:else if !embed && mode === "annotating"}
+            <AnnotationToolbar />
+          {:else if !embed && mode === "redacting"}
+            <RedactionToolbar />
+          {:else}
+            <ReadingToolbar />
+          {/if}
+          {#if !embed && $sidebars["action"] === false}
+            <div class="toolbar w-auto">
+              <Button
+                ghost
+                minW={false}
+                onclick={() => ($sidebars["action"] = true)}
+              >
                 <SidebarExpand16 />
-              </span>
-            </Button>
-          </div>
-        {/if}
-        {#if showLoading && loading && loading < 1}
-          <LoadingToolbar progress={loading} />
-        {:else if !embed && mode === "annotating"}
-          <AnnotationToolbar />
-        {:else if !embed && mode === "redacting"}
-          <RedactionToolbar />
-        {:else}
-          <ReadingToolbar />
-        {/if}
-        {#if !embed && $sidebars["action"] === false}
-          <div class="toolbar w-auto">
-            <Button
-              ghost
-              minW={false}
-              onclick={() => ($sidebars["action"] = true)}
-            >
-              <SidebarExpand16 />
-            </Button>
-          </div>
-        {/if}
-      </Flex>
+              </Button>
+            </div>
+          {/if}
+        </Flex>
+      </div>
     {/snippet}
 
     <!-- content -->
