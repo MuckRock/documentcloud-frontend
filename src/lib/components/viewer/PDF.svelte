@@ -126,6 +126,7 @@
               bind:this={virtualizer}
               data={sizes}
               {scrollRef}
+              keepMounted={[Math.max(0, viewer.page - 2)]}
               itemProps={() => ({
                 style: { display: "flex", "justify-content": "center" },
               })}
