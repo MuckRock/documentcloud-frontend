@@ -2,10 +2,13 @@
  * Unit tests for the pinchZoom attachment.
  *
  * jsdom lacks TouchEvent, so tests synthesise touch events by attaching a
- * `touches` array to a plain Event. The `flushSync` import from "svelte" is
- * mocked so the anchored-zoom path can be exercised without a real component
- * tree, and `document.elementFromPoint` / `getBoundingClientRect` are stubbed
- * where the scroll-anchoring math needs controlled geometry.
+ * `touches` array to a plain Event. The `tick` import from "svelte" is mocked
+ * so the anchored-zoom path can be exercised without a real component tree
+ * (settleLayout awaits tick → requestAnimationFrame → tick before measuring
+ * post-zoom geometry, so callers must await a `settle()` helper for the
+ * handler's async work to finish), and `document.elementFromPoint` /
+ * `getBoundingClientRect` are stubbed where the scroll-anchoring math needs
+ * controlled geometry.
  */
 import {
   describe,
@@ -17,8 +20,8 @@ import {
   afterEach,
 } from "vitest";
 
-const { flushSync } = vi.hoisted(() => ({ flushSync: vi.fn() }));
-vi.mock("svelte", () => ({ flushSync }));
+const { tick } = vi.hoisted(() => ({ tick: vi.fn(() => Promise.resolve()) }));
+vi.mock("svelte", () => ({ tick }));
 
 import { pinchZoom, type PinchZoomOptions } from "../pinchZoom";
 
@@ -43,6 +46,13 @@ function fireTouch(el: HTMLElement, type: string, touches: Touch[]): Event {
   });
   el.dispatchEvent(event);
   return event;
+}
+
+/** Let pinchZoom's async settleLayout (tick → rAF → tick) finish. */
+function settle(): Promise<void> {
+  return new Promise((resolve) =>
+    requestAnimationFrame(() => setTimeout(resolve, 0)),
+  );
 }
 
 // --- setup helper ---
@@ -247,7 +257,7 @@ describe("pinchZoom", () => {
       document.elementFromPoint = vi.fn(() => pageEl);
     });
 
-    it("adjusts scroll ancestors to keep the focal point fixed", () => {
+    it("adjusts scroll ancestors to keep the focal point fixed", async () => {
       let scale = 1;
       const setZoom = vi.fn((s: number) => {
         scale = s;
@@ -284,10 +294,11 @@ describe("pinchZoom", () => {
 
       // Move: touches 200 px apart → ratio 2, newScale 2, midpoint (200, 200)
       fireTouch(element, "touchmove", twoTouches(200, 200, 200));
+      await settle();
 
       expect(setZoom).toHaveBeenCalledWith(2);
-      // flushSync is called between the pre- and post-zoom measurements
-      expect(flushSync).toHaveBeenCalled();
+      // tick is awaited between the pre- and post-zoom measurements
+      expect(tick).toHaveBeenCalled();
 
       // dx = rect1.left + px * k - anchorX = 150 + 50 * 2 - 200 = 50
       // dy = rect1.top  + py * k - anchorY = 180 + 20 * 2 - 200 = 20
@@ -297,7 +308,7 @@ describe("pinchZoom", () => {
       cleanup();
     });
 
-    it("zooms without scroll adjustment when the focal point is over a gap", () => {
+    it("zooms without scroll adjustment when the focal point is over a gap", async () => {
       // elementFromPoint returns an element without a .page-container ancestor
       const gapEl = document.createElement("div");
       document.body.appendChild(gapEl);
@@ -318,17 +329,18 @@ describe("pinchZoom", () => {
 
       fireTouch(element, "touchstart", twoTouches(200, 200, 100));
       fireTouch(element, "touchmove", twoTouches(200, 200, 200));
+      await settle();
 
       expect(setZoom).toHaveBeenCalledWith(2);
-      // No page element → no flushSync, no scroll adjustment
-      expect(flushSync).not.toHaveBeenCalled();
+      // No page element → no tick, no scroll adjustment
+      expect(tick).not.toHaveBeenCalled();
       expect(scrollH.scrollLeft).toBe(0);
       expect(scrollV.scrollTop).toBe(0);
 
       cleanup();
     });
 
-    it("does nothing when the new scale equals the current scale", () => {
+    it("does nothing when the new scale equals the current scale", async () => {
       const setZoom = vi.fn();
 
       const cleanup = pinchZoom({
@@ -342,6 +354,7 @@ describe("pinchZoom", () => {
       // Start and move with the same distance → ratio 1, newScale === currentScale
       fireTouch(element, "touchstart", twoTouches(200, 200, 100));
       fireTouch(element, "touchmove", twoTouches(200, 200, 100));
+      await settle();
 
       expect(setZoom).not.toHaveBeenCalled();
 
