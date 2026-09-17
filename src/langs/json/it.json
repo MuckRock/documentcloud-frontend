@@ -238,6 +238,7 @@
     "accessDocuments": "I tuoi documenti {access}",
     "nameDocuments": "{access} documenti di {name}",
     "allDocuments": "Tutti documenti",
+    "explore": "Esplora Documenti",
     "upload": "Carico",
     "dropFile": "Inserisci file per caricare",
     "matchingPages": "{n, plural, one {# pagina} other {# pagine}} che corrispondono alla query",
@@ -299,6 +300,7 @@
     "edit": "Cambia le metadati del progetto",
     "share": "Condividi & embedding questo progetto",
     "add": "Aggiungi {n, plural, one {documenti} other {documenti}} a un progetto",
+    "explore": "Esplora Progetti",
     "access": {
       "public": "Pubblico",
       "private": "Private",
@@ -419,6 +421,8 @@
     "language": "Linguaggio",
     "delete": "Cancellare",
     "ocr_engine": "Motor di riconoscimento ottico",
+    "documentActions": "Azioni Documento",
+    "projectActions": "Azioni Progetto",
     "addons": {
       "title": "Estensioni",
       "pinned": "Aggiunti pinati appariranno qui",

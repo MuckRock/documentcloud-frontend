@@ -131,6 +131,7 @@
     "accessDocuments": "Ihre {access}-Dokumente",
     "nameDocuments": "{access}-Dokumente von {name}",
     "allDocuments": "Alle {access}-Dokumente",
+    "explore": "Dokumente erkunden",
     "upload": "Hochladen",
     "dropFile": "Datei zum Hochladen hier ablegen",
     "matchingPages": "{n, plural, one {# Seite} other {# Seiten}} entsprechen der Abfrage",
@@ -174,7 +175,8 @@
     "processingDocuments": "Verarbeitung {n, plural, one {von einem Dokument} other {von # Dokumenten}}"
   },
   "projects": {
-    "header": "Projekte"
+    "header": "Projekte",
+    "explore": "Projekte erkunden"
   },
   "uploadDialog": {
     "beginUpload": "Hochladen starten",
@@ -208,6 +210,8 @@
     "share": "Teilen",
     "data": "Tags und Daten bearbeiten",
     "processing": "Verarbeitung",
+    "documentActions": "Dokumentaktionen",
+    "projectActions": "Projektaktionen",
     "file": {
       "pdf": "PDF herunterladen",
       "text": "Extrahierten Text herunterladen"

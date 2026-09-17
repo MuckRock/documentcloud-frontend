@@ -247,6 +247,7 @@
     "accessDocuments": "Your {access}Documents",
     "nameDocuments": "{name}’s {access}Documents",
     "allDocuments": "All {access}Documents",
+    "explore": "Explore Documents",
     "upload": "Upload",
     "dropFile": "Drop file to upload",
     "matchingPages": "{n, plural, one {# page} other {# pages}} matching the query",
@@ -365,6 +366,7 @@
     "edit": "Edit Project Metadata",
     "share": "Share & embed this project",
     "add": "Add {n, plural, one {this document} other {# documents}} to a project",
+    "explore": "Explore Projects",
     "access": {
       "public": "Public",
       "private": "Private",
@@ -491,6 +493,8 @@
     "updated": "Last updated on",
     "language": "Language",
     "ocr_engine": "OCR Engine",
+    "documentActions": "Document Actions",
+    "projectActions": "Project Actions",
     "addons": {
       "title": "Add-Ons",
       "pinned": "Pinned add-ons will appear here",
