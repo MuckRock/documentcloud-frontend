@@ -33,12 +33,12 @@
   import { _ } from "svelte-i18n";
   import { Search24 } from "svelte-octicons";
 
-  import Button from "../common/Button.svelte";
   import DocumentListItem from "./DocumentListItem.svelte";
   import Empty from "../common/Empty.svelte";
   import Flex from "../common/Flex.svelte";
   import NoteHighlights from "./NoteHighlights.svelte";
   import PageHighlights from "./PageHighlights.svelte";
+  import InfiniteScrollTrigger from "$lib/components/search/InfiniteScrollTrigger.svelte";
 
   import { StorageManager } from "$lib/utils/storage";
   import { SearchResultsState } from "$lib/state/search.svelte";
@@ -63,10 +63,6 @@
     visibleFieldsOverride,
   }: Props = $props();
 
-  let endEl: Maybe<HTMLElement> = $state();
-  let error: Maybe<APIError<unknown>> = $derived(search.error); // catch any initial errors, but overwrite if needed
-  let observer: Maybe<IntersectionObserver>;
-
   // we can pass in an onNext callback or ust use the SearchResultsState
   // this is likely just for testing and storybook, and may go away if we don't need it
   let onNext = $derived(onNextProp ?? search.loadNext);
@@ -83,55 +79,6 @@
   function expandAll() {
     highlightState.update((state) => ({ ...state, allOpen: true }));
   }
-
-  function watch(el: HTMLElement): Maybe<IntersectionObserver> {
-    if (!el) return;
-    const io = new IntersectionObserver((entries, observer) => {
-      entries.forEach(async (entry) => {
-        if (entry.isIntersecting && search.next) {
-          observer?.unobserve(el);
-          error = await onNext();
-          if (error) {
-            // don't keep trying if something fails
-            auto = false;
-          }
-        }
-      });
-    });
-
-    try {
-      // sometimes this breaks, so just let the user click the button
-      io.observe(el);
-    } catch (e) {
-      console.warn(e);
-      auto = false; // turn off auto if IO is failing
-    }
-    return io;
-  }
-
-  function unwatch(io: IntersectionObserver, el?: HTMLElement) {
-    if (el) {
-      io?.unobserve(el);
-    }
-  }
-
-  // Re-observe the sentinel whenever results change (search.next updates)
-  // so auto-loading continues for subsequent pages
-  $effect(() => {
-    if (auto && endEl && search.next) {
-      // clean up previous observer
-      if (observer) {
-        unwatch(observer, endEl);
-      }
-      observer = watch(endEl);
-    }
-
-    return () => {
-      if (observer) {
-        unwatch(observer, endEl);
-      }
-    };
-  });
 </script>
 
 <div class="container" data-sveltekit-preload-data={preload}>
@@ -194,29 +141,7 @@
     {/each}
   </Flex>
 
-  <div bind:this={endEl} class="end">
-    {#if search.next}
-      <Button
-        ghost
-        mode="primary"
-        disabled={search.loading}
-        onclick={async () => {
-          error = await onNext();
-        }}
-      >
-        {#if search.loading}
-          {$_("common.loading")}
-        {:else}
-          {$_("documents.more")}
-        {/if}
-      </Button>
-    {/if}
-
-    {#if error}
-      <p class="error">{error.message}</p>
-      <p class="error">{$_("documents.retry")}</p>
-    {/if}
-  </div>
+  <InfiniteScrollTrigger {search} {onNext} />
 
   {@render end?.()}
 </div>
@@ -259,17 +184,5 @@
     margin: 0;
     height: 1.25rem;
     width: 1.25rem;
-  }
-
-  .end {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .error {
-    text-align: center;
-    color: var(--error, red);
   }
 </style>
