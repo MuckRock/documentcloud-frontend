@@ -9,12 +9,11 @@
 -->
 <script lang="ts">
   import { browser } from "$app/environment";
-  import { onMount } from "svelte";
+  import { onMount, untrack } from "svelte";
   import { Virtualizer, type VirtualizerHandle } from "virtua/svelte";
 
   import PdfPage from "./PDFPage.svelte";
 
-  import { scrollToPage } from "$lib/utils/scroll";
   import { getSections } from "$lib/utils/viewer";
   import { getViewerState } from "$lib/state/viewer.svelte";
   import { pinchZoom, type PinchZoomOptions } from "$lib/utils/pinchZoom";
@@ -23,6 +22,13 @@
   const viewer = getViewerState();
 
   let virtualizer = $state<VirtualizerHandle>();
+
+  viewer.onPageChange = (index) => {
+    virtualizer?.scrollToIndex(index, {
+      align: "start",
+      offset: untrack(() => -viewer.headerHeight),
+    });
+  };
 
   let pinching = $state(false);
   let pinchEnabled = $derived(viewer.mode === "document");
@@ -81,7 +87,7 @@
         // fresh load `viewer.pdf` is still the placeholder promise at this
         // point, and ViewerContext's afterNavigate does the scrolling instead.
         if (viewer.page > 1) {
-          scrollToPage(viewer.page);
+          viewer.goToPage(viewer.page);
         }
 
         // @ts-ignore

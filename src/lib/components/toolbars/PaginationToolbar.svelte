@@ -38,22 +38,14 @@
   );
   let canEditSections = $derived(!viewer.embed && document.edit_access);
 
-  // pagination
-  function next() {
-    viewer.page = Math.min(viewer.page + 1, totalPages);
-    scrollToPage(viewer.page);
-    replaceState(pageHashUrl(viewer.page), {});
-  }
-
-  function previous() {
-    viewer.page = Math.max(viewer.page - 1, 1);
-    scrollToPage(viewer.page);
-    replaceState(pageHashUrl(viewer.page), {});
-  }
-
   function gotoPage(n: number) {
-    viewer.page = n;
-    scrollToPage(viewer.page);
+    // Text mode is not virtualized
+    if (viewer.mode === "text") {
+      viewer.page = n;
+      scrollToPage(viewer.page);
+    } else {
+      viewer.goToPage(n);
+    }
     replaceState(pageHashUrl(viewer.page), {});
   }
 </script>
@@ -118,9 +110,9 @@
     <div class="paginator">
       <Paginator
         goToNav
-        ongoto={(n) => gotoPage(n)}
-        onnext={next}
-        onprevious={previous}
+        ongoto={gotoPage}
+        onnext={gotoPage}
+        onprevious={gotoPage}
         bind:page={viewer.page}
         {totalPages}
         has_next={viewer.page < totalPages}

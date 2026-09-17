@@ -39,6 +39,7 @@ export class ViewerState {
   errors: Error[] = $state([]);
   mode: ViewerMode = $state("document");
   page: number = $state(1); // 1-indexed
+  onPageChange = $state<(index: number) => void>();
   // A never-resolving placeholder until `loadPDF` runs. `null` means this viewer
   // has no PDF at all (e.g. a single-note embed), so consumers render from a
   // page image instead of loading the document.
@@ -101,6 +102,15 @@ export class ViewerState {
   get loadingProgress(): number {
     if (this.progress.total === 0) return 0;
     return this.progress.loaded / this.progress.total;
+  }
+
+  /*
+   * Scroll a page into view.
+   * To change the page state without scrolling, just assign to viewer.page directly.
+   */
+  goToPage(page: number) {
+    this.page = page;
+    this.onPageChange?.(page - 1);
   }
 
   /**
