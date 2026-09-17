@@ -61,9 +61,6 @@ export class ViewerState {
   scrollContainer = $state<HTMLElement>();
   innerContainer = $state<HTMLElement>();
 
-  // Height of the sticky toolbar header above the page content
-  headerHeight = $state(0);
-
   startMargin = $derived.by(() => {
     // The vertical offset depends on the viewer width, so recalculate when it changes
     this.width;

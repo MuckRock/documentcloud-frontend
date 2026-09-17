@@ -9,7 +9,7 @@
 -->
 <script lang="ts">
   import { browser } from "$app/environment";
-  import { onMount, untrack } from "svelte";
+  import { onMount } from "svelte";
   import { Virtualizer, type VirtualizerHandle } from "virtua/svelte";
 
   import PdfPage from "./PDFPage.svelte";
@@ -24,10 +24,9 @@
   let virtualizer = $state<VirtualizerHandle>();
 
   viewer.onPageChange = (index) => {
-    virtualizer?.scrollToIndex(index, {
-      align: "start",
-      offset: untrack(() => -viewer.headerHeight),
-    });
+    const page = viewer.innerContainer?.querySelector("[id^=document\\/p]")!;
+    const offset = -parseFloat(getComputedStyle(page).scrollMarginTop);
+    virtualizer?.scrollToIndex(index, { align: "start", offset });
   };
 
   let pinching = $state(false);
