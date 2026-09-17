@@ -30,10 +30,8 @@
   };
 
   let pinching = $state(false);
-  let pinchEnabled = $derived(viewer.mode === "document");
 
   let pinchZoomOptions = $derived<PinchZoomOptions>({
-    enabled: () => pinchEnabled,
     getScale: () => viewer.scale,
     setZoom: (scale) => {
       viewer.zoom = scale;
@@ -105,7 +103,7 @@
     during the first layout, so pages are never laid out at one spacing and then
     resized — which would shift every page below the change (#1203).
   -->
-  <div class={["sizer", { pinch: pinchEnabled }]}>
+  <div class="sizer">
     <div class="pages" {@attach pinchZoom(pinchZoomOptions)}>
       <div class="inner" bind:clientWidth={viewer.width}>
         <div
@@ -151,6 +149,7 @@
   .sizer {
     container-type: inline-size;
     width: 100%;
+    touch-action: pan-x pan-y;
   }
   .pages {
     padding: 3rem;
@@ -180,10 +179,6 @@
 
   .page.last {
     margin-bottom: 0;
-  }
-
-  .pinch {
-    touch-action: pan-x pan-y;
   }
 
   @container (width < 35rem) {

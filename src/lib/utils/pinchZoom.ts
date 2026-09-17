@@ -26,8 +26,6 @@ export interface PinchZoomOptions {
    * reflects the new scale before we read the post-change geometry.
    */
   setZoom: (scale: number) => void;
-  /** Whether pinch-zoom is currently allowed (e.g. only in reading mode). */
-  enabled: () => boolean;
   /** Minimum/maximum scale reachable via pinch. */
   min: number;
   max: number;
@@ -178,14 +176,12 @@ export function pinchZoom(options: PinchZoomOptions): Attachment<HTMLElement> {
     }
 
     function onTouchStart(e: TouchEvent) {
-      if (!options.enabled()) return;
       if (e.touches.length === 2 && beginPinch(e.touches)) {
         e.preventDefault();
       }
     }
 
     async function onTouchMove(e: TouchEvent) {
-      if (!options.enabled()) return;
       if (e.touches.length !== 2) {
         if (active) endPinch();
         return;
@@ -208,7 +204,7 @@ export function pinchZoom(options: PinchZoomOptions): Attachment<HTMLElement> {
     // would otherwise page-zoom, so claim them. Plain (non-ctrl) wheel stays a
     // normal scroll.
     async function onWheel(e: WheelEvent) {
-      if (!options.enabled() || !e.ctrlKey) return;
+      if (!e.ctrlKey) return;
       e.preventDefault();
 
       // A ctrl+wheel stream is a single gesture; start on the first event and
