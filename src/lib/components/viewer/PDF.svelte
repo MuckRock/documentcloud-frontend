@@ -43,13 +43,6 @@
     max: 2.5,
     onPinchStart: () => (pinching = true),
     onPinchEnd: () => (pinching = false),
-    findItemByOffset: (offset) => {
-      if (!virtualizer) return null;
-      const index = virtualizer.findItemIndex(
-        offset + virtualizer.getScrollOffset(),
-      );
-      return globalThis.document.getElementById(`document/p${index + 1}`);
-    },
   });
 
   let document = $derived(viewer.document!);
@@ -131,6 +124,7 @@
                   display: "flex",
                   "justify-content": "center",
                   contain: "none",
+                  "pointer-events": "auto",
                 },
               })}
             >

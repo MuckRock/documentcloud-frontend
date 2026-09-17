@@ -35,7 +35,6 @@ export interface PinchZoomOptions {
   onPinchStart?: () => void;
   /** Called when a pinch gesture ends. */
   onPinchEnd?: () => void;
-  findItemByOffset: (offset: number) => Nullable<HTMLElement>;
 }
 
 /** Ignore touch pinches that start with the fingers closer than this (px). */
@@ -108,13 +107,15 @@ async function applyAnchoredZoom(
   anchorX: number,
   anchorY: number,
   newScale: number,
-  { getScale, setZoom, findItemByOffset }: PinchZoomOptions,
+  { getScale, setZoom }: PinchZoomOptions,
 ) {
   const currentScale = getScale();
   if (currentScale <= 0 || newScale === currentScale) return;
   const k = newScale / currentScale;
 
-  const pageEl = findItemByOffset(anchorY);
+  const pageEl = document
+    .elementFromPoint(anchorX, anchorY)
+    ?.closest(".page-container") as HTMLElement | null;
   const rect0 = pageEl?.getBoundingClientRect();
 
   // If there's no anchor page, just zoom.
@@ -179,7 +180,6 @@ export function pinchZoom(options: PinchZoomOptions): Attachment<HTMLElement> {
     function onTouchStart(e: TouchEvent) {
       if (!options.enabled()) return;
       if (e.touches.length === 2 && beginPinch(e.touches)) {
-        // Claim the gesture so the browser doesn't pan while we pinch.
         e.preventDefault();
       }
     }
@@ -190,7 +190,6 @@ export function pinchZoom(options: PinchZoomOptions): Attachment<HTMLElement> {
         if (active) endPinch();
         return;
       }
-      // A second finger can land after the first; start once spread is real.
       if (!active && !beginPinch(e.touches)) return;
       e.preventDefault();
 
