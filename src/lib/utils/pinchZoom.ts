@@ -246,6 +246,7 @@ export function pinchZoom(options: PinchZoomOptions): Attachment<HTMLElement> {
       element.removeEventListener("touchcancel", onTouchEnd);
       element.removeEventListener("wheel", onWheel);
       if (wheelEndTimer) clearTimeout(wheelEndTimer);
+      if (active || wheelActive) options.onPinchEnd?.();
     };
   };
 }

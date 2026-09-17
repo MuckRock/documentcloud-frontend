@@ -39,13 +39,9 @@
   let canEditSections = $derived(!viewer.embed && document.edit_access);
 
   function gotoPage(n: number) {
-    // Text mode is not virtualized
-    if (viewer.mode === "text") {
-      viewer.page = n;
-      scrollToPage(viewer.page);
-    } else {
-      viewer.goToPage(n);
-    }
+    viewer.page = n;
+    if (showPDF) viewer.goToPage(n);
+    else scrollToPage(n);
     replaceState(pageHashUrl(viewer.page), {});
   }
 </script>

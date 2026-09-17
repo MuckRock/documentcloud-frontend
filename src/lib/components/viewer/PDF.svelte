@@ -23,11 +23,18 @@
 
   let virtualizer = $state<VirtualizerHandle>();
 
-  viewer.onPageChange = (index) => {
-    const page = viewer.innerContainer?.querySelector("[id^=document\\/p]")!;
-    const offset = -parseFloat(getComputedStyle(page).scrollMarginTop);
+  function onPageChange(index: number) {
+    const page = viewer.innerContainer?.querySelector("[id^=document\\/p]");
+    const offset = page
+      ? -parseFloat(getComputedStyle(page).scrollMarginTop)
+      : 0;
     virtualizer?.scrollToIndex(index, { align: "start", offset });
-  };
+  }
+
+  onMount(() => {
+    viewer.onPageChange = onPageChange;
+    return () => (viewer.onPageChange = undefined);
+  });
 
   let pinching = $state(false);
 
@@ -127,7 +134,7 @@
             >
               {#snippet children([width, height], n)}
                 {@const page_number = n + 1}
-                <div class={["page", { last: n === sizes.length - 1 }]}>
+                <div class={["page-wrapper", { last: n === sizes.length - 1 }]}>
                   {#if sections[n]}
                     <h3 class="section pin-x">
                       {sections[n].title}
@@ -167,17 +174,17 @@
     flex: none;
   }
 
-  .page {
+  .page-wrapper {
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
-  .page,
+  .page-wrapper,
   .section {
     margin-bottom: 1.5rem;
   }
 
-  .page.last {
+  .page-wrapper.last {
     margin-bottom: 0;
   }
 
@@ -185,7 +192,7 @@
     .pages {
       padding: 1.5rem;
     }
-    .page,
+    .page-wrapper,
     .section {
       margin-bottom: 0.75rem;
     }
@@ -194,7 +201,7 @@
     .pages {
       padding: 4.5rem;
     }
-    .page,
+    .page-wrapper,
     .section {
       margin-bottom: 2.25rem;
     }
