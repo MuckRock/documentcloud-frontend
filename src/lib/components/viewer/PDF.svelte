@@ -127,7 +127,11 @@
               bind:this={virtualizer}
               {...viewer.virtualizerProps}
               itemProps={() => ({
-                style: { display: "flex", "justify-content": "center" },
+                style: {
+                  display: "flex",
+                  "justify-content": "center",
+                  contain: "none",
+                },
               })}
             >
               {#snippet children([width, height], n)}

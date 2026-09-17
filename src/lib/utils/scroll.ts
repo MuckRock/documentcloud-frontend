@@ -33,12 +33,14 @@ export function scrollToPage(n: number): void {
  * pixel offset and so landed on the wrong page.
  *
  * @param id element id, e.g. `document/p12`
+ * @param container the scrolling ancestor to measure against, if known — see
+ * `scrollToElement`
  */
-export function scrollToId(id: string): void {
+export function scrollToId(id: string, container?: HTMLElement): void {
   const find = () => window.document.getElementById(id);
 
   const el = find();
-  if (el) return scrollToElement(el);
+  if (el) return scrollToElement(el, container);
 
   if (typeof MutationObserver !== "function") {
     return console.warn(`Missing scroll target ${id}`);
@@ -48,7 +50,7 @@ export function scrollToId(id: string): void {
     const el = find();
     if (!el) return;
     stop();
-    scrollToElement(el);
+    scrollToElement(el, container);
   });
 
   const timer = setTimeout(() => {
@@ -77,19 +79,27 @@ export function scrollToId(id: string): void {
  *
  * Page geometry is still moving when a deep link scrolls — pdf.js renders pages
  * lazily, fonts and toolbars resolve late — and anything that resizes above the
- * target slides it out of view. So scroll again whenever the target's offset
- * moves, until it holds still or the reader takes over (#1203).
+ * target slides it out of view. So scroll again whenever the target moves,
+ * until it holds still or the reader takes over (#1203).
  *
  * @param el the element to scroll to
+ * @param container the scrolling ancestor to measure against, if known
  */
-function scrollToElement(el: HTMLElement): void {
+function scrollToElement(el: HTMLElement, container?: HTMLElement): void {
+  function getOffset() {
+    if (!container) return el.offsetTop;
+    return (
+      el.getBoundingClientRect().top - container.getBoundingClientRect().top
+    );
+  }
+
   el.scrollIntoView();
 
   // No frames to settle over in a non-visual environment (jsdom, SSR).
   if (typeof requestAnimationFrame !== "function") return;
 
   const start = performance.now();
-  let offset = el.offsetTop;
+  let offset = getOffset();
   let stableSince = start;
   let frame = 0;
 
@@ -99,14 +109,15 @@ function scrollToElement(el: HTMLElement): void {
   }
 
   function tick(now: number) {
-    const current = el.offsetTop;
+    const current = getOffset();
 
-    // `offsetTop` is independent of scroll position, so a change here means the
-    // surrounding layout moved the target, not that we scrolled it.
-    if (current !== offset) {
-      offset = current;
+    // Did anything move the target since the last frame? `offsetTop` catches
+    // layout shifts above it; the container-relative delta also catches
+    // virtua re-aligning the list.
+    if (Math.abs(current - offset) > 1) {
       stableSince = now;
       el.scrollIntoView();
+      offset = getOffset();
     }
 
     if (now - stableSince >= SETTLE_STABLE || now - start >= SETTLE_TIMEOUT) {
