@@ -68,7 +68,6 @@ function setup(overrides: Partial<PinchZoomOptions> = {}) {
   const options: PinchZoomOptions = {
     getScale: () => scale,
     setZoom,
-    enabled: () => true,
     min: 0.4,
     max: 2.5,
     onPinchStart,
@@ -120,12 +119,6 @@ describe("pinchZoom", () => {
       const { element } = setup();
       const event = fireTouch(element, "touchstart", twoTouches(200, 200, 100));
       expect(event.defaultPrevented).toBe(true);
-    });
-
-    it("does not start a pinch when disabled", () => {
-      const { element, onPinchStart } = setup({ enabled: () => false });
-      fireTouch(element, "touchstart", twoTouches(200, 200, 100));
-      expect(onPinchStart).not.toHaveBeenCalled();
     });
 
     it("does not start a pinch when fingers are closer than the minimum distance", () => {
@@ -284,7 +277,6 @@ describe("pinchZoom", () => {
       const cleanup = pinchZoom({
         getScale: () => scale,
         setZoom,
-        enabled: () => true,
         min: 0.4,
         max: 2.5,
       })(element) as () => void;
@@ -322,7 +314,6 @@ describe("pinchZoom", () => {
       const cleanup = pinchZoom({
         getScale: () => scale,
         setZoom,
-        enabled: () => true,
         min: 0.4,
         max: 2.5,
       })(element) as () => void;
@@ -346,7 +337,6 @@ describe("pinchZoom", () => {
       const cleanup = pinchZoom({
         getScale: () => 1,
         setZoom,
-        enabled: () => true,
         min: 0.4,
         max: 2.5,
       })(element) as () => void;

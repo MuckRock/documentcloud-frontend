@@ -30,8 +30,7 @@ const SETTLE_MS = 2_500;
 function pagesOffTarget(page: Page, n: number): Promise<number> {
   return page.evaluate((n) => {
     const el = document.getElementById(`document/p${n}`);
-    const first = document.getElementById("document/p1");
-    if (!el || !first) throw new Error(`page ${n} has not rendered`);
+    if (!el) throw new Error(`page ${n} has not rendered`);
 
     // The viewer scrolls a wrapper around the pages, not the window.
     let scroller = el.parentElement;
@@ -39,16 +38,30 @@ function pagesOffTarget(page: Page, n: number): Promise<number> {
       if (/auto|scroll/.test(getComputedStyle(scroller).overflowY)) break;
       scroller = scroller.parentElement;
     }
-    const scrollTop =
-      scroller?.scrollTop ?? document.scrollingElement?.scrollTop ?? 0;
 
-    // A page plus the gap below it: the distance one page of error covers. Read
-    // it off whichever container holds the pages, so this works in text mode
-    // (`.textPages`) as well as document mode (`.pages`).
-    const gap = parseFloat(getComputedStyle(el.parentElement!).rowGap) || 0;
-    const pitch = first.getBoundingClientRect().height + gap;
+    // Distance from the scroller's top edge to the target — the same shape as
+    // `scrollToElement`'s `getOffset` in src/lib/utils/scroll.ts. Rects are
+    // already scroll-position-relative, so this needs no separate scrollTop
+    // term, and `scroller` being null (window scroll) falls back to the
+    // viewport's own top edge (0), which is exactly right for that case too.
+    const scrollerTop =
+      scroller && scroller !== document.body
+        ? scroller.getBoundingClientRect().top
+        : 0;
+    const offset = el.getBoundingClientRect().top - scrollerTop;
 
-    return (el.offsetTop - scrollTop) / pitch;
+    // A page plus the gap below it: the distance one page of error covers.
+    // Measured from the target and a mounted neighbor.
+    const neighbor =
+      document.getElementById(`document/p${n - 1}`) ??
+      document.getElementById(`document/p${n + 1}`);
+    const pitch = neighbor
+      ? Math.abs(
+          el.getBoundingClientRect().top - neighbor.getBoundingClientRect().top,
+        )
+      : el.getBoundingClientRect().height;
+
+    return offset / pitch;
   }, n);
 }
 
@@ -89,18 +102,20 @@ test.describe("deep linking to a page", () => {
   }) => {
     // Sample the page spacing every frame. Any change means pages were laid out
     // at one size and then resized — which moves every page below the change.
-    // Padding is on the scroll container (`.pages`) and the gap is on the flex
-    // column inside it (`.inner`), so both have to be read.
+    // Padding is on the scroll container (`.pages`); spacing between pages is
+    // `margin-bottom` on the item wrapper (`.page-wrapper`).
     await page.addInitScript(() => {
       const seen: string[] = ((window as any).__spacing = []);
       (function sample() {
         requestAnimationFrame(sample);
         const pages = document.querySelector(".pages");
-        const inner = pages?.querySelector(".inner");
-        if (!pages || !inner) return;
+        // `.last` drops margin-bottom to 0, so exclude it — otherwise which
+        // page virtua happens to have mounted first could flip the sample.
+        const item = pages?.querySelector(".page-wrapper:not(.last)");
+        if (!pages || !item) return;
         const { paddingLeft } = getComputedStyle(pages);
-        const { rowGap } = getComputedStyle(inner);
-        const spacing = `${paddingLeft}/${rowGap}`;
+        const { marginBottom } = getComputedStyle(item);
+        const spacing = `${paddingLeft}/${marginBottom}`;
         if (seen.at(-1) !== spacing) seen.push(spacing);
       })();
     });
@@ -117,7 +132,8 @@ test.describe("deep linking to a page", () => {
 
     expect(spacing, "page spacing should never be re-laid out").toHaveLength(1);
     // On a phone the viewer is unambiguously in the narrow bucket, so the
-    // narrow spacing (1.5rem padding / 0.75rem gap) must apply immediately.
+    // narrow spacing (1.5rem padding / 0.75rem margin-bottom) must apply
+    // immediately.
     expect(spacing[0]).toBe("24px/12px");
   });
 
@@ -190,31 +206,48 @@ test.describe("deep linking at a numeric zoom", () => {
     page,
     multiPageDoc,
   }) => {
-    // pdf.js only renders pages as they come into view, so at any moment most
-    // are still placeholders. If a placeholder is a different size than the
-    // rendered article, every page below it moves when pdf.js gets to it.
+    // pdf.js swaps a page's placeholder box for its rendered canvas
+    // asynchronously (`data-loaded` flips true in PDFPage.svelte). If the
+    // placeholder and rendered sizes disagree, every page below it moves when
+    // pdf.js gets to it. Track one page's own box across that transition.
+    await page.addInitScript(() => {
+      const result: { before?: string; after?: string } = ((
+        window as any
+      ).__pageSizeTransition = {});
+      let tracked: HTMLElement | null = null;
+      const key = (el: HTMLElement) => {
+        const { width, height } = el.getBoundingClientRect();
+        return `${Math.round(width)}x${Math.round(height)}`;
+      };
+      (function sample() {
+        requestAnimationFrame(sample);
+        if (!tracked) {
+          tracked = document.querySelector<HTMLElement>(".page-container");
+          if (!tracked) return;
+          result.before = key(tracked);
+        }
+        if (tracked.dataset.loaded === "true" && !result.after) {
+          result.after = key(tracked);
+        }
+      })();
+    });
+
     await page.goto(`${multiPageDoc.viewerUrl}?zoom=0.5`);
     await expectPdfRendered(page);
     await page.waitForTimeout(SETTLE_MS);
 
-    const sizes = await page.evaluate(() => {
-      const distinct = (loaded: boolean) => [
-        ...new Set(
-          [...document.querySelectorAll<HTMLElement>(".page-container")]
-            .filter((c) => (c.dataset.loaded === "true") === loaded)
-            .map((c) => {
-              const { width, height } = c.getBoundingClientRect();
-              return `${Math.round(width)}x${Math.round(height)}`;
-            }),
-        ),
-      ];
-      return { rendered: distinct(true), pending: distinct(false) };
-    });
-
-    // Every page in the fixture is 595x842, so each group holds one size.
-    expect(sizes.rendered, "no page has rendered yet").toHaveLength(1);
-    expect(sizes.pending, "every page has already rendered").toHaveLength(1);
-    expect(sizes.pending).toEqual(sizes.rendered);
+    const { before, after } = await page.evaluate(
+      () => (window as any).__pageSizeTransition,
+    );
+    expect(
+      before,
+      "a page should have been seen before it rendered",
+    ).toBeTruthy();
+    expect(
+      after,
+      "the tracked page should have finished rendering",
+    ).toBeTruthy();
+    expect(after).toBe(before);
   });
 });
 
