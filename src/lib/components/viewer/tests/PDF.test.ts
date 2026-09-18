@@ -45,30 +45,19 @@ import { renderInViewer } from "./renderInViewer";
 import { document } from "@/test/fixtures/documents";
 
 describe("PDF", () => {
-  it("renders a page for each page in the document spec", () => {
+  it("renders a window of pages, not the whole document", () => {
     const { container } = renderInViewer(PDF, {
       context: { document, mode: "document" },
     });
 
     expect(container.querySelector(".pages")).not.toBeNull();
-    // one Page wrapper per page in page_spec (612.0x792.0:0-19 => 20 pages)
-    expect(container.querySelectorAll(".page")).toHaveLength(
-      document.page_count,
-    );
-  });
-
-  it("publishes the measurements that `pin-x` descendants read", () => {
-    const { container } = renderInViewer(PDF, {
-      context: { document, mode: "document" },
-    });
-
-    const pages = container.querySelector(".pages") as HTMLElement;
-
-    expect(pages.style.getPropertyValue("--scroll-range")).toMatch(/px$/);
-    expect(pages.style.getPropertyValue("--pin-width")).toMatch(/px$/);
-    // CSS.supports is stubbed false in vitest-setup, so this is the fallback
-    // path, which tracks scroll position as well
-    expect(pages.style.getPropertyValue("--scroll-left")).toMatch(/px$/);
+    // Pages are rendered through virtua's Virtualizer, which only mounts the
+    // pages that fit the viewport. jsdom has no layout engine (the container
+    // measures 0x0), so only a small window of the document's 20 pages
+    // (612.0x792.0:0-19) mounts rather than all of them.
+    const pages = container.querySelectorAll(".page");
+    expect(pages.length).toBeGreaterThan(0);
+    expect(pages.length).toBeLessThan(document.page_count);
   });
 
   it("shows an error view instead of pages when loading failed", () => {

@@ -84,4 +84,62 @@ describe("scroll helpers", () => {
     await new Promise((resolve) => setTimeout(resolve, 20));
     expect(scrollIntoView).not.toBeCalled();
   });
+
+  test("scrollToId scrolls into view given a container to measure against", () => {
+    const scrollIntoView = HTMLElement.prototype.scrollIntoView;
+    const container = document.createElement("div");
+    vi.spyOn(container, "getBoundingClientRect").mockReturnValue({
+      top: 0,
+    } as DOMRect);
+
+    const el = pages[5]!;
+    vi.spyOn(el, "getBoundingClientRect").mockReturnValue({
+      top: 250,
+    } as DOMRect);
+    vi.spyOn(document, "getElementById").mockImplementation(
+      (elementId: string) => pages.find((div) => div.id === elementId) || null,
+    );
+
+    scrollToId(pageId(6), container);
+
+    expect(scrollIntoView).toBeCalledTimes(1);
+  });
+
+  test("scrollToId falls back to plain scrollIntoView without a container", () => {
+    const scrollIntoView = HTMLElement.prototype.scrollIntoView;
+    vi.spyOn(document, "getElementById").mockImplementation(
+      (elementId: string) => pages.find((div) => div.id === elementId) || null,
+    );
+
+    scrollToId(pageId(7));
+
+    expect(scrollIntoView).toBeCalledTimes(1);
+  });
+
+  test("scrollToId settles once the container-relative position holds steady", async () => {
+    const scrollIntoView = HTMLElement.prototype.scrollIntoView;
+    const container = document.createElement("div");
+    vi.spyOn(container, "getBoundingClientRect").mockReturnValue({
+      top: 0,
+    } as DOMRect);
+
+    // A target under `scroll-margin-top` never reaches the container's exact
+    // top — it settles a fixed distance below it. Comparing that distance to
+    // zero every frame (the old bug) meant it looked "moved" forever and
+    // re-scrolled on every frame for the full settle timeout.
+    const el = pages[7]!;
+    vi.spyOn(el, "getBoundingClientRect").mockReturnValue({
+      top: 96,
+    } as DOMRect);
+    vi.spyOn(document, "getElementById").mockImplementation(
+      (elementId: string) => pages.find((div) => div.id === elementId) || null,
+    );
+
+    scrollToId(pageId(8), container);
+    expect(scrollIntoView).toBeCalledTimes(1);
+
+    // Held at the same (steady) position well past when it should settle.
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    expect(scrollIntoView).toBeCalledTimes(1);
+  });
 });

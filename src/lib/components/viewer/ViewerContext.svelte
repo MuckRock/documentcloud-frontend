@@ -94,10 +94,8 @@ layouts, stories, and tests.
     const id = hash?.split("#")[1];
     if (!id || !page) return;
 
-    viewer.page = page;
-    // `scrollToId` waits for the target to render if it hasn't yet, then holds
-    // it in view while the viewer finishes laying out.
-    scrollToId(id);
+    viewer.goToPage(page);
+    scrollToId(id, viewer.scrollContainer);
   }
 
   function onHashChange() {
@@ -119,12 +117,13 @@ layouts, stories, and tests.
     const { hash } = pageState.url;
     const hashPage = pageFromHash(hash);
     if (hashPage) {
-      viewer.page = hashPage;
+      viewer.goToPage(hashPage);
     }
     viewer.mode = mode;
     viewer.currentNote =
       viewer.document?.notes?.find(noteMatchingPageHash) ?? null;
-    if (shouldPaginate(mode) && (hashPage || 0) > 1) {
+    // Scroll if there's a note in the URL or we're past page 1
+    if (shouldPaginate(mode) && ((hashPage || 0) > 1 || noteFromHash(hash))) {
       scrollToHash(hash);
     }
   });
