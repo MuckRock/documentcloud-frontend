@@ -40,6 +40,9 @@ Selectable text can be rendered in one of two ways:
     height: number;
     text?: TextPosition[];
     query?: string;
+    // While true, skip the expensive pdfjs canvas re-render and rely on the
+    // CSS-stretched canvas for visual feedback during a pinch gesture.
+    pinching?: boolean;
     // make hidden things visible, for debugging
     debug?: boolean;
   }
@@ -51,6 +54,7 @@ Selectable text can be rendered in one of two ways:
     height = $bindable(),
     text = [],
     query = $bindable(getQuery(pageState.url, "q")),
+    pinching,
     debug = false,
   }: Props = $props();
 
@@ -227,7 +231,7 @@ Selectable text can be rendered in one of two ways:
     // reading it only inside the async `.then` below would not register it,
     // and numeric zoom changes (which flow through `pxScale`) wouldn't re-render.
     pxScale;
-    if (!visible) return;
+    if (!visible || pinching) return;
     Promise.all([viewer.pdf, page]).then(([pdf, page]) => {
       render(page, canvas, pxScale);
       textPromise = renderTextLayer(page, textContainer, pxScale);
@@ -257,7 +261,7 @@ Selectable text can be rendered in one of two ways:
 <Page {page_number} track bind:width={pageWidth} bind:visible>
   {#snippet children({ visible })}
     {#if page_level_notes.length}
-      <div class={["page-notes", visible && "pin-x"]}>
+      <div class="page-notes pin-x">
         {#each page_level_notes as note}
           <Note {note} />
         {/each}

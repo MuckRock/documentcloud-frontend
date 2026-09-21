@@ -81,6 +81,30 @@ describe("ViewerState", () => {
     expect(v.loadingProgress).toBe(0.25);
   });
 
+  describe("goToPage", () => {
+    it("sets the page and notifies onPageChange with a 0-indexed page", () => {
+      const v = new ViewerState();
+      const onPageChange = vi.fn();
+      v.onPageChange = onPageChange;
+
+      v.goToPage(5);
+
+      expect(v.page).toBe(5);
+      expect(onPageChange).toHaveBeenCalledWith(4);
+    });
+
+    it("is a no-op scroll, not a throw, when no pane has installed onPageChange", () => {
+      // Every mode but the virtualized PDF pane funnels page jumps through
+      // `scrollToPage` instead of `onPageChange` (see PaginationToolbar), and
+      // a mode switch can leave `onPageChange` unset entirely for a moment —
+      // this must never throw regardless of caller.
+      const v = new ViewerState();
+      expect(v.onPageChange).toBeUndefined();
+      expect(() => v.goToPage(3)).not.toThrow();
+      expect(v.page).toBe(3);
+    });
+  });
+
   it("loadPDF stores the pdf promise and wires progress updates", async () => {
     const pdf = { numPages: 7 };
     const task = makeTask(Promise.resolve(pdf));

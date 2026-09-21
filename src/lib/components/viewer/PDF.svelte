@@ -10,21 +10,51 @@
 <script lang="ts">
   import { browser } from "$app/environment";
   import { onMount } from "svelte";
+  import { Virtualizer, type VirtualizerHandle } from "virtua/svelte";
 
   import PdfPage from "./PDFPage.svelte";
 
-  import { scrollToPage } from "$lib/utils/scroll";
   import { getSections } from "$lib/utils/viewer";
   import { getViewerState } from "$lib/state/viewer.svelte";
-  import { pinX } from "$lib/utils/pinX.svelte";
+  import { pinchZoom, type PinchZoomOptions } from "$lib/utils/pinchZoom";
   import Error from "../common/Error.svelte";
 
   const viewer = getViewerState();
+
+  let virtualizer = $state<VirtualizerHandle>();
+
+  function onPageChange(index: number) {
+    const page = viewer.innerContainer?.querySelector("[id^=document\\/p]");
+    const offset = page
+      ? -parseFloat(getComputedStyle(page).scrollMarginTop)
+      : 0;
+    virtualizer?.scrollToIndex(index, { align: "start", offset });
+  }
+
+  onMount(() => {
+    viewer.onPageChange = onPageChange;
+    return () => (viewer.onPageChange = undefined);
+  });
+
+  let pinching = $state(false);
+
+  let pinchZoomOptions = $derived<PinchZoomOptions>({
+    getScale: () => viewer.scale,
+    setZoom: (scale) => {
+      viewer.zoom = scale;
+    },
+    min: Math.min(0.4, viewer.autoZoomScale),
+    max: 2.5,
+    onPinchStart: () => (pinching = true),
+    onPinchEnd: () => (pinching = false),
+  });
 
   let document = $derived(viewer.document!);
   let sizes = $derived(viewer.pageSizes);
   let sections = $derived(getSections(document));
   let scale = $derived(viewer.scale);
+
+  let maxPageWidth = $derived(viewer.maxPageWidth * scale);
 
   // handle missing page_spec
   // (PDF normally only renders when the viewer loads one, but guard `pdf` in
@@ -54,7 +84,7 @@
         // fresh load `viewer.pdf` is still the placeholder promise at this
         // point, and ViewerContext's afterNavigate does the scrolling instead.
         if (viewer.page > 1) {
-          scrollToPage(viewer.page);
+          viewer.goToPage(viewer.page);
         }
 
         // @ts-ignore
@@ -81,22 +111,41 @@
     resized — which would shift every page below the change (#1203).
   -->
   <div class="sizer">
-    <div class="pages" {@attach pinX}>
-      <div
-        class="inner"
-        bind:clientWidth={viewer.width}
-      >
-        {#if browser && viewer.width !== undefined}
-          {#each sizes as [width, height], n}
-            {@const page_number = n + 1}
-            {#if sections[n]}
-              <h3 class="section pin-x">
-                {sections[n].title}
-              </h3>
-            {/if}
-            <PdfPage {page_number} {scale} {width} {height} />
-          {/each}
-        {/if}
+    <div class="pages" {@attach pinchZoom(pinchZoomOptions)}>
+      <div class="inner" bind:clientWidth={viewer.width}>
+        <div
+          bind:this={viewer.innerContainer}
+          class="column"
+          style:width="{maxPageWidth}px"
+          style:--pin-width="{viewer.width}px"
+        >
+          {#if browser && viewer.width !== undefined}
+            <Virtualizer
+              bind:this={virtualizer}
+              {...viewer.virtualizerProps}
+              itemProps={() => ({
+                style: {
+                  display: "flex",
+                  "justify-content": "center",
+                  contain: "none",
+                  "pointer-events": "auto",
+                },
+              })}
+            >
+              {#snippet children([width, height], n)}
+                {@const page_number = n + 1}
+                <div class={["page-wrapper", { last: n === sizes.length - 1 }]}>
+                  {#if sections[n]}
+                    <h3 class="section pin-x">
+                      {sections[n].title}
+                    </h3>
+                  {/if}
+                  <PdfPage {page_number} {scale} {width} {height} {pinching} />
+                </div>
+              {/snippet}
+            </Virtualizer>
+          {/if}
+        </div>
       </div>
     </div>
   </div>
@@ -107,6 +156,7 @@
   .sizer {
     container-type: inline-size;
     width: 100%;
+    touch-action: pan-x pan-y;
   }
   .pages {
     padding: 3rem;
@@ -115,26 +165,45 @@
     width: 100%;
   }
   .inner {
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    justify-content: safe center;
+  }
+  .column {
+    flex: none;
+  }
+
+  .page-wrapper {
     display: flex;
     flex-direction: column;
-    margin: 0 auto;
-    gap: 1.5rem;
-    width: 100%;
+    justify-content: center;
   }
+  .page-wrapper,
+  .section {
+    margin-bottom: 1.5rem;
+  }
+
+  .page-wrapper.last {
+    margin-bottom: 0;
+  }
+
   @container (width < 35rem) {
     .pages {
       padding: 1.5rem;
     }
-    .inner {
-      gap: 0.75rem;
+    .page-wrapper,
+    .section {
+      margin-bottom: 0.75rem;
     }
   }
   @container (width > 70rem) {
     .pages {
       padding: 4.5rem;
     }
-    .inner {
-      gap: 2.25rem;
+    .page-wrapper,
+    .section {
+      margin-bottom: 2.25rem;
     }
   }
   .section {

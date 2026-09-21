@@ -39,6 +39,7 @@ export class ViewerState {
   errors: Error[] = $state([]);
   mode: ViewerMode = $state("document");
   page: number = $state(1); // 1-indexed
+  onPageChange = $state<(index: number) => void>();
   // A never-resolving placeholder until `loadPDF` runs. `null` means this viewer
   // has no PDF at all (e.g. a single-note embed), so consumers render from a
   // page image instead of loading the document.
@@ -56,16 +57,30 @@ export class ViewerState {
   #task: Nullable<pdfjs.PDFDocumentLoadingTask> = null;
   #retriesOn403Error = 0;
 
+  // The scrolling ancestor of the document
+  scrollContainer = $state<HTMLElement>();
+  innerContainer = $state<HTMLElement>();
+
+  startMargin = $derived.by(() => {
+    // The vertical offset depends on the viewer width, so recalculate when it changes
+    this.width;
+    return (
+      (this.innerContainer?.getBoundingClientRect().top ?? 0) -
+      (this.scrollContainer?.getBoundingClientRect().top ?? 0) +
+      (this.scrollContainer?.scrollTop ?? 0)
+    );
+  });
+
   // state and deriveds for zoom calculations
   // regardless of zoom mode, we always calculate auto zoom scale to display in select menu
   width = $state<number>();
   pageSizes = $derived(
     this.document?.page_spec ? pageSizes(this.document.page_spec) : [],
   );
+  maxPageWidth = $derived(Math.max(...this.pageSizes.map(([w]) => w)));
   autoZoomScale = $derived.by(() => {
     if (!this.width) return 1;
-    const maxPageWidth = Math.max(...this.pageSizes.map(([w]) => w));
-    return Math.min(1, this.width / maxPageWidth);
+    return Math.min(1, this.width / this.maxPageWidth);
   });
   scale = $derived.by(() => {
     if (typeof this.zoom === "number") return this.zoom;
@@ -73,9 +88,26 @@ export class ViewerState {
     return 1;
   });
 
+  // Props object to spread onto the Virtualizer in PDF.svelte
+  virtualizerProps = $derived({
+    scrollRef: this.scrollContainer,
+    data: this.pageSizes,
+    startMargin: this.startMargin,
+    keepMounted: [Math.max(0, this.page - 2)],
+  });
+
   get loadingProgress(): number {
     if (this.progress.total === 0) return 0;
     return this.progress.loaded / this.progress.total;
+  }
+
+  /*
+   * Scroll a page into view.
+   * To change the page state without scrolling, just assign to viewer.page directly.
+   */
+  goToPage(page: number) {
+    this.page = page;
+    this.onPageChange?.(page - 1);
   }
 
   /**

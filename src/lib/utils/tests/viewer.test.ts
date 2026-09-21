@@ -125,15 +125,17 @@ describe("zoom", () => {
   });
 
   test("getZoomLevels offers auto plus percentages in page modes", () => {
-    // "auto" replaced the old fit-width/fit-height options
     (["document", "annotating", "redacting"] as ViewerMode[]).forEach(
       (mode) => {
         const values = getZoomLevels(mode).map(([value]) => value);
         expect(values).toEqual(["auto", 0.5, 0.75, 1, 1.25, 1.5, 2]);
-        expect(values).not.toContain("width");
-        expect(values).not.toContain("height");
       },
     );
+  });
+
+  test("getZoomLevels includes a custom option in the correct place", () => {
+    const values = getZoomLevels("document", 0.8).map(([value]) => value);
+    expect(values).toEqual(["auto", 0.5, 0.75, 0.8, 1, 1.25, 1.5, 2]);
   });
 
   test("getZoomLevels", () => {
