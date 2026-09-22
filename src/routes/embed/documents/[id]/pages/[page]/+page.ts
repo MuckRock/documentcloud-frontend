@@ -9,7 +9,7 @@ export async function load({ params, fetch, setHeaders }) {
   const page = +params.page;
   let [document, notes] = await Promise.all([
     documents.get(+params.id, fetch),
-    notesApi.list(+params.id, fetch),
+    notesApi.list(+params.id, {}, fetch),
   ]);
 
   if (document.error || !document.data) {

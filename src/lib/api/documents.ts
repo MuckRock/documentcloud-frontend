@@ -127,7 +127,7 @@ export async function get(
     "projects",
     "revisions",
     "sections",
-    "notes.user",
+    // "notes.user",
   ];
   endpoint.searchParams.set("expand", expand.join(","));
 

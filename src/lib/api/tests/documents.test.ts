@@ -107,9 +107,9 @@ describe("document fetching", () => {
 
     expect(error).toBeUndefined();
     expect(result).toStrictEqual(document);
-    expect(mockFetch).toBeCalledWith(
+    expect(mockFetch).toHaveBeenCalledWith(
       new URL(
-        `documents/${document.id}/?expand=user%2Corganization%2Cprojects%2Crevisions%2Csections%2Cnotes.user`,
+        `documents/${document.id}/?expand=user%2Corganization%2Cprojects%2Crevisions%2Csections`,
         BASE_API_URL,
       ),
       {
@@ -158,7 +158,7 @@ describe("document fetching", () => {
 
     expect(error).toBeUndefined();
     expect(results).toStrictEqual(search);
-    expect(mockFetch).toBeCalledWith(
+    expect(mockFetch).toHaveBeenCalledWith(
       new URL(
         "documents/search/?expand=user%2Corganization%2Cprojects&q=boston&hl=true",
         BASE_API_URL,
@@ -445,7 +445,7 @@ describe("document write methods", () => {
 
     expect(data).toBeUndefined();
     expect(error).toBeUndefined();
-    expect(mockFetch).toBeCalledWith(
+    expect(mockFetch).toHaveBeenCalledWith(
       new URL(`documents/${document.id}/`, BASE_API_URL),
       {
         credentials: "include",
@@ -479,7 +479,7 @@ describe("document write methods", () => {
 
     expect(data).toBeUndefined();
     expect(error).toBeUndefined();
-    expect(mockFetch).toBeCalledWith(endpoint, {
+    expect(mockFetch).toHaveBeenCalledWith(endpoint, {
       credentials: "include",
       method: "DELETE",
       headers: {
@@ -581,7 +581,7 @@ describe("document write methods", () => {
     );
 
     expect(data?.["_tag"]).toEqual(["one", "two"]);
-    expect(mockFetch).toBeCalledWith(
+    expect(mockFetch).toHaveBeenCalledWith(
       new URL(`documents/${document.id}/data/_tag/`, BASE_API_URL),
       {
         credentials: "include",
@@ -683,19 +683,19 @@ describe("document helper methods", () => {
     public_url.searchParams.set("t", updated.toString());
     // for public documents, these are the same
     expect(asset_url).toStrictEqual(public_url);
-    expect(mockFetch).toBeCalledTimes(0); // didn't use it
+    expect(mockFetch).toHaveBeenCalledTimes(0); // didn't use it
 
     // for private documents and those still processing, the URL should be private
     asset_url = await documents.assetUrl(privateDoc, mockFetch);
 
     expect(asset_url).toStrictEqual(privateUrl);
-    expect(mockFetch).toBeCalledTimes(1);
+    expect(mockFetch).toHaveBeenCalledTimes(1);
 
     // documents still processing are kind of private
     asset_url = await documents.assetUrl(processingDoc, mockFetch);
 
     expect(asset_url).toStrictEqual(privateUrl);
-    expect(mockFetch).toBeCalledTimes(2); // we've called it twice now
+    expect(mockFetch).toHaveBeenCalledTimes(2); // we've called it twice now
   });
 
   test("canonicalUrl", ({ document }) => {

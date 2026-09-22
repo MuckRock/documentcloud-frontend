@@ -12,7 +12,6 @@ import * as documents from "$lib/api/documents";
 import { breadcrumbTrail } from "$lib/utils/index";
 import loadDocument from "$lib/load/document";
 
-/** @type {import('./$types').PageLoad} */
 export async function load({
   fetch,
   params,
