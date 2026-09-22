@@ -2,7 +2,14 @@ import { test, expect, describe } from "vitest";
 
 import { APP_URL } from "@/config/config.js";
 import { me } from "@/test/fixtures/accounts";
-import { userDocs, tag, kv, searchUrl, highlight } from "../search";
+import {
+  userDocs,
+  tag,
+  kv,
+  searchUrl,
+  highlight,
+  appendQuery,
+} from "../search";
 
 describe("search utilities", () => {
   test("search URL", () => {
@@ -42,5 +49,28 @@ describe("search utilities", () => {
     const query = "sail";
 
     expect(highlight(text, query)).toStrictEqual(marked);
+  });
+
+  test("append query", () => {
+    expect(
+      appendQuery(new URL("/documents/", APP_URL), "foo").href,
+    ).toStrictEqual(`${APP_URL}documents/?q=foo`);
+
+    expect(
+      appendQuery(new URL("/documents/?q=foo", APP_URL), "bar").href,
+    ).toStrictEqual(`${APP_URL}documents/?q=foo+AND+bar`);
+
+    const urlWithKV = new URL(`/documents/`, APP_URL);
+    urlWithKV.searchParams.set("q", kv("foo", "bar baz"));
+    expect(appendQuery(urlWithKV, kv("foo", "bar baz")).href).toStrictEqual(
+      `${APP_URL}documents/?q=%2Bdata_foo%3A%22bar+baz%22`,
+    );
+  });
+
+  test("append query does not mutate the input URL", () => {
+    const url = new URL("/documents/?q=foo", APP_URL);
+    const before = url.href;
+    appendQuery(url, "bar");
+    expect(url.href).toStrictEqual(before);
   });
 });
