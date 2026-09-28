@@ -1,10 +1,13 @@
 <script lang="ts">
+  import type { SvgComponent } from "svelte-octicons";
+
   interface Props {
     key?: string;
     value: string;
     href?: null | string;
     inline?: boolean;
     tag?: boolean;
+    icon?: typeof SvgComponent | null;
     [key: string]: any;
   }
 
@@ -14,6 +17,7 @@
     href = null,
     inline = false,
     tag = false,
+    icon: Icon = null,
     ...rest
   }: Props = $props();
 
@@ -29,6 +33,10 @@
   class:inline
   {...allprops}
 >
+  {#if Icon}
+    <Icon width="0.65rem" height="0.65rem" />
+  {/if}
+
   {#if !tag}
     <span class="key">{key}</span>
   {/if}
@@ -41,7 +49,7 @@
 <style>
   .kv {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     padding: 0.1875rem 0.375rem;
     gap: 0.375rem;
 
@@ -49,6 +57,7 @@
     border: 1px solid var(--gray-2, #b5ceed);
 
     color: var(--gray-5, #5c717c);
+    fill: var(--gray-5, #5c717c);
     font-size: var(--font-xs, 0.75rem);
     font-style: italic;
     font-weight: var(--font-regular, 400);
@@ -57,6 +66,7 @@
 
   .link.kv {
     color: var(--blue-5, #153359);
+    fill: var(--blue-5, #153359);
     border-color: var(--blue-2);
     background: var(--blue-1);
     text-decoration: none;
