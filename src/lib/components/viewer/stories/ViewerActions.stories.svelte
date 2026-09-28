@@ -7,7 +7,8 @@
   import ViewerContext from "$lib/components/viewer/ViewerContext.svelte";
   import doc from "@/test/fixtures/documents/document-expanded.json";
 
-  const document = doc as Document;
+  // Notes load separately from the document, so split them off the fixture.
+  const { notes = [], ...document } = doc as Document;
 
   const { Story } = defineMeta({
     title: "Navigation / Viewer Actions",
@@ -18,11 +19,11 @@
   });
 </script>
 
-<!-- ViewerActions renders from its `document` prop but reads `page` off the
-     viewer state, so it needs a provider. `loadPdf` is off because nothing here
+<!-- ViewerActions renders from its `document` prop but reads `page` and
+     `notes` off the viewer state, so it needs a provider. `loadPdf` is off because nothing here
      draws a page. -->
 {#snippet template(args)}
-  <ViewerContext document={args.document} loadPdf={false}>
+  <ViewerContext document={args.document} {notes} loadPdf={false}>
     <ViewerActions {...args} />
   </ViewerContext>
 {/snippet}

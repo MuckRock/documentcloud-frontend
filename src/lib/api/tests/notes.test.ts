@@ -4,6 +4,11 @@ import { APP_URL, BASE_API_URL, CSRF_HEADER_NAME } from "@/config/config.js";
 
 import * as notes from "../notes";
 import type { Document, Note, NoteResults } from "../types";
+import {
+  documentNotes,
+  documentNotesPages,
+  documentNotesUrl,
+} from "@/test/fixtures/notes";
 
 type Use<T> = (value: T) => Promise<void>;
 
@@ -33,6 +38,60 @@ const csrf_token = "token";
 describe("reading notes", () => {
   test.todo("notes.get");
   test.todo("notes.list");
+
+  test("notes.all loads a document's notes with users expanded", async () => {
+    const mockFetch = vi.fn().mockImplementation(async () => ({
+      ok: true,
+      status: 200,
+      async json() {
+        return { next: null, previous: null, results: documentNotes };
+      },
+    }));
+
+    const result = await notes.all(2622, mockFetch);
+
+    expect(result).toEqual(documentNotes);
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+
+    const [url, options] = mockFetch.mock.calls[0]!;
+    expect(url.pathname).toEqual(documentNotesUrl.pathname);
+    expect(url.searchParams.get("expand")).toEqual("user");
+    expect(url.searchParams.get("per_page")).toEqual("100");
+    expect(options).toEqual({ credentials: "include" });
+  });
+
+  test("notes.all follows pagination to load every note", async () => {
+    const [first, second] = documentNotesPages;
+    const mockFetch = vi.fn().mockImplementation(async (url: URL) => ({
+      ok: true,
+      status: 200,
+      async json() {
+        return url.searchParams.get("cursor") === "page-2" ? second : first;
+      },
+    }));
+
+    const result = await notes.all(2622, mockFetch);
+
+    expect(mockFetch).toHaveBeenCalledTimes(2);
+    // the second request follows `next` (getAll re-applies its own per_page)
+    const nextUrl: URL = mockFetch.mock.calls[1]![0];
+    expect(nextUrl.searchParams.get("cursor")).toEqual(
+      new URL(first.next!).searchParams.get("cursor"),
+    );
+    expect(result).toEqual(documentNotes);
+  });
+
+  test("notes.all returns an empty list for a document without notes", async () => {
+    const mockFetch = vi.fn().mockImplementation(async () => ({
+      ok: true,
+      status: 200,
+      async json() {
+        return { next: null, previous: null, results: [] };
+      },
+    }));
+
+    expect(await notes.all(2622, mockFetch)).toEqual([]);
+  });
 });
 
 describe("writing notes", () => {

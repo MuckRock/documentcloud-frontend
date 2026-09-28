@@ -1,5 +1,7 @@
 import type { Note, Page } from "$lib/api/types";
 
+import { BASE_API_URL } from "@/config/config.js";
+
 export const note: Note = {
   id: 557,
   user: 126,
@@ -831,3 +833,43 @@ export const expandedNotePage: Page<Note> = {
     },
   ],
 };
+
+/**
+ * Notes for the `document-expanded.json` fixture (document 2622), as the
+ * viewer loads them: in parallel with the document, from
+ * `documents/2622/notes/?expand=user`, instead of as a document expansion.
+ */
+export const documentNotes: Note[] = expandedNotePage.results;
+
+/** Endpoint the viewer loads `documentNotes` from */
+export const documentNotesUrl = new URL(
+  "documents/2622/notes/?expand=user",
+  BASE_API_URL,
+);
+
+/**
+ * `documentNotes` split across two API pages, linked by `next` and `previous`,
+ * to exercise loaders that follow pagination.
+ */
+export const documentNotesPages: [Page<Note>, Page<Note>] = (() => {
+  const split = 10;
+  const url = (cursor: string) => {
+    const u = new URL(documentNotesUrl);
+    u.searchParams.set("per_page", String(split));
+    u.searchParams.set("cursor", cursor);
+    return u.href;
+  };
+
+  return [
+    {
+      next: url("page-2"),
+      previous: null,
+      results: documentNotes.slice(0, split),
+    },
+    {
+      next: null,
+      previous: url("page-1"),
+      results: documentNotes.slice(split),
+    },
+  ];
+})();

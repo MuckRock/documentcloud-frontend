@@ -18,7 +18,9 @@
   import pdfFile from "@/test/fixtures/documents/examples/the-santa-anas.pdf";
   import ViewerContext from "../ViewerContext.svelte";
 
-  const document = { ...doc, edit_access: true } as Document;
+  // Notes load separately from the document, so split them off the fixture.
+  const { notes = [], ...fixture } = doc as Document;
+  const document = { ...fixture, edit_access: true };
 
   const { Story } = defineMeta({
     title: "Viewer / PDF Page",
@@ -35,19 +37,19 @@
 <!-- PDFPage always renders at a numeric scale now; the viewer resolves "auto"
      to one before passing it down. -->
 <Story name="full size" parameters={{ layout: "fullscreen" }} asChild>
-  <ViewerContext {document} asset_url={url}>
+  <ViewerContext {document} {notes} asset_url={url}>
     <PdfPage page_number={1} scale={1} {width} {height} />
   </ViewerContext>
 </Story>
 
 <Story name="embedded text" asChild>
-  <ViewerContext {document} asset_url={url}>
+  <ViewerContext {document} {notes} asset_url={url}>
     <PdfPage page_number={1} scale={1.5} {width} {height} />
   </ViewerContext>
 </Story>
 
 <Story name="server text" asChild>
-  <ViewerContext {document} asset_url={url}>
+  <ViewerContext {document} {notes} asset_url={url}>
     <PdfPage
       page_number={1}
       scale={1.5}
@@ -75,7 +77,7 @@
   }}
   asChild
 >
-  <ViewerContext {document} asset_url={url}>
+  <ViewerContext {document} {notes} asset_url={url}>
     <p>Query: {query}</p>
     <p>URL: {page.url}</p>
     <PdfPage page_number={1} scale={1.5} {width} {height} />
@@ -83,7 +85,7 @@
 </Story>
 
 <Story name="long section start" parameters={{ layout: "fullscreen" }} asChild>
-  <ViewerContext {document} asset_url={url}>
+  <ViewerContext {document} {notes} asset_url={url}>
     <PdfPage page_number={1} scale={1} {width} {height} />
   </ViewerContext>
 </Story>

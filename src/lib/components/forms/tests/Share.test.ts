@@ -4,7 +4,7 @@ import { userEvent } from "@testing-library/user-event";
 
 import Share from "../Share.svelte";
 
-import type { Access, Document } from "$lib/api/types";
+import type { Access, Document, Note } from "$lib/api/types";
 import documentFixture from "@/test/fixtures/documents/document-expanded.json";
 import {
   canonicalPageUrl,
@@ -16,11 +16,16 @@ import { canonicalNoteUrl, noteUrl } from "$lib/api/notes";
 
 describe("Share", () => {
   let document: Document;
+  let notes: Note[];
   beforeEach(() => {
-    document = documentFixture as Document;
+    // Notes load separately from the document, so strip them off the fixture
+    // to make sure Share reads its `notes` prop and not `document.notes`.
+    const { notes: fixtureNotes = [], ...rest } = documentFixture as Document;
+    document = rest;
+    notes = fixtureNotes;
   });
   it("lets a user share the whole document, a single page, or a note", async () => {
-    render(Share, { document });
+    render(Share, { document, notes });
     const user = userEvent.setup();
     const tablist = screen.getByRole("tablist");
     expect(tablist).toBeInTheDocument();
@@ -37,7 +42,7 @@ describe("Share", () => {
     expect(tabs[2]).toHaveClass("active");
   });
   it("generates a permalink and iframe code for the document, page, or note", async () => {
-    render(Share, { document });
+    render(Share, { document, notes });
     const user = userEvent.setup();
     let inputs = screen.getAllByRole("textbox");
     // Document tab
@@ -58,18 +63,16 @@ describe("Share", () => {
     );
     // Note tab
     await user.click(screen.getByText("Note"));
-    expect(inputs[0]).toHaveValue(
-      noteUrl(document, document.notes?.[0]!).toString(),
-    );
+    expect(inputs[0]).toHaveValue(noteUrl(document, notes[0]!).toString());
     expect(inputs[1]).toHaveValue(
-      `${canonicalNoteUrl(document, document.notes?.[0]!)}?embed=1`,
+      `${canonicalNoteUrl(document, notes[0]!)}?embed=1`,
     );
     expect((inputs[2] as HTMLInputElement).value).toContain(
-      `<iframe src="${canonicalNoteUrl(document, document.notes?.[0]!)}?embed=1"`,
+      `<iframe src="${canonicalNoteUrl(document, notes[0]!)}?embed=1"`,
     );
   });
   it("allows the document embed to be customized, updating the embed URL accordingly", async () => {
-    render(Share, { document });
+    render(Share, { document, notes });
     const user = userEvent.setup();
     let inputs = screen.getAllByRole("textbox");
     // Default settings
@@ -80,7 +83,7 @@ describe("Share", () => {
     );
   });
   it("disables customization of page and note embeds", async () => {
-    render(Share, { document });
+    render(Share, { document, notes });
     const user = userEvent.setup();
     expect(screen.getByText("Customize Embed")).toBeEnabled();
     await user.click(screen.getByText("Page"));
@@ -91,28 +94,28 @@ describe("Share", () => {
     expect(screen.getByText("Customize Embed")).toBeEnabled();
   });
   it("disables the note tab when none are on the document", async () => {
-    const docWithoutNotes = Object.assign({}, document, { notes: [] });
-    expect(docWithoutNotes.notes).toEqual([]);
-    render(Share, { document: docWithoutNotes });
+    render(Share, { document, notes: [] });
     expect(screen.getByText("Note")).toBeDisabled();
   });
 
   describe("access warnings", () => {
-    /** Replace the document's notes with a single note at `access` */
-    function withNote(access: Access, edit_access = false): Document {
-      const note = { ...document.notes![0]!, access, edit_access };
-      return { ...document, notes: [note] };
+    /** A single note at `access`, in place of the fixture's notes */
+    function withNote(access: Access, edit_access = false): Note[] {
+      return [{ ...notes[0]!, access, edit_access }];
     }
 
     it("warns about the document, not the note, off the note tab", () => {
-      render(Share, { document: { ...document, access: "private" } });
+      render(Share, {
+        document: { ...document, access: "private" },
+        notes,
+      });
 
       expect(screen.getByText("This document is private.")).toBeInTheDocument();
     });
 
     it("warns about a restricted note on the note tab", async () => {
       const user = userEvent.setup();
-      render(Share, { document: withNote("private") });
+      render(Share, { document, notes: withNote("private") });
 
       // the document itself is public, so nothing to warn about yet
       expect(
@@ -126,7 +129,7 @@ describe("Share", () => {
 
     it("describes note organization access as edit access, not org membership", async () => {
       const user = userEvent.setup();
-      render(Share, { document: withNote("organization") });
+      render(Share, { document, notes: withNote("organization") });
       await user.click(screen.getByText("Note"));
 
       expect(
@@ -143,8 +146,10 @@ describe("Share", () => {
 
     it("warns about the document when it is more restrictive than the note", async () => {
       const user = userEvent.setup();
-      const doc = { ...withNote("organization"), access: "private" as Access };
-      render(Share, { document: doc });
+      render(Share, {
+        document: { ...document, access: "private" as Access },
+        notes: withNote("organization"),
+      });
       await user.click(screen.getByText("Note"));
 
       expect(screen.getByText("This document is private.")).toBeInTheDocument();
@@ -154,7 +159,7 @@ describe("Share", () => {
       const user = userEvent.setup();
       expect(document.edit_access).toBe(false);
 
-      render(Share, { document: withNote("private", true) });
+      render(Share, { document, notes: withNote("private", true) });
       await user.click(screen.getByText("Note"));
 
       expect(screen.getByText("Make public")).toBeInTheDocument();
@@ -162,7 +167,7 @@ describe("Share", () => {
 
     it("hides the fix when the note is not editable", async () => {
       const user = userEvent.setup();
-      render(Share, { document: withNote("private", false) });
+      render(Share, { document, notes: withNote("private", false) });
       await user.click(screen.getByText("Note"));
 
       expect(screen.queryByText("Make public")).not.toBeInTheDocument();
@@ -170,7 +175,7 @@ describe("Share", () => {
 
     it("titles the edit modal for the note, not the document", async () => {
       const user = userEvent.setup();
-      render(Share, { document: withNote("private", true) });
+      render(Share, { document, notes: withNote("private", true) });
       await user.click(screen.getByText("Note"));
       await user.click(screen.getByText("Make public"));
 

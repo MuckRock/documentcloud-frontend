@@ -9,8 +9,6 @@
  * jsdom has no PointerEvent, so pointer interactions are dispatched as
  * MouseEvents (offsetX/clientWidth are 0 in jsdom, which is fine here).
  */
-import type { Document } from "$lib/api/types";
-
 import { describe, it, expect, vi } from "vitest";
 import { fireEvent } from "@testing-library/svelte";
 import { readable } from "svelte/store";
@@ -44,15 +42,11 @@ import { notePage } from "@/test/fixtures/notes";
 const notes = notePage.results; // 15 real, positioned notes across several pages
 const page0Notes = notes.filter((n) => n.page_number === 0);
 
-function docWith(ns: typeof notes): Document {
-  return { ...base, notes: ns };
-}
-
 describe("AnnotationLayer", () => {
   it("renders positioned notes for its page as highlights", () => {
     const { container } = renderInViewer(AnnotationLayer, {
       props: { page_number: 0 },
-      context: { document: docWith(notes), mode: "document" },
+      context: { document: base, notes, mode: "document" },
     });
 
     // only the notes on page 0 belong to this layer
@@ -64,7 +58,7 @@ describe("AnnotationLayer", () => {
   it("enters writing mode when the viewer mode is annotating", () => {
     const { container } = renderInViewer(AnnotationLayer, {
       props: { page_number: 0 },
-      context: { document: docWith([]), mode: "annotating" },
+      context: { document: base, notes: [], mode: "annotating" },
     });
 
     expect(container.querySelector(".notes.writing")).not.toBeNull();
@@ -73,7 +67,7 @@ describe("AnnotationLayer", () => {
   it("draws a box on pointer-down and clears it on Escape", async () => {
     const { container } = renderInViewer(AnnotationLayer, {
       props: { page_number: 0 },
-      context: { document: docWith([]), mode: "annotating" },
+      context: { document: base, notes: [], mode: "annotating" },
     });
 
     const surface = container.querySelector(".notes") as HTMLElement;

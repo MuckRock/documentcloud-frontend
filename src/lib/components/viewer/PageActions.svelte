@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Document } from "$lib/api/types";
+  import type { Document, Note } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
   import {
@@ -26,11 +26,12 @@
 
   interface Props {
     document: Document;
+    notes?: Note[];
     page_number: number;
     pageWidth: number;
   }
 
-  let { document, page_number, pageWidth }: Props = $props();
+  let { document, notes = [], page_number, pageWidth }: Props = $props();
 
   let pageShareOpen = $state(false);
   let pageNote = $state(false);
@@ -116,7 +117,7 @@
       {#snippet title()}
         <h1>{$_("dialog.share")}</h1>
       {/snippet}
-      <Share {document} page={page_number} currentTab="page" />
+      <Share {document} {notes} page={page_number} currentTab="page" />
     </Modal>
   </Portal>
 {/if}

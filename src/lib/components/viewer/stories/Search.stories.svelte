@@ -33,7 +33,12 @@
   }}
   asChild
 >
-  <ViewerContext {document} text={Promise.resolve(text)} mode="search">
+  <ViewerContext
+    {document}
+    notes={[]}
+    text={Promise.resolve(text)}
+    mode="search"
+  >
     <Search />
   </ViewerContext>
 </Story>
@@ -54,7 +59,12 @@
   }}
   asChild
 >
-  <ViewerContext {document} text={Promise.resolve(text)} mode="search">
+  <ViewerContext
+    {document}
+    notes={[]}
+    text={Promise.resolve(text)}
+    mode="search"
+  >
     <Search />
   </ViewerContext>
 </Story>
@@ -75,7 +85,12 @@
   }}
   asChild
 >
-  <ViewerContext {document} text={Promise.resolve(text)} mode="search">
+  <ViewerContext
+    {document}
+    notes={[]}
+    text={Promise.resolve(text)}
+    mode="search"
+  >
     <Search />
   </ViewerContext>
 </Story>
@@ -96,7 +111,12 @@
   }}
   asChild
 >
-  <ViewerContext {document} text={Promise.resolve(text)} mode="search">
+  <ViewerContext
+    {document}
+    notes={[]}
+    text={Promise.resolve(text)}
+    mode="search"
+  >
     <Search />
   </ViewerContext>
 </Story>

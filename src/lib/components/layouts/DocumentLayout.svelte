@@ -37,7 +37,7 @@ Must be a child of a ViewerContext
     <nav class="column">
       <Projects {projects} {document} />
       <Data {document} />
-      <Notes {document} />
+      <Notes {document} notes={viewer.notes} />
     </nav>
   {/snippet}
 

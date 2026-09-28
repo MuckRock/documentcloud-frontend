@@ -40,7 +40,8 @@ Must be a child of a ViewerContext
 
   let document = $derived(viewer.document!);
   let notes = $derived(
-    getNotes(document)[page_number]?.filter((note) => !isPageLevel(note)) ?? [],
+    getNotes(viewer.notes)[page_number]?.filter((note) => !isPageLevel(note)) ??
+      [],
   );
   let writing = $derived(viewer.mode === "annotating");
   let activeNote = $derived(
@@ -162,19 +163,16 @@ Must be a child of a ViewerContext
     oldNote: Maybe<Nullable<NoteType>>,
   ) {
     const editedNote = note;
-    // Make an optimistic update to the `$documentStore`,
+    // Make an optimistic update to `viewer.notes`,
     // which should be overwritten by invalidation.
     // Start by removing the old note from the notes array.
-    const newDocNotes = document.notes?.filter(
-      (note) => note.id !== oldNote?.id,
-    );
+    const newNotes = viewer.notes.filter((note) => note.id !== oldNote?.id);
     // When a note is added or edited, add or replace it in the array.
     // When it's deleted, `editedNote` will be undefined so we'll skip this.
-    if (editedNote) newDocNotes?.push(editedNote);
-    // Make an optimistic update to `viewer.document` for `document.notes`.
-    viewer.document = { ...document, notes: newDocNotes };
-    // Finally, invalidate the document. After it's refetched,
-    // viewer.document will be updated with fresh data from the API.
+    if (editedNote) newNotes.push(editedNote);
+    viewer.notes = newNotes;
+    // Finally, invalidate the document. After it and its notes are refetched,
+    // viewer.notes will be updated with fresh data from the API.
     invalidate(`document:${document.id}`);
   }
 </script>

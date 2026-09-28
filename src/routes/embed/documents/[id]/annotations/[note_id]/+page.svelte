@@ -70,7 +70,14 @@
   <EmbedLayout canonicalUrl={viewerUrl} type="note">
     <div class="note-container" bind:this={embedContainer}>
       <div class="card">
-        <ViewerContext document={doc} {note} embed mode="notes" loadPdf={false}>
+        <ViewerContext
+          document={doc}
+          notes={[note]}
+          {note}
+          embed
+          mode="notes"
+          loadPdf={false}
+        >
           <Note {note} />
         </ViewerContext>
       </div>

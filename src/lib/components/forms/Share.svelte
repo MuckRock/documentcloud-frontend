@@ -61,6 +61,8 @@
 
   interface Props {
     document: Document;
+    /** Notes on this document, loaded separately from it */
+    notes?: Note[];
     page?: number;
     note_id?: undefined | string | number;
     currentTab?: "document" | "page" | "note";
@@ -70,6 +72,7 @@
 
   let {
     document,
+    notes = [],
     page = $bindable(1),
     note_id = $bindable(undefined),
     currentTab = $bindable("document"),
@@ -77,21 +80,18 @@
   }: Props = $props();
 
   let noteOptions = $derived(
-    document.notes?.map<NoteOption>((note) => ({
+    notes.map<NoteOption>((note) => ({
       value: note.id,
       label: `pg. ${note.page_number + 1} – ${note.title}`,
     })),
   );
 
-  let notes = $derived(document.notes || []);
-  let note = $derived(
-    note_id ? notes?.find((n) => n.id === note_id) : notes[0],
-  );
+  let note = $derived(note_id ? notes.find((n) => n.id === note_id) : notes[0]);
 
   let customizeEmbedOpen = $state(false);
   let editOpen = $state(false);
 
-  // `document.notes` doesn't hear about our own note edits, so track them here
+  // `notes` doesn't hear about our own note edits, so track them here
   // the way the `edited` store tracks document edits.
   let noteEdits: Record<string, Access> = $state({});
 
@@ -179,7 +179,7 @@
   onMount(() => {
     if (!note_id) {
       // try to set a default note
-      note_id = document.notes ? document.notes[0]?.id : undefined;
+      note_id = notes[0]?.id;
     }
   });
 
@@ -248,7 +248,7 @@
       <Tab
         onclick={() => (currentTab = "note")}
         active={currentTab === "note"}
-        disabled={!document.notes || document.notes.length === 0}
+        disabled={notes.length === 0}
       >
         <Note16 />
         {$_("share.note")}

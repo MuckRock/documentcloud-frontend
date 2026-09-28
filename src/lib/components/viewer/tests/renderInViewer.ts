@@ -16,6 +16,12 @@ import ViewerHarness from "./ViewerHarness.svelte";
 /** Props ViewerContext accepts, used to seed viewer state for a test. */
 export interface ViewerContextProps {
   document: Document;
+  /**
+   * Notes load separately from the document and seed `viewer.notes`.
+   * Required by ViewerContext; defaults to none here so tests that don't
+   * care about notes can leave it out.
+   */
+  notes?: Note[];
   mode?: ViewerMode;
   zoom?: Zoom;
   page?: number;
@@ -51,6 +57,6 @@ export function renderInViewer(
   { props = {}, context }: Options,
 ) {
   return render(ViewerHarness, {
-    props: { child, childProps: props, context },
+    props: { child, childProps: props, context: { notes: [], ...context } },
   });
 }

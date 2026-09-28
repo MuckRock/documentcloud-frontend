@@ -15,7 +15,7 @@ Must be a child of a ViewerContext
   const viewer = getViewerState();
 
   let document = $derived(viewer.document!);
-  let notes = $derived(document.notes ?? []);
+  let notes = $derived(viewer.notes);
   let annotate = $derived(getViewerHref({ document, mode: "annotating" }));
 </script>
 

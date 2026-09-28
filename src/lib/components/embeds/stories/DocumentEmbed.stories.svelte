@@ -1,5 +1,5 @@
 <script module lang="ts">
-  import type { Document } from "$lib/api/types";
+  import type { Document, Note } from "$lib/api/types";
 
   import { defineMeta } from "@storybook/addon-svelte-csf";
 
@@ -7,7 +7,10 @@
   import EmbedLayout from "../../layouts/EmbedLayout.svelte";
   import ViewerContext from "../../viewer/ViewerContext.svelte";
   import { canonicalUrl } from "$lib/api/documents";
-  import { documentExpanded as document } from "@/test/fixtures/documents";
+  import { documentExpanded } from "@/test/fixtures/documents";
+
+  // Notes load separately from the document, so split them off the fixture.
+  const { notes = [], ...document } = documentExpanded;
 
   const { Story } = defineMeta({
     title: "Embed / Document",
@@ -16,22 +19,25 @@
     render: template,
   });
 
-  type Args = { document: Document };
+  type Args = { document: Document; notes: Note[] };
 </script>
 
 {#snippet template(args: Args)}
   <div class="vh-100">
     <EmbedLayout canonicalUrl={canonicalUrl(args.document).href}>
-      <ViewerContext document={args.document} embed>
+      <ViewerContext document={args.document} notes={args.notes} embed>
         <DocumentEmbed />
       </ViewerContext>
     </EmbedLayout>
   </div>
 {/snippet}
 
-<Story name="Public" args={{ document }} />
+<Story name="Public" args={{ document, notes }} />
 
-<Story name="Private" args={{ document: { ...document, access: "private" } }} />
+<Story
+  name="Private"
+  args={{ document: { ...document, access: "private" }, notes }}
+/>
 
 <style>
   .vh-100 {

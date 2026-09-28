@@ -199,7 +199,7 @@
       {/if}
 
       {#if visible === "share"}
-        <Share {document} page={viewer.page} />
+        <Share {document} notes={viewer.notes} page={viewer.page} />
       {/if}
 
       {#if visible === "edit"}

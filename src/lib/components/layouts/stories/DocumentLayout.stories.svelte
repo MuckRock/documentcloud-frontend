@@ -3,12 +3,13 @@
   import DocumentLayout from "../DocumentLayout.svelte";
   import ViewerContext from "../../viewer/ViewerContext.svelte";
 
-  import type { Document, DocumentText, Maybe } from "$lib/api/types";
+  import type { Document, DocumentText, Maybe, Note } from "$lib/api/types";
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import txt from "@/test/fixtures/documents/document.txt.json";
   import { pdfUrl } from "$lib/api/documents";
-  const document = doc as Document;
+  // Notes load separately from the document, so split them off the fixture.
+  const { notes = [], ...document } = doc as Document;
 
   const { Story } = defineMeta({
     title: "Layout / Document",
@@ -28,11 +29,13 @@
 
   type Args = {
     document: Document;
+    notes: Note[];
     text: Promise<Maybe<DocumentText>>;
   };
 
   const args: Args = {
     document,
+    notes,
     text: Promise.resolve(txt),
   };
 </script>
@@ -41,6 +44,7 @@
   <div class="vh">
     <ViewerContext
       document={args.document}
+      notes={args.notes}
       text={args.text}
       asset_url={pdfUrl(args.document)}
     >

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Document } from "$lib/api/types";
+  import type { Document, Note } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
   import { Note16, Note24 } from "svelte-octicons";
@@ -14,11 +14,10 @@
 
   interface Props {
     document: Document;
+    notes: Note[];
   }
 
-  let { document }: Props = $props();
-
-  let notes = $derived(document.notes ?? []);
+  let { document, notes }: Props = $props();
   let annotate = $derived(
     new URL("?mode=annotating", canonicalUrl(document)).href,
   );

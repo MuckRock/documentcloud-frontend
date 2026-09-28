@@ -47,7 +47,7 @@ layouts, stories, and tests.
     document,
     text = new Promise(() => {}),
     note = null,
-    notes = [],
+    notes,
     asset_url = pdfUrl(document),
     embed = false,
     page = 1,
@@ -81,12 +81,16 @@ layouts, stories, and tests.
   }
   seedState();
 
-  // The document can change without ViewerContext remounting (navigating
-  // between documents), so keep it in sync. Other fields are seeded once and
-  // then owned by the viewer, so re-seeding them here would clobber in-view
-  // interactions (zoom, page).
+  // The document and its notes can change without ViewerContext remounting
+  // (navigating between documents, or invalidating after a note edit), so keep
+  // them in sync. Other fields are seeded once and then owned by the viewer,
+  // so re-seeding them here would clobber in-view interactions (zoom, page).
   $effect(() => {
     viewer.document = document;
+  });
+
+  $effect(() => {
+    viewer.notes = notes;
   });
 
   const noteMatchingPageHash = (note: Note) =>
@@ -103,8 +107,7 @@ layouts, stories, and tests.
 
   function onHashChange() {
     const { hash } = window.location;
-    viewer.currentNote =
-      viewer.document?.notes?.find(noteMatchingPageHash) ?? null;
+    viewer.currentNote = viewer.notes.find(noteMatchingPageHash) ?? null;
     if (shouldPaginate(viewer.mode)) {
       scrollToHash(hash);
     }
@@ -123,8 +126,7 @@ layouts, stories, and tests.
       viewer.goToPage(hashPage);
     }
     viewer.mode = mode;
-    viewer.currentNote =
-      viewer.document?.notes?.find(noteMatchingPageHash) ?? null;
+    viewer.currentNote = viewer.notes.find(noteMatchingPageHash) ?? null;
     // Scroll if there's a note in the URL or we're past page 1
     if (shouldPaginate(mode) && ((hashPage || 0) > 1 || noteFromHash(hash))) {
       scrollToHash(hash);
