@@ -24,7 +24,8 @@
     "required": "Requis",
     "selectAll": "S\u00e9lectionner tout",
     "selected": "S\u00e9lectionn\u00e9",
-    "resultsCount": "Mostrando {n, number} de {total, number} r\u00e9sultats"
+    "resultsCount": "Affichage {n, number} de {total, number} r\u00e9sultats",
+    "resultsCountShort": "Affichage de {n, number} r\u00e9sultats"
   },
   "documentBrowser": {
     "fieldsAnchor": "Vue",
@@ -238,6 +239,7 @@
     "accessDocuments": "Vos documents",
     "nameDocuments": "Segnato come {name}.",
     "allDocuments": "Tous les documents d'acc\u00e8s",
+    "explore": "Explorer les documents",
     "upload": "Upload",
     "dropFile": "T\u00e9l\u00e9chargez le fichier pour t\u00e9l\u00e9charger",
     "matchingPages": "{n, plural, one {# page} other {# pages}} correspondant à la requête",
@@ -299,6 +301,7 @@
     "edit": "Modifier les m\u00e9tadonn\u00e9es du projet",
     "share": "Partager et afficher ce projet",
     "add": "Ajouter {n, plural, one {ce document} other {# documents}}, \u00e0 un projet",
+    "explore": "Explorer les projets",
     "access": {
       "public": "Public",
       "private": "Private",
@@ -419,6 +422,8 @@
     "language": "Langue",
     "delete": "Supprimer",
     "ocr_engine": "Appareil OCR",
+    "documentActions": "Actions sur le document",
+    "projectActions": "Actions sur le projet",
     "addons": {
       "title": "Extensions",
       "pinned": "Pin\u00e9s extensions seront visible ici",
@@ -646,9 +651,10 @@
       }
     },
     "userIdentity": {
-      "legend": "Attribution",
-      "anonymous": "Anonyme",
-      "shareAnonymously": "Partager anonymement"
+      "legend": "Votre adresse e-mail",
+      "email": "E-mail",
+      "emailHelp": "Nous l'utiliserons uniquement pour donner suite \u00e0 vos retours.",
+      "emailPlaceholder": "vous@exemple.com"
     },
     "success": "Nous avons re\u00e7u vos retours. Merci !"
   },

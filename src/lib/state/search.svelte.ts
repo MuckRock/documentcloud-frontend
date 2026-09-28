@@ -6,20 +6,21 @@
  */
 
 import type {
+  AddOn,
   APIError,
   APIResponse,
   Document,
-  DocumentResults,
   Maybe,
   Nullable,
+  Page,
   Pending,
+  Project,
   SearchOptions,
 } from "$lib/api/types";
 
 import { createContext } from "svelte";
 import { get, type Writable } from "svelte/store";
 import { SvelteMap, SvelteSet } from "svelte/reactivity";
-import { search } from "$lib/api/documents";
 import { isDefined } from "$lib/utils";
 import { getApiResponse } from "$lib/utils/api";
 
@@ -32,17 +33,18 @@ interface Args {
 // these should match the stores $lib/api/documents.ts
 interface WatchStores {
   deleted?: Writable<Set<string>>;
-  edited?: Writable<Map<string, Document>>;
+  edited?: Writable<Map<string, Partial<Document>>>;
   pending?: Writable<Pending[]>;
   finished?: Writable<Set<number>>;
 }
 
-const EXPANDABLE_FIELDS = new Set(["user", "organization", "projects", "id"]);
-
-export class SearchResultsState {
-  visible: SvelteMap<string, Document> = new SvelteMap();
+export class SearchResultsState<
+  T extends Document | Project | AddOn = Document,
+> {
+  visible: SvelteMap<string, T> = new SvelteMap();
   selectedIds: SvelteSet<string> = new SvelteSet();
   total: number = $state(0);
+  hasTotal: boolean = $state(false);
   query: Maybe<string> = $state("");
   options: Maybe<SearchOptions> = $state();
   loading: boolean = $state(false);
@@ -66,15 +68,16 @@ export class SearchResultsState {
     return this.visible.values();
   }
 
-  get selected(): Document[] {
+  get selected(): T[] {
     return [...this.selectedIds]
       .map((id) => this.visible.get(id))
-      .filter(isDefined<Document>);
+      .filter(isDefined<T>);
   }
 
   get editable(): boolean {
     return (
-      this.selected.length > 0 && this.selected.every((d) => d.edit_access)
+      this.selected.length > 0 &&
+      this.selected.every((d) => "edit_access" in d && d.edit_access)
     );
   }
 
@@ -89,32 +92,10 @@ export class SearchResultsState {
   }
 
   /**
-   * Load initial search results, clearing any previous results
-   */
-  async load(query: string, options?: SearchOptions, fetch = globalThis.fetch) {
-    this.query = query;
-    this.loading = true;
-
-    const { data } = await search(this.query, options, fetch);
-
-    if (data) {
-      this.visible.clear();
-      for (const d of data.results) {
-        this.visible.set(String(d.id), d);
-      }
-      this.total = data.count ?? data.results.length;
-      this.next = data.next;
-      this.applyWatched();
-    }
-
-    this.loading = false;
-  }
-
-  /**
    * Handle initial search results, synchronously.
    * This kicks off downstream updates.
    */
-  async setResults(results: Promise<APIResponse<DocumentResults, any>>) {
+  async setResults(results: Promise<APIResponse<Page<T>, any>>) {
     this.loading = true;
     const { data: searchResults } = await results;
     if (!searchResults) {
@@ -127,6 +108,7 @@ export class SearchResultsState {
       this.visible.set(String(d.id), d);
     }
     this.total = searchResults.count ?? searchResults.results.length;
+    this.hasTotal = !!searchResults.count;
     this.next = searchResults.next;
     this.applyWatched();
     this.loading = false;
@@ -152,7 +134,7 @@ export class SearchResultsState {
       console.warn,
     );
 
-    const { data, error } = await getApiResponse<DocumentResults>(resp);
+    const { data, error } = await getApiResponse<Page<T>>(resp);
 
     if (data) {
       // append, don't replace
@@ -243,15 +225,12 @@ export class SearchResultsState {
     }
   }
 
-  handleEdited(edited: Map<string, Document>) {
+  handleEdited(edited: Map<string, Partial<Document>>) {
     for (const [id, edit] of edited) {
       const doc = this.visible.get(id);
       if (doc) {
         for (const [k, v] of Object.entries(edit)) {
-          // ignore expandable fields
-          if (!EXPANDABLE_FIELDS.has(k)) {
-            doc[k] = v;
-          }
+          doc[k] = v;
         }
         this.visible.set(id, { ...doc });
       }
@@ -262,7 +241,7 @@ export class SearchResultsState {
     for (const p of pending) {
       const id = String(p.doc_id);
       const doc = this.visible.get(id);
-      if (doc && doc.status !== "pending") {
+      if (doc && "status" in doc && doc.status !== "pending") {
         this.visible.set(id, { ...doc, status: "pending" });
       }
     }
@@ -272,7 +251,7 @@ export class SearchResultsState {
     for (const docId of finished) {
       const id = String(docId);
       const doc = this.visible.get(id);
-      if (doc && doc.status !== "success") {
+      if (doc && "status" in doc && doc.status !== "success") {
         this.visible.set(id, { ...doc, status: "success" });
       }
     }
@@ -280,4 +259,4 @@ export class SearchResultsState {
 }
 
 export const [getSearchResults, setSearchResults] =
-  createContext<SearchResultsState>();
+  createContext<SearchResultsState<Document>>();

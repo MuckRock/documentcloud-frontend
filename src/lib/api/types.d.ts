@@ -241,6 +241,7 @@ export interface SearchOptions {
 // add more as needed
 export interface DocumentFilters {
   id__in: string; // comma-separated list
+  per_page?: number;
 }
 
 export interface OEmbed {
@@ -322,7 +323,17 @@ export interface Flatpage {
 }
 
 // known errors
+/** Validation errors keyed by the field they apply to. */
 export interface ValidationError extends Record<string, string[]> {}
+
+/**
+ * Everything the API might put in an error response body: field-keyed
+ * validation errors, a bare array of errors that aren't about one field,
+ * a lone message, or `{detail}` and nested objects from DRF.
+ * Pass these through `normalizeErrors` in `$lib/utils/api` before rendering.
+ */
+export type APIErrors =
+  ValidationError | Record<string, unknown> | string[] | string;
 
 /** Addons */
 
@@ -361,6 +372,7 @@ interface AddOnParameters {
   title: string;
   description: string;
   instructions: string;
+  disclosures: string;
   categories: AddOnCategory[];
   documents: string[];
   required: string[];

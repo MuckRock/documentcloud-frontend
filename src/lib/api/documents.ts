@@ -51,7 +51,9 @@ export const MODES = new Set<ViewerMode>([...READING_MODES, ...WRITING_MODES]);
 export const deleted: Writable<Set<string>> = writable(new Set());
 
 // for tracking edited documents before solr updates
-export const edited: Writable<Map<string, Document>> = writable(new Map());
+export const edited: Writable<Map<string, Partial<Document>>> = writable(
+  new Map(),
+);
 
 export const DEFAULT_EXPAND = ["user", "organization", "projects"];
 

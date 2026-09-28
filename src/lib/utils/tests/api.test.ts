@@ -5,6 +5,7 @@ import {
   getApiResponse,
   getPrivateAsset,
   getCsrfToken,
+  normalizeErrors,
 } from "../api";
 
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
@@ -132,5 +133,65 @@ describe("cookie handling", () => {
     document.cookie = `${CSRF_COOKIE_NAME}=token`;
 
     expect(getCsrfToken(document)).toStrictEqual("token");
+  });
+});
+
+describe("normalizeErrors", () => {
+  test("nothing to show", () => {
+    expect(normalizeErrors(undefined)).toEqual([]);
+    expect(normalizeErrors(null)).toEqual([]);
+    expect(normalizeErrors({})).toEqual([]);
+    expect(normalizeErrors([])).toEqual([]);
+  });
+
+  test("errors keyed by field", () => {
+    expect(
+      normalizeErrors({
+        title: ["This field may not be blank."],
+        source: ["Too long.", "Nope."],
+      }),
+    ).toEqual([
+      { field: "title", messages: ["This field may not be blank."] },
+      { field: "source", messages: ["Too long.", "Nope."] },
+    ]);
+  });
+
+  test("a bare array of non-field errors", () => {
+    // what the API returns when editing a processing document
+    expect(
+      normalizeErrors([
+        "You may not update `access` while the document is processing",
+      ]),
+    ).toEqual([
+      {
+        messages: [
+          "You may not update `access` while the document is processing",
+        ],
+      },
+    ]);
+  });
+
+  test("a single string", () => {
+    expect(normalizeErrors("Bad Request")).toEqual([
+      { messages: ["Bad Request"] },
+    ]);
+  });
+
+  test("a field with a single string instead of a list", () => {
+    expect(normalizeErrors({ detail: "Not found." })).toEqual([
+      { field: "detail", messages: ["Not found."] },
+    ]);
+  });
+
+  test("nested errors are flattened", () => {
+    expect(normalizeErrors({ data: { key: ["is required"] } })).toEqual([
+      { field: "data", messages: ["key: is required"] },
+    ]);
+  });
+
+  test("fields with no messages are dropped", () => {
+    expect(normalizeErrors({ title: [], source: ["Too long."] })).toEqual([
+      { field: "source", messages: ["Too long."] },
+    ]);
   });
 });

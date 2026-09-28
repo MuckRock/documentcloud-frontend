@@ -5,10 +5,10 @@ This will mostly merge with existing data.
 <script lang="ts">
   import type {
     APIError,
+    APIErrors,
     Document,
     Data,
     Maybe,
-    ValidationError,
   } from "$lib/api/types";
 
   import { invalidate } from "$app/navigation";
@@ -18,6 +18,7 @@ This will mostly merge with existing data.
   import { _ } from "svelte-i18n";
   import { Alert24 } from "svelte-octicons";
 
+  import ApiError from "$lib/components/common/ApiError.svelte";
   import Button from "$lib/components/common/Button.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
   import Flex from "$lib/components/common/Flex.svelte";
@@ -33,7 +34,7 @@ This will mostly merge with existing data.
 
   interface Props {
     documents: Document[];
-    error?: Maybe<APIError<ValidationError>>;
+    error?: Maybe<APIError<APIErrors>>;
     onclose?: () => void;
   }
 
@@ -227,19 +228,7 @@ This will mostly merge with existing data.
   {/if}
 
   {#if error}
-    <Tip mode="error">
-      {#snippet icon()}<Alert24 />{/snippet}
-      <p>{error.message}</p>
-      {#if Object.keys(error.errors ?? {}).length}
-        <ul>
-          {#each Object.entries(error.errors ?? {}) as [field, errs]}
-            <li>
-              <strong>{field}</strong>: {errs.join(";")}
-            </li>
-          {/each}
-        </ul>
-      {/if}
-    </Tip>
+    <ApiError {error} />
   {/if}
 
   <table>

@@ -24,7 +24,8 @@
     "required": "Requerido",
     "selectAll": "Seguir todos",
     "selected": "Seleccionado",
-    "resultsCount": "Mostrando {n, number} de {total, number} resultados"
+    "resultsCount": "Mostrando {n, number} de {total, number} resultados",
+    "resultsCountShort": "Mostrando {n, number} resultados"
   },
   "access": {
     "private": {
@@ -238,6 +239,7 @@
     "accessDocuments": "Seguimiento de sus {access}Documentos",
     "nameDocuments": "Segnato como {name}'s Documentos",
     "allDocuments": "Todas las {access}Documentos",
+    "explore": "Explorar Documentos",
     "upload": "Cargar",
     "dropFile": "Ejectar archivo para subir",
     "matchingPages": "{n, plural, one {# página} other {# páginas}} que coinciden con la consulta",
@@ -299,6 +301,7 @@
     "edit": "Editar metadatos del proyecto",
     "share": "Compartir & enlazar este proyecto",
     "add": "Agrega {n, plural, one {este documento} other {# documentos}} a un proyecto",
+    "explore": "Explorar Proyectos",
     "access": {
       "public": "P\u00fablico",
       "private": "Privado",
@@ -419,6 +422,8 @@
     "language": "Lengua",
     "delete": "Eliminar",
     "ocr_engine": "Motor de OCR",
+    "documentActions": "Acciones del Documento",
+    "projectActions": "Acciones del Proyecto",
     "addons": {
       "title": "Agregados",
       "pinned": "A\u00f1adidos marcados se mostrar\u00e1n aqu\u00ed",
@@ -556,6 +561,7 @@
     "selectionLearnMore": "Aprende m\u00e1s sobre c\u00f3mo funcionan los Add-ons.",
     "editing": "Edici\u00f3n de un addon previamente enviado",
     "instructions": "Instrucciones",
+    "disclosures": "Aviso de privacidad",
     "dispatch": "Entrega",
     "history": "Historia",
     "noHistory": "No has ejecutado esta adici\u00f3n antes.",
@@ -647,9 +653,10 @@
       }
     },
     "userIdentity": {
-      "legend": "Attribuci\u00f3n",
-      "anonymous": "Desconocido",
-      "shareAnonymously": "Compartir de manera an\u00f3nima"
+      "legend": "Tu direcci\u00f3n de correo electr\u00f3nico",
+      "email": "Correo electr\u00f3nico",
+      "emailHelp": "Solo la usaremos para dar seguimiento a tus comentarios.",
+      "emailPlaceholder": "tu@ejemplo.com"
     },
     "success": "Agradecemos su retroalimentaci\u00f3n. \u00a1Muchas gracias!"
   },

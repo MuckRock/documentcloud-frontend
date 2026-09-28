@@ -6,6 +6,7 @@
   import {
     Bookmark16,
     File16,
+    FileDirectory16,
     Globe16,
     Lock16,
     Organization16,
@@ -226,7 +227,13 @@
       {#snippet start()}
         <File16 />
       {/snippet}
-      {$_("documents.publicDocuments")}
+      {$_("documents.explore")}
+    </NavItem>
+    <NavItem href="/projects?list=public">
+      {#snippet start()}
+        <FileDirectory16 />
+      {/snippet}
+      {$_("projects.explore")}
     </NavItem>
   {/snippet}
 </SignedIn>

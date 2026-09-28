@@ -1,11 +1,12 @@
 <!-- @component Enable or disable revisions for a document. -->
 <script lang="ts">
-  import type { Document, Maybe } from "$lib/api/types";
+  import type { APIError, APIErrors, Document, Maybe } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
   import { _ } from "svelte-i18n";
 
+  import ApiError from "../common/ApiError.svelte";
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
   import Field from "../inputs/Field.svelte";
@@ -21,6 +22,7 @@
   let { document, disabled = false }: Props = $props();
 
   let formRef: Maybe<HTMLFormElement> = $state();
+  let error: Maybe<APIError<APIErrors>> = $state();
 
   let action = $derived(canonicalUrl(document).href + "?/edit");
 
@@ -29,6 +31,12 @@
     formData.set("revision_control", enabled);
 
     return ({ result, update }) => {
+      if (result.type === "failure") {
+        error = result.data;
+        return;
+      }
+
+      error = undefined;
       invalidate(`document:${document.id}`);
       update(result);
     };
@@ -36,19 +44,24 @@
 </script>
 
 <form {action} method="post" use:enhance={onSubmit} bind:this={formRef}>
-  <Flex gap={1} align="center" justify="between">
-    <Field inline title={$_("dialogRevisionsDialog.controlLabel")}>
-      <Switch
-        name="revision_control"
-        checked={document.revision_control}
-        onchange={() => formRef?.submit()}
-        {disabled}
-      />
-    </Field>
-    <Flex class="buttons">
-      <Button size="small" type="submit" mode="primary" {disabled}>
-        {$_("dialog.save")}
-      </Button>
+  <Flex direction="column" gap={1}>
+    {#if error}
+      <ApiError {error} />
+    {/if}
+    <Flex gap={1} align="center" justify="between">
+      <Field inline title={$_("dialogRevisionsDialog.controlLabel")}>
+        <Switch
+          name="revision_control"
+          checked={document.revision_control}
+          onchange={() => formRef?.submit()}
+          {disabled}
+        />
+      </Field>
+      <Flex class="buttons">
+        <Button size="small" type="submit" mode="primary" {disabled}>
+          {$_("dialog.save")}
+        </Button>
+      </Flex>
     </Flex>
   </Flex>
 </form>

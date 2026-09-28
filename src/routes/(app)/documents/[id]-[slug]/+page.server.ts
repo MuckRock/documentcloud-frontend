@@ -74,7 +74,7 @@ export const actions = {
     const { data: document, error } = await edit(id, update, csrf_token, fetch);
 
     if (error) {
-      setFlash({ message: error.message, status: "error" }, cookies);
+      // No flash, render errors inline
       return fail(error.status, {
         message: error.message,
         errors: error.errors,

@@ -5,20 +5,19 @@ This form is entirely client-side.
 <script lang="ts">
   import type {
     APIError,
+    APIErrors,
     Document,
     Maybe,
     Section,
-    ValidationError,
   } from "$lib/api/types";
 
   import { onMount } from "svelte";
   import { invalidate } from "$app/navigation";
   import { _ } from "svelte-i18n";
-  import { Alert24 } from "svelte-octicons";
 
+  import ApiError from "../common/ApiError.svelte";
   import Button from "../common/Button.svelte";
   import EditSectionRow from "./EditSectionRow.svelte";
-  import Tip from "../common/Tip.svelte";
 
   import { create } from "$lib/api/sections";
   import { getCsrfToken } from "$lib/utils/api";
@@ -50,7 +49,7 @@ This form is entirely client-side.
   let collides = $derived(existing_pages.has(newPageNumber));
 
   // The most recent API error from any create/update/delete on this form.
-  let error: Maybe<APIError<ValidationError>> = $state();
+  let error: Maybe<APIError<APIErrors>> = $state();
 
   onMount(() => {
     csrftoken = getCsrfToken();
@@ -136,23 +135,7 @@ This form is entirely client-side.
   </table>
 
   {#if error}
-    <Tip mode="error">
-      {#snippet icon()}<Alert24 />{/snippet}
-      <div role="alert">
-        <!-- `message` is the HTTP status text, which is empty over HTTP/2, so
-             fall back to a generic message; the field errors carry the detail. -->
-        <p>{error.message || $_("common.error")}</p>
-        {#if Object.keys(error.errors ?? {}).length}
-          <ul>
-            {#each Object.entries(error.errors ?? {}) as [field, errs]}
-              <li>
-                <strong>{field}</strong>: {errs.join("; ")}
-              </li>
-            {/each}
-          </ul>
-        {/if}
-      </div>
-    </Tip>
+    <ApiError {error} />
   {/if}
 
   <div class="buttons">

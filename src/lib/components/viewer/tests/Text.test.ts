@@ -31,18 +31,6 @@ vi.mock("$app/state", () => ({
 }));
 vi.mock("$app/navigation", () => ({ afterNavigate: vi.fn() }));
 
-// Page uses IntersectionObserver when tracking visibility.
-beforeAll(() => {
-  vi.stubGlobal(
-    "IntersectionObserver",
-    class {
-      observe() {}
-      unobserve() {}
-      disconnect() {}
-    },
-  );
-});
-
 import Text from "../Text.svelte";
 import { renderInViewer } from "./renderInViewer";
 import { document } from "@/test/fixtures/documents";

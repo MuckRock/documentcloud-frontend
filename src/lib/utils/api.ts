@@ -151,3 +151,48 @@ export function getCsrfToken(document = globalThis.document): Maybe<string> {
 
   return token;
 }
+
+/** A group of error messages from the API, optionally tied to a form field. */
+export interface ErrorGroup {
+  field?: string;
+  messages: string[];
+}
+
+/**
+ * Coerce one value from an error payload into strings,
+ * flattening nested objects into `key: message` lines.
+ */
+function toMessages(value: unknown): string[] {
+  if (value === null || value === undefined) return [];
+
+  if (Array.isArray(value)) return value.flatMap(toMessages);
+
+  if (typeof value === "object") {
+    return Object.entries(value).flatMap(([key, nested]) =>
+      toMessages(nested).map((message) => `${key}: ${message}`),
+    );
+  }
+
+  return [String(value)];
+}
+
+/**
+ * Flatten an API error payload into renderable groups.
+ *
+ * The API keys field validation errors by field name, sends errors that aren't
+ * about one field as a bare array of strings, and returns a single string from
+ * a few endpoints.
+ */
+export function normalizeErrors(errors: unknown): ErrorGroup[] {
+  if (errors === null || errors === undefined) return [];
+
+  // field-keyed errors are the only shape with a label to show
+  if (typeof errors === "object" && !Array.isArray(errors)) {
+    return Object.entries(errors)
+      .map(([field, value]) => ({ field, messages: toMessages(value) }))
+      .filter(({ messages }) => messages.length);
+  }
+
+  const messages = toMessages(errors);
+  return messages.length ? [{ messages }] : [];
+}

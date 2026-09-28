@@ -33,7 +33,8 @@
     "required": "Required",
     "selectAll": "Select All",
     "selected": "Selected",
-    "resultsCount": "Showing {n, number} of {total, number} Results"
+    "resultsCount": "Showing {n, number} of {total, number} Results",
+    "resultsCountShort": "Showing {n, number} Results"
   },
   "access": {
     "private": {
@@ -247,6 +248,7 @@
     "accessDocuments": "Your {access}Documents",
     "nameDocuments": "{name}’s {access}Documents",
     "allDocuments": "All {access}Documents",
+    "explore": "Explore Documents",
     "upload": "Upload",
     "dropFile": "Drop file to upload",
     "matchingPages": "{n, plural, one {# page} other {# pages}} matching the query",
@@ -365,6 +367,7 @@
     "edit": "Edit Project Metadata",
     "share": "Share & embed this project",
     "add": "Add {n, plural, one {this document} other {# documents}} to a project",
+    "explore": "Explore Projects",
     "access": {
       "public": "Public",
       "private": "Private",
@@ -491,6 +494,8 @@
     "updated": "Last updated on",
     "language": "Language",
     "ocr_engine": "OCR Engine",
+    "documentActions": "Document Actions",
+    "projectActions": "Project Actions",
     "addons": {
       "title": "Add-Ons",
       "pinned": "Pinned add-ons will appear here",
@@ -654,6 +659,7 @@
     "selectionLearnMore": "Learn More about How Add-Ons Work",
     "editing": "Editing a previously dispatched Add-On",
     "instructions": "Instructions",
+    "disclosures": "Privacy Disclosures",
     "dispatch": "Dispatch",
     "history": "History",
     "noHistory": "You have not run this Add-On before",
@@ -747,11 +753,13 @@
       }
     },
     "userIdentity": {
-      "legend": "Attribution",
-      "anonymous": "Anonymous",
-      "shareAnonymously": "Share Anonymously"
+      "legend": "Your email address",
+      "email": "Email",
+      "emailHelp": "We'll only use this to follow up on your feedback.",
+      "emailPlaceholder": "you@example.com"
     },
-    "success": "We have received your feedback. Thank you!"
+    "success": "We have received your feedback. Thank you!",
+    "error": "Sorry, we couldn't send your feedback. Please try again or email us at info@documentcloud.org."
   },
   "homepage": {
     "header": {
@@ -767,7 +775,8 @@
       "heading": "{count} public documents and counting",
       "countFallback": "Millions of",
       "description": "<p>Everyone is welcome to explore our public document archive and organize interesting documents into projects.</p>",
-      "projectsHeading": "Explore some of our newsworthy projects:"
+      "projectsHeading": "Explore some of our newsworthy projects:",
+      "trendingHeading": "Trending documents"
     },
     "sources": {
       "heading": "Documents from trustworthy sources",

@@ -163,17 +163,6 @@ describe("SearchResultsState", () => {
       expect(search.visible.get(id)!.title).toBe("Updated Title");
     });
 
-    it("skips expandable fields like user and organization", () => {
-      const id = [...search.visible.keys()][0]!;
-      const originalUser = search.visible.get(id)!.user;
-
-      search.handleEdited(
-        new Map([[id, { user: { id: 999 } } as unknown as Document]]),
-      );
-
-      expect(search.visible.get(id)!.user).toEqual(originalUser);
-    });
-
     it("ignores IDs not in visible", () => {
       const sizeBefore = search.visible.size;
 

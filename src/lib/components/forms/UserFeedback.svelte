@@ -1,15 +1,19 @@
 <script lang="ts">
   import type { Nullable, User } from "$lib/api/types";
 
+  import { untrack } from "svelte";
+
   import { enhance } from "$app/forms";
   import { page } from "$app/state";
 
   import { _ } from "svelte-i18n";
-  import { Bug16, Comment16, Question16 } from "svelte-octicons";
+  import { Alert24, Bug16, Comment16, Question16 } from "svelte-octicons";
 
-  import Avatar from "../accounts/Avatar.svelte";
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
+  import Tip from "../common/Tip.svelte";
+  import Field from "../inputs/Field.svelte";
+  import Text from "../inputs/Text.svelte";
 
   import { APP_URL } from "@/config/config";
   import { getUserName } from "$lib/api/accounts";
@@ -26,6 +30,10 @@
     feedbackType = $bindable("Comment"),
     onclose,
   }: Props = $props();
+
+  // Zendesk needs an address to open a ticket, so we ask for one and
+  // pre-fill it for signed-in users
+  let email = $state(untrack(() => user?.email) ?? "");
 
   let feedbackTypes = [
     {
@@ -51,23 +59,32 @@
     },
   ];
 
-  let anonymous = $derived(!Boolean(user));
-
   let placeholder = $derived(
     feedbackTypes.find((type) => type.value === feedbackType)?.placeholder ??
       $_("feedback.defaultPlaceholder"),
   );
 
   let status: null | "loading" | "success" | "error" = $state(null);
+  let error: string | null = $state(null);
 
   function handleSubmit() {
     status = "loading";
-    return async ({ result }) => {
+    error = null;
+    // update() applies the action result and invalidates, which is what lets
+    // the server's flash message reach the toaster
+    return async ({ result, update }) => {
       if (result.type === "success") {
         status = "success";
+        await update();
         onclose?.();
       } else if (result.type === "failure") {
         status = "error";
+        error = result.data?.message ?? $_("feedback.error");
+        // keep what they wrote so they can retry
+        await update({ reset: false });
+      } else if (result.type === "error") {
+        status = "error";
+        error = $_("feedback.error");
       }
     };
   }
@@ -98,38 +115,43 @@
       </label>
     {/each}
   </fieldset>
-  {#if user}
-    <fieldset class="userIdentity">
-      <legend>{$_("feedback.userIdentity.legend")}</legend>
-      {#if anonymous}
-        <Flex align="center">
-          <Avatar />
-          <span class="name">{$_("feedback.userIdentity.anonymous")}</span>
-          <input type="hidden" name="user" value={null} />
-        </Flex>
-      {:else}
-        <Flex align="center">
-          <Avatar {user} />
-          <span class="name">{getUserName(user)}</span>
-          <input type="hidden" name="user" value={user.email} />
-        </Flex>
-      {/if}
-      <label class="anonymous">
-        <input type="checkbox" bind:checked={anonymous} />
-        {$_("feedback.userIdentity.shareAnonymously")}
-      </label>
-    </fieldset>
-  {/if}
+  <fieldset class="userIdentity">
+    <legend>{$_("feedback.userIdentity.legend")}</legend>
+    <Field
+      title={$_("feedback.userIdentity.email")}
+      description={$_("feedback.userIdentity.emailHelp")}
+      sronly
+    >
+      <Text
+        type="email"
+        name="email"
+        autocomplete="email"
+        placeholder={$_("feedback.userIdentity.emailPlaceholder")}
+        bind:value={email}
+        required
+      />
+    </Field>
+    {#if user}
+      <input type="hidden" name="name" value={getUserName(user)} />
+    {/if}
+  </fieldset>
   <input type="text" name="url" value={page.url.href} hidden />
   <textarea class="feedback" name="message" bind:value={feedback} {placeholder}
   ></textarea>
+
+  {#if error}
+    <Tip mode="error">
+      {#snippet icon()}<Alert24 />{/snippet}
+      <p>{error}</p>
+    </Tip>
+  {/if}
 
   <footer class="actions">
     <Flex align="center">
       <Button
         type="submit"
         mode="primary"
-        disabled={!feedback || status === "loading"}
+        disabled={!feedback || !email || status === "loading"}
       />
     </Flex>
   </footer>
@@ -143,7 +165,7 @@
   }
   header,
   footer {
-    padding: 0.5rem;
+    padding: 0.5rem 0;
   }
   .hello-message {
     font-size: var(--font-sm);
@@ -212,6 +234,10 @@
     display: none;
   }
   .userIdentity {
-    padding: 0.5rem 1rem;
+    display: block;
+    padding: 0.5rem;
+  }
+  .userIdentity :global(.help) {
+    margin: 0.5rem 0.5rem 0;
   }
 </style>

@@ -45,9 +45,9 @@
 
   {#snippet action()}
     <UploadButton {project} />
-    <h4>Document Actions</h4>
+    <h4>{$_("sidebar.documentActions")}</h4>
     <DocumentActions />
-    <h4>Project Actions</h4>
+    <h4>{$_("sidebar.projectActions")}</h4>
     <ProjectActions {project} />
     <Collaborators {users} {project} />
   {/snippet}
