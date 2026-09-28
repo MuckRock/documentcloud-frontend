@@ -21,7 +21,11 @@ Must be a child of a ViewerContext
 
   const viewer = getViewerState();
 
-  let zoomLevels = $derived(getZoomLevels(viewer.mode));
+  let zoomRound = $derived.by(() => {
+    const { zoom } = viewer;
+    return typeof zoom === "number" ? Math.round(zoom * 100) / 100 : zoom;
+  });
+  let zoomLevels = $derived(getZoomLevels(viewer.mode, zoomRound));
   let initial = $derived(getInitialZoom(page.url, viewer.mode));
 
   let [zoomOut, zoomIn] = $derived(
@@ -80,7 +84,10 @@ Must be a child of a ViewerContext
           {$_("zoom.zoom")}
         {/if}
       </span>
-      <select name="zoom" bind:value={viewer.zoom}>
+      <select
+        name="zoom"
+        bind:value={() => zoomRound, (value) => (viewer.zoom = value)}
+      >
         {#each zoomLevels as [value, label]}
           <option {value}>
             {$_(label)}

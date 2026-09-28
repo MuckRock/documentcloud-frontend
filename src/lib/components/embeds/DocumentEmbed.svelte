@@ -41,7 +41,7 @@
   );
 </script>
 
-<div class="container">
+<div class="container" bind:this={viewer.scrollContainer}>
   {#if document.access !== "public"}
     <div class="banner">
       <Alert16 />
@@ -65,6 +65,8 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
   header {
     flex: 0 0 auto;

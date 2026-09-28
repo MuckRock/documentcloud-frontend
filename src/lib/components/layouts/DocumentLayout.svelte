@@ -42,7 +42,7 @@ Must be a child of a ViewerContext
   {/snippet}
 
   {#snippet content()}
-    <article>
+    <article bind:this={viewer.scrollContainer}>
       <header><DocumentHeader {document} /></header>
       <main><Viewer /></main>
     </article>
@@ -79,6 +79,8 @@ Must be a child of a ViewerContext
     flex-direction: column;
     gap: 0.5rem;
     width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   header {

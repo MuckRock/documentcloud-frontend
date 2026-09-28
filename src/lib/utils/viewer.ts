@@ -188,33 +188,30 @@ export function getDefaultZoom(mode: ViewerMode): Zoom {
   }
 }
 
+const ZOOM_STEPS = [0.5, 0.75, 1, 1.25, 1.5, 2];
+
+const ZOOM_LEVELS: [number, string][] = ZOOM_STEPS.map((value) => [
+  value,
+  `${value * 100}%`,
+]);
+
 /**
  * Generate zoom levels based on mode, since each zooms in a slightly different way
  */
-export function getZoomLevels(mode: ViewerMode): ZoomLevels {
+export function getZoomLevels(mode: ViewerMode, zoom?: Zoom): ZoomLevels {
   switch (mode) {
     case "document":
     case "annotating":
     case "redacting":
-      return [
-        ["auto", "zoom.auto"],
-        [0.5, "50%"],
-        [0.75, "75%"],
-        [1, "100%"],
-        [1.25, "125%"],
-        [1.5, "150%"],
-        [2, "200%"],
-      ];
+      const levels = [...ZOOM_LEVELS];
+      if (typeof zoom === "number" && !ZOOM_STEPS.includes(zoom)) {
+        levels.push([zoom, `${Math.round(zoom * 100)}%`]);
+        levels.sort(([a], [b]) => a - b);
+      }
+      return [["auto", "zoom.auto"], ...levels];
 
     case "text":
-      return [
-        [0.5, "50%"],
-        [0.75, "75%"],
-        [1, "100%"],
-        [1.25, "125%"],
-        [1.5, "150%"],
-        [2, "200%"],
-      ];
+      return ZOOM_LEVELS;
 
     case "grid":
       return [

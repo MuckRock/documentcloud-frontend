@@ -99,6 +99,11 @@ describe("Zoom", () => {
     ).toBeInTheDocument();
   });
 
+  it("includes an option for a non-pre-defined value", () => {
+    renderZoom("document", "0.8");
+    expect(screen.getByRole("combobox")).toHaveValue("0.8");
+  });
+
   it("labels the select for screen readers without showing the text", () => {
     renderZoom("document");
     expect(screen.getByLabelText("Zoom")).toBe(screen.getByRole("combobox"));
