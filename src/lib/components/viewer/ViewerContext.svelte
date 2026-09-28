@@ -26,6 +26,7 @@ layouts, stories, and tests.
   interface Props {
     document: Document;
     text?: Promise<Maybe<DocumentText>>;
+    notes: Note[];
     note?: Nullable<Note>;
     asset_url?: URL;
     embed?: boolean;
@@ -46,6 +47,7 @@ layouts, stories, and tests.
     document,
     text = new Promise(() => {}),
     note = null,
+    notes = [],
     asset_url = pdfUrl(document),
     embed = false,
     page = 1,
@@ -65,6 +67,7 @@ layouts, stories, and tests.
   // top-level reactive captures.
   function seedState() {
     viewer.document = document;
+    viewer.notes = notes;
     viewer.text = text;
     viewer.assetUrl = asset_url;
     viewer.embed = embed;

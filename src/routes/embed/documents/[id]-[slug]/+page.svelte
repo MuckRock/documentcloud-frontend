@@ -17,6 +17,7 @@
   );
   let asset_url = $derived(data.asset_url);
   let canonical_url = $derived(canonicalUrl(document).href);
+  let notes = $derived(data.notes ?? []);
 </script>
 
 <svelte:head>
@@ -38,7 +39,7 @@
   />
 </svelte:head>
 
-<ViewerContext {document} {mode} {text} {asset_url} embed>
+<ViewerContext {document} {mode} {text} {asset_url} {notes} embed>
   <EmbedLayout
     settings={data.settings}
     canonicalUrl={canonical_url}

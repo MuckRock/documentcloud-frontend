@@ -9,7 +9,7 @@ import loadDocument from "$lib/load/document";
 import * as documents from "$lib/api/documents";
 
 export async function load({ fetch, url, params, depends, setHeaders }) {
-  let { document, asset_url, mode } = await loadDocument({
+  let { document, asset_url, mode, notes } = await loadDocument({
     fetch,
     url,
     params,
@@ -32,6 +32,7 @@ export async function load({ fetch, url, params, depends, setHeaders }) {
 
   return {
     document,
+    notes,
     mode,
     asset_url,
     settings,

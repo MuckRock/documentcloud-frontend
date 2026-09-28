@@ -17,7 +17,7 @@ import {
 } from "@/config/config.js";
 import { DEFAULT_EXPAND } from "@/config/config.js";
 import { canonicalUrl } from "./documents";
-import { getApiResponse } from "../utils";
+import { getApiResponse, getAll } from "../utils/api";
 
 /**
  * Load notes from a single document from the API
@@ -37,6 +37,18 @@ export async function list(
   );
 
   return getApiResponse<Page<Note>>(resp);
+}
+
+/**
+ * Get all notes for a single document, with users expanded
+ */
+export async function all(doc_id: number | string, fetch = globalThis.fetch) {
+  const endpoint = new URL(
+    `documents/${doc_id}/notes/?expand=user`,
+    BASE_API_URL,
+  );
+
+  return getAll<Note>(endpoint, 100, fetch);
 }
 
 /**

@@ -22,7 +22,7 @@ export default async function load({ fetch, params, url }: Load) {
   // load doc and notes separately for caching
   const [doc, notes] = await Promise.all([
     documents.get(+params.id, fetch),
-    notesApi.list(+params.id, { per_page: 100 }, fetch),
+    notesApi.all(params.id, fetch),
   ]);
 
   if (doc.error) {
@@ -50,13 +50,9 @@ export default async function load({ fetch, params, url }: Load) {
     search = await documents.searchWithin(doc.data.id, query, undefined, fetch);
   }
 
-  const document = doc.data;
-  if (notes.data) {
-    document.notes = notes.data.results;
-  }
-
   return {
     document: doc.data,
+    notes,
     asset_url,
     mode,
     search,

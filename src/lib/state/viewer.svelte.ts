@@ -33,6 +33,7 @@ if (!pdfjs.GlobalWorkerOptions.workerSrc) {
 export class ViewerState {
   // document parts
   document: Nullable<Document> = $state(null);
+  notes: Note[] = $state([]); // loaded separately for performance
   text: Promise<Maybe<DocumentText>> = $state(new Promise(() => {}));
   assetUrl: Nullable<URL> = $state(null); // backend field is `asset_url`
   embed: boolean = $state(false);
