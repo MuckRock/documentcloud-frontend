@@ -30,6 +30,7 @@ export async function load({ fetch, url, params, depends, setHeaders }) {
     "cache-control": cache?.cacheControl ?? `public, max-age=${EMBED_MAX_AGE}`,
     "last-modified":
       cache?.lastModified ?? new Date(document.updated_at).toUTCString(),
+    "cache-tag": `doc-${document.id}`,
   });
 
   return {

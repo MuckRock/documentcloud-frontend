@@ -45,13 +45,18 @@ export async function load({
     parent(),
   ]);
 
-  if (!me) {
+  if (me) {
+    // logged-in pages must never be stored by a shared cache or reused after logout
+    setHeaders({ "cache-control": "private, no-store" });
+  } else {
     // prefer the API's cache policy, falling back to our defaults
     setHeaders({
       "cache-control":
         cache?.cacheControl ?? `public, max-age=${VIEWER_MAX_AGE}`,
       "last-modified":
         cache?.lastModified ?? new Date(document.updated_at).toUTCString(),
+      // matches the API's tag, which Cloudflare strips before we can read it
+      "cache-tag": `doc-${document.id}`,
     });
   }
 
