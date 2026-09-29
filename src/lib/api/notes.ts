@@ -48,7 +48,10 @@ export async function all(doc_id: number | string, fetch = globalThis.fetch) {
     BASE_API_URL,
   );
 
-  return getAll<Note>(endpoint, 100, fetch);
+  return getAll<Note>(endpoint, 100, fetch).catch((e) => {
+    console.warn(e);
+    return [];
+  });
 }
 
 /**

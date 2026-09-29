@@ -121,14 +121,7 @@ export async function get(
   fetch: typeof globalThis.fetch = globalThis.fetch,
 ): Promise<APIResponse<Document, null>> {
   const endpoint = new URL(`documents/${id}/`, BASE_API_URL);
-  const expand = [
-    "user",
-    "organization",
-    "projects",
-    "revisions",
-    "sections",
-    // "notes.user",
-  ];
+  const expand = ["user", "organization", "projects", "revisions", "sections"];
   endpoint.searchParams.set("expand", expand.join(","));
 
   const resp = await fetch(endpoint, { credentials: "include" }).catch(

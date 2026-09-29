@@ -97,7 +97,10 @@ export async function getAll<T>(
   fetch = globalThis.fetch,
 ): Promise<Array<T>> {
   url.searchParams.set("per_page", String(perPage));
-  const resp = await fetch(url, { credentials: "include" });
+  const resp = await fetch(url, { credentials: "include" }).catch(console.warn);
+  if (!resp || !resp.ok) {
+    return [];
+  }
   const data: Page<T> = await resp.json();
   const results = data.results;
   if (data.next) {
