@@ -3,6 +3,7 @@ import {
   isErrorCode,
   isRedirectCode,
   getApiResponse,
+  getCacheInfo,
   getPrivateAsset,
   getCsrfToken,
   normalizeErrors,
@@ -125,6 +126,44 @@ describe("getApiResponse", () => {
     const response = await getApiResponse();
     expect(response.data).toBeUndefined();
     expect(response.error?.status).toEqual(500);
+  });
+
+  it("passes cache headers through", async () => {
+    resp = new Response(JSON.stringify(body), {
+      status: 200,
+      headers: {
+        "Cache-Control": "public, max-age=300",
+        "Last-Modified": "Tue, 29 Sep 2026 12:00:00 GMT",
+        "X-Other": "ignored",
+      },
+    });
+    const response = await getApiResponse(resp);
+    expect(response.cache).toEqual({
+      cacheControl: "public, max-age=300",
+      lastModified: "Tue, 29 Sep 2026 12:00:00 GMT",
+    });
+    // must survive serialization
+    expect(JSON.parse(JSON.stringify(response)).cache).toEqual(response.cache);
+  });
+
+  it("omits cache when the API sends no cache headers", async () => {
+    resp = new Response(JSON.stringify(body), { status: 200 });
+    const response = await getApiResponse(resp);
+    expect(response.cache).toBeUndefined();
+  });
+});
+
+describe("getCacheInfo", () => {
+  it("handles missing headers", () => {
+    expect(getCacheInfo()).toBeUndefined();
+  });
+
+  it("returns whichever headers are present", () => {
+    const headers = new Headers({ "cache-control": "private" });
+    expect(getCacheInfo(headers)).toEqual({
+      cacheControl: "private",
+      lastModified: undefined,
+    });
   });
 });
 

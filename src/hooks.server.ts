@@ -8,6 +8,7 @@ import { sequence } from "@sveltejs/kit/hooks";
 
 import { DC_BASE } from "./config/config.js";
 import { log } from "$lib/utils/logging";
+import { CACHE_HEADERS } from "$lib/utils/api";
 
 export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
   if (request.url.startsWith(DC_BASE)) {
@@ -42,6 +43,8 @@ const language: Handle = async ({ event, resolve }) => {
 
   return resolve(event, {
     transformPageChunk: ({ html }) => html.replace("%lang%", lang),
+    // let universal loads read API cache headers during SSR
+    filterSerializedResponseHeaders: (name) => CACHE_HEADERS.includes(name),
   });
 };
 

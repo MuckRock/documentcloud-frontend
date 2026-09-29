@@ -1,5 +1,8 @@
 import type {
   APIResponse,
+  CacheInfo,
+  Document,
+  Note,
   Highlights,
   Maybe,
   ViewerMode,
@@ -15,10 +18,23 @@ interface Load {
   url: URL;
 }
 
+interface LoadResult {
+  document: Document;
+  notes: Note[] | never[];
+  cache: Maybe<CacheInfo>;
+  asset_url: URL;
+  mode: ViewerMode;
+  search: Maybe<APIResponse<Highlights, null>>;
+}
+
 /**
  * Load a document and its assets
  */
-export default async function load({ fetch, params, url }: Load) {
+export default async function load({
+  fetch,
+  params,
+  url,
+}: Load): Promise<LoadResult> {
   // load doc and notes separately for caching
   const [doc, notes] = await Promise.all([
     documents.get(params.id, fetch),
@@ -52,6 +68,7 @@ export default async function load({ fetch, params, url }: Load) {
 
   return {
     document: doc.data,
+    cache: doc.cache,
     notes,
     asset_url,
     mode,

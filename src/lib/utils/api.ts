@@ -1,5 +1,5 @@
 import type { NumericRange } from "@sveltejs/kit";
-import type { APIResponse, Maybe, Page } from "$lib/api/types";
+import type { APIResponse, CacheInfo, Maybe, Page } from "$lib/api/types";
 import { CSRF_COOKIE_NAME, MAX_PER_PAGE } from "@/config/config";
 
 export function isErrorCode(status: number): status is NumericRange<400, 599> {
@@ -10,6 +10,24 @@ export function isRedirectCode(
   status: number,
 ): status is NumericRange<300, 308> {
   return status >= 300 && status <= 308;
+}
+
+/**
+ * API headers we pass through. Also used by `filterSerializedResponseHeaders`,
+ * without which SvelteKit throws when reading them during SSR.
+ */
+export const CACHE_HEADERS = ["cache-control", "last-modified"];
+
+/**
+ * Pull cache headers out of an API response, if there are any.
+ */
+export function getCacheInfo(headers?: Headers): Maybe<CacheInfo> {
+  const cacheControl = headers?.get("cache-control") ?? undefined;
+  const lastModified = headers?.get("last-modified") ?? undefined;
+
+  if (!cacheControl && !lastModified) return;
+
+  return { cacheControl, lastModified };
 }
 
 /**
@@ -36,6 +54,11 @@ export async function getApiResponse<T, E = unknown>(
     };
 
     return response;
+  }
+
+  const cache = getCacheInfo(resp.headers);
+  if (cache) {
+    response.cache = cache;
   }
 
   if (isErrorCode(resp.status)) {

@@ -21,7 +21,7 @@ export async function load({
   setHeaders,
   data,
 }) {
-  const { document, notes, asset_url, mode } = await loadDocument({
+  const { document, notes, asset_url, mode, cache } = await loadDocument({
     fetch,
     params,
     url,
@@ -46,9 +46,12 @@ export async function load({
   ]);
 
   if (!me) {
+    // prefer the API's cache policy, falling back to our defaults
     setHeaders({
-      "cache-control": `public, max-age=${VIEWER_MAX_AGE}`,
-      "last-modified": new Date(document.updated_at).toUTCString(),
+      "cache-control":
+        cache?.cacheControl ?? `public, max-age=${VIEWER_MAX_AGE}`,
+      "last-modified":
+        cache?.lastModified ?? new Date(document.updated_at).toUTCString(),
     });
   }
 

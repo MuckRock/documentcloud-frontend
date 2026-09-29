@@ -9,7 +9,7 @@ import loadDocument from "$lib/load/document";
 import * as documents from "$lib/api/documents";
 
 export async function load({ fetch, url, params, depends, setHeaders }) {
-  let { document, asset_url, mode, notes } = await loadDocument({
+  let { document, asset_url, mode, notes, cache } = await loadDocument({
     fetch,
     url,
     params,
@@ -25,9 +25,11 @@ export async function load({ fetch, url, params, depends, setHeaders }) {
 
   let settings = getEmbedSettings(url.searchParams, documentDefaults);
 
+  // prefer the API's cache policy, falling back to our defaults
   setHeaders({
-    "cache-control": `public, max-age=${EMBED_MAX_AGE}`,
-    "last-modified": new Date(document.updated_at).toUTCString(),
+    "cache-control": cache?.cacheControl ?? `public, max-age=${EMBED_MAX_AGE}`,
+    "last-modified":
+      cache?.lastModified ?? new Date(document.updated_at).toUTCString(),
   });
 
   return {

@@ -51,11 +51,20 @@ export interface APIError<E> {
 }
 
 /**
- * Wrap an API response so we can pass errors along
+ * Cache headers from the backend API, kept as plain strings so they serialize
+ */
+export interface CacheInfo {
+  cacheControl?: string;
+  lastModified?: string;
+}
+
+/**
+ * Wrap an API response so we can pass errors and cache headers along
  */
 export interface APIResponse<T, E = unknown> {
   data?: T;
   error?: APIError<E>;
+  cache?: CacheInfo;
 }
 
 export interface User {
