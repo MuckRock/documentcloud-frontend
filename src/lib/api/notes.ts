@@ -25,7 +25,6 @@ import { getApiResponse, getAll } from "../utils/api";
  */
 export async function list(
   doc_id: number,
-  options: SearchOptions = {},
   fetch = globalThis.fetch,
 ): Promise<APIResponse<Page<Note>>> {
   const endpoint = new URL(`documents/${doc_id}/notes/`, BASE_API_URL);
