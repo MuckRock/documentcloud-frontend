@@ -21,7 +21,7 @@ interface Load {
 export default async function load({ fetch, params, url }: Load) {
   // load doc and notes separately for caching
   const [doc, notes] = await Promise.all([
-    documents.get(+params.id, fetch),
+    documents.get(params.id, fetch),
     notesApi.all(params.id, fetch),
   ]);
 

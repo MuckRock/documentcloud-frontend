@@ -5,7 +5,6 @@ import type {
   Note,
   Nullable,
   Page,
-  SearchOptions,
   ValidationError,
 } from "./types";
 
