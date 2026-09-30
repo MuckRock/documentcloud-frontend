@@ -104,9 +104,9 @@
         {scrollRef}
         {startMargin}
       >
-        {#snippet children(document)}
+        {#snippet children(document, i)}
           <div
-            class="result-row"
+            class={["result-row", i === results.length - 1 && "last"]}
             class:selected={search.selectedIds.has(String(document.id))}
           >
             {#if !embed}
@@ -181,6 +181,10 @@
     gap: 0.625rem;
     align-items: flex-start;
     padding-bottom: 0.5rem;
+  }
+
+  .result-row:not(.last) {
+    padding-bottom: 1.5rem;
   }
 
   .result-row.selected {
