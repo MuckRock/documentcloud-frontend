@@ -73,6 +73,7 @@
   const search = $derived(searchProp ?? getSearchResults());
 
   let footerToolbarWidth: number = $state(800);
+  let scrollRef = $state<HTMLDivElement>();
 
   function selectAll(e: Event) {
     const target = e.target as HTMLInputElement;
@@ -96,7 +97,7 @@
   });
 </script>
 
-<div class="container">
+<div class="container" bind:this={scrollRef}>
   <Dropzone {onDrop} disabled={!canUploadFiles(me)}>
     {#snippet children({ active, disabled })}
       <div class:active class:disabled class="dropOverlay">
@@ -140,7 +141,7 @@
             </Flex>
           {/if}
         {/snippet}
-        <ResultsList {search} {visibleFieldsOverride} auto>
+        <ResultsList {search} {visibleFieldsOverride} {scrollRef} auto>
           {#snippet start()}
             {#if me && !canUploadFiles(me)}
               <Unverified user={me} />
@@ -205,6 +206,7 @@
   .container {
     width: 100%;
     height: 100%;
+    overflow-y: auto;
   }
 
   label.select-all {
