@@ -53,7 +53,6 @@
     onNext?: () => Promise<Maybe<APIError<any>>>; // can return an error
     visibleFieldsOverride?: VisibleFields;
     scrollRef?: HTMLElement;
-    startMargin?: number;
   }
 
   let {
@@ -65,11 +64,34 @@
     search,
     visibleFieldsOverride,
     scrollRef,
-    startMargin: outsideStartMargin = 0,
   }: Props = $props();
 
-  // Height of the element before the results list
+  let listEl = $state<HTMLElement>();
   let startMargin = $state(0);
+
+  $effect(() => {
+    if (!listEl || !scrollRef) return;
+
+    function measure() {
+      startMargin =
+        listEl!.getBoundingClientRect().top -
+        scrollRef!.getBoundingClientRect().top -
+        scrollRef!.clientTop +
+        scrollRef!.scrollTop;
+    }
+
+    const observer = new ResizeObserver(measure);
+    for (
+      let el = listEl.parentElement;
+      el && el !== scrollRef;
+      el = el.parentElement
+    ) {
+      observer.observe(el);
+    }
+    observer.observe(scrollRef);
+
+    return () => observer.disconnect();
+  });
 
   // we can pass in an onNext callback or ust use the SearchResultsState
   // this is likely just for testing and storybook, and may go away if we don't need it
@@ -93,65 +115,63 @@
 
 <div class="container" data-sveltekit-preload-data={preload}>
   <Flex direction="column" gap={1}>
-    {#if start}
-      <div bind:clientHeight={startMargin}>
-        {@render start()}
-      </div>
-    {/if}
+    {@render start?.()}
 
     {#if hasResults}
-      <Virtualizer
-        data={results}
-        getKey={({ id }) => id}
-        {scrollRef}
-        startMargin={startMargin + outsideStartMargin}
-      >
-        {#snippet children(document, i)}
-          <div
-            class={["result-row", i === results.length - 1 && "last"]}
-            class:selected={search.selectedIds.has(String(document.id))}
-          >
-            {#if !embed}
-              <label>
-                <span class="sr-only">{$_("documents.select")}</span>
-                <input
-                  type="checkbox"
-                  checked={search.selectedIds.has(String(document.id))}
-                  onchange={(e) => {
-                    const id = String(document.id);
-                    if (e.currentTarget.checked) {
-                      search.selectedIds.add(id);
-                    } else {
-                      search.selectedIds.delete(id);
-                    }
-                  }}
-                  value={document.id}
-                />
-              </label>
-            {/if}
-            <div class="result-content">
-              <DocumentListItem
-                {document}
-                visibleFields={visibleFieldsOverride ?? $visibleFields}
-              />
-              {#if document.highlights}
-                <PageHighlights
-                  {document}
-                  onCollapseAll={collapseAll}
-                  onExpandAll={expandAll}
-                />
+      <div bind:this={listEl}>
+        <Virtualizer
+          data={results}
+          getKey={({ id }) => id}
+          {scrollRef}
+          {startMargin}
+        >
+          {#snippet children(document, i)}
+            <div
+              class={["result-row", i === results.length - 1 && "last"]}
+              class:selected={search.selectedIds.has(String(document.id))}
+            >
+              {#if !embed}
+                <label>
+                  <span class="sr-only">{$_("documents.select")}</span>
+                  <input
+                    type="checkbox"
+                    checked={search.selectedIds.has(String(document.id))}
+                    onchange={(e) => {
+                      const id = String(document.id);
+                      if (e.currentTarget.checked) {
+                        search.selectedIds.add(id);
+                      } else {
+                        search.selectedIds.delete(id);
+                      }
+                    }}
+                    value={document.id}
+                  />
+                </label>
               {/if}
-              {#if document.note_highlights}
-                <NoteHighlights
+              <div class="result-content">
+                <DocumentListItem
                   {document}
-                  onCollapseAll={collapseAll}
-                  onExpandAll={expandAll}
+                  visibleFields={visibleFieldsOverride ?? $visibleFields}
                 />
-              {/if}
+                {#if document.highlights}
+                  <PageHighlights
+                    {document}
+                    onCollapseAll={collapseAll}
+                    onExpandAll={expandAll}
+                  />
+                {/if}
+                {#if document.note_highlights}
+                  <NoteHighlights
+                    {document}
+                    onCollapseAll={collapseAll}
+                    onExpandAll={expandAll}
+                  />
+                {/if}
+              </div>
             </div>
-          </div>
-        {/snippet}
-      </Virtualizer>
+          {/snippet}
+        </Virtualizer>
+      </div>
     {:else if search.loading}
       <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
     {:else}

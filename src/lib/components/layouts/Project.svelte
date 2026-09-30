@@ -23,7 +23,6 @@
   let { project, users, query = "" }: Props = $props();
 
   let scrollRef = $state<HTMLElement>();
-  let startMargin = $state(0);
 
   let combinedQuery = $derived(
     `+project:${project.slug}-${project.id} ${query}`.trim(),
@@ -39,11 +38,9 @@
 
   {#snippet content()}
     <article bind:this={scrollRef}>
-      <header bind:clientHeight={startMargin}>
-        <ProjectHeader {project} />
-      </header>
+      <header><ProjectHeader {project} /></header>
       <main>
-        <DocumentBrowser {project} {query} {scrollRef} {startMargin} />
+        <DocumentBrowser {project} {query} {scrollRef} />
       </main>
     </article>
   {/snippet}

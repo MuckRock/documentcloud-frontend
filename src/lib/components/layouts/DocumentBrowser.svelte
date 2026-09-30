@@ -60,7 +60,6 @@
     project?: Nullable<Project>;
     visibleFieldsOverride?: VisibleFields;
     scrollRef?: HTMLElement;
-    startMargin?: number;
   }
 
   let {
@@ -69,7 +68,6 @@
     project = null,
     visibleFieldsOverride,
     scrollRef: scrollRefProp,
-    startMargin,
   }: Props = $props();
 
   // this lets us pass in non-global search results, for testing
@@ -146,13 +144,7 @@
             </Flex>
           {/if}
         {/snippet}
-        <ResultsList
-          {search}
-          {visibleFieldsOverride}
-          {scrollRef}
-          {startMargin}
-          auto
-        >
+        <ResultsList {search} {visibleFieldsOverride} {scrollRef} auto>
           {#snippet start()}
             {#if me && !canUploadFiles(me)}
               <Unverified user={me} />
