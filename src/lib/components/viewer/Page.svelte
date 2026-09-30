@@ -128,7 +128,12 @@ Must be a child of a ViewerContext
     </h4>
 
     {#if !viewer.embed}
-      <PageActions {document} {page_number} pageWidth={width} />
+      <PageActions
+        {document}
+        notes={viewer.notes}
+        {page_number}
+        pageWidth={width}
+      />
     {/if}
   </header>
   {@render children?.({ id, href, visible, documentHref })}

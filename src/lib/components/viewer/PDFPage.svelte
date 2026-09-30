@@ -252,7 +252,8 @@ Selectable text can be rendered in one of two ways:
     ].filter((r) => r.page_number === page_number - 1),
   );
   let page_level_notes = $derived(
-    getNotes(document)[page_number - 1]?.filter((n) => isPageLevel(n)) ?? [],
+    getNotes(viewer.notes)[page_number - 1]?.filter((n) => isPageLevel(n)) ??
+      [],
   );
 </script>
 

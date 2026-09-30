@@ -7,7 +7,9 @@ export async function load({ parent, setHeaders }) {
     { href: "/add-ons/", title: "Add-Ons" },
   ]);
 
-  if (!me) {
+  if (me) {
+    setHeaders({ "cache-control": "private, no-store" });
+  } else {
     setHeaders({
       "cache-control": `public, max-age=${VIEWER_MAX_AGE}`,
     });

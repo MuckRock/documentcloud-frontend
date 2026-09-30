@@ -13,11 +13,13 @@
     render: template,
   });
 
-  const document = doc as Document;
+  // Notes load separately from the document, so split them off the fixture.
+  const { notes = [], ...document } = doc as Document;
   const url = new URL(pdfFile, import.meta.url);
 
   let args = {
     document,
+    notes,
     asset_url: url,
   };
 </script>
@@ -28,8 +30,8 @@
   </ViewerContext>
 {/snippet}
 
-<Story name="notes using images" args={{ document }} />
+<Story name="notes using images" args={{ document, notes }} />
 
 <Story name="notes using a PDF file" {args} />
 
-<Story name="no notes" args={{ document: { ...document, notes: [] } }} />
+<Story name="no notes" args={{ document, notes: [] }} />

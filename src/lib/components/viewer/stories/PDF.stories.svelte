@@ -16,7 +16,8 @@
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import redacted from "@/test/fixtures/documents/redactions.json";
 
-  const document = doc as Document;
+  // Notes load separately from the document, so split them off the fixture.
+  const { notes = [], ...document } = doc as Document;
 
   const { Story } = defineMeta({
     title: "Viewer / PDF Viewer",
@@ -39,10 +40,8 @@
 
   let args = {
     context: {
-      document: {
-        ...document,
-        notes: [],
-      },
+      document,
+      notes: [],
       mode: "document",
       asset_url: pdfUrl(document),
     },
@@ -64,7 +63,7 @@
 
 <Story
   name="With Notes"
-  args={{ ...args, context: { ...args.context, document } }}
+  args={{ ...args, context: { ...args.context, notes } }}
 />
 
 <Story
@@ -123,16 +122,13 @@
     ...args,
     context: {
       ...args.context,
-      document: { ...document, notes: [], page_spec: undefined },
+      document: { ...document, page_spec: undefined },
     },
   }}
 />
 
 <Story name="Redactions in-progress" asChild>
-  <ViewerContext
-    document={{ ...document, notes: [] }}
-    asset_url={pdfUrl(document)}
-  >
+  <ViewerContext {document} notes={[]} asset_url={pdfUrl(document)}>
     <div style="width: {IMAGE_WIDTHS_MAP.get('large')}px;">
       <button on:click={() => ($pending[document.id] = redacted)}>
         Show redactions
@@ -148,7 +144,7 @@
     ...args,
     context: {
       ...args.context,
-      document: { ...document, notes: [], sections },
+      document: { ...document, sections },
     },
   }}
 />

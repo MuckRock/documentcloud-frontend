@@ -17,7 +17,7 @@
 <!-- This toolbar reads the viewer state, so it needs a provider. `loadPdf` is
      off because the toolbar renders from state alone and never draws a page. -->
 {#snippet template()}
-  <ViewerContext {document} loadPdf={false}>
+  <ViewerContext {document} notes={[]} loadPdf={false}>
     <div class="vh justify-end">
       <PaginationToolbar />
     </div>

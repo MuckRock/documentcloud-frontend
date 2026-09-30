@@ -3,7 +3,6 @@ import type {
   BBox,
   Document,
   Note,
-  NoteResults,
   Nullable,
   Page,
   ValidationError,
@@ -17,12 +16,11 @@ import {
 } from "@/config/config.js";
 import { DEFAULT_EXPAND } from "@/config/config.js";
 import { canonicalUrl } from "./documents";
-import { getApiResponse } from "../utils";
+import { getApiResponse, getAll } from "../utils/api";
 
 /**
  * Load notes from a single document from the API
  * @example https://api.www.documentcloud.org/api/documents/2622/notes/
- * @deprecated
  */
 export async function list(
   doc_id: number,
@@ -37,6 +35,21 @@ export async function list(
   );
 
   return getApiResponse<Page<Note>>(resp);
+}
+
+/**
+ * Get all notes for a single document, with users expanded
+ */
+export async function all(doc_id: number | string, fetch = globalThis.fetch) {
+  const endpoint = new URL(
+    `documents/${doc_id}/notes/?expand=user`,
+    BASE_API_URL,
+  );
+
+  return getAll<Note>(endpoint, 100, fetch).catch((e) => {
+    console.warn(e);
+    return [];
+  });
 }
 
 /**

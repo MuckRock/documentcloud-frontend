@@ -25,7 +25,9 @@ export async function load({ url, fetch, data, parent, setHeaders }) {
 
   const { me } = await parent();
 
-  if (!me) {
+  if (me) {
+    setHeaders({ "cache-control": "private, no-store" });
+  } else {
     setHeaders({
       "cache-control": `public, max-age=${VIEWER_MAX_AGE}`,
     });

@@ -16,12 +16,13 @@
     parameters: { layout: "centered" },
   });
 
-  const document = doc as Document;
+  // Notes load separately from the document, so split them off the fixture.
+  const { notes = [], ...document } = doc as Document;
   const sizes = pageSizes(document.page_spec!);
 </script>
 
 <Story name="Reading" asChild>
-  <ViewerContext {document}>
+  <ViewerContext {document} {notes}>
     <Flex class="pages" direction="column" gap={1}>
       {#each sizes as [width, height], page_number}
         <Page page_number={page_number + 1}>
@@ -35,7 +36,7 @@
 </Story>
 
 <Story name="Writing" asChild>
-  <ViewerContext {document} mode="annotating">
+  <ViewerContext {document} {notes} mode="annotating">
     <Flex class="pages" direction="column" gap={1}>
       {#each sizes as [width, height], page_number}
         <Page page_number={page_number + 1}>

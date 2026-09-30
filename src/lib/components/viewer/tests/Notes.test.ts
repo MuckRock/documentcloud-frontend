@@ -38,7 +38,7 @@ function doc(overrides: Partial<Document>): Document {
 describe("Notes", () => {
   it("prompts editors to annotate when there are no notes", () => {
     renderInViewer(Notes, {
-      context: { document: doc({ notes: [], edit_access: true }) },
+      context: { document: doc({ edit_access: true }), notes: [] },
     });
 
     // the empty state offers a call-to-action link into annotating mode
@@ -49,7 +49,7 @@ describe("Notes", () => {
 
   it("shows no annotate CTA for viewers without edit access", () => {
     renderInViewer(Notes, {
-      context: { document: doc({ notes: [], edit_access: false }) },
+      context: { document: doc({ edit_access: false }), notes: [] },
     });
 
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
@@ -59,7 +59,8 @@ describe("Notes", () => {
     const sample = notes.slice(0, 3);
     const { container } = renderInViewer(Notes, {
       context: {
-        document: doc({ notes: sample, edit_access: false }),
+        document: doc({ edit_access: false }),
+        notes: sample,
         embed: true, // skip the note footer (actions/metadata) to keep it light
       },
     });

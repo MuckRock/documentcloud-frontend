@@ -14,7 +14,7 @@
     documentDefaults,
     type DocumentSettings,
   } from "$lib/utils/embedConfig";
-  import { getUserName, isOrg, isUser } from "$lib/api/accounts";
+  import { isOrg } from "$lib/api/accounts";
   import { canonicalUrl, userOrgString } from "$lib/api/documents";
   import { getViewerState } from "$lib/state/viewer.svelte";
 

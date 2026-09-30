@@ -50,7 +50,9 @@ export async function load({ fetch, cookies, setHeaders }) {
     getTrendingDocuments(fetch),
   ]);
 
-  if (!me) {
+  if (me) {
+    setHeaders({ "cache-control": "private, no-store" });
+  } else {
     setHeaders({
       "cache-control": `public, max-age=${PAGE_MAX_AGE}`,
     });

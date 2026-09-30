@@ -108,7 +108,12 @@
       {#snippet title()}
         <h1>{$_("dialog.share")}</h1>
       {/snippet}
-      <Share document={doc} note_id={note.id} currentTab="note" />
+      <Share
+        document={doc}
+        notes={viewer.notes}
+        note_id={note.id}
+        currentTab="note"
+      />
     </Modal>
   </Portal>
 {/if}

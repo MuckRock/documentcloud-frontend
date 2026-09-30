@@ -12,7 +12,6 @@ import * as documents from "$lib/api/documents";
 import { breadcrumbTrail } from "$lib/utils/index";
 import loadDocument from "$lib/load/document";
 
-/** @type {import('./$types').PageLoad} */
 export async function load({
   fetch,
   params,
@@ -22,7 +21,7 @@ export async function load({
   setHeaders,
   data,
 }) {
-  const { document, asset_url, mode } = await loadDocument({
+  const { document, notes, asset_url, mode, cache } = await loadDocument({
     fetch,
     params,
     url,
@@ -46,16 +45,25 @@ export async function load({
     parent(),
   ]);
 
-  if (!me) {
+  if (me) {
+    // logged-in pages must never be stored by a shared cache or reused after logout
+    setHeaders({ "cache-control": "private, no-store" });
+  } else {
+    // prefer the API's cache policy, falling back to our defaults
     setHeaders({
-      "cache-control": `public, max-age=${VIEWER_MAX_AGE}`,
-      "last-modified": new Date(document.updated_at).toUTCString(),
+      "cache-control":
+        cache?.cacheControl ?? `public, max-age=${VIEWER_MAX_AGE}`,
+      "last-modified":
+        cache?.lastModified ?? new Date(document.updated_at).toUTCString(),
+      // matches the API's tag, which Cloudflare strips before we can read it
+      "cache-tag": `doc-${document.id}`,
     });
   }
 
   return {
     ...data,
     document,
+    notes,
     mode,
     asset_url,
     breadcrumbs,

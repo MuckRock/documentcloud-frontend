@@ -1,14 +1,16 @@
 <script module lang="ts">
-  import type { Access, Document } from "$lib/api/types";
+  import type { Access, Document, Note } from "$lib/api/types";
 
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import Share from "../Share.svelte";
   import Toaster from "$lib/components/layouts/Toaster.svelte";
 
   import * as documents from "$lib/api/documents";
+  import * as notesApi from "$lib/api/notes";
   import { APP_URL } from "@/config/config.js";
   import doc from "@/test/fixtures/documents/document-expanded.json";
-  const document = doc as Document;
+  // Notes load separately from the document, so split them off the fixture.
+  const { notes = [], ...document } = doc as Document;
 
   // The fixture is a real production document. It only exists in whichever
   // environment its canonical URL points at, so compare that origin against
@@ -38,12 +40,9 @@
 
   // Every note on the fixture is public, so restrict the first one — the one the
   // note tab selects by default — to see the note access warnings.
-  function withNote(access: Access, edit_access = false): Document {
-    const [first, ...rest] = document.notes ?? [];
-    return {
-      ...document,
-      notes: [{ ...first!, access, edit_access }, ...rest],
-    };
+  function withNote(access: Access, edit_access = false): Note[] {
+    const [first, ...rest] = notes;
+    return [{ ...first!, access, edit_access }, ...rest];
   }
 
   const { Story } = defineMeta({
@@ -64,19 +63,28 @@
 
 {#snippet template({ documentId, ...args })}
   {#if documentId}
-    {#await documents.get(documentId)}
+    {#await Promise.all([documents.get(documentId), notesApi.all(documentId)])}
       <p>Loading document {documentId}…</p>
-    {:then response}
+    {:then [response, notes]}
       {#if response.data}
         <!-- Real document from the current environment: drop the mock so the
              iframe loads the live embed for the matching environment. -->
-        <Share {...args} document={response.data} previewSrcdoc={undefined} />
+        <Share
+          {...args}
+          document={response.data}
+          {notes}
+          previewSrcdoc={undefined}
+        />
       {:else}
         <p>Could not load document {documentId}.</p>
       {/if}
     {/await}
   {:else}
-    <Share {...args} document={args.document ?? document} />
+    <Share
+      {...args}
+      document={args.document ?? document}
+      notes={args.notes ?? notes}
+    />
   {/if}
   <Toaster />
 {/snippet}
@@ -109,28 +117,29 @@
 
 <Story name="Page" args={{ document, currentTab: "page" }} />
 
-<Story name="Note" args={{ document, currentTab: "note" }} />
+<Story name="Note" args={{ document, notes, currentTab: "note" }} />
 
 <Story
   name="Private Note"
-  args={{ document: withNote("private"), currentTab: "note" }}
+  args={{ document, notes: withNote("private"), currentTab: "note" }}
 />
 
 <Story
   name="Collaborators Note"
-  args={{ document: withNote("organization"), currentTab: "note" }}
+  args={{ document, notes: withNote("organization"), currentTab: "note" }}
 />
 
 <Story
   name="Private Note with Edit Access"
-  args={{ document: withNote("private", true), currentTab: "note" }}
+  args={{ document, notes: withNote("private", true), currentTab: "note" }}
 />
 
 <!-- The note is public but the document isn't, so the document is what needs fixing. -->
 <Story
   name="Public Note on a Private Document"
   args={{
-    document: { ...withNote("public"), access: "private", edit_access: true },
+    document: { ...document, access: "private", edit_access: true },
+    notes: withNote("public"),
     currentTab: "note",
   }}
 />

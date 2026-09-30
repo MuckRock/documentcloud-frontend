@@ -29,7 +29,7 @@
 </script>
 
 {#snippet template(args: ComponentProps<typeof NoteExcerpt>)}
-  <ViewerContext {document} asset_url={pdfUrl(document)}>
+  <ViewerContext {document} {notes} asset_url={pdfUrl(document)}>
     <NoteExcerpt {...args} />
   </ViewerContext>
 {/snippet}

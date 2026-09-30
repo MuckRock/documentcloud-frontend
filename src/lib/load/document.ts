@@ -1,5 +1,8 @@
 import type {
   APIResponse,
+  CacheInfo,
+  Document,
+  Note,
   Highlights,
   Maybe,
   ViewerMode,
@@ -7,6 +10,7 @@ import type {
 
 import { error } from "@sveltejs/kit";
 import * as documents from "$lib/api/documents";
+import * as notesApi from "$lib/api/notes";
 
 interface Load {
   fetch: typeof globalThis.fetch;
@@ -14,24 +18,41 @@ interface Load {
   url: URL;
 }
 
+interface LoadResult {
+  document: Document;
+  notes: Note[] | never[];
+  cache: Maybe<CacheInfo>;
+  asset_url: URL;
+  mode: ViewerMode;
+  search: Maybe<APIResponse<Highlights, null>>;
+}
+
 /**
  * Load a document and its assets
  */
-export default async function load({ fetch, params, url }: Load) {
-  const { data: document, error: err } = await documents.get(+params.id, fetch);
+export default async function load({
+  fetch,
+  params,
+  url,
+}: Load): Promise<LoadResult> {
+  // load doc and notes separately for caching
+  const [doc, notes] = await Promise.all([
+    documents.get(params.id, fetch),
+    notesApi.all(params.id, fetch),
+  ]);
 
-  if (err) {
-    console.warn(err.status, url.href);
-    return error(err.status, err.message);
+  if (doc.error) {
+    console.warn(doc.error.status, url.href);
+    return error(doc.error.status, doc.error.message);
   }
 
-  if (!document) {
+  if (!doc.data) {
     return error(404, "Document not found");
   }
 
   let mode: ViewerMode =
     (url.searchParams.get("mode") as ViewerMode) ?? "document";
-  const asset_url = await documents.assetUrl(document, fetch);
+  const asset_url = await documents.assetUrl(doc.data, fetch);
 
   if (!documents.MODES.has(mode)) {
     mode = documents.MODES[0];
@@ -42,11 +63,13 @@ export default async function load({ fetch, params, url }: Load) {
   let search: Maybe<APIResponse<Highlights, null>> = undefined;
   const query = url.searchParams.get("q");
   if (query) {
-    search = await documents.searchWithin(document.id, query, undefined, fetch);
+    search = await documents.searchWithin(doc.data.id, query, undefined, fetch);
   }
 
   return {
-    document,
+    document: doc.data,
+    cache: doc.cache,
+    notes,
     asset_url,
     mode,
     search,

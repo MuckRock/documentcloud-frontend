@@ -117,13 +117,11 @@ export function pageSizes(pageSpec: string): [width: number, height: number][] {
 /**
  * Index notes by page
  */
-export function getNotes(document: Document): Record<number, Note[]> {
-  return (
-    document.notes?.reduce<Record<number, Note[]>>((m, note) => {
-      m[note.page_number] = (m[note.page_number] ?? []).concat(note);
-      return m;
-    }, {}) ?? {}
-  );
+export function getNotes(notes: Note[]): Record<number, Note[]> {
+  return notes.reduce<Record<number, Note[]>>((m, note) => {
+    m[note.page_number] = (m[note.page_number] ?? []).concat(note);
+    return m;
+  }, {});
 }
 
 /**

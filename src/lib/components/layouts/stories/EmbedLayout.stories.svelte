@@ -12,7 +12,8 @@
   import { canonicalUrl, pdfUrl } from "$lib/api/documents";
   import ViewerContext from "../../viewer/ViewerContext.svelte";
 
-  const document = doc as Document;
+  // Notes load separately from the document, so split them off the fixture.
+  const { notes = [], ...document } = doc as Document;
   const text = Promise.resolve(txt);
 
   const { Story } = defineMeta({
@@ -38,7 +39,13 @@
 <Story name="With Document" {args}>
   {#snippet template(args: Args)}
     <div class="vh">
-      <ViewerContext {document} {text} asset_url={pdfUrl(document)} embed>
+      <ViewerContext
+        {document}
+        {notes}
+        {text}
+        asset_url={pdfUrl(document)}
+        embed
+      >
         <EmbedLayout
           settings={args.settings}
           canonicalUrl={canonicalUrl(document).href}

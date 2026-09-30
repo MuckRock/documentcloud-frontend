@@ -1,5 +1,10 @@
 <script module lang="ts">
-  import type { Document, DocumentText, ViewerMode } from "$lib/api/types";
+  import type {
+    Document,
+    DocumentText,
+    Note,
+    ViewerMode,
+  } from "$lib/api/types";
 
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import ViewerContext from "../ViewerContext.svelte";
@@ -11,7 +16,9 @@
   import { simulatePDF403Error } from "@/test/handlers/viewer";
   import { pdfUrl } from "$lib/api/documents";
 
-  const document = doc as Document;
+  // Notes load separately from the document, so split them off the fixture.
+  const { notes = [], ...document } = doc as Document;
+  const editableNotes = notes.map((note) => ({ ...note, edit_access: true }));
 
   const { Story } = defineMeta({
     title: "Viewer / Viewer",
@@ -25,11 +32,13 @@
 
   let args: {
     document: Document;
+    notes: Note[];
     text: DocumentText;
     mode: ViewerMode;
     embed: boolean;
   } = {
     document,
+    notes,
     text: txt,
     mode: "document",
     embed: false,
@@ -48,11 +57,8 @@
   name="Edit Access"
   args={{
     ...args,
-    document: {
-      ...document,
-      edit_access: true,
-      notes: document.notes?.map((note) => ({ ...note, edit_access: true })),
-    },
+    document: { ...document, edit_access: true },
+    notes: editableNotes,
   }}
 />
 <Story
@@ -73,11 +79,8 @@
   args={{
     ...args,
     mode: "annotating",
-    document: {
-      ...document,
-      edit_access: true,
-      notes: document.notes?.map((note) => ({ ...note, edit_access: true })),
-    },
+    document: { ...document, edit_access: true },
+    notes: editableNotes,
   }}
 />
 <Story
@@ -97,11 +100,8 @@
   args={{
     ...args,
     mode: "search",
-    document: {
-      ...document,
-      edit_access: true,
-      notes: document.notes?.map((note) => ({ ...note, edit_access: true })),
-    },
+    document: { ...document, edit_access: true },
+    notes: editableNotes,
   }}
 />
 

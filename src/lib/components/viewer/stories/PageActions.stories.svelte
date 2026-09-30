@@ -5,7 +5,8 @@
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
 
-  const document = doc as Document;
+  // Notes load separately from the document, so split them off the fixture.
+  const { notes = [], ...document } = doc as Document;
   // The fixture has `edit_access: false`; override to expose the
   // note/section actions that only appear for editors.
   const editable = { ...document, edit_access: true } as Document;
@@ -25,6 +26,7 @@
   let args = {
     props: {
       document,
+      notes,
       page_number: 1,
       pageWidth: WIDE,
     },

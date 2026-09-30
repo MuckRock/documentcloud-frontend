@@ -2,9 +2,10 @@ import type { ViewerMode } from "$lib/api/types";
 
 import { describe, it, test, expect } from "vitest";
 import { document } from "@/test/fixtures/documents";
-import { note } from "@/test/fixtures/notes";
+import { note, notePage } from "@/test/fixtures/notes";
 import {
   fitPage,
+  getNotes,
   getViewerHref,
   pageSizes,
   sortedSections,
@@ -312,5 +313,24 @@ describe("sortedSections", () => {
     sortedSections(doc);
 
     expect(doc.sections.map((s) => s.page_number)).toEqual([2, 1]);
+  });
+});
+
+describe("getNotes", () => {
+  const notes = notePage.results;
+
+  it("indexes notes by zero-indexed page number", () => {
+    const byPage = getNotes(notes);
+    const pages = new Set(notes.map((n) => n.page_number));
+
+    expect(Object.keys(byPage).map(Number).sort()).toEqual([...pages].sort());
+    for (const [page, pageNotes] of Object.entries(byPage)) {
+      expect(pageNotes.every((n) => n.page_number === +page)).toBe(true);
+    }
+    expect(Object.values(byPage).flat()).toHaveLength(notes.length);
+  });
+
+  it("returns an empty index when there are no notes", () => {
+    expect(getNotes([])).toEqual({});
   });
 });

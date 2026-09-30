@@ -18,8 +18,8 @@
   import cjiPdf from "@/test/fixtures/documents/examples/signed-fair-fight-foundation-settlement-2024.pdf";
   import { pdfUrl } from "$lib/api/documents";
 
-  const document = doc as Document;
-  const notes = document.notes as NoteType[];
+  // Notes load separately from the document, so split them off the fixture.
+  const { notes = [], ...document } = doc as Document;
   const note0 = notes[0]!;
   const note1 = notes[1]!;
   const note2 = notes[2]!;
@@ -37,9 +37,11 @@
   Within a month-and-a-half, <a href="https://en.wikipedia.org/wiki/George_Osborne">George Osborne</a>, the country's new 38 year-old Chancellor of the Exchequor (i.e. the country's Finance Minister)
   will present a budget to Parliament that calls for emergency actions to reduce Britain's forecast $280 billion deficit.`;
 
+  const { notes: cjiNotes = [], ...cjiDocument } = cji as Document;
   const CJI = {
-    document: cji as Document,
-    note: cji.notes.find((n) => n.id === 2587355) as NoteType,
+    document: cjiDocument,
+    notes: cjiNotes,
+    note: cjiNotes.find((n) => n.id === 2587355)!,
     url: new URL(cjiPdf, import.meta.url),
   };
 
@@ -56,7 +58,7 @@
 </script>
 
 {#snippet template({ asset_url = pdfUrl(document), ...args }: Args)}
-  <ViewerContext {document} {asset_url}>
+  <ViewerContext {document} {notes} {asset_url}>
     <Note {...args} />
   </ViewerContext>
 {/snippet}
@@ -82,7 +84,7 @@
 />
 
 <Story name="Excerpt from rotated page" asChild>
-  <ViewerContext document={CJI.document} asset_url={CJI.url}>
+  <ViewerContext document={CJI.document} notes={CJI.notes} asset_url={CJI.url}>
     <Note document={CJI.document} note={CJI.note} scale={2} />
   </ViewerContext>
 </Story>

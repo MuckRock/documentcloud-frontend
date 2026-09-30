@@ -19,6 +19,7 @@
       ? documents.text(document)
       : Promise.resolve({ pages: [], updated: 0 }),
   );
+  let notes = $derived(data.notes);
   let asset_url = $derived(data.asset_url);
   let canonical_url = $derived(documents.canonicalUrl(document).href);
 
@@ -70,7 +71,7 @@
   />
 </svelte:head>
 
-<ViewerContext {document} {mode} {text} {asset_url}>
+<ViewerContext {document} {notes} {mode} {text} {asset_url}>
   <DocumentLayout />
 </ViewerContext>
 <GuidedTour />
