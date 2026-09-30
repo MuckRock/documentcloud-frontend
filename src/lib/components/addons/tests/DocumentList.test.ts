@@ -1,7 +1,12 @@
 import type { Document } from "$lib/api/types";
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/svelte";
+
+// jsdom can't measure the viewport, so render every result instead of virtualizing
+vi.mock("virtua/svelte", async () => ({
+  Virtualizer: (await import("@/test/mocks/Virtualizer.svelte")).default,
+}));
 
 import DocumentListDemo from "./DocumentList.demo.svelte";
 import { document as docFixture } from "@/test/fixtures/documents";
