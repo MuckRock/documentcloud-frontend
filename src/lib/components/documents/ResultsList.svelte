@@ -53,6 +53,7 @@
     onNext?: () => Promise<Maybe<APIError<any>>>; // can return an error
     visibleFieldsOverride?: VisibleFields;
     scrollRef?: HTMLElement;
+    startMargin?: number;
   }
 
   let {
@@ -64,6 +65,7 @@
     search,
     visibleFieldsOverride,
     scrollRef,
+    startMargin: outsideStartMargin = 0,
   }: Props = $props();
 
   // Height of the element before the results list
@@ -102,7 +104,7 @@
         data={results}
         getKey={({ id }) => id}
         {scrollRef}
-        {startMargin}
+        startMargin={startMargin + outsideStartMargin}
       >
         {#snippet children(document, i)}
           <div
