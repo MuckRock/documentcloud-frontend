@@ -17,8 +17,6 @@
 -->
 
 <script lang="ts">
-  import { run } from "svelte/legacy";
-
   import type { Writable } from "svelte/store";
   import type { Document } from "$lib/api/types";
 
@@ -33,13 +31,15 @@
   interface Props {
     document: Document;
     open?: boolean;
+    onCollapseAll?: () => void;
+    onExpandAll?: () => void;
   }
 
-  let { document, open = $bindable(true) }: Props = $props();
+  let { document, open = $bindable(true), ...props }: Props = $props();
 
   const { subscribe } =
     getContext<Writable<{ allOpen: boolean }>>("highlightState") ?? {};
-  run(() => {
+  $effect(() => {
     subscribe?.((state) => {
       open = state.allOpen;
     });
@@ -60,8 +60,7 @@
   getHref={noteHref}
   bind:open
   showAll={Boolean(subscribe)}
-  on:collapseAll
-  on:expandAll
+  {...props}
 >
   {#snippet summary()}
     {$_("documents.matchingNotes", { values: { n: highlights.length } })}

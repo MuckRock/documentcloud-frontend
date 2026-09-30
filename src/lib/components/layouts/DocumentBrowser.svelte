@@ -59,6 +59,7 @@
     query?: string;
     project?: Nullable<Project>;
     visibleFieldsOverride?: VisibleFields;
+    scrollRef?: HTMLElement;
   }
 
   let {
@@ -66,6 +67,7 @@
     query = "",
     project = null,
     visibleFieldsOverride,
+    scrollRef: scrollRefProp,
   }: Props = $props();
 
   // this lets us pass in non-global search results, for testing
@@ -73,6 +75,8 @@
   const search = $derived(searchProp ?? getSearchResults());
 
   let footerToolbarWidth: number = $state(800);
+  let container = $state<HTMLDivElement>();
+  let scrollRef = $derived(scrollRefProp ?? container);
 
   function selectAll(e: Event) {
     const target = e.target as HTMLInputElement;
@@ -96,7 +100,7 @@
   });
 </script>
 
-<div class="container">
+<div class="container" class:scroll={!scrollRefProp} bind:this={container}>
   <Dropzone {onDrop} disabled={!canUploadFiles(me)}>
     {#snippet children({ active, disabled })}
       <div class:active class:disabled class="dropOverlay">
@@ -140,7 +144,7 @@
             </Flex>
           {/if}
         {/snippet}
-        <ResultsList {search} {visibleFieldsOverride} auto>
+        <ResultsList {search} {visibleFieldsOverride} {scrollRef} auto>
           {#snippet start()}
             {#if me && !canUploadFiles(me)}
               <Unverified user={me} />
@@ -205,6 +209,10 @@
   .container {
     width: 100%;
     height: 100%;
+  }
+
+  .scroll {
+    overflow-y: auto;
   }
 
   label.select-all {
