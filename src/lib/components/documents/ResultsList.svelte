@@ -32,6 +32,7 @@
   import { getContext, setContext, type Snippet } from "svelte";
   import { _ } from "svelte-i18n";
   import { Search24 } from "svelte-octicons";
+  import { Virtualizer } from "virtua/svelte";
 
   import DocumentListItem from "./DocumentListItem.svelte";
   import Empty from "../common/Empty.svelte";
@@ -51,6 +52,7 @@
     end?: Snippet;
     onNext?: () => Promise<Maybe<APIError<any>>>; // can return an error
     visibleFieldsOverride?: VisibleFields;
+    scrollRef?: HTMLElement;
   }
 
   let {
@@ -61,11 +63,17 @@
     onNext: onNextProp,
     search,
     visibleFieldsOverride,
+    scrollRef,
   }: Props = $props();
+
+  // Height of the element before the results list
+  let startMargin = $state(0);
 
   // we can pass in an onNext callback or ust use the SearchResultsState
   // this is likely just for testing and storybook, and may go away if we don't need it
   let onNext = $derived(onNextProp ?? search.loadNext);
+  let results = $derived(search.results.toArray());
+  let hasResults = $derived(results.length !== 0);
 
   const embed: boolean = getContext("embed");
   const visibleFields = getVisibleFieldsContext();
@@ -83,65 +91,78 @@
 
 <div class="container" data-sveltekit-preload-data={preload}>
   <Flex direction="column" gap={1}>
-    {@render start?.()}
-
-    {#each search.results as document (document.id)}
-      <div
-        class="result-row"
-        class:selected={search.selectedIds.has(String(document.id))}
-      >
-        {#if !embed}
-          <label>
-            <span class="sr-only">{$_("documents.select")}</span>
-            <input
-              type="checkbox"
-              checked={search.selectedIds.has(String(document.id))}
-              onchange={(e) => {
-                const id = String(document.id);
-                if (e.currentTarget.checked) {
-                  search.selectedIds.add(id);
-                } else {
-                  search.selectedIds.delete(id);
-                }
-              }}
-              value={document.id}
-            />
-          </label>
-        {/if}
-        <div class="result-content">
-          <DocumentListItem
-            {document}
-            visibleFields={visibleFieldsOverride ?? $visibleFields}
-          />
-          {#if document.highlights}
-            <PageHighlights
-              {document}
-              onCollapseAll={collapseAll}
-              onExpandAll={expandAll}
-            />
-          {/if}
-          {#if document.note_highlights}
-            <NoteHighlights
-              {document}
-              onCollapseAll={collapseAll}
-              onExpandAll={expandAll}
-            />
-          {/if}
-        </div>
+    {#if start}
+      <div bind:clientHeight={startMargin}>
+        {@render start()}
       </div>
+    {/if}
+
+    {#if hasResults}
+      <Virtualizer
+        data={results}
+        getKey={({ id }) => id}
+        {scrollRef}
+        {startMargin}
+      >
+        {#snippet children(document)}
+          <div
+            class="result-row"
+            class:selected={search.selectedIds.has(String(document.id))}
+          >
+            {#if !embed}
+              <label>
+                <span class="sr-only">{$_("documents.select")}</span>
+                <input
+                  type="checkbox"
+                  checked={search.selectedIds.has(String(document.id))}
+                  onchange={(e) => {
+                    const id = String(document.id);
+                    if (e.currentTarget.checked) {
+                      search.selectedIds.add(id);
+                    } else {
+                      search.selectedIds.delete(id);
+                    }
+                  }}
+                  value={document.id}
+                />
+              </label>
+            {/if}
+            <div class="result-content">
+              <DocumentListItem
+                {document}
+                visibleFields={visibleFieldsOverride ?? $visibleFields}
+              />
+              {#if document.highlights}
+                <PageHighlights
+                  {document}
+                  onCollapseAll={collapseAll}
+                  onExpandAll={expandAll}
+                />
+              {/if}
+              {#if document.note_highlights}
+                <NoteHighlights
+                  {document}
+                  onCollapseAll={collapseAll}
+                  onExpandAll={expandAll}
+                />
+              {/if}
+            </div>
+          </div>
+        {/snippet}
+      </Virtualizer>
+    {:else if search.loading}
+      <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
     {:else}
-      {#if search.loading}
-        <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
-      {:else}
-        <Empty icon={Search24}>
-          <h2>{$_("noDocuments.noSearchResults")}</h2>
-          <p>{$_("noDocuments.queryNoResults")}</p>
-        </Empty>
-      {/if}
-    {/each}
+      <Empty icon={Search24}>
+        <h2>{$_("noDocuments.noSearchResults")}</h2>
+        <p>{$_("noDocuments.queryNoResults")}</p>
+      </Empty>
+    {/if}
   </Flex>
 
-  <InfiniteScrollTrigger {search} {onNext} />
+  {#if hasResults}
+    <InfiniteScrollTrigger {search} {onNext} />
+  {/if}
 
   {@render end?.()}
 </div>
