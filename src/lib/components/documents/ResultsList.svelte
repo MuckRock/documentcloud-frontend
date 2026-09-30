@@ -116,15 +116,15 @@
           {#if document.highlights}
             <PageHighlights
               {document}
-              on:collapseAll={collapseAll}
-              on:expandAll={expandAll}
+              onCollapseAll={collapseAll}
+              onExpandAll={expandAll}
             />
           {/if}
           {#if document.note_highlights}
             <NoteHighlights
               {document}
-              on:collapseAll={collapseAll}
-              on:expandAll={expandAll}
+              onCollapseAll={collapseAll}
+              onExpandAll={expandAll}
             />
           {/if}
         </div>
