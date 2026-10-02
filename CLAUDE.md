@@ -125,8 +125,8 @@ against the unfixed code is not a test.
 
 - `src/lib/` - Reusable components, utilities, and API modules
 - `src/routes/` - SvelteKit routes and pages
-- `src/embed/` - Legacy embed scripts (built separately with esbuild)
-- `src/legacy/` - Legacy utilities and components
+- `src/embed/` - Embed scripts (built separately with esbuild). These run on other sites to embed our application.
+- `src/legacy/` - Legacy utilities and components. We keep these files for reference but no live code uses or imports them.
 - `src/config/` - Environment-specific configuration files
 - `src/langs/` - Internationalization files
 
@@ -157,8 +157,8 @@ against the unfixed code is not a test.
 ### Build Process
 
 - Main build uses Vite/SvelteKit
-- Legacy embeds built separately with esbuild via `embeds.js`
-- Adapter configured for Netlify deployment
+- Embed scripts built separately with esbuild via `embeds.js`
+- Adapter configured for Cloudflare Workers deployment
 
 ### Testing Strategy
 
@@ -175,7 +175,7 @@ against the unfixed code is not a test.
 - Legacy code isolated in separate directories
 
 #### Component Organization
-- **Common/reusable components** live in `src/lib/components/common/` (Button, NavItem, Modal, etc.)
+- **Common/reusable components** live in `src/lib/components/common/` (Button, Badge, Banner, etc.)
 - **Feature-specific components** organized by domain (sidebar, navigation, documents, addons, accounts, etc.)
 - **Cross-cutting UI patterns** consistently applied (NavItem used across navigation, sidebars, menus, dropdowns)
 - **Semantic naming** - components named for their function rather than original location
