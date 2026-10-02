@@ -67,9 +67,6 @@ storybook-static/
 .wrangler
 wrangler.preview.jsonc
 
-# Claude Code
-CLAUDE.md
-
 # ignoring these skills until I'm sure we want them
 .claude/skills/migrate-storybook-csf
 .claude/skills/cloudflare
