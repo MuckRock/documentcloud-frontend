@@ -3,6 +3,7 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 <!-- CLAUDE.md shared standard v1 — canonical copy: squarelet/CLAUDE.md -->
+
 ## Code comments
 
 Comments say **why**, not what. If the code already says it, delete the comment.
@@ -75,13 +76,30 @@ against the unfixed code is not a test.
 
 ## Development Commands
 
+### Git
+
+The `main` branch is production. Feature branches base off `main`. There is an old branch called `master` that should be ignored. IGNORE the `master` branch.
+
 ### Local Development (Docker-based)
+
+The server is running locally at https://www.dev.documentcloud.org/. Some pages render differently depending on whether the user is logged in or not, so Playwright is often important for testing.
 
 - `make install` - Install dependencies in Docker container
 - `make dev` - Start the development server with Docker (requires local backend setup)
 - `make build` - Build the production version in Docker
 - `make down` - Stop Docker containers
 - `make clean` - Remove build output, copied embed bundles in `static/`, and test/coverage reports
+
+#### Restart the dev server after changing dependencies
+
+The frontend container (`documentcloud-frontend-documentcloud_frontend-1`) bind-mounts the repo and runs `vite dev`. Its `node_modules` tracks whatever was last installed, so editing `package.json` or `package-lock.json` leaves the long-running vite server holding a stale pre-bundled dependency cache. Clear it and restart that one container:
+
+```sh
+docker exec documentcloud-frontend-documentcloud_frontend-1 rm -rf /app/node_modules/.vite
+docker restart documentcloud-frontend-documentcloud_frontend-1
+```
+
+This failure is easy to misdiagnose. SSR keeps returning 200, so pages look fine, but the browser console shows `504 (Outdated Optimize Dep)` for `svelte`, `esm-env`, and `devalue`, then `Failed to fetch dynamically imported module: @sveltejs/kit/src/runtime/client/entry.js`. The client entry never loads, so **nothing hydrates**: the search editor renders as a plain input instead of a ProseMirror contenteditable, buttons like "Select Files" stay `disabled`, and most of the Playwright suite fails on unrelated-looking assertions. Check for those 504s before investigating an apparent regression. Vite logs `Forced re-optimization of dependencies` and needs one page load to settle after restarting.
 
 ### Direct NPM Commands
 
@@ -175,24 +193,28 @@ against the unfixed code is not a test.
 - Legacy code isolated in separate directories
 
 #### Component Organization
+
 - **Common/reusable components** live in `src/lib/components/common/` (Button, Badge, Banner, etc.)
 - **Feature-specific components** organized by domain (sidebar, navigation, documents, addons, accounts, etc.)
 - **Cross-cutting UI patterns** consistently applied (NavItem used across navigation, sidebars, menus, dropdowns)
 - **Semantic naming** - components named for their function rather than original location
 
 #### Import Path Conventions
+
 - **Absolute imports** using `$lib/` alias for cross-domain component imports
 - **Relative imports** for closely related components within the same feature area
 - **Consistent barrel exports** from common directories to simplify imports
 - **Systematic path updates** when components are moved between directories
 
 #### Component Migration and Refactoring
+
 - Components can be **safely relocated** between directories as their purpose evolves
 - **Import paths systematically updated** throughout codebase when components move
 - **Storybook stories migrate with components** to maintain documentation consistency
 - **Semantic renaming** follows function over original location (e.g., SidebarItem → NavItem)
 
 #### Code Quality and Formatting
+
 - **Integrated automatic formatting** runs on file changes
 - **Consistent code style** enforced across the entire codebase
 - **Linting integration** with IDE and development workflow
