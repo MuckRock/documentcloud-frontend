@@ -77,11 +77,11 @@ against the unfixed code is not a test.
 
 ### Local Development (Docker-based)
 
-- `make install` - Install dependencies in Docker container and host
+- `make install` - Install dependencies in Docker container
 - `make dev` - Start the development server with Docker (requires local backend setup)
 - `make build` - Build the production version in Docker
 - `make down` - Stop Docker containers
-- `make clean` - Remove built files and webpack chunks
+- `make clean` - Remove build output, copied embed bundles in `static/`, and test/coverage reports
 
 ### Direct NPM Commands
 

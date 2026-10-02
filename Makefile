@@ -20,8 +20,5 @@ down:
 	docker compose -f local.yml down
 
 clean:
-	@echo deleting Webpack chunks
-	rm -f public/index.html public/[0-9]*.*.* public/bundle.*.js public/bundle.*.css public/bundle.*.txt public/*.map public/*.*.js
-	rm -rf public/assets public/notes public/viewer public/embed
-	@echo deleting built files
-	rm -rf build .svelte-kit playwright-report
+	rm -rf build .svelte-kit static/embed static/notes static/viewer
+	rm -rf playwright-report test-results coverage storybook-static
