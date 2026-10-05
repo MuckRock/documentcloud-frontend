@@ -16,6 +16,7 @@ Selectable text can be rendered in one of two ways:
   import { page as pageState } from "$app/state";
 
   import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
+  import { onDestroy } from "svelte";
   import { _ } from "svelte-i18n";
 
   // page parts
@@ -83,7 +84,7 @@ Selectable text can be rendered in one of two ways:
   ) {
     // only one render task at a time;
     if (renderTask) {
-      await renderTask.promise;
+      await renderTask.promise.catch(ignoreCancelled);
     }
 
     // check that we have things
@@ -141,6 +142,17 @@ Selectable text can be rendered in one of two ways:
     return textLayer.render();
   }
 
+  /** Swallow pdf.js's cancellation rejections; rethrow anything else. */
+  function ignoreCancelled(error: unknown) {
+    if (
+      error instanceof pdfjs.RenderingCancelledException ||
+      error instanceof pdfjs.AbortException
+    ) {
+      return;
+    }
+    throw error;
+  }
+
   function markHighlights(textContainer: Maybe<HTMLElement>, query: string) {
     if (!query || !textContainer || !container) return;
     container.querySelectorAll("span").forEach((span) => {
@@ -186,7 +198,7 @@ Selectable text can be rendered in one of two ways:
       !canvas.hidden
     ) {
       Promise.all([viewer.pdf, page]).then(([pdf, page]) => {
-        render(page, canvas, scale);
+        render(page, canvas, scale).catch(ignoreCancelled);
       });
     }
   }
@@ -233,8 +245,10 @@ Selectable text can be rendered in one of two ways:
     pxScale;
     if (!visible || pinching) return;
     Promise.all([viewer.pdf, page]).then(([pdf, page]) => {
-      render(page, canvas, pxScale);
-      textPromise = renderTextLayer(page, textContainer, pxScale);
+      render(page, canvas, pxScale).catch(ignoreCancelled);
+      textPromise = renderTextLayer(page, textContainer, pxScale).catch(
+        ignoreCancelled,
+      );
     });
   });
   $effect(() => {
@@ -245,6 +259,18 @@ Selectable text can be rendered in one of two ways:
       markHighlights(textContainer, currentQuery);
     });
   });
+  // The canvas bitmap and pdf.js's page data outlive the unmounted element
+  // unless released here.
+  onDestroy(() => {
+    renderTask?.cancel();
+    textLayer?.cancel();
+    if (canvas) {
+      canvas.width = 0;
+      canvas.height = 0;
+    }
+    page?.then((p) => p.cleanup()).catch(() => {});
+  });
+
   let redactions_for_page = $derived(
     [
       ...($pending[document.id] ?? []),

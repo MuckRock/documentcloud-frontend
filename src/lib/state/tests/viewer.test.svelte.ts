@@ -114,12 +114,22 @@ describe("ViewerState", () => {
     const url = new URL("https://example.com/doc.pdf");
     v.loadPDF(url);
 
-    expect(getDocument).toHaveBeenCalledWith({ url });
+    expect(getDocument).toHaveBeenCalledWith(expect.objectContaining({ url }));
     await expect(v.pdf).resolves.toBe(pdf);
 
     // the class installs its own onProgress handler on the task
     (task.onProgress as (p: unknown) => void)({ loaded: 4, total: 8 });
     expect(v.progress).toEqual({ loaded: 4, total: 8 });
+  });
+
+  it("loadPDF fetches only the byte ranges pdf.js needs, not the whole file", () => {
+    getDocument.mockReturnValue(makeTask(Promise.resolve({})));
+    const v = new ViewerState();
+    v.loadPDF(new URL("https://example.com/doc.pdf"));
+
+    expect(getDocument).toHaveBeenCalledWith(
+      expect.objectContaining({ disableAutoFetch: true, disableStream: true }),
+    );
   });
 
   it("loadPDF is a no-op while a task is already in flight", () => {
@@ -148,7 +158,9 @@ describe("ViewerState", () => {
 
     await vi.waitFor(() => expect(getDocument).toHaveBeenCalledTimes(2));
     expect(assetUrl).toHaveBeenCalledWith(doc);
-    expect(getDocument).toHaveBeenLastCalledWith({ url: freshUrl });
+    expect(getDocument).toHaveBeenLastCalledWith(
+      expect.objectContaining({ url: freshUrl }),
+    );
     await expect(v.pdf).resolves.toBe(secondPdf);
   });
 

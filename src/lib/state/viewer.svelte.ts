@@ -118,7 +118,13 @@ export class ViewerState {
   loadPDF(url: URL): void {
     if (this.#task) return;
 
-    this.#task = pdfjs.getDocument({ url });
+    // pdf.js pre-fetches the whole file unless both are set, which exhausts
+    // memory on very large documents.
+    this.#task = pdfjs.getDocument({
+      url,
+      disableAutoFetch: true,
+      disableStream: true,
+    });
     this.pdf = this.#task.promise;
 
     this.#task.onProgress = (p: DocumentLoadProgress) => {
