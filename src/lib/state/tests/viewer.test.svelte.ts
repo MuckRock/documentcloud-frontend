@@ -122,6 +122,18 @@ describe("ViewerState", () => {
     expect(v.progress).toEqual({ loaded: 4, total: 8 });
   });
 
+  it("loadingProgress is complete once the PDF opens, even with only part of the file loaded", async () => {
+    const task = makeTask(Promise.resolve({ numPages: 7 }));
+    getDocument.mockReturnValue(task);
+
+    const v = new ViewerState();
+    v.loadPDF(new URL("https://example.com/doc.pdf"));
+    (task.onProgress as (p: unknown) => void)({ loaded: 1, total: 100 });
+    await v.pdf;
+
+    expect(v.loadingProgress).toBe(1);
+  });
+
   it("loadPDF fetches only the byte ranges pdf.js needs, not the whole file", () => {
     getDocument.mockReturnValue(makeTask(Promise.resolve({})));
     const v = new ViewerState();

@@ -56,6 +56,7 @@ export class ViewerState {
 
   // internal PDF loading state
   #task: Nullable<pdfjs.PDFDocumentLoadingTask> = null;
+  #opened = $state(false);
   #retriesOn403Error = 0;
 
   // The scrolling ancestor of the document
@@ -97,7 +98,11 @@ export class ViewerState {
     keepMounted: [Math.max(0, this.page - 2)],
   });
 
+  /** Fraction of the PDF loaded, or 1 once pdf.js has opened it. */
   get loadingProgress(): number {
+    // With range requests most of the file is never fetched, so bytes
+    // loaded never reach the total.
+    if (this.#opened) return 1;
     if (this.progress.total === 0) return 0;
     return this.progress.loaded / this.progress.total;
   }
@@ -126,6 +131,10 @@ export class ViewerState {
       disableStream: true,
     });
     this.pdf = this.#task.promise;
+    this.#task.promise.then(
+      () => (this.#opened = true),
+      () => {}, // handled below
+    );
 
     this.#task.onProgress = (p: DocumentLoadProgress) => {
       this.progress = p;
