@@ -42,9 +42,10 @@
   }
 
   let clientWidth: number = $state(800);
+  let scrollRef = $state<HTMLDivElement>();
 </script>
 
-<div bind:clientWidth class="outer">
+<div bind:clientWidth bind:this={scrollRef} class="outer">
   <ContentLayout>
     {#snippet header()}
       <Flex>
@@ -72,7 +73,7 @@
     {#if searchState.loading && searchState.visible.size === 0}
       <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
     {:else}
-      <ResultsList search={searchState} auto />
+      <ResultsList search={searchState} {scrollRef} auto />
     {/if}
 
     {#snippet footer()}
@@ -111,5 +112,6 @@
 <style>
   .outer {
     height: 100%;
+    overflow-y: auto;
   }
 </style>

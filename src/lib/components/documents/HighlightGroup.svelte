@@ -2,7 +2,6 @@
 
 <script lang="ts" generics="H">
   import type { Snippet } from "svelte";
-  import { createEventDispatcher } from "svelte";
   import { _ } from "svelte-i18n";
   import {
     ChevronDown12,
@@ -20,6 +19,8 @@
     getHref: (id: string) => string;
     showAll?: boolean;
     summary?: Snippet;
+    onCollapseAll?: () => void;
+    onExpandAll?: () => void;
     children?: Snippet<[any]>;
   }
 
@@ -29,22 +30,22 @@
     getHref,
     showAll = false,
     summary,
+    onCollapseAll,
+    onExpandAll,
     children,
   }: Props = $props();
 
   let clientWidth = $state(1000);
   let isSmall = $derived(clientWidth < remToPx(27));
 
-  const dispatch = createEventDispatcher();
-
   function collapseAll() {
     open = false;
-    dispatch("collapseAll");
+    onCollapseAll?.();
   }
 
   function expandAll() {
     open = true;
-    dispatch("expandAll");
+    onExpandAll?.();
   }
 </script>
 
