@@ -15,6 +15,7 @@ import { readable } from "svelte/store";
 // pdfjs would hit the network when ViewerContext mounts and loads the PDF.
 vi.mock("pdfjs-dist/legacy/build/pdf.mjs", () => ({
   GlobalWorkerOptions: { workerSrc: "mock-worker" },
+  PDFDataRangeTransport: class {},
   getDocument: vi.fn(() => ({
     promise: new Promise(() => {}),
     onProgress: null,

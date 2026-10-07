@@ -61,14 +61,6 @@
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="og:url" content={canonical_url} />
   <meta property="og:title" content={document.title} />
-
-  <link
-    rel="prefetch"
-    href={asset_url.href}
-    as="fetch"
-    crossorigin="anonymous"
-    type="application/pdf"
-  />
 </svelte:head>
 
 <ViewerContext {document} {notes} {mode} {text} {asset_url}>
