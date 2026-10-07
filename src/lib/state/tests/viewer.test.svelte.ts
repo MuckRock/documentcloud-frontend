@@ -18,9 +18,10 @@ import {
 
 // `vi.mock` factories are hoisted above the file, so the mocks they reference
 // must be created with `vi.hoisted`.
-const { getDocument, assetUrl } = vi.hoisted(() => ({
+const { getDocument, assetUrl, openSignedRange } = vi.hoisted(() => ({
   getDocument: vi.fn(),
   assetUrl: vi.fn(),
+  openSignedRange: vi.fn(),
 }));
 vi.mock("pdfjs-dist/legacy/build/pdf.mjs", () => ({
   // truthy workerSrc so the module-init guard skips `new URL(...)`
@@ -28,6 +29,7 @@ vi.mock("pdfjs-dist/legacy/build/pdf.mjs", () => ({
   getDocument,
 }));
 vi.mock("$lib/api/documents", () => ({ assetUrl }));
+vi.mock("$lib/utils/pdfRange", () => ({ openSignedRange }));
 
 import { ViewerState } from "$lib/state/viewer.svelte";
 import { PT_TO_PX } from "$lib/utils/viewer";
@@ -142,6 +144,81 @@ describe("ViewerState", () => {
     expect(getDocument).toHaveBeenCalledWith(
       expect.objectContaining({ disableAutoFetch: true, disableStream: true }),
     );
+  });
+
+  describe("loadPDF for a private document", () => {
+    const privateDoc = { ...doc, access: "private" } as Document;
+    const signedUrl = new URL("https://s3.example.com/doc.pdf?sig=1");
+
+    it("loads by byte range through a transport that re-signs its URL", async () => {
+      const transport = {};
+      openSignedRange.mockResolvedValue(transport);
+      getDocument.mockReturnValue(makeTask(Promise.resolve({})));
+      const freshUrl = new URL("https://s3.example.com/doc.pdf?sig=2");
+      assetUrl.mockResolvedValue(freshUrl);
+
+      const v = new ViewerState();
+      v.document = privateDoc;
+      v.loadPDF(signedUrl);
+
+      await vi.waitFor(() =>
+        expect(getDocument).toHaveBeenCalledWith(
+          expect.objectContaining({ range: transport }),
+        ),
+      );
+      const [url, refresh] = openSignedRange.mock.calls[0]!;
+      expect(url).toBe(signedUrl);
+      await expect(refresh()).resolves.toBe(freshUrl);
+      expect(assetUrl).toHaveBeenCalledWith(privateDoc);
+    });
+
+    it("falls back to loading by URL when the server won't serve ranges", async () => {
+      openSignedRange.mockResolvedValue(null);
+      getDocument.mockReturnValue(makeTask(Promise.resolve({})));
+
+      const v = new ViewerState();
+      v.document = privateDoc;
+      v.loadPDF(signedUrl);
+
+      await vi.waitFor(() =>
+        expect(getDocument).toHaveBeenCalledWith(
+          expect.objectContaining({ url: signedUrl }),
+        ),
+      );
+      expect(openSignedRange).toHaveBeenCalledWith(
+        signedUrl,
+        expect.any(Function),
+      );
+    });
+
+    it("records a range that can't be fetched as an error", async () => {
+      const transport: { onError?: (e: unknown) => void } = {};
+      openSignedRange.mockResolvedValue(transport);
+      getDocument.mockReturnValue(makeTask(Promise.resolve({})));
+
+      const v = new ViewerState();
+      v.document = privateDoc;
+      v.loadPDF(signedUrl);
+      await vi.waitFor(() => expect(getDocument).toHaveBeenCalled());
+
+      const error = new Error("Range request failed: 500");
+      transport.onError?.(error);
+      expect(v.errors).toContain(error);
+    });
+
+    it("only starts one load when called again while opening", async () => {
+      openSignedRange.mockResolvedValue({});
+      getDocument.mockReturnValue(makeTask(Promise.resolve({})));
+
+      const v = new ViewerState();
+      v.document = privateDoc;
+      v.loadPDF(signedUrl);
+      v.loadPDF(signedUrl);
+      await vi.waitFor(() => expect(getDocument).toHaveBeenCalled());
+
+      expect(openSignedRange).toHaveBeenCalledTimes(1);
+      expect(getDocument).toHaveBeenCalledTimes(1);
+    });
   });
 
   it("loadPDF is a no-op while a task is already in flight", () => {

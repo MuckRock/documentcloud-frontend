@@ -20,6 +20,7 @@ vi.mock("pdfjs-dist/legacy/build/pdf.mjs", () => {
   }
   return {
     GlobalWorkerOptions: { workerSrc: "mock-worker" },
+    PDFDataRangeTransport: class {},
     getDocument,
     TextLayer: class {
       cancel = vi.fn();

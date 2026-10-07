@@ -21,6 +21,7 @@ import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
 import { createContext } from "svelte";
 
 import { assetUrl } from "$lib/api/documents";
+import { openSignedRange } from "$lib/utils/pdfRange";
 import { pageSizes } from "$lib/utils/viewer";
 
 if (!pdfjs.GlobalWorkerOptions.workerSrc) {
@@ -56,6 +57,7 @@ export class ViewerState {
 
   // internal PDF loading state
   #task: Nullable<pdfjs.PDFDocumentLoadingTask> = null;
+  #opening = false;
   #opened = $state(false);
   #retriesOn403Error = 0;
 
@@ -121,16 +123,32 @@ export class ViewerState {
    * On a 403 (expired private asset URL), retry with a fresh URL up to 5 times.
    */
   loadPDF(url: URL): void {
-    if (this.#task) return;
+    if (this.#task || this.#opening) return;
 
+    const document = this.document;
+    if (!document || document.access === "public") {
+      this.pdf = this.#open({ url });
+      return;
+    }
+
+    // Signed private URLs expire before pdf.js has read every page it needs.
+    this.#opening = true;
+    this.pdf = openSignedRange(url, () => assetUrl(document)).then((range) => {
+      this.#opening = false;
+      if (!range) return this.#open({ url });
+      range.onError = (error) => this.#fail(error);
+      return this.#open({ range });
+    });
+  }
+
+  #open(source: { url: URL } | { range: pdfjs.PDFDataRangeTransport }) {
     // pdf.js pre-fetches the whole file unless both are set, which exhausts
     // memory on very large documents.
     this.#task = pdfjs.getDocument({
-      url,
+      ...source,
       disableAutoFetch: true,
       disableStream: true,
     });
-    this.pdf = this.#task.promise;
     this.#task.promise.then(
       () => (this.#opened = true),
       () => {}, // handled below
@@ -152,11 +170,17 @@ export class ViewerState {
         this.#retriesOn403Error++;
         this.loadPDF(freshUrl);
       } else {
-        console.error(error);
-        this.errors = [...this.errors, error];
+        this.#fail(error);
         throw error;
       }
     });
+
+    return this.#task.promise;
+  }
+
+  #fail(error: unknown) {
+    console.error(error);
+    this.errors = [...this.errors, error as Error];
   }
 }
 
