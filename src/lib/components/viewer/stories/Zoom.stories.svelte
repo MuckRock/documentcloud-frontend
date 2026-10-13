@@ -6,7 +6,7 @@
 
   import doc from "@/test/fixtures/documents/document-expanded.json";
 
-  const document = doc as Document;
+  const { notes = [], ...document } = doc as Document;
 
   const { Story } = defineMeta({
     title: "Viewer / Zoom",
@@ -20,7 +20,7 @@
 
   // Zoom reads its mode from ViewerContext, not from props.
   let args = {
-    context: { document, mode: "document" },
+    context: { document, notes, mode: "document" },
   };
 </script>
 

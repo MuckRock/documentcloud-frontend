@@ -6,7 +6,7 @@
 
   import doc from "@/test/fixtures/documents/examples/lefler-thesis.json";
 
-  const document = doc as Document;
+  const { notes = [], ...document } = doc as Document;
 
   const { Story } = defineMeta({
     title: "Viewer / Grid",
@@ -18,6 +18,7 @@
   let args = {
     context: {
       document,
+      notes,
     },
     props: {
       size: "thumbnail",
