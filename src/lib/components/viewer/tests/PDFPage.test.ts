@@ -3,7 +3,7 @@
  * or memory grows with every page scrolled past.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { waitFor } from "@testing-library/svelte";
+import { waitFor, within } from "@testing-library/svelte";
 import { readable } from "svelte/store";
 
 const { getDocument, textLayers } = vi.hoisted(() => ({
@@ -134,6 +134,59 @@ describe("PDFPage", () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+  });
+
+  describe("loading indicator", () => {
+    const indicator = (container: HTMLElement) =>
+      within(container).queryByRole("img", { name: "Loading …" });
+
+    it("shows while the page's data is still downloading", async () => {
+      // A slow range request: pdf.js hasn't produced the page yet.
+      getDocument.mockReturnValue({
+        promise: Promise.resolve({
+          numPages: 1,
+          getPage: vi.fn(() => new Promise(() => {})),
+        }),
+        onProgress: null,
+      });
+      const { container } = renderPage();
+      await new Promise((r) => setTimeout(r, 20));
+
+      expect(indicator(container)).not.toBeNull();
+    });
+
+    it("shows until pdf.js has drawn the page, then goes away", async () => {
+      const { container } = renderPage();
+      await waitFor(() => expect(page.render).toHaveBeenCalled());
+      expect(indicator(container)).not.toBeNull();
+
+      page.finishRender();
+
+      await waitFor(() => expect(indicator(container)).toBeNull());
+    });
+
+    it("stays hidden while a drawn page re-renders at a new zoom", async () => {
+      const { container, rerender } = renderInViewer(PDFPage, {
+        props: { page_number: 1, scale: 1, width: 612, height: 792 },
+        context: { document, mode: "document" },
+      });
+      await waitFor(() => expect(page.render).toHaveBeenCalled());
+      expect(indicator(container)).not.toBeNull();
+      page.finishRender();
+      await waitFor(() => expect(indicator(container)).toBeNull());
+
+      // A second render whose promise never settles.
+      page.render.mockReturnValue({
+        promise: new Promise(() => {}),
+        cancel: vi.fn(),
+      });
+      await rerender({
+        childProps: { page_number: 1, scale: 2, width: 612, height: 792 },
+      });
+      await waitFor(() => expect(page.render).toHaveBeenCalledTimes(2));
+
+      expect(indicator(container)).toBeNull();
+    });
   });
 
   it("releases its pdf.js page when it unmounts", async () => {

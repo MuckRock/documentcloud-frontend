@@ -18,6 +18,7 @@ Selectable text can be rendered in one of two ways:
   import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
   import { onDestroy } from "svelte";
   import { _ } from "svelte-i18n";
+  import { Sync16 } from "svelte-octicons";
 
   // page parts
   import AnnotationLayer from "./AnnotationLayer.svelte";
@@ -67,6 +68,8 @@ Selectable text can be rendered in one of two ways:
   let renderTask;
   let textPromise: Maybe<Promise<void>> = $state(); // resolves when text is rendered
   let loaded = $state(false);
+  // First draw only: later renders reuse page data pdf.js already has.
+  let drawn = $state(false);
   let textLayer: pdfjs.TextLayer; // TextLayer
 
   // visibility, for loading optimization
@@ -111,7 +114,8 @@ Selectable text can be rendered in one of two ways:
       transform,
     });
     loaded = true;
-    return renderTask.promise;
+    await renderTask.promise;
+    drawn = true;
   }
 
   async function renderTextLayer(
@@ -312,6 +316,12 @@ Selectable text can be rendered in one of two ways:
     >
       <canvas bind:this={canvas} {width} {height}></canvas>
 
+      {#if !drawn}
+        <div class="page-loading" role="img" aria-label={$_("common.loading")}>
+          <Sync16 class="spin" fill="var(--gray-4)" />
+        </div>
+      {/if}
+
       {#if text.length > 0}
         <div bind:this={textContainer} class="selectable-text">
           {#each text as word}
@@ -414,6 +424,30 @@ Selectable text can be rendered in one of two ways:
     background-color: var(--note-public, mark);
     color: transparent;
     opacity: 0.35;
+  }
+
+  /* Delayed so pages that draw quickly never flash it. */
+  .page-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 0;
+    animation: fade-in 0.2s ease-out 0.3s forwards;
+  }
+
+  @keyframes fade-in {
+    to {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page-loading :global(.spin) {
+      animation: none;
+    }
   }
 
   canvas {
