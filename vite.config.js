@@ -45,8 +45,10 @@ export default defineConfig(({ mode }) => ({
 
   // allow top-level await
   optimizeDeps: {
-    esbuildOptions: {
-      target: "esnext",
+    rolldownOptions: {
+      transform: {
+        target: "esnext",
+      },
     },
   },
 
