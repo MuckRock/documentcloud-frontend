@@ -21,6 +21,7 @@ import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
 import { createContext } from "svelte";
 
 import { assetUrl } from "$lib/api/documents";
+import { openSignedRange } from "$lib/utils/pdfRange";
 import { pageSizes } from "$lib/utils/viewer";
 
 if (!pdfjs.GlobalWorkerOptions.workerSrc) {
@@ -56,6 +57,8 @@ export class ViewerState {
 
   // internal PDF loading state
   #task: Nullable<pdfjs.PDFDocumentLoadingTask> = null;
+  #opening = false;
+  #opened = $state(false);
   #retriesOn403Error = 0;
 
   // The scrolling ancestor of the document
@@ -97,7 +100,11 @@ export class ViewerState {
     keepMounted: [Math.max(0, this.page - 2)],
   });
 
+  /** Fraction of the PDF loaded, or 1 once pdf.js has opened it. */
   get loadingProgress(): number {
+    // With range requests most of the file is never fetched, so bytes
+    // loaded never reach the total.
+    if (this.#opened) return 1;
     if (this.progress.total === 0) return 0;
     return this.progress.loaded / this.progress.total;
   }
@@ -116,10 +123,36 @@ export class ViewerState {
    * On a 403 (expired private asset URL), retry with a fresh URL up to 5 times.
    */
   loadPDF(url: URL): void {
-    if (this.#task) return;
+    if (this.#task || this.#opening) return;
 
-    this.#task = pdfjs.getDocument({ url });
-    this.pdf = this.#task.promise;
+    const document = this.document;
+    if (!document || document.access === "public") {
+      this.pdf = this.#open({ url });
+      return;
+    }
+
+    // Signed private URLs expire before pdf.js has read every page it needs.
+    this.#opening = true;
+    this.pdf = openSignedRange(url, () => assetUrl(document)).then((range) => {
+      this.#opening = false;
+      if (!range) return this.#open({ url });
+      range.onError = (error) => this.#fail(error);
+      return this.#open({ range });
+    });
+  }
+
+  #open(source: { url: URL } | { range: pdfjs.PDFDataRangeTransport }) {
+    // pdf.js pre-fetches the whole file unless both are set, which exhausts
+    // memory on very large documents.
+    this.#task = pdfjs.getDocument({
+      ...source,
+      disableAutoFetch: true,
+      disableStream: true,
+    });
+    this.#task.promise.then(
+      () => (this.#opened = true),
+      () => {}, // handled below
+    );
 
     this.#task.onProgress = (p: DocumentLoadProgress) => {
       this.progress = p;
@@ -137,11 +170,17 @@ export class ViewerState {
         this.#retriesOn403Error++;
         this.loadPDF(freshUrl);
       } else {
-        console.error(error);
-        this.errors = [...this.errors, error];
+        this.#fail(error);
         throw error;
       }
     });
+
+    return this.#task.promise;
+  }
+
+  #fail(error: unknown) {
+    console.error(error);
+    this.errors = [...this.errors, error as Error];
   }
 }
 

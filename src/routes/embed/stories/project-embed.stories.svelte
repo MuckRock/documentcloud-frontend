@@ -13,7 +13,7 @@
     title: "Embed / Project",
     component: ProjectEmbed,
     tags: ["autodocs"],
-    parameters: { layout: "centered" },
+    parameters: { layout: "fullscreen" },
   });
 
   const data = {
@@ -41,13 +41,5 @@
     msw: { handlers: [projects.info, projects.documents] },
   }}
 >
-  <div class="vh">
-    <ProjectEmbed {data} />
-  </div>
+  <ProjectEmbed {data} />
 </Story>
-
-<style>
-  .vh {
-    height: 90vh;
-  }
-</style>

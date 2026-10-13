@@ -16,7 +16,9 @@ Selectable text can be rendered in one of two ways:
   import { page as pageState } from "$app/state";
 
   import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
+  import { onDestroy } from "svelte";
   import { _ } from "svelte-i18n";
+  import { Sync16 } from "svelte-octicons";
 
   // page parts
   import AnnotationLayer from "./AnnotationLayer.svelte";
@@ -66,6 +68,8 @@ Selectable text can be rendered in one of two ways:
   let renderTask;
   let textPromise: Maybe<Promise<void>> = $state(); // resolves when text is rendered
   let loaded = $state(false);
+  // First draw only: later renders reuse page data pdf.js already has.
+  let drawn = $state(false);
   let textLayer: pdfjs.TextLayer; // TextLayer
 
   // visibility, for loading optimization
@@ -83,7 +87,7 @@ Selectable text can be rendered in one of two ways:
   ) {
     // only one render task at a time;
     if (renderTask) {
-      await renderTask.promise;
+      await renderTask.promise.catch(ignoreCancelled);
     }
 
     // check that we have things
@@ -110,7 +114,8 @@ Selectable text can be rendered in one of two ways:
       transform,
     });
     loaded = true;
-    return renderTask.promise;
+    await renderTask.promise;
+    drawn = true;
   }
 
   async function renderTextLayer(
@@ -139,6 +144,17 @@ Selectable text can be rendered in one of two ways:
     });
 
     return textLayer.render();
+  }
+
+  /** Swallow pdf.js's cancellation rejections; rethrow anything else. */
+  function ignoreCancelled(error: unknown) {
+    if (
+      error instanceof pdfjs.RenderingCancelledException ||
+      error instanceof pdfjs.AbortException
+    ) {
+      return;
+    }
+    throw error;
   }
 
   function markHighlights(textContainer: Maybe<HTMLElement>, query: string) {
@@ -186,7 +202,7 @@ Selectable text can be rendered in one of two ways:
       !canvas.hidden
     ) {
       Promise.all([viewer.pdf, page]).then(([pdf, page]) => {
-        render(page, canvas, scale);
+        render(page, canvas, scale).catch(ignoreCancelled);
       });
     }
   }
@@ -233,8 +249,10 @@ Selectable text can be rendered in one of two ways:
     pxScale;
     if (!visible || pinching) return;
     Promise.all([viewer.pdf, page]).then(([pdf, page]) => {
-      render(page, canvas, pxScale);
-      textPromise = renderTextLayer(page, textContainer, pxScale);
+      render(page, canvas, pxScale).catch(ignoreCancelled);
+      textPromise = renderTextLayer(page, textContainer, pxScale).catch(
+        ignoreCancelled,
+      );
     });
   });
   $effect(() => {
@@ -245,6 +263,18 @@ Selectable text can be rendered in one of two ways:
       markHighlights(textContainer, currentQuery);
     });
   });
+  // The canvas bitmap and pdf.js's page data outlive the unmounted element
+  // unless released here.
+  onDestroy(() => {
+    renderTask?.cancel();
+    textLayer?.cancel();
+    if (canvas) {
+      canvas.width = 0;
+      canvas.height = 0;
+    }
+    page?.then((p) => p.cleanup()).catch(() => {});
+  });
+
   let redactions_for_page = $derived(
     [
       ...($pending[document.id] ?? []),
@@ -285,6 +315,12 @@ Selectable text can be rendered in one of two ways:
       tabindex="-1"
     >
       <canvas bind:this={canvas} {width} {height}></canvas>
+
+      {#if !drawn}
+        <div class="page-loading" role="img" aria-label={$_("common.loading")}>
+          <Sync16 class="spin" fill="var(--gray-4)" />
+        </div>
+      {/if}
 
       {#if text.length > 0}
         <div bind:this={textContainer} class="selectable-text">
@@ -388,6 +424,30 @@ Selectable text can be rendered in one of two ways:
     background-color: var(--note-public, mark);
     color: transparent;
     opacity: 0.35;
+  }
+
+  /* Delayed so pages that draw quickly never flash it. */
+  .page-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 0;
+    animation: fade-in 0.2s ease-out 0.3s forwards;
+  }
+
+  @keyframes fade-in {
+    to {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page-loading :global(.spin) {
+      animation: none;
+    }
   }
 
   canvas {
