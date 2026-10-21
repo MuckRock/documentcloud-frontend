@@ -13,6 +13,7 @@
   import Projects from "../sidebar/Projects.svelte";
   import DocumentActions from "../sidebar/DocumentActions.svelte";
   import UploadButton from "../sidebar/UploadButton.svelte";
+  import { getDocumentQuery } from "$lib/state/query.svelte";
 
   interface Props {
     project: Project;
@@ -27,13 +28,18 @@
   let combinedQuery = $derived(
     `+project:${project.slug}-${project.id} ${query}`.trim(),
   );
+
+  const documentQuery = getDocumentQuery();
+  $effect(() => {
+    documentQuery.query = combinedQuery;
+  });
 </script>
 
 <SidebarLayout>
   {#snippet navigation()}
     <Documents />
     <Projects />
-    <AddOns query={combinedQuery} />
+    <AddOns />
   {/snippet}
 
   {#snippet content()}
