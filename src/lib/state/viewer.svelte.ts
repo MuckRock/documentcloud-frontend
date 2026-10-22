@@ -116,13 +116,11 @@ export class ViewerState {
    */
   goToPage(page: number) {
     this.page = page;
-    if (!this.virtualizerRef || !this.innerContainer) return;
 
-    const pageEl = this.innerContainer.querySelector("[id^=document\\/p]");
-    const offset = pageEl
-      ? -parseFloat(getComputedStyle(pageEl).scrollMarginTop)
-      : 0;
-    this.virtualizerRef.scrollToIndex(page - 1, { align: "start", offset });
+    this.virtualizerRef?.scrollToIndex(page - 1, {
+      align: "start",
+      offset: -96,
+    });
   }
 
   /**
