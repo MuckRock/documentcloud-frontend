@@ -14,6 +14,7 @@ Must be a child of a ViewerContext
   import Empty from "../common/Empty.svelte";
   import Error from "../common/Error.svelte";
   import Highlight from "../documents/Highlight.svelte";
+  import Virtualizer from "$lib/components/viewer/Virtualizer.svelte";
 
   import { getViewerState } from "$lib/state/viewer.svelte";
   import { getQuery, highlight, pageNumber } from "$lib/utils/search";
@@ -66,26 +67,30 @@ Must be a child of a ViewerContext
           })}
         </h2>
       </header>
-    {/if}
-    {#each resultsPages as [pageNumber, resultsList]}
-      {@const href = getViewerHref({
-        document,
-        page: pageNumber,
-        mode: "document",
-        query,
-      })}
+      <div bind:this={viewer.innerContainer}>
+        <Virtualizer data={resultsPages} getKey={([key]) => key}>
+          {#snippet children([pageNumber, resultsList])}
+            {@const href = getViewerHref({
+              document,
+              page: pageNumber,
+              mode: "document",
+              query,
+            })}
 
-      <a use:qs {href} class="card">
-        <Highlight
-          title="{$_('documents.pageAbbrev')} {pageNumber}"
-          segments={resultsList}
-        />
-      </a>
+            <a use:qs {href} class="card">
+              <Highlight
+                title="{$_('documents.pageAbbrev')} {pageNumber}"
+                segments={resultsList}
+              />
+            </a>
+          {/snippet}
+        </Virtualizer>
+      </div>
     {:else}
       <Empty icon={Search24}>
         {$_("search.empty")}
       </Empty>
-    {/each}
+    {/if}
   {:catch err}
     <Error>{err.message}</Error>
   {/await}
@@ -93,14 +98,10 @@ Must be a child of a ViewerContext
 
 <style>
   .pages {
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    gap: 1rem;
     margin: 0 auto;
     width: 100%;
     max-width: 38.0625rem;
-    padding: 1rem 1rem;
+    padding: 1rem 1rem 0;
     min-height: 100%;
   }
   .card {
@@ -109,6 +110,7 @@ Must be a child of a ViewerContext
     border: 1px solid var(--gray-2);
     border-radius: 0.25rem;
     box-shadow: var(--shadow-1);
+    margin-bottom: 1rem;
   }
   .card:hover,
   .card:focus {

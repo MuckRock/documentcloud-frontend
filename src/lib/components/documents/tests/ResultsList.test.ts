@@ -1,31 +1,37 @@
 import type { DocumentResults } from "$lib/api/types";
-import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/svelte";
+import { describe, it, expect, beforeEach } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/svelte";
 
-// jsdom can't measure the viewport, so render every result instead of virtualizing
-vi.mock("virtua/svelte", async () => ({
-  Virtualizer: (await import("@/test/mocks/Virtualizer.svelte")).default,
-}));
+import { stubViewport } from "@/test/helpers/stubViewport";
 
 import ResultsList from "./ResultsList.demo.svelte";
 import searchResults from "@/test/fixtures/documents/search-highlight.json";
 
 const results = searchResults as unknown as DocumentResults;
 
+async function renderResults() {
+  const rendered = render(ResultsList, {
+    results: results.results,
+  });
+  await waitFor(() =>
+    expect(screen.getAllByRole("heading", { level: 3 }).length).toBeGreaterThan(
+      0,
+    ),
+  );
+  return rendered;
+}
+
 describe("ResultsList", () => {
-  it("shows results", () => {
-    render(ResultsList, {
-      results: results.results,
-    });
+  beforeEach(() => stubViewport({ itemHeight: 150 }));
+
+  it("shows the results in view, in order", async () => {
+    await renderResults();
 
     const headings = screen.getAllByRole("heading", { level: 3 });
 
-    // check that we rendered the right number of documents
-    expect(headings.length).toEqual(results.results.length);
-
-    // check that text is the same
+    expect(headings.length).toBeLessThan(results.results.length);
     expect(headings.map((h) => h.textContent)).toEqual(
-      results.results.map((d) => d.title),
+      results.results.slice(0, headings.length).map((d) => d.title),
     );
   });
 
@@ -38,9 +44,7 @@ describe("ResultsList", () => {
   });
 
   it("selects documents via checkboxes", async () => {
-    render(ResultsList, {
-      results: results.results,
-    });
+    await renderResults();
 
     const checkboxes = screen.getAllByRole("checkbox");
 
@@ -61,9 +65,7 @@ describe("ResultsList", () => {
   });
 
   it("marks selected rows with the selected class", async () => {
-    const { container } = render(ResultsList, {
-      results: results.results,
-    });
+    const { container } = await renderResults();
 
     // no rows selected initially
     expect(container.querySelectorAll(".result-row.selected")).toHaveLength(0);
