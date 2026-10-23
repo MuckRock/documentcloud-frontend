@@ -65,7 +65,7 @@
       {#snippet children(aspect, n)}
         {@const page_number = n + 1}
         {@const height = width * aspect}
-        {@const margin = maxHeight - height}
+        {@const margin = lanes > 1 ? maxHeight - height : 0}
         {@const src = pageImageUrl(document, page_number, size).href}
         <div class="page-container">
           <Page {page_number}>
