@@ -119,6 +119,7 @@ export class ViewerState {
 
     this.virtualizerRef?.scrollToIndex(page - 1, {
       align: "start",
+      // Should match the scroll-margin-top value in components/viewer/Page.svelte
       offset: -96,
     });
   }
