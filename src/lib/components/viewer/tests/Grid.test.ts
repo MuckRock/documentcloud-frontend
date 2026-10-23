@@ -3,7 +3,8 @@
  * real ViewerContext provider via renderInViewer. Only pdfjs (network) and the
  * router are mocked.
  */
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { waitFor } from "@testing-library/svelte";
 import { readable } from "svelte/store";
 
 vi.mock("pdfjs-dist/legacy/build/pdf.mjs", () => ({
@@ -23,16 +24,23 @@ vi.mock("$app/navigation", () => ({ afterNavigate: vi.fn() }));
 
 import Grid from "../Grid.svelte";
 import { renderInViewer } from "./renderInViewer";
+import { stubViewport } from "@/test/helpers/stubViewport";
 import { document } from "@/test/fixtures/documents";
 
 describe("Grid", () => {
-  it("renders one thumbnail image per page, linked to the page", () => {
+  beforeEach(() => stubViewport({ itemHeight: 300 }));
+
+  it("renders thumbnails for the pages in view, linked to each page", async () => {
     const { container } = renderInViewer(Grid, {
       context: { document, mode: "grid", embed: true },
     });
 
+    await waitFor(() => {
+      const count = container.querySelectorAll("img").length;
+      expect(count).toBeGreaterThan(0);
+      expect(count).toBeLessThan(document.page_count);
+    });
     const images = container.querySelectorAll("img");
-    expect(images).toHaveLength(document.page_count);
 
     // each image is wrapped in a link to its page
     images.forEach((img, i) => {
