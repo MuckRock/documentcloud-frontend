@@ -17,9 +17,10 @@
 
   interface Props {
     project?: Maybe<Project>;
+    compact?: boolean;
   }
 
-  let { project = undefined }: Props = $props();
+  let { project = undefined, compact = false }: Props = $props();
   let me = $derived(getCurrentUser());
 
   function onUploadClick() {
@@ -33,18 +34,27 @@
 {#if isSignedIn(me) && canUploadFiles(me)}
   {#if project}
     <Button
-      full
+      full={!compact}
+      minW={!compact}
+      ghost={compact}
+      title={compact ? $_("sidebar.uploadToProject") : ""}
       mode="primary"
       onclick={onUploadClick}
       disabled={!project.edit_access}
     >
       <PlusCircle16 />
-      {$_("sidebar.uploadToProject")}
+      <span class:sr-only={compact}>{$_("sidebar.uploadToProject")}</span>
     </Button>
   {:else}
-    <Button mode="primary" href="/upload/">
+    <Button
+      mode="primary"
+      href="/upload/"
+      minW={!compact}
+      ghost={compact}
+      title={compact ? $_("sidebar.upload") : ""}
+    >
       <PlusCircle16 />
-      {$_("sidebar.upload")}
+      <span class:sr-only={compact}>{$_("sidebar.upload")}</span>
     </Button>
   {/if}
 {/if}

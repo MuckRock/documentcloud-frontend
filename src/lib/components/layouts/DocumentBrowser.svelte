@@ -28,6 +28,7 @@
 
   // Form components
   import Dropzone from "$lib/components/inputs/Dropzone.svelte";
+  import UploadButton from "$lib/components/sidebar/UploadButton.svelte";
   import DocumentActions from "$lib/components/sidebar/DocumentActions.svelte";
   import {
     filesToUpload,
@@ -132,6 +133,7 @@
               <DocumentListToolbar {query} {project} />
               {#if $sidebars["action"] === false}
                 <div class="toolbar w-auto">
+                  <UploadButton project={project ?? undefined} compact />
                   <Button
                     ghost
                     minW={false}
