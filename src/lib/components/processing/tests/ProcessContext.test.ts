@@ -8,7 +8,13 @@ vi.mock("$app/state", () => ({
 }));
 
 import { page } from "$app/state";
-import ProcessContext, { load } from "../ProcessContext.svelte";
+import ProcessContext, {
+  load,
+  addons,
+  documents,
+} from "../ProcessContext.svelte";
+import { run } from "@/test/fixtures/addons/runs";
+import { POLL_INTERVAL } from "@/config/config";
 import { me } from "@/test/fixtures/accounts";
 
 // ProcessContext calls invalidate() from $app/navigation in its $effect
@@ -30,6 +36,67 @@ import { history } from "$lib/api/addons";
 
 const mockPending = vi.mocked(pending);
 const mockHistory = vi.mocked(history);
+
+describe("ProcessContext — terminal add-on runs", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.clearAllMocks();
+    load.cancel();
+    addons.set([]);
+    documents.set([]);
+    stubVisibility("visible");
+    page.data.me = me;
+    mockPending.mockResolvedValue([]);
+  });
+
+  afterEach(() => {
+    load.cancel();
+    addons.set([]);
+    documents.set([]);
+    vi.useRealTimers();
+    restoreVisibility();
+  });
+
+  it.each(["success", "failure", "cancelled"] as const)(
+    "does not poll an undismissed %s run",
+    async (status) => {
+      mockHistory.mockResolvedValue({
+        data: { results: [{ ...run, status }] },
+      } as any);
+      render(ProcessContext);
+      await vi.advanceTimersByTimeAsync(POLL_INTERVAL * 3);
+      expect(mockHistory).toHaveBeenCalledTimes(1);
+    },
+  );
+
+  it("polls queued work until it completes and can load a later run", async () => {
+    mockHistory
+      .mockResolvedValueOnce({
+        data: { results: [{ ...run, status: "queued" }] },
+      } as any)
+      .mockResolvedValue({
+        data: { results: [{ ...run, status: "success" }] },
+      } as any);
+    render(ProcessContext);
+    await vi.advanceTimersByTimeAsync(POLL_INTERVAL * 3);
+    expect(mockHistory).toHaveBeenCalledTimes(2);
+
+    load();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(mockHistory).toHaveBeenCalledTimes(3);
+  });
+
+  it("cancels a queued poll when the only running add-on is dismissed", async () => {
+    mockHistory.mockResolvedValue({
+      data: { results: [{ ...run, status: "in_progress" }] },
+    } as any);
+    render(ProcessContext);
+    await vi.advanceTimersByTimeAsync(0);
+    addons.set([{ ...run, status: "in_progress", dismissed: true }]);
+    await vi.advanceTimersByTimeAsync(POLL_INTERVAL * 3);
+    expect(mockHistory).toHaveBeenCalledTimes(1);
+  });
+});
 
 // Stub the read-only `document.visibilityState` getter so tests can simulate a
 // hidden or visible tab. Returns nothing — pair with `restoreVisibility()`.

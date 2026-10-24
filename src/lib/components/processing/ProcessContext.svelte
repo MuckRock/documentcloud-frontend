@@ -133,10 +133,21 @@ This makes the state of those processes available via context.
     });
   });
 
+  let pollingActive = false;
   $effect(() => {
-    if (isSignedIn(me) && ($documents.length > 0 || $addons.length > 0)) {
+    const activeAddons = $addons.some(
+      (run) =>
+        !run.dismissed &&
+        (run.status === "queued" || run.status === "in_progress"),
+    );
+    const shouldPoll =
+      isSignedIn(me) && ($documents.length > 0 || activeAddons);
+    if (shouldPoll) {
       load();
+    } else if (pollingActive) {
+      load.cancel();
     }
+    pollingActive = shouldPoll;
 
     started.forEach((d) => {
       if (!$currentIds.has(d) && !$finished.has(d)) {
