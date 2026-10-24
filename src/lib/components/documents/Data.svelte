@@ -2,7 +2,7 @@
   import type { Document } from "$lib/api/types";
 
   import { _ } from "svelte-i18n";
-  import { Pencil16, Tag16, Tag24 } from "svelte-octicons";
+  import { LinkExternal16, Pencil16, Tag16, Tag24 } from "svelte-octicons";
 
   import Action from "$lib/components/common/Action.svelte";
   import Empty from "$lib/components/common/Empty.svelte";
@@ -31,6 +31,16 @@
     Object.entries(document.data).filter(([k, v]) => k !== "_tag"),
   );
   let empty = $derived(Object.keys(document.data).length === 0);
+
+  function externalHref(value: string): string | undefined {
+    try {
+      const url = new URL(value);
+      if (url.protocol === "http:" || url.protocol === "https:")
+        return url.href;
+    } catch {
+      // Metadata values may be plain text rather than URLs.
+    }
+  }
 </script>
 
 <SidebarGroup name="projects:viewer">
@@ -72,11 +82,23 @@
           <Flex wrap class="data">
             {#each data as [key, values]}
               {#each values as value}
-                <KV
-                  {key}
-                  {value}
-                  href={search.searchUrl(search.kv(key, value)).href}
-                />
+                {@const destination = externalHref(value)}
+                <Flex gap={0.25} align="center">
+                  <KV
+                    {key}
+                    {value}
+                    href={search.searchUrl(search.kv(key, value)).href}
+                  />
+                  {#if destination}
+                    <a
+                      href={destination}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={value}
+                      title={value}><LinkExternal16 /></a
+                    >
+                  {/if}
+                </Flex>
               {/each}
             {/each}
           </Flex>
