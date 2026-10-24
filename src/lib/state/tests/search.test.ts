@@ -15,6 +15,29 @@ describe("SearchResultsState", () => {
   });
 
   describe("setResults", () => {
+    it("reports a failed search instead of keeping results from another query", async () => {
+      await search.setResults(Promise.resolve({ data: fixture }));
+      search.selectAll();
+      const error = {
+        status: 503,
+        message: "Service Unavailable",
+        errors: ["Invalid query"],
+      };
+
+      await search.setResults(Promise.resolve({ error }));
+
+      expect(search.error).toEqual(error);
+      expect(search.visible.size).toBe(0);
+      expect(search.selectedIds.size).toBe(0);
+      expect(search.total).toBe(0);
+      expect(search.next).toBeNull();
+      expect(search.loading).toBe(false);
+
+      await search.setResults(Promise.resolve({ data: fixture }));
+      expect(search.error).toBeUndefined();
+      expect(search.visible.size).toBe(fixture.results.length);
+    });
+
     it("populates visible from API response", async () => {
       await search.setResults(Promise.resolve({ data: fixture }));
 

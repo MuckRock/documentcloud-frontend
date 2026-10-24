@@ -97,8 +97,14 @@ export class SearchResultsState<
    */
   async setResults(results: Promise<APIResponse<Page<T>, any>>) {
     this.loading = true;
-    const { data: searchResults } = await results;
+    const { data: searchResults, error } = await results;
+    this.error = error;
     if (!searchResults) {
+      this.visible.clear();
+      this.selectedIds.clear();
+      this.total = 0;
+      this.hasTotal = false;
+      this.next = null;
       this.loading = false;
       return this;
     }

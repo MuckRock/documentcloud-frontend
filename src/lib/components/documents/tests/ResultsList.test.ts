@@ -13,6 +13,22 @@ import searchResults from "@/test/fixtures/documents/search-highlight.json";
 const results = searchResults as unknown as DocumentResults;
 
 describe("ResultsList", () => {
+  it("shows search errors without a misleading empty-results message", () => {
+    render(ResultsList, {
+      error: {
+        status: 503,
+        message: "Service Unavailable",
+        errors: ["Invalid query <script>"],
+      },
+    });
+
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Invalid query <script>",
+    );
+    expect(screen.queryByText("No search results")).not.toBeInTheDocument();
+    expect(document.querySelector("script")).toBeNull();
+  });
+
   it("shows results", () => {
     render(ResultsList, {
       results: results.results,

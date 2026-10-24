@@ -36,6 +36,7 @@
 
   import DocumentListItem from "./DocumentListItem.svelte";
   import Empty from "../common/Empty.svelte";
+  import ApiError from "../common/ApiError.svelte";
   import Flex from "../common/Flex.svelte";
   import NoteHighlights from "./NoteHighlights.svelte";
   import PageHighlights from "./PageHighlights.svelte";
@@ -117,6 +118,10 @@
   <Flex direction="column" gap={1}>
     {@render start?.()}
 
+    {#if search.error}
+      <ApiError error={search.error} />
+    {/if}
+
     {#if hasResults}
       <div bind:this={listEl}>
         <Virtualizer
@@ -174,7 +179,7 @@
       </div>
     {:else if search.loading}
       <Empty icon={Hourglass24}>{$_("common.loading")}</Empty>
-    {:else}
+    {:else if !search.error}
       <Empty icon={Search24}>
         <h2>{$_("noDocuments.noSearchResults")}</h2>
         <p>{$_("noDocuments.queryNoResults")}</p>
