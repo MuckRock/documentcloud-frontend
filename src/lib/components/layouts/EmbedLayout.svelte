@@ -5,7 +5,12 @@
 
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
-  import { ScreenFull16, ScreenNormal16, Download16 } from "svelte-octicons";
+  import {
+    ScreenFull16,
+    ScreenNormal16,
+    Download16,
+    LinkExternal16,
+  } from "svelte-octicons";
 
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
@@ -64,6 +69,18 @@
       </a>
     </Tooltip>
     <Flex align="center">
+      {#if type === "project"}
+        <Button
+          size="small"
+          ghost
+          minW={false}
+          href={canonicalUrl}
+          target="_blank"
+        >
+          {$_("embed.viewProject")}
+          <LinkExternal16 />
+        </Button>
+      {/if}
       {#if settings.pdf && downloadUrl}
         <Tooltip caption={$_("embed.download")}>
           <Button

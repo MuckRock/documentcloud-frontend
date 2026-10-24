@@ -33,7 +33,7 @@
   <title>{project.title}</title>
 </svelte:head>
 
-<EmbedLayout canonicalUrl={canonicalUrl(project).href}>
+<EmbedLayout canonicalUrl={canonicalUrl(project).href} type="project">
   <article>
     {#if title || description}
       <header>

@@ -1,4 +1,7 @@
 {
+  "embed": {
+    "viewProject": "\u041e\u0442\u043a\u0440\u044b\u0442\u044c \u043f\u0440\u043e\u0435\u043a\u0442"
+  },
   "common": {
     "emailAddress": "Почтовый адрес",
     "loading": "Загрузка…",

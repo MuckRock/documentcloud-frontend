@@ -1,4 +1,7 @@
 {
+  "embed": {
+    "viewProject": "Projekt anzeigen"
+  },
   "common": {
     "emailAddress": "E-Mail-Adresse",
     "loading": "Lädt..."

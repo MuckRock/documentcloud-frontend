@@ -394,6 +394,7 @@
     "zoomIn": "Acercar"
   },
   "embed": {
+    "viewProject": "Ver proyecto",
     "download": "Descargar",
     "enterFullscreen": "Llenando pantalla completa",
     "exitFullscreen": "Salir al modo m\u00e1ximo",

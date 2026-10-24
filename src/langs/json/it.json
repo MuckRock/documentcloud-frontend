@@ -394,6 +394,7 @@
     "zoomIn": "Ingrandisci"
   },
   "embed": {
+    "viewProject": "Visualizza progetto",
     "download": "Scarica",
     "enterFullscreen": "Pullover",
     "exitFullscreen": "Usare Fullscreen",
