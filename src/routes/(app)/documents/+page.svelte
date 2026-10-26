@@ -22,9 +22,15 @@
     getPendingDocuments,
     getFinishedDocuments,
   } from "$lib/components/processing/ProcessContext.svelte";
+  import { getDocumentQuery } from "$lib/state/query.svelte";
 
   let { data } = $props();
   let query = $derived(data.query);
+
+  const documentQuery = getDocumentQuery();
+  $effect(() => {
+    documentQuery.query = query;
+  });
 
   const search = new SearchResultsState({ loading: true });
   setSearchResults(search);
@@ -50,7 +56,7 @@
   {#snippet navigation()}
     <DocumentNavigation />
     <ProjectNavigation />
-    <AddOnsNavigation {query} />
+    <AddOnsNavigation />
   {/snippet}
 
   {#snippet content()}
