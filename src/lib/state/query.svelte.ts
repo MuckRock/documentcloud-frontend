@@ -26,7 +26,7 @@ export class DocumentQueryState {
 export const [getDocumentQuery, setDocumentQuery] =
   createContext<DocumentQueryState>();
 
-export const initDocumentQueryState = () => {
+export function initDocumentQueryState() {
   setDocumentQuery(new DocumentQueryState());
   return getDocumentQuery();
-};
+}
