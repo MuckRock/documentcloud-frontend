@@ -10,7 +10,7 @@ vi.mock("$lib/api/accounts", () => ({ listOrgs: vi.fn() }));
 
 const org = organizationsList.results[0]!;
 const url = new URL(
-  `https://www.documentcloud.org/documents/organizations/${org.uuid}/`,
+  `https://www.documentcloud.org/organizations/uuid/${org.uuid}/`,
 );
 
 function event(signedIn: boolean) {

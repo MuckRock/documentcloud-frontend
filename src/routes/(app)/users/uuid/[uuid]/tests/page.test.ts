@@ -9,9 +9,7 @@ import { load } from "../+page";
 vi.mock("$lib/api/accounts", () => ({ listUsers: vi.fn() }));
 
 const user = usersList.results[0]!;
-const url = new URL(
-  `https://www.documentcloud.org/documents/users/${user.uuid}/`,
-);
+const url = new URL(`https://www.documentcloud.org/users/uuid/${user.uuid}/`);
 
 function event(signedIn: boolean) {
   return {
