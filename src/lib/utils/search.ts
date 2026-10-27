@@ -1,4 +1,4 @@
-import type { Nullable, Project, User } from "$lib/api/types";
+import type { Nullable, Org, Project, User } from "$lib/api/types";
 import type { Access } from "../api/types";
 
 import lucene from "lucene";
@@ -26,6 +26,11 @@ export function userDocs(user?: Nullable<User>, access?: Access): string {
   }
 
   return `user:${user.id}`;
+}
+
+/** Search params for an organization's documents */
+export function orgDocs(org: Org): string {
+  return `organization:${org.id}`;
 }
 
 /**

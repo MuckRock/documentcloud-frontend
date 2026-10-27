@@ -1,9 +1,10 @@
 import { test, expect, describe } from "vitest";
 
 import { APP_URL } from "@/config/config.js";
-import { me } from "@/test/fixtures/accounts";
+import { me, organization } from "@/test/fixtures/accounts";
 import {
   userDocs,
+  orgDocs,
   tag,
   kv,
   searchUrl,
@@ -25,6 +26,12 @@ describe("search utilities", () => {
 
     expect(userDocs(me, "private")).toStrictEqual(
       `user:${me.id} access:private`,
+    );
+  });
+
+  test("orgDocs", () => {
+    expect(orgDocs(organization)).toStrictEqual(
+      `organization:${organization.id}`,
     );
   });
 
