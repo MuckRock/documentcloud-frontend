@@ -21,7 +21,6 @@
   import Zoom from "../viewer/Zoom.svelte";
 
   import { pageHashUrl, shouldPaginate } from "$lib/api/documents";
-  import { scrollToPage } from "$lib/utils/scroll";
   import { sortedSections } from "$lib/utils/viewer";
   import { getViewerState } from "$lib/state/viewer.svelte";
 
@@ -39,9 +38,7 @@
   let canEditSections = $derived(!viewer.embed && document.edit_access);
 
   function gotoPage(n: number) {
-    viewer.page = n;
-    if (showPDF) viewer.goToPage(n);
-    else scrollToPage(n);
+    viewer.goToPage(n);
     replaceState(pageHashUrl(viewer.page), {});
   }
 </script>

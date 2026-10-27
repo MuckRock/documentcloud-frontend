@@ -34,7 +34,7 @@
     "svelte-octicons": "^18.20.0",
     "svelte-preprocess": "^6.0.3",
     "sveltekit-flash-message": "^2.4.6",
-    "virtua": "^0.50.2",
+    "virtua": "^0.53.5",
     "vite": "^8.3.4"
   },
   "devDependencies": {
