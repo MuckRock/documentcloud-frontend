@@ -23,7 +23,7 @@ export async function list(project_id: number, fetch = globalThis.fetch) {
  */
 export async function add(
   project_id: number,
-  user: { email: string; access: ProjectAccess },
+  user: ({ email: string } | { user: number }) & { access: ProjectAccess },
   csrf_token: string,
   fetch = globalThis.fetch,
 ): Promise<APIResponse<ProjectUser, ValidationError>> {
