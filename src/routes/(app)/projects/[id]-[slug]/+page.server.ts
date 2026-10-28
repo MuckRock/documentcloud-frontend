@@ -6,6 +6,7 @@ import { redirect, setFlash } from "sveltekit-flash-message/server";
 import { CSRF_COOKIE_NAME } from "@/config/config.js";
 import * as collaborators from "$lib/api/collaborators";
 import * as projects from "$lib/api/projects";
+import { getUserIdFromUUID } from "$lib/api/accounts";
 
 const ACCESS: Set<ProjectAccess> = new Set(["admin", "edit", "view"]);
 
@@ -91,12 +92,24 @@ export const actions = {
       return fail(403, { message: "Missing CSRF token" });
     }
 
-    const email = form.get("email") as string;
+    const uuid = form.get("user") as string;
+    const id = await getUserIdFromUUID(uuid, fetch);
+
+    if (!id) {
+      return fail(403, {
+        errors: {
+          user: [
+            "Collaborator could not be added. Ask this user to log in to DocumentCloud to activate their account.",
+          ],
+        },
+      });
+    }
+
     const access = getAccess(form);
 
     const { data: user, error } = await collaborators.add(
       +params.id,
-      { email, access },
+      { user: id, access },
       csrf_token,
       fetch,
     );
