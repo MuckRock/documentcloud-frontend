@@ -2,7 +2,8 @@
 Invite a new collaborator to a project
 -->
 <script lang="ts">
-  import type { Project, ValidationError } from "$lib/api/types";
+  import { SQUARELET_BASE } from "@/config/config.js";
+  import type { Project, SquareletUser, ValidationError } from "$lib/api/types";
 
   import { enhance } from "$app/forms";
 
@@ -11,8 +12,9 @@ Invite a new collaborator to a project
   import Button from "../common/Button.svelte";
   import Flex from "../common/Flex.svelte";
   import Field from "../inputs/Field.svelte";
-  import Text from "../inputs/Text.svelte";
+  import Select from "../inputs/Select.svelte";
   import ProjectAccess from "../inputs/ProjectAccess.svelte";
+  import UserListItem from "./UserListItem.svelte";
 
   import { canonicalUrl } from "$lib/api/projects";
 
@@ -47,16 +49,44 @@ Invite a new collaborator to a project
 
 <form {action} method="post" use:enhance={onSubmit}>
   <Field
-    title={$_("common.emailAddress")}
+    title={$_("collaborators.invite.search")}
     sronly
     required
     description={$_("collaborators.invite.message")}
   >
-    <Text name="email" placeholder={$_("common.emailAddress")} required />
+    <Select
+      name="user"
+      valueField="uuid"
+      placeholder={$_("collaborators.invite.search")}
+      fetch="{SQUARELET_BASE}/fe_api/users/?search=[query]"
+      fetchProps={{ credentials: "include" }}
+      fetchCallback={({ results }) => results}
+      searchProps={{ disabled: true }}
+      fetchDebounceTime={400}
+      minQuery={3}
+      fetchResetOnBlur={false}
+      resetOnBlur={false}
+      lazyDropdown={false}
+    >
+      {#snippet option(item: SquareletUser)}
+        <UserListItem user={item} />
+      {/snippet}
+
+      {#snippet selection(selectedOptions: SquareletUser[], bindItem: Function)}
+        {#each selectedOptions as selection (selection.uuid)}
+          <div class="chip">
+            <UserListItem user={selection} />
+            <button data-action="deselect" use:bindItem={selection}>
+              &times;
+            </button>
+          </div>
+        {/each}
+      {/snippet}
+    </Select>
     {#snippet error()}
-      {#if errors.email}
+      {#if errors.user}
         <p class="error">
-          {@html errors.email.join("\n")}
+          {@html errors.user.join("\n")}
         </p>
       {/if}
     {/snippet}
@@ -82,5 +112,36 @@ Invite a new collaborator to a project
     color: var(--error);
     font-size: var(--font-sm);
     font-weight: var(--font-semibold);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    background: var(--blue-1, #eef3f9);
+    border: 1px solid var(--blue-2, #b5ceed);
+    color: var(--blue-5, #053775);
+  }
+
+  .chip button {
+    all: unset;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    font-size: var(--font-md, 1rem);
+    line-height: 1;
+    color: inherit;
+    opacity: 0.6;
+  }
+
+  .chip button:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.1);
   }
 </style>
