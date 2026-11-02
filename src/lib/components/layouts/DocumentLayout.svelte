@@ -23,6 +23,7 @@ Must be a child of a ViewerContext
   import { getCurrentUser } from "$lib/utils/permissions";
   import { isOrg } from "$lib/api/accounts";
   import { getViewerState } from "$lib/state/viewer.svelte";
+  import { getDocumentQuery } from "$lib/state/query.svelte";
 
   let me = $derived(getCurrentUser());
   const viewer = getViewerState();
@@ -30,6 +31,11 @@ Must be a child of a ViewerContext
   let document = $derived(viewer.document!);
   let text = $derived(viewer.text);
   let projects = $derived((document.projects ?? []) as Project[]);
+
+  const documentQuery = getDocumentQuery();
+  $effect(() => {
+    documentQuery.query = `+document:${document.id}`;
+  });
 </script>
 
 <SidebarLayout hideNavigation={!me}>
@@ -61,7 +67,7 @@ Must be a child of a ViewerContext
         {/if}
         <ViewerActions {document} user={me} />
         <SignedIn>
-          <AddOns query="+document:{document.id}" />
+          <AddOns />
         </SignedIn>
       </Flex>
       {#await text then text}

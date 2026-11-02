@@ -48,7 +48,7 @@ exports[`AddOnListItem 1`] = `
         >
           <a
             class="svelte-155gb3"
-            href="/add-ons/MuckRock/documentcloud-bulk-edit-addon/"
+            href="https://www.dev.documentcloud.org/add-ons/MuckRock/documentcloud-bulk-edit-addon/"
           >
             Bulk Edit
           </a>
@@ -128,7 +128,7 @@ exports[`AddOnListItem 2`] = `
         >
           <a
             class="svelte-155gb3"
-            href="/add-ons/MuckRock/documentcloud-azure-document-intelligence-ocr-addon/"
+            href="https://www.dev.documentcloud.org/add-ons/MuckRock/documentcloud-azure-document-intelligence-ocr-addon/"
           >
             Azure Document Intelligence OCR
           </a>

@@ -5,6 +5,8 @@ import "$lib/i18n/index.js";
 
 import { mswLoader } from "msw-storybook-addon/csf3";
 
+import DocumentQueryDecorator from "$lib/components/storybook/DocumentQueryDecorator.svelte";
+
 import { me, myOrgs, organization, usersList } from "@/test/fixtures/accounts";
 
 // msw-storybook-addon 3 dropped `initialize()`; worker setup now happens in a
@@ -79,5 +81,7 @@ const preview: Preview = {
 
 // Provide the MSW addon loader globally
 export const loaders = [mswLoader(setupMsw)];
+
+export const decorators = [() => ({ Component: DocumentQueryDecorator })];
 
 export default preview;

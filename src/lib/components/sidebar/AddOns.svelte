@@ -21,27 +21,11 @@
   import Error from "../common/Error.svelte";
   import Button from "../common/Button.svelte";
   import SignedIn from "../common/SignedIn.svelte";
+  import { getDocumentQuery } from "$lib/state/query.svelte";
 
-  interface Props {
-    query?: string;
-  }
-
-  let { query = "" }: Props = $props();
+  const documentQuery = getDocumentQuery();
 
   let pinnedAddOns = $derived(page.data.pinnedAddons ?? []);
-
-  function getHref(query: string, addon?: AddOn): string {
-    let path = "/add-ons/";
-    if (addon) {
-      path += `${addon.repository}/`;
-    }
-    let url = new URL(path, APP_URL);
-    // We only see the browser on addons that process documents
-    if (addon?.parameters.documents) {
-      url.searchParams.set("q", query);
-    }
-    return url.toString();
-  }
 </script>
 
 <SignedIn>
@@ -55,13 +39,7 @@
       </NavItem>
     {/snippet}
     {#snippet action()}
-      <Button
-        ghost
-        mode="primary"
-        size="small"
-        minW={false}
-        href={getHref(query)}
-      >
+      <Button ghost mode="primary" size="small" minW={false} href="/add-ons/">
         <Search16 width={14} height={14} />
         {$_("common.explore")}
       </Button>
@@ -86,7 +64,7 @@
         <Error>{error.message}</Error>
       {:else}
         {#each data?.results ?? [] as addon}
-          <NavItem small href={getHref(query, addon)}>
+          <NavItem small href={documentQuery.getAddonLink(addon)}>
             {#snippet start()}
               <Pin size={0.875} active={addon.active} />
             {/snippet}

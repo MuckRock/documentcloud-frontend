@@ -6,6 +6,7 @@
   import AddOnPin from "$lib/components/addons/AddOnPin.svelte";
   import PremiumBadge from "$lib/components/premium-credits/PremiumBadge.svelte";
   import { clean } from "$lib/utils/markup";
+  import { getDocumentQuery } from "$lib/state/query.svelte";
 
   interface Props {
     addon: AddOn;
@@ -13,7 +14,9 @@
 
   let { addon }: Props = $props();
 
-  let url = $derived(`/add-ons/${addon?.repository}/`);
+  const documentQuery = getDocumentQuery();
+
+  let url = $derived(documentQuery.getAddonLink(addon));
   let description = $derived(clean(addon?.parameters?.description ?? ""));
   let author = $derived({ name: addon?.repository?.split("/")[0] });
   let isPremium = $derived(
