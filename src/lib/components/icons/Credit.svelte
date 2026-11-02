@@ -41,6 +41,6 @@
 <style>
   svg {
     display: block;
-    fill: var(--credit-color, --premium);
+    fill: var(--credit-color, var(--premium));
   }
 </style>

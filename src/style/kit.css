@@ -70,7 +70,12 @@ Updated variables and styles for new SvelteKit routes
 
   /* semantic aliases */
   --primary: var(--blue-3);
-  --premium: var(--green-3);
+  --premium-1: var(--purple-1);
+  --premium-2: var(--purple-2);
+  --premium-3: var(--purple-3);
+  --premium-4: var(--purple-4);
+  --premium-5: var(--purple-5);
+  --premium: var(--premium-3);
   --error: var(--red-3);
   --caution: var(--orange-3);
 

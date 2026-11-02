@@ -124,7 +124,12 @@
     box-shadow: 0px 2px 0px 0px var(--orange-4, #69515c);
   }
 
-  .premium,
+  .premium {
+    background: var(--premium-3, #744af0);
+    box-shadow: 0px 2px 0px 0px var(--premium-4, #343ba6);
+    border-color: var(--premium-4, #343ba6);
+  }
+
   .success {
     background: var(--green-3, #27c6a2);
     box-shadow: 0px 2px 0px 0px var(--green-4, #117383);
@@ -170,14 +175,21 @@
     background: var(--orange-1, #fff0ee);
   }
 
-  .ghost.premium,
+  .ghost.premium {
+    color: var(--premium-3, #744af0);
+    fill: var(--premium-3, #744af0);
+  }
+
+  .ghost.premium:hover,
+  .ghost.premium.hover {
+    background: var(--premium-1, #f4f1fe);
+  }
+
   .ghost.success {
     color: var(--green-3, #27c6a2);
     fill: var(--green-3, #27c6a2);
   }
 
-  .ghost.premium:hover,
-  .ghost.premium.hover,
   .ghost.success:hover,
   .ghost.success.hover {
     background: var(--green-1, #ebf9f6);

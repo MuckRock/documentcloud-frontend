@@ -81,7 +81,7 @@
 <Dropdown {position}>
   {#snippet anchor()}
     {#if active_org.individual}
-      <NavItem --fill="var(--green-3)" --color="var(--green-5)">
+      <NavItem --fill="var(--premium-3)" --color="var(--premium-5)">
         {#snippet start()}
           <PremiumIcon />
         {/snippet}

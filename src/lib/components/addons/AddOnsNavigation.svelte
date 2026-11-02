@@ -55,10 +55,10 @@
     <NavItem
       active={active === "premium"}
       href="/add-ons/?premium=true"
-      --hover-background="var(--green-2)"
+      --hover-background="var(--premium-2)"
     >
       {#snippet start()}
-        <Premium --fill="var(--green-3)" />
+        <Premium --fill="var(--premium-3)" />
       {/snippet}
       Premium
     </NavItem>

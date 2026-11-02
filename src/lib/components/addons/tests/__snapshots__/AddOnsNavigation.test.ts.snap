@@ -140,7 +140,7 @@ exports[`AddOnsNavigation 1`] = `
       </svelte-css-wrapper>
        
       <svelte-css-wrapper
-        style="display: contents; --hover-background: var(--green-2);"
+        style="display: contents; --hover-background: var(--premium-2);"
       >
         <!---->
         <a
@@ -149,7 +149,7 @@ exports[`AddOnsNavigation 1`] = `
           title=""
         >
           <svelte-css-wrapper
-            style="display: contents; --fill: var(--green-3);"
+            style="display: contents; --fill: var(--premium-3);"
           >
             <svg
               class="svelte-r1tris"

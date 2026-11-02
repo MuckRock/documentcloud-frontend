@@ -86,9 +86,9 @@
                 </Tip>
               {:else if active === "premium"}
                 <Tip
-                  --background-color="var(--green-1)"
-                  --border-color="var(--green)"
-                  --fill="var(--green-4)"
+                  --background-color="var(--premium-1)"
+                  --border-color="var(--premium-2)"
+                  --fill="var(--premium-4)"
                 >
                   {#snippet icon()}
                     <Premium size={1.75} />

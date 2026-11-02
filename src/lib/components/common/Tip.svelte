@@ -63,11 +63,11 @@
     background: var(--blue-1);
   }
   .tip.premium {
-    color: var(--green-5);
-    fill: var(--green-3);
-    background-color: var(--green-3);
-    border-color: var(--green-2);
-    background: var(--green-1);
+    color: var(--premium-5);
+    fill: var(--premium-3);
+    background-color: var(--premium-3);
+    border-color: var(--premium-2);
+    background: var(--premium-1);
   }
   .tip.danger {
     color: var(--orange-5);
