@@ -6,7 +6,7 @@
  * other uses of $lib/api/documents keep working); pdfjs and the router are
  * mocked as elsewhere.
  */
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { screen, waitFor } from "@testing-library/svelte";
 import { readable } from "svelte/store";
 
@@ -39,27 +39,27 @@ vi.mock("$lib/api/documents", async (orig) => ({
 
 import Search from "../Search.svelte";
 import { renderInViewer } from "./renderInViewer";
+import { stubViewport } from "@/test/helpers/stubViewport";
 import {
   document,
   searchWithin as searchResults,
 } from "@/test/fixtures/documents";
 
 describe("Search", () => {
-  it("lists a result card per matching page", async () => {
+  beforeEach(() => stubViewport({ itemHeight: 150 }));
+
+  it("lists result cards for the matching pages in view", async () => {
     searchWithin.mockResolvedValue({ data: searchResults });
 
     const { container } = renderInViewer(Search, {
       context: { document, mode: "search" },
     });
 
-    await waitFor(() =>
-      expect(container.querySelectorAll("a.card").length).toBeGreaterThan(0),
-    );
-
-    // one card per matching page in the searchWithin fixture
-    expect(container.querySelectorAll("a.card")).toHaveLength(
-      Object.keys(searchResults).length,
-    );
+    await waitFor(() => {
+      const count = container.querySelectorAll("a.card").length;
+      expect(count).toBeGreaterThan(0);
+      expect(count).toBeLessThan(Object.keys(searchResults).length);
+    });
     expect(searchWithin).toHaveBeenCalledWith(document.id, "Boston");
   });
 

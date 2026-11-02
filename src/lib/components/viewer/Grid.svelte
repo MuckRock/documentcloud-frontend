@@ -12,6 +12,7 @@
 
   import { browser } from "$app/environment";
   import { _ } from "svelte-i18n";
+  import { VMasonry } from "virtua/svelte";
 
   import Page from "./Page.svelte";
 
@@ -36,46 +37,68 @@
     large: 3,
   };
 
+  const GAP = 24;
+  const PADDING = 32;
+
   let document = $derived(viewer.document!);
   $effect(() => {
     size = zoomToSize(viewer.zoom);
   });
+
+  let containerWidth = $state(0);
+
   let sizes = $derived(pageSizesFromSpec(document.page_spec));
   let scale = $derived(SCALE[size] ?? 1);
   let width = $derived((IMAGE_WIDTHS_MAP.get(size) ?? 180) / scale);
+  let maxHeight = $derived(width * Math.max(...sizes));
+  let lanes = $derived(
+    Math.max(
+      1,
+      Math.floor((containerWidth - 2 * PADDING + GAP) / (width + GAP)),
+    ),
+  );
 </script>
 
-<div class="pages" style:--image-width="{width}px">
+<div class="pages" bind:clientWidth={containerWidth}>
   {#if browser}
-    {#each sizes as aspect, n}
-      {@const page_number = n + 1}
-      {@const height = width * aspect}
-      {@const src = pageImageUrl(document, page_number, size).href}
-      <Page {page_number}>
-        {#snippet children({ documentHref })}
-          <a href={documentHref}>
-            <img
-              {src}
-              alt="Page {page_number}, {document.title}"
-              title="Page {page_number}, {document.title}"
-              width="{width}px"
-              height="{height}px"
-              loading="lazy"
-            />
-          </a>
-        {/snippet}
-      </Page>
-    {/each}
+    <VMasonry {lanes} data={sizes} gap={GAP} style="padding: {PADDING}px">
+      {#snippet children(aspect, n)}
+        {@const page_number = n + 1}
+        {@const height = width * aspect}
+        {@const margin = lanes > 1 ? maxHeight - height : 0}
+        {@const src = pageImageUrl(document, page_number, size).href}
+        <div class="page-container">
+          <Page {page_number}>
+            {#snippet children({ documentHref })}
+              <a href={documentHref} style:margin-bottom="{margin}px">
+                <img
+                  {src}
+                  alt="Page {page_number}, {document.title}"
+                  title="Page {page_number}, {document.title}"
+                  width="{width}px"
+                  height="{height}px"
+                  loading="lazy"
+                />
+              </a>
+            {/snippet}
+          </Page>
+        </div>
+      {/snippet}
+    </VMasonry>
   {/if}
 </div>
 
 <style>
   .pages {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, var(--image-width));
-    gap: 1.5rem;
-    padding: 2rem;
-    justify-content: space-evenly;
+    height: 100%;
+  }
+
+  .page-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    width: 100%;
   }
 
   a:hover {

@@ -19,20 +19,41 @@
     context: {
       document,
       notes,
+      mode: "grid",
     },
-    props: {
-      size: "thumbnail",
-    },
+    width: "100%",
   };
 </script>
 
 {#snippet template(args)}
   <ViewerContext {...args.context}>
-    <Grid {...args.props} />
+    <div style:height="100vh" style:width={args.width}>
+      <Grid />
+    </div>
   </ViewerContext>
 {/snippet}
 
 <Story
+  name="thumbnail"
+  args={{ ...args, context: { ...args.context, zoom: "thumbnail" } }}
+/>
+
+<Story
   name="small"
-  args={{ ...args, props: { ...args.props, size: "small" } }}
+  args={{ ...args, context: { ...args.context, zoom: "small" } }}
+/>
+
+<Story
+  name="normal"
+  args={{ ...args, context: { ...args.context, zoom: "normal" } }}
+/>
+
+<Story
+  name="large"
+  args={{ ...args, context: { ...args.context, zoom: "large" } }}
+/>
+
+<Story
+  name="xlarge"
+  args={{ ...args, context: { ...args.context, zoom: "xlarge" } }}
 />

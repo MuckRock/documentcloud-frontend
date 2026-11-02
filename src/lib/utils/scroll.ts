@@ -16,15 +16,6 @@ const SCROLL_GESTURES = ["wheel", "touchstart"];
 const CANCEL_EVENTS = [...SCROLL_GESTURES, "keydown", "pointerdown"];
 
 /**
- * Scroll to a page using a standard ID
- *
- * @param n page number
- */
-export function scrollToPage(n: number): void {
-  scrollToId(pageHashUrl(n).replace("#", ""));
-}
-
-/**
  * Scroll to the element with this id, waiting for it to render if it hasn't yet.
  *
  * Text mode renders its pages behind a promise, so a deep link into one runs

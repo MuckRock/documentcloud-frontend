@@ -10,31 +10,16 @@
 <script lang="ts">
   import { browser } from "$app/environment";
   import { onMount } from "svelte";
-  import { Virtualizer, type VirtualizerHandle } from "virtua/svelte";
 
   import PdfPage from "./PDFPage.svelte";
 
   import { getSections } from "$lib/utils/viewer";
   import { getViewerState } from "$lib/state/viewer.svelte";
   import { pinchZoom, type PinchZoomOptions } from "$lib/utils/pinchZoom";
+  import Virtualizer from "$lib/components/viewer/Virtualizer.svelte";
   import Error from "../common/Error.svelte";
 
   const viewer = getViewerState();
-
-  let virtualizer = $state<VirtualizerHandle>();
-
-  function onPageChange(index: number) {
-    const page = viewer.innerContainer?.querySelector("[id^=document\\/p]");
-    const offset = page
-      ? -parseFloat(getComputedStyle(page).scrollMarginTop)
-      : 0;
-    virtualizer?.scrollToIndex(index, { align: "start", offset });
-  }
-
-  onMount(() => {
-    viewer.onPageChange = onPageChange;
-    return () => (viewer.onPageChange = undefined);
-  });
 
   let pinching = $state(false);
 
@@ -121,8 +106,8 @@
         >
           {#if browser && viewer.width !== undefined}
             <Virtualizer
-              bind:this={virtualizer}
-              {...viewer.virtualizerProps}
+              data={viewer.pageSizes}
+              keepMounted={[Math.max(0, viewer.page - 2)]}
               itemProps={() => ({
                 style: {
                   display: "flex",

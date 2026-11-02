@@ -5,8 +5,8 @@
  */
 import type { Document } from "$lib/api/types";
 
-import { describe, it, expect, vi } from "vitest";
-import { screen } from "@testing-library/svelte";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { screen, waitFor } from "@testing-library/svelte";
 import { readable } from "svelte/store";
 
 vi.mock("pdfjs-dist/legacy/build/pdf.mjs", () => ({
@@ -27,6 +27,7 @@ vi.mock("$app/navigation", () => ({ afterNavigate: vi.fn() }));
 
 import Notes from "../Notes.svelte";
 import { renderInViewer } from "./renderInViewer";
+import { stubViewport } from "@/test/helpers/stubViewport";
 import { document as base } from "@/test/fixtures/documents";
 import { notePage } from "@/test/fixtures/notes";
 
@@ -37,6 +38,8 @@ function doc(overrides: Partial<Document>): Document {
 }
 
 describe("Notes", () => {
+  beforeEach(() => stubViewport({ itemHeight: 300 }));
+
   it("prompts editors to annotate when there are no notes", () => {
     renderInViewer(Notes, {
       context: { document: doc({ edit_access: true }), notes: [] },
@@ -56,20 +59,22 @@ describe("Notes", () => {
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
   });
 
-  it("renders one entry per note", () => {
-    const sample = notes.slice(0, 3);
+  it("renders entries for the notes in view, not every note", async () => {
     const { container } = renderInViewer(Notes, {
       context: {
         document: doc({ edit_access: false }),
-        notes: sample,
+        notes,
         embed: true, // skip the note footer (actions/metadata) to keep it light
       },
     });
 
-    expect(container.querySelectorAll(".note-wrapper")).toHaveLength(
-      sample.length,
-    );
-    // the first note's title is shown
-    expect(screen.getByText(sample[0]!.title!)).toBeInTheDocument();
+    await waitFor(() => {
+      const count = container.querySelectorAll(".note-wrapper").length;
+      expect(count).toBeGreaterThan(0);
+      expect(count).toBeLessThan(notes.length);
+    });
+    // the list starts at the first note
+    expect(screen.getByText(notes[0]!.title!)).toBeInTheDocument();
+    expect(screen.queryByText(notes.at(-1)!.title!)).not.toBeInTheDocument();
   });
 });

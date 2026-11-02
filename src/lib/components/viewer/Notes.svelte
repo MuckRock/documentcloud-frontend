@@ -8,6 +8,7 @@ Must be a child of a ViewerContext
 
   import Empty from "../common/Empty.svelte";
   import Note from "../notes/Note.svelte";
+  import Virtualizer from "$lib/components/viewer/Virtualizer.svelte";
 
   import { getViewerHref } from "$lib/utils/viewer";
   import { getViewerState } from "$lib/state/viewer.svelte";
@@ -19,13 +20,17 @@ Must be a child of a ViewerContext
   let annotate = $derived(getViewerHref({ document, mode: "annotating" }));
 </script>
 
-<div class="pages">
-  {#each notes as note}
-    <div class="note-wrapper">
-      <div class="card">
-        <Note {note} />
-      </div>
-    </div>
+<div class="pages" bind:this={viewer.innerContainer}>
+  {#if notes.length > 0}
+    <Virtualizer data={notes} getKey={({ id }) => id}>
+      {#snippet children(note, i)}
+        <div class="note-wrapper">
+          <div class="card">
+            <Note {note} />
+          </div>
+        </div>
+      {/snippet}
+    </Virtualizer>
   {:else}
     <Empty icon={ListOrdered24}>
       <h2>{$_("notes.empty")}</h2>
@@ -35,19 +40,15 @@ Must be a child of a ViewerContext
         </p>
       {/if}
     </Empty>
-  {/each}
+  {/if}
 </div>
 
 <style>
   .pages {
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    gap: 2rem;
+    width: 100%;
     margin: 0 auto;
     max-width: 38.0625rem;
-    padding: 2rem 0;
-    min-height: 100%;
+    padding: 2rem 0 0;
   }
 
   .card {
@@ -58,5 +59,6 @@ Must be a child of a ViewerContext
   .note-wrapper {
     display: flex;
     flex-direction: column;
+    margin-bottom: 2rem;
   }
 </style>

@@ -3,13 +3,14 @@
   import type { Document } from "$lib/api/types";
   import doc from "@/test/fixtures/documents/document-expanded.json";
   import pdfFile from "@/test/fixtures/documents/examples/agreement-between-conservatives-and-liberal-democrats-to-form-a-coalition-government.pdf";
+  import ScrollContainer from "./ScrollContainer.svelte";
   import ViewerContext from "../ViewerContext.svelte";
   import Notes from "../Notes.svelte";
 
   const { Story } = defineMeta({
     title: "Viewer / Notes View",
     component: Notes,
-    parameters: { layout: "centered" },
+    parameters: { layout: "fullscreen" },
     render: template,
   });
 
@@ -21,12 +22,15 @@
     document,
     notes,
     asset_url: url,
+    mode: "notes",
   };
 </script>
 
 {#snippet template(args)}
   <ViewerContext {...args}>
-    <Notes />
+    <ScrollContainer>
+      <Notes />
+    </ScrollContainer>
   </ViewerContext>
 {/snippet}
 

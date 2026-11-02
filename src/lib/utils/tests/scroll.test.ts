@@ -1,5 +1,5 @@
 import { vi, test, expect, describe, afterEach, beforeEach } from "vitest";
-import { scrollToId, scrollToPage } from "../scroll";
+import { scrollToId } from "../scroll";
 import { pageHashUrl } from "$lib/api/documents";
 
 const pageId = (n: number) => pageHashUrl(n).replace("#", "");
@@ -34,26 +34,6 @@ describe("scroll helpers", () => {
     stopWaiting();
     window.document.body.replaceChildren();
     vi.restoreAllMocks();
-  });
-
-  test("scrollToPage", () => {
-    const scrollIntoView = HTMLElement.prototype.scrollIntoView;
-    const getElementById = vi
-      .spyOn(document, "getElementById")
-      .mockImplementation(
-        (elementId: string) =>
-          pages.find((div) => div.id === elementId) || null,
-      );
-
-    expect(scrollToPage(5)).toBeUndefined();
-
-    // check that we found the right element
-    expect(getElementById).toBeCalledWith(pageId(5));
-
-    expect(scrollToPage(70)).toBeUndefined(); // not a page, nothing to scroll to
-
-    // only called on the page that exists
-    expect(scrollIntoView).toBeCalledTimes(1);
   });
 
   test("scrollToId waits for a target that hasn't rendered yet", async () => {

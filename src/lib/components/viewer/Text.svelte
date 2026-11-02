@@ -6,11 +6,11 @@
 -->
 <script lang="ts">
   import { page } from "$app/state";
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
 
   import Page from "./Page.svelte";
+  import Virtualizer from "$lib/components/viewer/Virtualizer.svelte";
   import { getViewerState } from "$lib/state/viewer.svelte";
-  import { scrollToPage } from "$lib/utils/scroll";
   import { highlight } from "$lib/utils/search";
   import { getQuery } from "$lib/utils/search";
 
@@ -18,22 +18,45 @@
 
   const viewer = getViewerState();
 
+  let keepMounted = $derived.by(() => {
+    const MOUNTED = 200;
+    const pageCount = viewer.pageSizes.length;
+    const start = Math.max(
+      0,
+      Math.min(viewer.page - 1 - MOUNTED / 2, pageCount - MOUNTED),
+    );
+    const end = Math.min(pageCount, start + MOUNTED);
+    return Array.from({ length: end - start }, (_, i) => start + i);
+  });
+
   onMount(async () => {
     if (viewer.page > 1) {
-      scrollToPage(viewer.page);
+      // The pages aren't rendered by virtua until the next tick
+      await tick();
+      viewer.goToPage(viewer.page);
     }
   });
 </script>
 
-<div class="textPages" style:--zoom={+viewer.zoom || 1}>
+<div
+  bind:this={viewer.innerContainer}
+  class="textPages"
+  style:--zoom={+viewer.zoom || 1}
+>
   {#await viewer.text then text}
-    {#each text?.pages ?? [] as { page, contents }}
-      <Page page_number={page + 1} track>
-        <pre>
+    <Virtualizer
+      data={text?.pages ?? []}
+      getKey={({ page }) => page}
+      {keepMounted}
+    >
+      {#snippet children({ page, contents })}
+        <Page page_number={page + 1} track>
+          <pre>
       {@html highlight(contents, query)}
     </pre>
-      </Page>
-    {/each}
+        </Page>
+      {/snippet}
+    </Virtualizer>
   {/await}
 </div>
 

@@ -17,6 +17,7 @@ import type {
   BBox,
 } from "$lib/api/types";
 
+import type { VirtualizerHandle } from "virtua/svelte";
 import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
 import { createContext } from "svelte";
 
@@ -41,7 +42,6 @@ export class ViewerState {
   errors: Error[] = $state([]);
   mode: ViewerMode = $state("document");
   page: number = $state(1); // 1-indexed
-  onPageChange = $state<(index: number) => void>();
   // A never-resolving placeholder until `loadPDF` runs. `null` means this viewer
   // has no PDF at all (e.g. a single-note embed), so consumers render from a
   // page image instead of loading the document.
@@ -50,6 +50,9 @@ export class ViewerState {
   );
   progress: DocumentLoadProgress = $state({ loaded: 0, total: 0 });
   zoom: Zoom = $state(1);
+
+  // Reference to the currently mounted virtualizer
+  virtualizerRef = $state<VirtualizerHandle>();
 
   // notes
   currentNote: Nullable<Note> = $state(null);
@@ -95,9 +98,7 @@ export class ViewerState {
   // Props object to spread onto the Virtualizer in PDF.svelte
   virtualizerProps = $derived({
     scrollRef: this.scrollContainer,
-    data: this.pageSizes,
     startMargin: this.startMargin,
-    keepMounted: [Math.max(0, this.page - 2)],
   });
 
   /** Fraction of the PDF loaded, or 1 once pdf.js has opened it. */
@@ -115,7 +116,12 @@ export class ViewerState {
    */
   goToPage(page: number) {
     this.page = page;
-    this.onPageChange?.(page - 1);
+
+    this.virtualizerRef?.scrollToIndex(page - 1, {
+      align: "start",
+      // Should match the scroll-margin-top value in components/viewer/Page.svelte
+      offset: -96,
+    });
   }
 
   /**
