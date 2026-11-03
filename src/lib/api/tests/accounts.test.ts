@@ -36,6 +36,7 @@ import {
   isOrg,
   isUser,
   setOrg,
+  getUserIdFromUUID,
 } from "../accounts";
 
 describe("getMe", async () => {
@@ -365,4 +366,37 @@ test("inMyOrg", () => {
       verified_journalist: true,
     },
   ]);
+});
+
+describe("getUserIdFromUUID", () => {
+  const user = fixtures.usersList.results[0]!;
+
+  function mockFetch(results: unknown[]) {
+    return vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({ ...fixtures.usersList, results }),
+    });
+  }
+
+  test("returns the DocumentCloud id of the user with that uuid", async () => {
+    const fetch = mockFetch([user]);
+
+    expect(await getUserIdFromUUID(user.uuid, fetch)).toBe(user.id);
+
+    const endpoint = new URL("users/", BASE_API_URL);
+    endpoint.searchParams.set("uuid", user.uuid);
+    expect(fetch).toHaveBeenCalledWith(endpoint, { credentials: "include" });
+  });
+
+  test("returns null when no user has that uuid", async () => {
+    expect(await getUserIdFromUUID(user.uuid, mockFetch([]))).toBeNull();
+  });
+
+  test("returns null without a request when the uuid is empty", async () => {
+    const fetch = mockFetch([user]);
+
+    expect(await getUserIdFromUUID("", fetch)).toBeNull();
+    expect(fetch).not.toHaveBeenCalled();
+  });
 });

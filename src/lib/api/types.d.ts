@@ -458,3 +458,11 @@ export interface AddOnPayload {
   errors?: OutputUnit[];
   valid?: boolean;
 }
+
+export interface SquareletUser {
+  id: number;
+  uuid: string;
+  username: string;
+  name: string;
+  avatar_url: string;
+}

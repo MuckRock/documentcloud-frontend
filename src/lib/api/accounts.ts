@@ -237,3 +237,16 @@ export async function listOrgs(
   );
   return getApiResponse<Page<Org>>(response);
 }
+
+/**
+ * Get a user's DocumentCloud ID from their MuckRock Accounts UUID.
+ */
+export async function getUserIdFromUUID(
+  uuid?: string,
+  fetch = globalThis.fetch,
+) {
+  if (!uuid) return null;
+
+  const { data } = await listUsers({ uuid }, fetch);
+  return data?.results?.[0]?.id ?? null;
+}
