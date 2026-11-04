@@ -141,6 +141,12 @@ export function getDefaultZoom(mode: ViewerMode): Zoom {
     case "redacting":
       return "auto";
 
+    case "edit":
+      return "auto";
+
+    case "bulk":
+      return "small";
+
     case "grid":
       return "small";
 
@@ -164,6 +170,7 @@ export function getZoomLevels(mode: ViewerMode, zoom?: Zoom): ZoomLevels {
     case "document":
     case "annotating":
     case "redacting":
+    case "edit":
       const levels = [...ZOOM_LEVELS];
       if (typeof zoom === "number" && !ZOOM_STEPS.includes(zoom)) {
         levels.push([zoom, `${Math.round(zoom * 100)}%`]);
@@ -175,6 +182,7 @@ export function getZoomLevels(mode: ViewerMode, zoom?: Zoom): ZoomLevels {
       return ZOOM_LEVELS;
 
     case "grid":
+    case "bulk":
       return [
         ["thumbnail", "zoom.thumbnail"],
         ["small", "zoom.small"],
@@ -193,7 +201,13 @@ export function getInitialZoom(url: Maybe<URL>, mode: ViewerMode): Maybe<Zoom> {
 
   if (!zoom) return undefined;
 
-  const numeric = new Set(["document", "text", "annotating", "redacting"]);
+  const numeric = new Set([
+    "document",
+    "text",
+    "annotating",
+    "redacting",
+    "edit",
+  ]);
 
   if (numeric.has(mode) && zoom.match(/\d+/)) {
     return +zoom;
@@ -222,7 +236,7 @@ export function getZoomInOut(
   let zoomOut: Maybe<Zoom>, zoomIn: Maybe<Zoom>;
 
   // If the viewer is in grid mode, look up the string index
-  if (mode === "grid") {
+  if (["grid", "bulk"].includes(mode)) {
     const index = zoomValues.indexOf(zoom as Sizes);
     zoomOut = zoomValues[index - 1];
     zoomIn = zoomValues[index + 1];

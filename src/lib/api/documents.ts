@@ -43,7 +43,12 @@ export const READING_MODES = new Set<ReadMode>([
   "search",
 ]);
 
-export const WRITING_MODES = new Set<WriteMode>(["annotating", "redacting"]);
+export const WRITING_MODES = new Set<WriteMode>([
+  "annotating",
+  "redacting",
+  "edit",
+  "bulk",
+]);
 
 export const MODES = new Set<ViewerMode>([...READING_MODES, ...WRITING_MODES]);
 
@@ -732,7 +737,9 @@ export function userOrgString(document: Document): string {
  * @returns {boolean}
  */
 export function shouldPreload(mode: ViewerMode): boolean {
-  return ["document", "notes", "redacting", "annotating"].includes(mode);
+  return ["document", "notes", "redacting", "annotating", "edit"].includes(
+    mode,
+  );
 }
 
 /**
@@ -741,9 +748,14 @@ export function shouldPreload(mode: ViewerMode): boolean {
  * @returns {boolean}
  */
 export function shouldPaginate(mode: ViewerMode): boolean {
-  return ["document", "text", "annotating", "redacting", "search"].includes(
-    mode,
-  );
+  return [
+    "document",
+    "text",
+    "annotating",
+    "redacting",
+    "search",
+    "edit",
+  ].includes(mode);
 }
 
 /**

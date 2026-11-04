@@ -33,7 +33,7 @@
   let sections = $derived(sortedSections(document));
   let totalPages = $derived(document.page_count);
   let showPDF = $derived(
-    ["document", "annotating", "redacting"].includes(viewer.mode),
+    ["document", "annotating", "redacting", "edit"].includes(viewer.mode),
   );
   let canEditSections = $derived(!viewer.embed && document.edit_access);
 
