@@ -18,6 +18,7 @@ Must be a child of a ViewerContext
   import { getViewerState } from "$lib/state/viewer.svelte";
   import { getQuery } from "$lib/utils/search";
   import { getViewerHref } from "$lib/utils/viewer";
+  import Checkbox from "$lib/components/inputs/Checkbox.svelte";
 
   interface Props {
     page_number: number;
@@ -60,6 +61,12 @@ Must be a child of a ViewerContext
       embed: viewer.embed,
       query: getQuery(page.url, "q"),
     }),
+  );
+  let showPageActions = $derived(
+    !viewer.embed && !["edit", "bulk"].includes(viewer.mode),
+  );
+  let selected = $derived(
+    viewer.mode === "bulk" && viewer.selectedPages.has(page_number),
   );
 
   function watch(el: HTMLElement, once = false): IntersectionObserver {
@@ -128,15 +135,28 @@ Must be a child of a ViewerContext
     </h4>
 
     {#if !viewer.embed}
-      <PageActions
-        {document}
-        notes={viewer.notes}
-        {page_number}
-        pageWidth={width}
-      />
+      {#if showPageActions}
+        <PageActions
+          {document}
+          notes={viewer.notes}
+          {page_number}
+          pageWidth={width}
+        />
+      {:else if viewer.mode === "bulk"}
+        <div class="check">
+          <Checkbox
+            sronly
+            label={$_("inputs.selectPage", { values: { page: page_number } })}
+            bind:value={
+              () => selected,
+              (v) => viewer.selectedPages[v ? "add" : "delete"](page_number)
+            }
+          />
+        </div>
+      {/if}
     {/if}
   </header>
-  {@render children?.({ id, href, visible, documentHref })}
+  {@render children?.({ id, href, visible, documentHref, selected })}
 </div>
 
 <style>
@@ -183,5 +203,9 @@ Must be a child of a ViewerContext
   }
   .title:empty {
     display: none;
+  }
+
+  .check {
+    margin: 5px 0;
   }
 </style>
