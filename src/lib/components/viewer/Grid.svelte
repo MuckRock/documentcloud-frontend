@@ -58,6 +58,7 @@
       Math.floor((containerWidth - 2 * PADDING + GAP) / (width + GAP)),
     ),
   );
+  let edit = $derived(viewer.mode === "bulk");
 </script>
 
 <div class="pages" bind:clientWidth={containerWidth}>
@@ -68,19 +69,34 @@
         {@const height = width / aspectRatio}
         {@const margin = lanes > 1 ? maxHeight - height : 0}
         {@const src = pageImageUrl(document, page_number, size).href}
+        {@const title = `Page ${page_number}, ${document.title}`}
         <div class="page-container">
           <Page {page_number}>
-            {#snippet children({ documentHref })}
-              <a href={documentHref} style:margin-bottom="{margin}px">
-                <img
-                  {src}
-                  alt="Page {page_number}, {document.title}"
-                  title="Page {page_number}, {document.title}"
-                  width="{width}px"
-                  height="{height}px"
-                  loading="lazy"
-                />
-              </a>
+            {#snippet children({ documentHref, selected })}
+              {#if edit}
+                <div style:margin-bottom="{margin}px">
+                  <img
+                    class:selected
+                    {src}
+                    alt={title}
+                    {title}
+                    width="{width}px"
+                    height="{height}px"
+                    loading="lazy"
+                  />
+                </div>
+              {:else}
+                <a href={documentHref} style:margin-bottom="{margin}px">
+                  <img
+                    {src}
+                    alt={title}
+                    {title}
+                    width="{width}px"
+                    height="{height}px"
+                    loading="lazy"
+                  />
+                </a>
+              {/if}
             {/snippet}
           </Page>
         </div>
@@ -109,5 +125,9 @@
   img {
     background-color: var(--white, white);
     box-shadow: var(--shadow-1);
+  }
+
+  .selected {
+    outline: 2px solid var(--blue-3);
   }
 </style>

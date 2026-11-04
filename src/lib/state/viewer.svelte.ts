@@ -24,6 +24,7 @@ import { createContext } from "svelte";
 import { assetUrl } from "$lib/api/documents";
 import { openSignedRange } from "$lib/utils/pdfRange";
 import { pagesFromSpec } from "$lib/utils/pageSize";
+import { SvelteSet } from "svelte/reactivity";
 
 if (!pdfjs.GlobalWorkerOptions.workerSrc) {
   pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -63,6 +64,9 @@ export class ViewerState {
   #opening = false;
   #opened = $state(false);
   #retriesOn403Error = 0;
+
+  // edit mode state
+  selectedPages = new SvelteSet<number>();
 
   // The scrolling ancestor of the document
   scrollContainer = $state<HTMLElement>();
