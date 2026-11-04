@@ -3,7 +3,7 @@ Must be a child of a ViewerContext
  -->
 
 <script lang="ts">
-  import type { ReadMode, WriteMode } from "$lib/api/types";
+  import type { ReadMode, ViewerMode, WriteMode } from "$lib/api/types";
 
   import { page } from "$app/state";
 
@@ -11,6 +11,7 @@ Must be a child of a ViewerContext
   import {
     Comment16,
     EyeClosed16,
+    Pencil16,
     File16,
     Typography16,
     Apps16,
@@ -58,6 +59,7 @@ Must be a child of a ViewerContext
   const writeModes: Map<WriteMode, string> = new Map([
     ["annotating", $_("mode.annotating")],
     ["redacting", $_("mode.redacting")],
+    ["edit", $_("mode.editing")],
   ]);
 
   const icons = {
@@ -67,6 +69,7 @@ Must be a child of a ViewerContext
     notes: Note16,
     annotating: Comment16,
     redacting: EyeClosed16,
+    edit: Pencil16,
     search: Search16,
   };
 
@@ -83,6 +86,12 @@ Must be a child of a ViewerContext
       ([value]) => value === viewer.mode,
     )?.[1],
   );
+
+  // If the user is in grid mode, the edit button opens bulk edit.
+  function getMode(mode: ViewerMode): ViewerMode {
+    if (mode === "edit" && viewer.mode === "grid") return "bulk";
+    return mode;
+  }
 </script>
 
 <PageToolbar bind:width>
@@ -174,9 +183,10 @@ Must be a child of a ViewerContext
         {#each writeModes as [value, name]}
           <Button
             ghost
+            minW={false}
             href={getViewerHref({
               document,
-              mode: value,
+              mode: getMode(value),
               embed: viewer.embed,
               query,
             })}
