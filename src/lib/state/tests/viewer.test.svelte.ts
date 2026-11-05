@@ -32,7 +32,8 @@ vi.mock("$lib/api/documents", () => ({ assetUrl }));
 vi.mock("$lib/utils/pdfRange", () => ({ openSignedRange }));
 
 import { ViewerState } from "$lib/state/viewer.svelte";
-import { PT_TO_PX } from "$lib/utils/viewer";
+import { PT_TO_PX } from "$lib/utils/pageSize";
+import { Page } from "$lib/utils/page.svelte";
 import documentFixture from "@/test/fixtures/documents/document.json";
 
 const doc = documentFixture as unknown as Document;
@@ -67,7 +68,7 @@ describe("ViewerState", () => {
     expect(v.progress).toEqual({ loaded: 0, total: 0 });
     // the viewport width is only known once the PDF pane has laid out
     expect(v.width).toBeUndefined();
-    expect(v.pageSizes).toEqual([]);
+    expect(v.pages).toEqual([]);
   });
 
   it("loadingProgress guards against a zero total", () => {
@@ -276,29 +277,35 @@ describe("ViewerState", () => {
       return v;
     }
 
-    it("derives pageSizes from the document's page_spec", () => {
+    it("derives pages from the document's page_spec", () => {
       const v = viewerWithWidth();
-      expect(v.pageSizes).toHaveLength(doc.page_count);
+      expect(v.pages).toHaveLength(doc.page_count);
       expect(
-        v.pageSizes.every(([w, h]) => w === PAGE_WIDTH && h === PAGE_HEIGHT),
+        v.pages.every(
+          ({ width, height }) => width === PAGE_WIDTH && height === PAGE_HEIGHT,
+        ),
       ).toBe(true);
     });
 
-    it("derives empty pageSizes when the document has no page_spec", () => {
+    it("derives no pages when the document has no page_spec", () => {
       const v = new ViewerState();
       v.document = { ...doc, page_spec: undefined } as Document;
-      expect(v.pageSizes).toEqual([]);
+      expect(v.pages).toEqual([]);
     });
 
-    it("allows pageSizes to be overridden when page_spec is missing", () => {
-      // PDF.svelte falls back to placeholder sizes from the pdfjs page count
+    it("allows pages to be overridden when page_spec is missing", () => {
+      // PDF.svelte falls back to placeholder pages from the pdfjs page count
       const v = new ViewerState();
       v.document = { ...doc, page_spec: undefined } as Document;
-      v.pageSizes = Array(3).fill([0, 0]);
-      expect(v.pageSizes).toEqual([
-        [0, 0],
-        [0, 0],
-        [0, 0],
+      v.pages = [0, 1, 2].map(
+        (index) => new Page({ index, width: 0, height: 0 }),
+      );
+      expect(
+        v.pages.map(({ index, width, height }) => [index, width, height]),
+      ).toEqual([
+        [0, 0, 0],
+        [1, 0, 0],
+        [2, 0, 0],
       ]);
     });
 
