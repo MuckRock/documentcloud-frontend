@@ -23,6 +23,7 @@ Must be a child of a ViewerContext
 
   interface Props {
     page_number: number;
+    pageId: number;
     track?: boolean | "once";
     width?: number | undefined;
     title?: Snippet;
@@ -32,6 +33,7 @@ Must be a child of a ViewerContext
 
   let {
     page_number,
+    pageId,
     track = false,
     width = $bindable(undefined),
     title,
@@ -67,7 +69,7 @@ Must be a child of a ViewerContext
     !viewer.embed && !["edit", "bulk"].includes(viewer.mode),
   );
   let selected = $derived(
-    viewer.mode === "bulk" && viewer.selectedPages.has(page_number),
+    viewer.mode === "bulk" && viewer.selectedPages.has(pageId),
   );
 
   function watch(el: HTMLElement, once = false): IntersectionObserver {
@@ -150,7 +152,7 @@ Must be a child of a ViewerContext
             label={$_("inputs.selectPage", { values: { page: page_number } })}
             bind:value={
               () => selected,
-              (v) => viewer.selectedPages[v ? "add" : "delete"](page_number)
+              (v) => viewer.selectedPages[v ? "add" : "delete"](pageId)
             }
           />
         </div>
