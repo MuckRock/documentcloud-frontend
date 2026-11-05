@@ -737,6 +737,11 @@
     "document": "This document is processing. Some features may not be available yet."
   },
   "editMode": {
+    "title": "Edit Document",
+    "cancel": "Discard",
+    "undo": "Undo",
+    "confirm": "Save",
+    "instructions": "Rotate, reorder, duplicate and delete pages from the document.",
     "up": "Move up",
     "down": "Move down",
     "cw": "Rotate clockwise",
