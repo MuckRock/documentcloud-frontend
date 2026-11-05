@@ -19,7 +19,7 @@
   } from "$lib/api/documents";
   import { embedUrl } from "$lib/api/embed";
   import { informSize } from "$lib/utils/embed";
-  import { pageSizesFromSpec } from "$lib/utils/pageSize";
+  import { pagesFromSpec } from "$lib/utils/pageSize";
 
   let { data } = $props();
 
@@ -34,10 +34,10 @@
     `${doc.title} (${$_("documents.pageAbbrev")} ${data.page})`,
   );
   let url = $derived(canonicalPageUrl(doc, page).toString());
-  let sizes = $derived(doc.page_spec ? pageSizesFromSpec(doc.page_spec) : []);
-  let aspect = $derived(sizes[page - 1] ?? 11 / 8.5);
+  let pages = $derived(doc.page_spec ? pagesFromSpec(doc.page_spec) : []);
+  let aspect = $derived(pages[page - 1]?.aspectRatio ?? 8.5 / 11);
   let width = $derived(IMAGE_WIDTHS_MAP.get("large") ?? 1000);
-  let height = $derived(width * aspect);
+  let height = $derived(width / aspect);
   let shimPlacements = $derived.by(() => {
     if (active === null) return [];
     return [
