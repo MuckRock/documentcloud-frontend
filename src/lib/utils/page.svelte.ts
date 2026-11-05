@@ -1,4 +1,8 @@
+let id = 0;
+
 export class Page {
+  id = ++id;
+
   // Zero-indexed page position in the document
   index = $state(0);
   width = $state(0);

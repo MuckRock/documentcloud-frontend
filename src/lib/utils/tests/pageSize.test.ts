@@ -42,4 +42,9 @@ describe("pagesFromSpec", () => {
     const [first, second] = pagesFromSpec("612x792:0-1");
     expect(first).not.toBe(second);
   });
+
+  test("assigns each page a unique ID", () => {
+    const [first, second] = pagesFromSpec("612x792:0-1");
+    expect(first?.id).not.toEqual(second?.id);
+  });
 });
