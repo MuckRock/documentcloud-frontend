@@ -736,6 +736,14 @@
     "download": "Download File",
     "document": "This document is processing. Some features may not be available yet."
   },
+  "editMode": {
+    "up": "Move up",
+    "down": "Move down",
+    "cw": "Rotate clockwise",
+    "ccw": "Rotate counterclockwise",
+    "duplicate": "Duplicate",
+    "delete": "Delete"
+  },
   "feedback": {
     "title": "Share Your Feedback",
     "hello": "<p>We welcome your feedback&mdash;comments, ideas, and questions&mdash;to inform our progress. We are a very small team so we cannot guarantee that we will respond to all feedback, but we will read and review all of it.</p>",
