@@ -233,9 +233,9 @@ Selectable text can be rendered in one of two ways:
     const pagePromise = page;
     if (pagePromise && width === 0 && height === 0) {
       pagePromise.then((p) => {
-        // It's safe to assume that PDFPageProxy.view is 4 elements long
-        pageData.width = p.view[2]!;
-        pageData.height = p.view[3]!;
+        // PDFPageProxy.view is [x1, y1, x2, y2] in points.
+        pageData.width = p.view[2]! * PT_TO_PX;
+        pageData.height = p.view[3]! * PT_TO_PX;
       });
     }
   });

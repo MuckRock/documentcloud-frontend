@@ -51,7 +51,7 @@
   let scale = $derived(SCALE[size] ?? 1);
   let width = $derived((IMAGE_WIDTHS_MAP.get(size) ?? 180) / scale);
   let maxHeight = $derived(
-    width * Math.max(...pages.map(({ aspectRatio }) => aspectRatio)),
+    width / Math.min(...pages.map(({ aspectRatio }) => aspectRatio)),
   );
   let lanes = $derived(
     Math.max(
