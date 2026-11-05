@@ -19,6 +19,7 @@ Must be a child of a ViewerContext
   import { getQuery } from "$lib/utils/search";
   import { getViewerHref } from "$lib/utils/viewer";
   import Checkbox from "$lib/components/inputs/Checkbox.svelte";
+  import EditActionsToolbar from "$lib/components/toolbars/EditActionsToolbar.svelte";
 
   interface Props {
     page_number: number;
@@ -153,6 +154,14 @@ Must be a child of a ViewerContext
             }
           />
         </div>
+      {:else if viewer.mode === "edit"}
+        <div class="edit-actions">
+          <EditActionsToolbar
+            mode="edit"
+            first={page_number === 1}
+            last={page_number === viewer.pages.length}
+          />
+        </div>
       {/if}
     {/if}
   </header>
@@ -207,5 +216,13 @@ Must be a child of a ViewerContext
 
   .check {
     margin: 5px 0;
+  }
+
+  .edit-actions {
+    background-color: var(--white);
+    border-radius: 0.75rem;
+    box-shadow: var(--shadow-1);
+    padding: 0.25rem;
+    display: flex;
   }
 </style>
