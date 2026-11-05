@@ -18,6 +18,7 @@
   import { pinchZoom, type PinchZoomOptions } from "$lib/utils/pinchZoom";
   import Virtualizer from "$lib/components/viewer/Virtualizer.svelte";
   import Error from "../common/Error.svelte";
+  import { Page } from "$lib/utils/page.svelte";
 
   const viewer = getViewerState();
 
@@ -35,7 +36,7 @@
   });
 
   let document = $derived(viewer.document!);
-  let sizes = $derived(viewer.pageSizes);
+  let pages = $derived(viewer.pages);
   let sections = $derived(getSections(document));
   let scale = $derived(viewer.scale);
 
@@ -49,8 +50,10 @@
     if (!pdf) return;
     pdf
       .then((p) => {
-        if (sizes.length === 0) {
-          viewer.pageSizes = Array(p.numPages).fill([0, 0]);
+        if (pages.length === 0) {
+          viewer.pages = Array.from({ length: p.numPages }).map(
+            (_, index) => new Page({ width: 0, height: 0, index }),
+          );
         }
       })
       .catch((e) => {
@@ -106,7 +109,7 @@
         >
           {#if browser && viewer.width !== undefined}
             <Virtualizer
-              data={viewer.pageSizes}
+              data={viewer.pages}
               keepMounted={[Math.max(0, viewer.page - 2)]}
               itemProps={() => ({
                 style: {
@@ -117,15 +120,15 @@
                 },
               })}
             >
-              {#snippet children([width, height], n)}
+              {#snippet children(page, n)}
                 {@const page_number = n + 1}
-                <div class={["page-wrapper", { last: n === sizes.length - 1 }]}>
+                <div class={["page-wrapper", { last: n === pages.length - 1 }]}>
                   {#if sections[n]}
                     <h3 class="section pin-x">
                       {sections[n].title}
                     </h3>
                   {/if}
-                  <PdfPage {page_number} {scale} {width} {height} {pinching} />
+                  <PdfPage {page_number} {page} {scale} {pinching} />
                 </div>
               {/snippet}
             </Virtualizer>

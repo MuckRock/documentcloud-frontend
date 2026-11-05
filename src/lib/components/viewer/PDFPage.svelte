@@ -31,15 +31,16 @@ Selectable text can be rendered in one of two ways:
   import { isPageLevel } from "$lib/api/notes";
   import { getViewerState } from "$lib/state/viewer.svelte";
   import { getQuery } from "$lib/utils/search";
-  import { getNotes, PT_TO_PX } from "$lib/utils/viewer";
+  import { getNotes } from "$lib/utils/viewer";
+  import { Page as PageClass } from "$lib/utils/page.svelte";
+  import { PT_TO_PX } from "$lib/utils/pageSize";
 
   const viewer = getViewerState();
 
   interface Props {
     page_number: number; // 1-indexed
+    page: PageClass;
     scale: number;
-    width: number;
-    height: number;
     text?: TextPosition[];
     query?: string;
     // While true, skip the expensive pdfjs canvas re-render and rely on the
@@ -51,9 +52,8 @@ Selectable text can be rendered in one of two ways:
 
   let {
     page_number,
+    page: pageData,
     scale,
-    width = $bindable(),
-    height = $bindable(),
     text = [],
     query = $bindable(getQuery(pageState.url, "q")),
     pinching,
@@ -75,7 +75,10 @@ Selectable text can be rendered in one of two ways:
   // visibility, for loading optimization
   let visible: boolean = $state(false);
 
-  // Width and height props have already been converted from pt to px in `pageSizes`,
+  let { width, height, aspectRatio, orientation, index, oneIndexedPageNumber } =
+    $derived(pageData);
+
+  // Width and height have already been converted from pt to px in `pagesFromSpec`,
   // but the PDF.js render methods use the unconverted pt values, so we need to pass
   // them a converted scale
   let pxScale = $derived(scale * PT_TO_PX);
@@ -218,7 +221,9 @@ Selectable text can be rendered in one of two ways:
   // in case this component ends up in a viewer that never loads a PDF)
   $effect(() => {
     if (!visible || !viewer.pdf || page) return;
-    page = Promise.resolve(viewer.pdf).then((pdf) => pdf.getPage(page_number));
+    page = Promise.resolve(viewer.pdf).then((pdf) =>
+      pdf.getPage(oneIndexedPageNumber),
+    );
   });
 
   // handle 0 sizing when page_spec is unavailable
@@ -229,13 +234,11 @@ Selectable text can be rendered in one of two ways:
     if (pagePromise && width === 0 && height === 0) {
       pagePromise.then((p) => {
         // It's safe to assume that PDFPageProxy.view is 4 elements long
-        width = p.view[2]!;
-        height = p.view[3]!;
+        pageData.width = p.view[2]!;
+        pageData.height = p.view[3]!;
       });
     }
   });
-  let aspect = $derived(height / width);
-  let orientation = $derived(height > width ? "vertical" : "horizontal");
   // The box this page occupies, at the zoom it will render at. Sizing it from
   // the intrinsic page width instead would lay every not-yet-rendered page out
   // at 100% while rendered ones sit at the real zoom, so boxes — and everything
@@ -279,11 +282,10 @@ Selectable text can be rendered in one of two ways:
     [
       ...($pending[document.id] ?? []),
       ...($redactions[document.id] ?? []),
-    ].filter((r) => r.page_number === page_number - 1),
+    ].filter((r) => r.page_number === index),
   );
   let page_level_notes = $derived(
-    getNotes(viewer.notes)[page_number - 1]?.filter((n) => isPageLevel(n)) ??
-      [],
+    getNotes(viewer.notes)[index]?.filter((n) => isPageLevel(n)) ?? [],
   );
 </script>
 
@@ -304,7 +306,7 @@ Selectable text can be rendered in one of two ways:
       class={["page-container", orientation, visible && "visible"]}
       class:visible
       class:debug
-      style:--aspect={aspect}
+      style:--aspect={aspectRatio}
       style:--width="{layoutWidth}px"
       style:--height="{height}px"
       style:--scale-factor={pxScale}
@@ -339,11 +341,11 @@ Selectable text can be rendered in one of two ways:
         </div>
       {/if}
 
-      <AnnotationLayer page_number={page_number - 1} />
+      <AnnotationLayer page_number={index} />
 
       {#if redactions_for_page.length > 0 || viewer.mode === "redacting"}
         <RedactionLayer
-          page_number={page_number - 1}
+          page_number={index}
           active={viewer.mode === "redacting"}
           id={document.id.toString()}
         />
@@ -354,7 +356,7 @@ Selectable text can be rendered in one of two ways:
 
 <style>
   .page-container {
-    aspect-ratio: 1 / var(--aspect);
+    aspect-ratio: var(--aspect);
     margin: 0;
     position: relative;
 
