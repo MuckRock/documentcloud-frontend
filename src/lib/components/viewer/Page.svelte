@@ -6,6 +6,7 @@ Must be a child of a ViewerContext
 
 <script lang="ts">
   import type { Maybe } from "$lib/api/types";
+  import type { EditAction } from "$lib/utils/editMode";
 
   import { page } from "$app/state";
 
@@ -23,7 +24,7 @@ Must be a child of a ViewerContext
 
   interface Props {
     page_number: number;
-    pageId: number;
+    pageId?: number;
     track?: boolean | "once";
     width?: number | undefined;
     title?: Snippet;
@@ -69,7 +70,7 @@ Must be a child of a ViewerContext
     !viewer.embed && !["edit", "bulk"].includes(viewer.mode),
   );
   let selected = $derived(
-    viewer.mode === "bulk" && viewer.selectedPages.has(pageId),
+    viewer.mode === "bulk" && viewer.selectedPages.has(pageId!),
   );
 
   function watch(el: HTMLElement, once = false): IntersectionObserver {
@@ -116,6 +117,25 @@ Must be a child of a ViewerContext
     if (el) io?.unobserve(el);
   }
 
+  function addEdit(action: EditAction) {
+    switch (action) {
+      case "up":
+      case "down":
+        const index = viewer.pages.findIndex(({ id }) => id === pageId);
+        const offset = action === "up" ? -1 : 1;
+        const position = viewer.pages[index + offset]?.id!;
+        viewer.edits.push({ action: "move", pages: [pageId!], position });
+        break;
+      case "cw":
+      case "ccw":
+      case "delete":
+        viewer.edits.push({ action, pages: [pageId!] });
+        break;
+      case "duplicate":
+        viewer.edits.push({ action, pages: [pageId!], position: pageId! });
+    }
+  }
+
   onMount(() => {
     if (track && container) {
       io = watch(container, track === "once");
@@ -152,7 +172,7 @@ Must be a child of a ViewerContext
             label={$_("inputs.selectPage", { values: { page: page_number } })}
             bind:value={
               () => selected,
-              (v) => viewer.selectedPages[v ? "add" : "delete"](pageId)
+              (v) => viewer.selectedPages[v ? "add" : "delete"](pageId!)
             }
           />
         </div>
@@ -162,6 +182,7 @@ Must be a child of a ViewerContext
             mode="edit"
             first={page_number === 1}
             last={page_number === viewer.pages.length}
+            onEdit={addEdit}
           />
         </div>
       {/if}

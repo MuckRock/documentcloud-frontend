@@ -32,6 +32,7 @@ Must be a child of a ViewerContext
   import { getQuery } from "$lib/utils/search";
   import { getViewerHref } from "$lib/utils/viewer";
   import { getViewerState } from "$lib/state/viewer.svelte";
+  import { goto } from "$app/navigation";
 
   let { query = getQuery(page.url, "q") } = $props();
 
@@ -58,6 +59,20 @@ Must be a child of a ViewerContext
   let current = $derived(
     Array.from(editModes ?? []).find(([value]) => value === viewer.mode)?.[1],
   );
+
+  let hasEdits = $derived(viewer.edits.length > 0);
+
+  function cancel() {
+    const href = getViewerHref({ document });
+    if (hasEdits) {
+      if (confirm($_("editMode.cancelWarning"))) {
+        viewer.edits = [];
+        goto(href);
+      }
+    } else {
+      goto(href);
+    }
+  }
 </script>
 
 <div class="toolbar" bind:clientWidth={width}>
@@ -138,7 +153,7 @@ Must be a child of a ViewerContext
         mode="danger"
         title={$_("editMode.cancel")}
         minW={false}
-        onclick={() => {}}
+        onclick={cancel}
       >
         <X16 />
         {#if BREAKPOINTS.EXPANDED}
@@ -148,10 +163,10 @@ Must be a child of a ViewerContext
       <Button
         size="small"
         ghost
-        disabled={false}
+        disabled={!hasEdits}
         title={$_("editMode.undo")}
         minW={false}
-        onclick={(e) => {}}
+        onclick={() => viewer.edits.pop()}
       >
         <Undo16 />
         {#if BREAKPOINTS.EXPANDED}
