@@ -18,7 +18,6 @@
 
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import { pageImageUrl } from "$lib/api/documents";
-  import { pagesFromSpec } from "$lib/utils/pageSize";
   import { getViewerState } from "$lib/state/viewer.svelte";
   import { zoomToSize } from "$lib/utils/viewer";
 
@@ -47,7 +46,7 @@
 
   let containerWidth = $state(0);
 
-  let pages = $derived(pagesFromSpec(document.page_spec!));
+  let pages = $derived(viewer.pages);
   let scale = $derived(SCALE[size] ?? 1);
   let width = $derived((IMAGE_WIDTHS_MAP.get(size) ?? 180) / scale);
   let maxHeight = $derived(
