@@ -1,3 +1,5 @@
+import { Page } from "$lib/utils/page.svelte";
+
 /**
  * Parses the page spec format (as "crunched" by the Python
  * [listcrunch](https://github.com/MuckRock/listcrunch) modules) and returns an
@@ -75,4 +77,20 @@ export function pageSizes(pageSpec: string): [number, number][] {
 
     return sizes;
   }, Array(parts.length));
+}
+
+/**
+ * Multiplier to convert PDF points (1/72 inch) to CSS pixels (1/96 inch)
+ */
+export const PT_TO_PX = 96 / 72;
+
+/**
+ * Create an array of Pages from a pageSpec string
+ */
+export function pagesFromSpec(pageSpec: string): Page[] {
+  const pageDimensions = pageSizes(pageSpec);
+  return pageDimensions.map(
+    ([width, height], index) =>
+      new Page({ index, width: width * PT_TO_PX, height: height * PT_TO_PX }),
+  );
 }
