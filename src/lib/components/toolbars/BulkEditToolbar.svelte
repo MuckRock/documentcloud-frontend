@@ -22,7 +22,7 @@
   function onchange(e: Event) {
     const target = e.target as HTMLInputElement;
     if (target.checked) {
-      viewer.pages.forEach((_, i) => viewer.selectedPages.add(i + 1));
+      viewer.pages.forEach(({ id }) => viewer.selectedPages.add(id));
     } else {
       viewer.selectedPages.clear();
     }
