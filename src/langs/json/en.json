@@ -742,6 +742,7 @@
     "undo": "Undo",
     "confirm": "Save",
     "instructions": "Rotate, reorder, duplicate and delete pages from the document.",
+    "cancelWarning": "You will lose unsaved edits. Are you sure you want to discard?",
     "up": "Move up",
     "down": "Move down",
     "cw": "Rotate clockwise",

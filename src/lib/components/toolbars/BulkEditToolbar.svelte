@@ -7,10 +7,12 @@
   import EditActionsToolbar from "$lib/components/toolbars/EditActionsToolbar.svelte";
 
   import { getViewerState } from "$lib/state/viewer.svelte";
+  import type { EditAction } from "$lib/utils/editMode";
 
   const viewer = getViewerState();
 
   let selectedCount = $derived(viewer.selectedPages.size);
+  let selectedPages = $derived([...viewer.selectedPages]);
   let totalCount = $derived(viewer.pages.length);
   let allSelected = $derived(selectedCount === totalCount);
   let label = $derived(
@@ -27,6 +29,25 @@
       viewer.selectedPages.clear();
     }
   }
+
+  $inspect(viewer.edits);
+
+  function addEdit(action: EditAction) {
+    switch (action) {
+      case "cw":
+      case "ccw":
+      case "delete":
+        viewer.edits.push({ action, pages: selectedPages });
+        break;
+      case "duplicate":
+        viewer.edits.push({
+          action,
+          pages: selectedPages,
+          // insert after the most recently selected page
+          position: selectedPages.at(-1)!,
+        });
+    }
+  }
 </script>
 
 <Flex>
@@ -39,5 +60,9 @@
     />
   </NavItem>
 
-  <EditActionsToolbar disabled={selectedCount === 0} mode="bulk" />
+  <EditActionsToolbar
+    disabled={selectedCount === 0}
+    mode="bulk"
+    onEdit={addEdit}
+  />
 </Flex>

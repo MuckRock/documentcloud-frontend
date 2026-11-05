@@ -75,8 +75,15 @@ Selectable text can be rendered in one of two ways:
   // visibility, for loading optimization
   let visible: boolean = $state(false);
 
-  let { width, height, aspectRatio, orientation, index, oneIndexedPageNumber } =
-    $derived(pageData);
+  let {
+    id,
+    width,
+    height,
+    aspectRatio,
+    orientation,
+    index,
+    oneIndexedPageNumber,
+  } = $derived(pageData);
 
   // Width and height have already been converted from pt to px in `pagesFromSpec`,
   // but the PDF.js render methods use the unconverted pt values, so we need to pass
@@ -291,7 +298,7 @@ Selectable text can be rendered in one of two ways:
 
 <svelte:document onvisibilitychange={onVisibilityChange} />
 
-<Page {page_number} track bind:width={pageWidth} bind:visible>
+<Page pageId={id} {page_number} track bind:width={pageWidth} bind:visible>
   {#snippet children({ visible })}
     {#if page_level_notes.length}
       <div class="page-notes pin-x">
