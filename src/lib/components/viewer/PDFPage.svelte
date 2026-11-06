@@ -223,6 +223,9 @@ Selectable text can be rendered in one of two ways:
   });
   let document = $derived(viewer.document!);
   let page = $state<Promise<PDFPageProxy>>();
+
+  let viewing = $derived(viewer.mode !== "edit");
+
   // render when anything changes
   // (PDFPage normally only renders when the viewer loads a PDF, but guard `pdf`
   // in case this component ends up in a viewer that never loads a PDF)
@@ -300,7 +303,7 @@ Selectable text can be rendered in one of two ways:
 
 <Page pageId={id} {page_number} track bind:width={pageWidth} bind:visible>
   {#snippet children({ visible })}
-    {#if page_level_notes.length}
+    {#if page_level_notes.length && viewing}
       <div class="page-notes pin-x">
         {#each page_level_notes as note}
           <Note {note} />
@@ -331,24 +334,26 @@ Selectable text can be rendered in one of two ways:
         </div>
       {/if}
 
-      {#if text.length > 0}
-        <div bind:this={textContainer} class="selectable-text">
-          {#each text as word}
-            <span
-              role="presentation"
-              class="word"
-              style="left: {word.x1 * 100}%; top: {word.y1 * 100}%;"
-              >{word.text}</span
-            >
-          {/each}
-        </div>
-      {:else}
-        <div bind:this={textContainer} class="selectable-text embedded">
-          <!-- pdfjs.renderTextLayer will fill this in -->
-        </div>
-      {/if}
+      {#if viewing}
+        {#if text.length > 0}
+          <div bind:this={textContainer} class="selectable-text">
+            {#each text as word}
+              <span
+                role="presentation"
+                class="word"
+                style="left: {word.x1 * 100}%; top: {word.y1 * 100}%;"
+                >{word.text}</span
+              >
+            {/each}
+          </div>
+        {:else}
+          <div bind:this={textContainer} class="selectable-text embedded">
+            <!-- pdfjs.renderTextLayer will fill this in -->
+          </div>
+        {/if}
 
-      <AnnotationLayer page_number={index} />
+        <AnnotationLayer page_number={index} />
+      {/if}
 
       {#if redactions_for_page.length > 0 || viewer.mode === "redacting"}
         <RedactionLayer
