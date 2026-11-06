@@ -1,7 +1,7 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
   import type { LucideIcon } from "@lucide/svelte";
-  import type { EditAction } from "$lib/utils/editMode";
+  import type { Edit } from "$lib/state/edit.svelte";
 
   import Flex from "$lib/components/common/Flex.svelte";
   import Button from "$lib/components/common/Button.svelte";
@@ -28,10 +28,10 @@
     first?: boolean;
     last?: boolean;
     disabled?: boolean;
-    onEdit?: (action: EditAction) => void;
+    onEdit?: (action: Edit) => void;
   } = $props();
 
-  const editActions = new Map<EditAction, LucideIcon>([
+  const editActions = new Map<Edit, LucideIcon>([
     ["up", ChevronUp],
     ["down", ChevronDown],
     ["cw", RotateCwSquare],
@@ -40,7 +40,7 @@
     ["delete", Trash],
   ]);
 
-  const modeActions: Record<Mode, (EditAction | true)[]> = {
+  const modeActions: Record<Mode, (Edit | true)[]> = {
     edit: ["up", "down", true, "ccw", "cw", true, "duplicate", true, "delete"],
     bulk: ["ccw", "cw", true, "duplicate", true, "delete"],
   };

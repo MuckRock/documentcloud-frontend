@@ -6,7 +6,7 @@ Must be a child of a ViewerContext
 
 <script lang="ts">
   import type { Maybe } from "$lib/api/types";
-  import type { EditAction } from "$lib/utils/editMode";
+  import type { Edit } from "$lib/state/edit.svelte";
 
   import { page } from "$app/state";
 
@@ -117,22 +117,22 @@ Must be a child of a ViewerContext
     if (el) io?.unobserve(el);
   }
 
-  function addEdit(action: EditAction) {
+  function onEdit(action: Edit) {
     switch (action) {
       case "up":
       case "down":
         const index = viewer.pages.findIndex(({ id }) => id === pageId);
-        const offset = action === "up" ? -1 : 1;
+        const offset = action === "up" ? -2 : 1;
         const position = viewer.pages[index + offset]?.id!;
-        viewer.edits.push({ action: "move", pages: [pageId!], position });
+        viewer.history.edit({ action: "move", pages: [pageId!], position });
         break;
       case "cw":
       case "ccw":
       case "delete":
-        viewer.edits.push({ action, pages: [pageId!] });
+        viewer.history.edit({ action, pages: [pageId!] });
         break;
       case "duplicate":
-        viewer.edits.push({ action, pages: [pageId!], position: pageId! });
+        viewer.history.edit({ action, pages: [pageId!], position: pageId! });
     }
   }
 
@@ -182,7 +182,7 @@ Must be a child of a ViewerContext
             mode="edit"
             first={page_number === 1}
             last={page_number === viewer.pages.length}
-            onEdit={addEdit}
+            {onEdit}
           />
         </div>
       {/if}
