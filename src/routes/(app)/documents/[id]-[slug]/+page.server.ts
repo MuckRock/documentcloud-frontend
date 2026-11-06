@@ -5,7 +5,7 @@ import { fail } from "@sveltejs/kit";
 import { setFlash, redirect } from "sveltekit-flash-message/server";
 
 import { CSRF_COOKIE_NAME, EMBED_URL } from "@/config/config.js";
-import { destroy, edit, redact } from "$lib/api/documents";
+import { destroy, edit, modify, redact } from "$lib/api/documents";
 
 export function load({ cookies, request, url }) {
   const inIframe = request.headers.get("Sec-Fetch-Dest") === "iframe";
@@ -152,5 +152,35 @@ export const actions = {
 
     setFlash({ message: "Updated ownership", status: "success" }, cookies);
     return data;
+  },
+
+  async modify({ cookies, fetch, params, request }) {
+    const csrf_token = cookies.get(CSRF_COOKIE_NAME);
+    if (!csrf_token) {
+      return fail(403, { message: "Missing CSRF token" });
+    }
+    const form = await request.formData();
+    const modifications = JSON.parse(form.get("modifications") as string);
+
+    const { data, error: err } = await modify(
+      params.id,
+      modifications,
+      csrf_token,
+      fetch,
+    );
+
+    // probably the API is down
+    if (err) {
+      setFlash(
+        { message: "Modifications failed to save.", status: "error" },
+        cookies,
+      );
+      return fail(500, { error: err.message, errors: err.errors });
+    }
+
+    setFlash({ message: "Modifications saved", status: "success" }, cookies);
+    return {
+      modifications: data,
+    };
   },
 } satisfies Actions;

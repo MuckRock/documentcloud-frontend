@@ -320,6 +320,13 @@ export interface Redaction extends BBox {
 
 export type Bounds = [number, number, number, number];
 
+export type Angle = "cc" | "ccw" | "hw";
+
+export interface Modification {
+  page: string;
+  id?: string;
+  modifications?: { type: "rotate"; angle: Angle }[];
+}
 export interface DataUpdate {
   values: string[];
   remove?: string[];

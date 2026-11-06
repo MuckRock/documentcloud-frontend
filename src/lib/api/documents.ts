@@ -22,6 +22,7 @@ import type {
   ValidationError,
   Nullable,
   Highlights,
+  Modification,
 } from "./types";
 
 import { writable, type Writable } from "svelte/store";
@@ -494,6 +495,31 @@ export async function redact(
   });
 
   return getApiResponse<Redaction[], ValidationError>(resp);
+}
+
+/**
+ * Modify a document
+ */
+export async function modify(
+  id: number | string,
+  modifications: Modification[],
+  csrf_token: string,
+  fetch = globalThis.fetch,
+) {
+  const endpoint = new URL(`documents/${id}/modifications/`, BASE_API_URL);
+
+  const resp = await fetch(endpoint, {
+    credentials: "include",
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+      [CSRF_HEADER_NAME]: csrf_token,
+      Referer: APP_URL,
+    },
+    body: JSON.stringify(modifications),
+  });
+
+  return getApiResponse<Modification[], ValidationError>(resp);
 }
 
 /**
