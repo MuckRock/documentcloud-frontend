@@ -63,13 +63,23 @@
 
 <div class="pages" bind:clientWidth={containerWidth}>
   {#if browser}
-    <VMasonry {lanes} data={pages} gap={GAP} style="padding: {PADDING}px">
-      {#snippet children({ id, aspectRatio, rotation }, n)}
+    <VMasonry
+      getKey={({ id }) => id}
+      {lanes}
+      data={pages}
+      gap={GAP}
+      style="padding: {PADDING}px"
+    >
+      {#snippet children(
+        { id, oneIndexedPageNumber, aspectRatio, rotation },
+        n,
+      )}
         {@const page_number = n + 1}
         {@const height = width / aspectRatio}
         {@const margin = lanes > 1 ? maxHeight - height : 0}
-        {@const src = pageImageUrl(document, page_number, size).href}
-        {@const title = `Page ${page_number}, ${document.title}`}
+        <!-- Modifications reorder pages, so the image comes from the source page, not the slot. -->
+        {@const src = pageImageUrl(document, oneIndexedPageNumber, size).href}
+        {@const title = `Page ${oneIndexedPageNumber}, ${document.title}`}
         <div class="page-container">
           <Page pageId={id} {page_number}>
             {#snippet children({ documentHref, selected })}
