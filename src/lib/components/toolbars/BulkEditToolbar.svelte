@@ -7,7 +7,7 @@
   import EditActionsToolbar from "$lib/components/toolbars/EditActionsToolbar.svelte";
 
   import { getViewerState } from "$lib/state/viewer.svelte";
-  import type { EditAction } from "$lib/utils/editMode";
+  import type { EditButton } from "$lib/state/edit.svelte";
 
   const viewer = getViewerState();
 
@@ -30,21 +30,20 @@
     }
   }
 
-  $inspect(viewer.edits);
-
-  function addEdit(action: EditAction) {
+  function onEdit(action: EditButton) {
     switch (action) {
       case "cw":
       case "ccw":
       case "delete":
-        viewer.edits.push({ action, pages: selectedPages });
+        viewer.history.edit({ action, pages: selectedPages });
         break;
       case "duplicate":
-        viewer.edits.push({
+        viewer.history.edit({
           action,
           pages: selectedPages,
-          // insert after the most recently selected page
-          position: selectedPages.at(-1)!,
+          position:
+            // insert after the last selected page
+            viewer.pages.findLastIndex((p) => selectedPages.includes(p.id)) + 1,
         });
     }
   }
@@ -60,9 +59,5 @@
     />
   </NavItem>
 
-  <EditActionsToolbar
-    disabled={selectedCount === 0}
-    mode="bulk"
-    onEdit={addEdit}
-  />
+  <EditActionsToolbar disabled={selectedCount === 0} mode="bulk" {onEdit} />
 </Flex>

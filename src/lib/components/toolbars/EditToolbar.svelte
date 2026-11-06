@@ -60,13 +60,11 @@ Must be a child of a ViewerContext
     Array.from(editModes ?? []).find(([value]) => value === viewer.mode)?.[1],
   );
 
-  let hasEdits = $derived(viewer.edits.length > 0);
-
   function cancel() {
     const href = getViewerHref({ document });
-    if (hasEdits) {
+    if (viewer.history.hasEntries) {
       if (confirm($_("editMode.cancelWarning"))) {
-        viewer.edits = [];
+        viewer.history.discard();
         goto(href);
       }
     } else {
@@ -163,10 +161,10 @@ Must be a child of a ViewerContext
       <Button
         size="small"
         ghost
-        disabled={!hasEdits}
+        disabled={!viewer.history.hasEntries}
         title={$_("editMode.undo")}
         minW={false}
-        onclick={() => viewer.edits.pop()}
+        onclick={() => viewer.history.undo()}
       >
         <Undo16 />
         {#if BREAKPOINTS.EXPANDED}

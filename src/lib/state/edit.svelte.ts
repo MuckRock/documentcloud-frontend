@@ -2,6 +2,8 @@ import type { Modification, Angle } from "$lib/api/types";
 import type { Page } from "$lib/utils/page.svelte";
 import { normalizeAngle } from "$lib/utils/normalizeAngle";
 
+export type EditButton = "up" | "down" | "cw" | "ccw" | "duplicate" | "delete";
+
 export type EditAction =
   | {
       action: "delete" | "cw" | "ccw";

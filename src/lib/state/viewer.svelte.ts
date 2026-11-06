@@ -16,7 +16,6 @@ import type {
   Zoom,
   BBox,
 } from "$lib/api/types";
-import type { Edit } from "$lib/utils/editMode";
 
 import type { VirtualizerHandle } from "virtua/svelte";
 import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
@@ -24,7 +23,6 @@ import { createContext } from "svelte";
 
 import { assetUrl } from "$lib/api/documents";
 import { openSignedRange } from "$lib/utils/pdfRange";
-import { pagesFromSpec } from "$lib/utils/pageSize";
 import { EditHistory } from "$lib/state/edit.svelte";
 import { SvelteSet } from "svelte/reactivity";
 
@@ -73,7 +71,6 @@ export class ViewerState {
     this.pageSpec ? pagesFromSpec(this.pageSpec) : [],
   );
   selectedPages = new SvelteSet<number>();
-  edits = $state<Edit[]>([]);
 
   // The scrolling ancestor of the document
   scrollContainer = $state<HTMLElement>();
