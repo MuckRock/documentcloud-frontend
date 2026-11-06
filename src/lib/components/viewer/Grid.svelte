@@ -64,7 +64,7 @@
 <div class="pages" bind:clientWidth={containerWidth}>
   {#if browser}
     <VMasonry {lanes} data={pages} gap={GAP} style="padding: {PADDING}px">
-      {#snippet children({ id, aspectRatio }, n)}
+      {#snippet children({ id, aspectRatio, rotation }, n)}
         {@const page_number = n + 1}
         {@const height = width / aspectRatio}
         {@const margin = lanes > 1 ? maxHeight - height : 0}
@@ -74,14 +74,21 @@
           <Page pageId={id} {page_number}>
             {#snippet children({ documentHref, selected })}
               {#if edit}
-                <div style:margin-bottom="{margin}px">
+                {@const quarterTurn = Math.abs(rotation / 90) % 2 === 1}
+                <div
+                  class="edit-image"
+                  style:--rotation="{rotation}deg"
+                  style:width="{width}px"
+                  style:height="{height}px"
+                  style:margin-bottom="{margin}px"
+                >
                   <img
                     class:selected
                     {src}
                     alt={title}
                     {title}
-                    width="{width}px"
-                    height="{height}px"
+                    width={quarterTurn ? height : width}
+                    height={quarterTurn ? width : height}
                     loading="lazy"
                   />
                 </div>
@@ -91,8 +98,8 @@
                     {src}
                     alt={title}
                     {title}
-                    width="{width}px"
-                    height="{height}px"
+                    {width}
+                    {height}
                     loading="lazy"
                   />
                 </a>
@@ -129,5 +136,17 @@
 
   .selected {
     outline: 2px solid var(--blue-3);
+  }
+
+  .edit-image {
+    position: relative;
+  }
+
+  .edit-image img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    max-width: none;
+    transform: translate(-50%, -50%) rotate(var(--rotation));
   }
 </style>
