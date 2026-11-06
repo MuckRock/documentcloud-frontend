@@ -32,7 +32,7 @@
 
   let document = $derived(viewer.document!);
   let sections = $derived(sortedSections(document));
-  let totalPages = $derived(document.page_count);
+  let totalPages = $derived(viewer.pages.length);
   let showPDF = $derived(
     ["document", "annotating", "redacting", "edit"].includes(viewer.mode),
   );
