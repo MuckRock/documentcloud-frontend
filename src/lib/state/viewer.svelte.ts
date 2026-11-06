@@ -87,9 +87,22 @@ export class ViewerState {
   // state and deriveds for zoom calculations
   // regardless of zoom mode, we always calculate auto zoom scale to display in select menu
   width = $state<number>();
-  pages = $derived(
+  #originalPages = $derived(
     this.document?.page_spec ? pagesFromSpec(this.document.page_spec) : [],
   );
+  pages = $derived.by(() => {
+    const pages = [...this.#originalPages];
+    for (const { action, pages: ids } of this.edits) {
+      if (action === "cw" || action === "ccw") {
+        for (const id of ids) {
+          const i = pages.findIndex((p) => p.id === id);
+          if (i !== -1) pages[i] = pages[i]!.rotate(action === "cw");
+        }
+      }
+    }
+    return pages;
+  });
+
   maxPageWidth = $derived(Math.max(...this.pages.map(({ width }) => width)));
   autoZoomScale = $derived.by(() => {
     if (!this.width) return 1;

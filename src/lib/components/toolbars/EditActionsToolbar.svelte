@@ -41,8 +41,8 @@
   ]);
 
   const modeActions: Record<Mode, (EditAction | true)[]> = {
-    edit: ["up", "down", true, "cw", "ccw", true, "duplicate", true, "delete"],
-    bulk: ["cw", "ccw", true, "duplicate", true, "delete"],
+    edit: ["up", "down", true, "ccw", "cw", true, "duplicate", true, "delete"],
+    bulk: ["ccw", "cw", true, "duplicate", true, "delete"],
   };
 
   const edit = $derived(mode === "edit");

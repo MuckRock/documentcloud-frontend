@@ -79,6 +79,7 @@ Selectable text can be rendered in one of two ways:
     id,
     width,
     height,
+    rotation,
     aspectRatio,
     orientation,
     index,
@@ -104,7 +105,7 @@ Selectable text can be rendered in one of two ways:
     if (!canvas || !page) return;
 
     const context = canvas.getContext("2d");
-    const viewport = page.getViewport({ scale });
+    const viewport = page.getViewport({ scale, rotation });
     const dpr = window?.devicePixelRatio ?? 1;
 
     const transform = dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : undefined;
@@ -260,6 +261,7 @@ Selectable text can be rendered in one of two ways:
     // reading it only inside the async `.then` below would not register it,
     // and numeric zoom changes (which flow through `pxScale`) wouldn't re-render.
     pxScale;
+    rotation;
     if (!visible || pinching) return;
     Promise.all([viewer.pdf, page]).then(([pdf, page]) => {
       render(page, canvas, pxScale).catch(ignoreCancelled);
