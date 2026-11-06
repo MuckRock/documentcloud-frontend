@@ -32,7 +32,10 @@ Must be a child of a ViewerContext
   import { getQuery } from "$lib/utils/search";
   import { getViewerHref } from "$lib/utils/viewer";
   import { getViewerState } from "$lib/state/viewer.svelte";
-  import { goto } from "$app/navigation";
+  import { goto, invalidate } from "$app/navigation";
+  import { canonicalUrl } from "$lib/api/documents";
+  import { enhance } from "$app/forms";
+  import type { SubmitFunction } from "@sveltejs/kit";
 
   let { query = getQuery(page.url, "q") } = $props();
 
@@ -60,17 +63,39 @@ Must be a child of a ViewerContext
     Array.from(editModes ?? []).find(([value]) => value === viewer.mode)?.[1],
   );
 
+  const gotoURL = $derived(
+    getViewerHref({
+      document,
+      mode: viewer.mode === "edit" ? "document" : "grid",
+    }),
+  );
+
   function cancel() {
-    const href = getViewerHref({ document });
     if (viewer.history.hasEntries) {
       if (confirm($_("editMode.cancelWarning"))) {
         viewer.history.discard();
-        goto(href);
+        goto(gotoURL);
       }
     } else {
-      goto(href);
+      goto(gotoURL);
     }
   }
+
+  const submit: SubmitFunction = ({ formElement, submitter }) => {
+    formElement.disabled = true;
+    (submitter as HTMLButtonElement).disabled = true;
+
+    return async ({ result }) => {
+      if (result.type === "failure") {
+        console.error(result);
+      }
+
+      if (result.type === "success") {
+        await invalidate(`document:${document.id}`);
+        goto(gotoURL);
+      }
+    };
+  };
 </script>
 
 <div class="toolbar" bind:clientWidth={width}>
@@ -171,18 +196,29 @@ Must be a child of a ViewerContext
           {$_("editMode.undo")}
         {/if}
       </Button>
-      <Button
-        size="small"
-        mode="primary"
-        title={$_("editMode.confirm")}
-        minW={!BREAKPOINTS.X_SMALL}
-        onclick={() => {}}
+      <form
+        method="POST"
+        action={new URL("?/modify", canonicalUrl(document)).href}
+        use:enhance={submit}
       >
-        <Check16 />
-        {#if BREAKPOINTS.EXPANDED}
-          {$_("editMode.confirm")}
-        {/if}
-      </Button>
+        <input
+          type="hidden"
+          name="modifications"
+          value={JSON.stringify(viewer.history.serialized)}
+        />
+        <Button
+          size="small"
+          mode="primary"
+          title={$_("editMode.confirm")}
+          minW={!BREAKPOINTS.X_SMALL}
+          type="submit"
+        >
+          <Check16 />
+          {#if BREAKPOINTS.EXPANDED}
+            {$_("editMode.confirm")}
+          {/if}
+        </Button>
+      </form>
     </Flex>
   </div>
 </div>

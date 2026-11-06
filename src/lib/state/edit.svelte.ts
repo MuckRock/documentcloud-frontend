@@ -1,3 +1,4 @@
+import type { Modification, Angle } from "$lib/api/types";
 import type { Page } from "$lib/utils/page.svelte";
 import { pagesFromSpec } from "$lib/utils/pageSize";
 
@@ -18,6 +19,16 @@ export type EditAction =
       pages: number[];
       position: number;
     };
+
+const getAngle = (rotation: number): Angle | null => {
+  let angle = rotation % 360;
+  if (angle < 0) angle += 360;
+
+  if (angle === 90) return "cc";
+  if (angle === 180) return "hw";
+  if (angle === 270) return "ccw";
+  return null;
+};
 
 export class EditHistory {
   #getPageSpec: () => string | undefined;
@@ -82,4 +93,26 @@ export class EditHistory {
   discard() {
     this.entries = [];
   }
+
+  serialized = $derived.by<Modification[]>(() => {
+    const groupedPages = this.current.reduce(
+      (acc, { index, rotation }) => {
+        const angle = getAngle(rotation);
+        const group = acc.at(-1);
+
+        if (!group || group.angle !== angle) {
+          acc.push({ angle, pages: [index] });
+        } else {
+          group.pages.push(index);
+        }
+        return acc;
+      },
+      [] as { angle: Angle | null; pages: number[] }[],
+    );
+
+    return groupedPages.map(({ pages, angle }) => ({
+      page: pages.toString(),
+      modifications: angle ? [{ type: "rotate", angle }] : [],
+    }));
+  });
 }
