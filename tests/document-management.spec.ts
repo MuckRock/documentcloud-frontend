@@ -92,3 +92,54 @@ test("reprocess a document", async ({ page, processedDoc }) => {
   // Reprocessing cycles the document back through pending to success.
   await waitForProcessed(page.request, docApiUrl);
 });
+
+test("modify a document", async ({ page, processedDoc }) => {
+  // Saving reprocesses the document.
+  test.setTimeout(180_000);
+
+  const { docApiUrl, viewerUrl } = processedDoc;
+  await page.goto(`${viewerUrl}?mode=edit`);
+  await expectPdfRendered(page);
+
+  const firstPage = page.locator(`[id="document/p1"]`);
+
+  await expect(async () => {
+    await firstPage.getByRole("button", { name: "Rotate clockwise" }).click();
+    await expect(firstPage.locator(".page-container")).toHaveClass(
+      /horizontal/,
+    );
+  }).toPass({ timeout: 20_000 });
+
+  const modifyResponse = page.waitForResponse(
+    (r) => r.url().includes("?/modify") && r.request().method() === "POST",
+  );
+  await page.getByRole("button", { name: "Save" }).click();
+  const response = await modifyResponse;
+
+  const request = response.request();
+  const field = new URLSearchParams(request.postData() ?? "").get(
+    "modifications",
+  );
+  expect(JSON.parse(field ?? "null")).toEqual([
+    { page: "0", modifications: [{ type: "rotate", angle: "cc" }] },
+  ]);
+  expect(response.ok()).toBeTruthy();
+  expect(await response.text()).toContain('"type":"success"');
+
+  // Saving leaves edit mode, and the fixture's single 612x792pt page comes back
+  // landscape once reprocessed.
+  await expect(page).not.toHaveURL(/mode=edit/);
+  await expect
+    .poll(
+      async () => {
+        const doc = await (await page.request.get(docApiUrl)).json();
+        return doc.status === "success" ? doc.page_spec : doc.status;
+      },
+      { timeout: 60_000 },
+    )
+    .toMatch(/^792(\.0+)?x612(\.0+)?:0$/);
+
+  await page.reload();
+  await expectPdfRendered(page);
+  await expect(firstPage.locator(".page-container")).toHaveClass(/horizontal/);
+});
