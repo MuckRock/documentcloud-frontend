@@ -24,6 +24,7 @@ import { createContext } from "svelte";
 import { assetUrl } from "$lib/api/documents";
 import { openSignedRange } from "$lib/utils/pdfRange";
 import { pagesFromSpec } from "$lib/utils/pageSize";
+import { EditHistory } from "$lib/state/edit.svelte";
 
 if (!pdfjs.GlobalWorkerOptions.workerSrc) {
   pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -64,6 +65,10 @@ export class ViewerState {
   #opened = $state(false);
   #retriesOn403Error = 0;
 
+  // edit history state
+  pageSpec = $derived(this.document?.page_spec);
+  history = new EditHistory(() => this.pageSpec);
+
   // The scrolling ancestor of the document
   scrollContainer = $state<HTMLElement>();
   innerContainer = $state<HTMLElement>();
@@ -81,9 +86,7 @@ export class ViewerState {
   // state and deriveds for zoom calculations
   // regardless of zoom mode, we always calculate auto zoom scale to display in select menu
   width = $state<number>();
-  pages = $derived(
-    this.document?.page_spec ? pagesFromSpec(this.document.page_spec) : [],
-  );
+  pages = $derived(this.history.current!);
   maxPageWidth = $derived(Math.max(...this.pages.map(({ width }) => width)));
   autoZoomScale = $derived.by(() => {
     if (!this.width) return 1;
