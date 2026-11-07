@@ -73,3 +73,11 @@
   name="xlarge"
   args={{ ...args, context: { ...args.context, zoom: "xlarge" } }}
 />
+
+<Story
+  name="bulk edit"
+  args={{
+    ...args,
+    context: { ...args.context, mode: "bulk" },
+  }}
+/>

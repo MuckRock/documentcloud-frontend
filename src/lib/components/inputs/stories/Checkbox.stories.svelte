@@ -17,3 +17,8 @@
 <Story name="some" args={{ indeterminate: true }} />
 
 <Story name="labeled" args={{ label: "Select all" }} />
+
+<Story
+  name="screen reader label"
+  args={{ label: "Select page 1", sronly: true }}
+/>
