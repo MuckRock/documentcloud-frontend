@@ -18,7 +18,6 @@
 
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import { pageImageUrl } from "$lib/api/documents";
-  import { pageSizesFromSpec } from "$lib/utils/pageSize";
   import { getViewerState } from "$lib/state/viewer.svelte";
   import { zoomToSize } from "$lib/utils/viewer";
 
@@ -47,10 +46,12 @@
 
   let containerWidth = $state(0);
 
-  let sizes = $derived(pageSizesFromSpec(document.page_spec));
+  let pages = $derived(viewer.pages);
   let scale = $derived(SCALE[size] ?? 1);
   let width = $derived((IMAGE_WIDTHS_MAP.get(size) ?? 180) / scale);
-  let maxHeight = $derived(width * Math.max(...sizes));
+  let maxHeight = $derived(
+    width / Math.min(...pages.map(({ aspectRatio }) => aspectRatio)),
+  );
   let lanes = $derived(
     Math.max(
       1,
@@ -61,10 +62,10 @@
 
 <div class="pages" bind:clientWidth={containerWidth}>
   {#if browser}
-    <VMasonry {lanes} data={sizes} gap={GAP} style="padding: {PADDING}px">
-      {#snippet children(aspect, n)}
+    <VMasonry {lanes} data={pages} gap={GAP} style="padding: {PADDING}px">
+      {#snippet children({ aspectRatio }, n)}
         {@const page_number = n + 1}
-        {@const height = width * aspect}
+        {@const height = width / aspectRatio}
         {@const margin = lanes > 1 ? maxHeight - height : 0}
         {@const src = pageImageUrl(document, page_number, size).href}
         <div class="page-container">

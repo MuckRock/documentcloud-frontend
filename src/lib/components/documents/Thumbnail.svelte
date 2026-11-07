@@ -7,7 +7,7 @@
 
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import { pageImageUrl } from "$lib/api/documents";
-  import { pageSizesFromSpec } from "$lib/utils/pageSize";
+  import { pagesFromSpec } from "$lib/utils/pageSize";
 
   interface Props {
     document: Document;
@@ -27,11 +27,11 @@
     document = { ...document, status: "error" };
   }
 
-  let sizes = $derived(
-    document.page_spec ? pageSizesFromSpec(document.page_spec) : null,
+  let pages = $derived(
+    document.page_spec ? pagesFromSpec(document.page_spec) : null,
   );
-  let aspect = $derived(sizes?.[0] ?? 11 / 8.5); // fallback to US letter for now
-  let height = $derived(thumbnailWidth * aspect);
+  let aspect = $derived(pages?.[0]?.aspectRatio ?? 8.5 / 11); // fallback to US letter for now
+  let height = $derived(thumbnailWidth / aspect);
   let hasPublicNotes = $derived(
     document.notes?.some((note) => note.access === "public"),
   );
