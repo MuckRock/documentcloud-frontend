@@ -25,7 +25,8 @@
     "selectAll": "S\u00e9lectionner tout",
     "selected": "S\u00e9lectionn\u00e9",
     "resultsCount": "Affichage {n, number} de {total, number} r\u00e9sultats",
-    "resultsCountShort": "Affichage de {n, number} r\u00e9sultats"
+    "resultsCountShort": "Affichage de {n, number} r\u00e9sultats",
+    "selectPage": "Sélectionner la page {page, number}"
   },
   "documentBrowser": {
     "fieldsAnchor": "Vue",
@@ -378,7 +379,8 @@
     "grid": "Page",
     "notes": "Notes",
     "annotating": "Annoter",
-    "redacting": "R\u00e9\u00e9dact"
+    "redacting": "R\u00e9\u00e9dact",
+    "editing": "Modifier"
   },
   "zoom": {
     "zoom": "Zoom",
@@ -631,6 +633,20 @@
     "totalCount": "{n} {n, plural, one {processus actif} other {processus actifs}}",
     "download": "T\u00e9l\u00e9charger le fichier",
     "document": "Ce document est en cours de traitement. Certaines fonctionnalités peuvent ne pas être encore disponibles."
+  },
+  "editMode": {
+    "title": "Modifier le document",
+    "cancel": "Abandonner",
+    "undo": "Annuler",
+    "confirm": "Enregistrer",
+    "instructions": "Faites pivoter, réorganisez, dupliquez et supprimez les pages du document.",
+    "cancelWarning": "Vous perdrez les modifications non enregistrées. Voulez-vous vraiment les abandonner ?",
+    "up": "Monter",
+    "down": "Descendre",
+    "cw": "Pivoter dans le sens horaire",
+    "ccw": "Pivoter dans le sens antihoraire",
+    "duplicate": "Dupliquer",
+    "delete": "Supprimer"
   },
   "feedback": {
     "title": "Partager vos retours",

@@ -232,6 +232,26 @@
   "processing": {
     "document": "Dieses Dokument wird verarbeitet. Einige Funktionen sind möglicherweise noch nicht verfügbar."
   },
+  "inputs": {
+    "selectPage": "Seite {page, number} auswählen"
+  },
+  "mode": {
+    "editing": "Bearbeiten"
+  },
+  "editMode": {
+    "title": "Dokument bearbeiten",
+    "cancel": "Verwerfen",
+    "undo": "Rückgängig",
+    "confirm": "Speichern",
+    "instructions": "Seiten des Dokuments drehen, neu anordnen, duplizieren und löschen.",
+    "cancelWarning": "Nicht gespeicherte Änderungen gehen verloren. Möchten Sie sie wirklich verwerfen?",
+    "up": "Nach oben",
+    "down": "Nach unten",
+    "cw": "Im Uhrzeigersinn drehen",
+    "ccw": "Gegen den Uhrzeigersinn drehen",
+    "duplicate": "Duplizieren",
+    "delete": "Löschen"
+  },
   "homepage": {
     "muckrock": {
       "about": "Über MuckRock",

@@ -25,7 +25,8 @@
     "selectAll": "Seleziona tutto",
     "selected": "Selezionato",
     "resultsCount": "Mostrando {n, number} di {total, number} risultati",
-    "resultsCountShort": "Mostrando {n, number} risultati"
+    "resultsCountShort": "Mostrando {n, number} risultati",
+    "selectPage": "Seleziona pagina {page, number}"
   },
   "access": {
     "private": {
@@ -378,7 +379,8 @@
     "grid": "Pagine",
     "notes": "Nota",
     "annotating": "{Annotate}",
-    "redacting": "Redassero"
+    "redacting": "Redassero",
+    "editing": "Modifica"
   },
   "zoom": {
     "zoom": "Zoom",
@@ -631,6 +633,20 @@
     "totalCount": "{n} {n, plural, one {progetto attivo} other {progetti attivi}}",
     "download": "Scarica file",
     "document": "Questo documento è in elaborazione. Alcune funzionalità potrebbero non essere ancora disponibili."
+  },
+  "editMode": {
+    "title": "Modifica documento",
+    "cancel": "Scarta",
+    "undo": "Annulla",
+    "confirm": "Salva",
+    "instructions": "Ruota, riordina, duplica ed elimina le pagine del documento.",
+    "cancelWarning": "Perderai le modifiche non salvate. Vuoi davvero scartarle?",
+    "up": "Sposta su",
+    "down": "Sposta giù",
+    "cw": "Ruota in senso orario",
+    "ccw": "Ruota in senso antiorario",
+    "duplicate": "Duplica",
+    "delete": "Elimina"
   },
   "feedback": {
     "title": "Condividi la tua opinione",
