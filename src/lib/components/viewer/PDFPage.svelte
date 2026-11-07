@@ -34,6 +34,7 @@ Selectable text can be rendered in one of two ways:
   import { getNotes } from "$lib/utils/viewer";
   import { Page as PageClass } from "$lib/utils/page.svelte";
   import { PT_TO_PX } from "$lib/utils/pageSize";
+  import { normalizeAngle } from "$lib/utils/normalizeAngle";
 
   const viewer = getViewerState();
 
@@ -105,7 +106,10 @@ Selectable text can be rendered in one of two ways:
     if (!canvas || !page) return;
 
     const context = canvas.getContext("2d");
-    const viewport = page.getViewport({ scale, rotation });
+    const viewport = page.getViewport({
+      scale,
+      rotation: normalizeAngle(page.rotate + rotation),
+    });
     const dpr = window?.devicePixelRatio ?? 1;
 
     const transform = dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : undefined;
@@ -139,7 +143,10 @@ Selectable text can be rendered in one of two ways:
 
     if (!page) return;
 
-    const viewport = page.getViewport({ scale });
+    const viewport = page.getViewport({
+      scale,
+      rotation: normalizeAngle(page.rotate + rotation),
+    });
 
     if (textLayer) {
       textLayer.update({ viewport });
@@ -336,24 +343,24 @@ Selectable text can be rendered in one of two ways:
         </div>
       {/if}
 
-      {#if viewing}
-        {#if text.length > 0}
-          <div bind:this={textContainer} class="selectable-text">
-            {#each text as word}
-              <span
-                role="presentation"
-                class="word"
-                style="left: {word.x1 * 100}%; top: {word.y1 * 100}%;"
-                >{word.text}</span
-              >
-            {/each}
-          </div>
-        {:else}
-          <div bind:this={textContainer} class="selectable-text embedded">
-            <!-- pdfjs.renderTextLayer will fill this in -->
-          </div>
-        {/if}
+      {#if text.length > 0}
+        <div bind:this={textContainer} class="selectable-text">
+          {#each text as word}
+            <span
+              role="presentation"
+              class="word"
+              style="left: {word.x1 * 100}%; top: {word.y1 * 100}%;"
+              >{word.text}</span
+            >
+          {/each}
+        </div>
+      {:else}
+        <div bind:this={textContainer} class="selectable-text embedded">
+          <!-- pdfjs.renderTextLayer will fill this in -->
+        </div>
+      {/if}
 
+      {#if viewing}
         <AnnotationLayer page_number={index} />
       {/if}
 
@@ -440,6 +447,20 @@ Selectable text can be rendered in one of two ways:
     background-color: var(--note-public, mark);
     color: transparent;
     opacity: 0.35;
+  }
+
+  /* pdfjs's TextLayer adds the rotation to a data attribute
+  but never actually applies the transform */
+  .selectable-text:global([data-main-rotation="90"]) {
+    transform: rotate(90deg) translateY(-100%);
+  }
+
+  .selectable-text:global([data-main-rotation="180"]) {
+    transform: rotate(180deg) translate(-100%, -100%);
+  }
+
+  .selectable-text:global([data-main-rotation="270"]) {
+    transform: rotate(270deg) translateX(-100%);
   }
 
   /* Delayed so pages that draw quickly never flash it. */
