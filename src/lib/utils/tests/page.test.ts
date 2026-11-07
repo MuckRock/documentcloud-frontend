@@ -43,6 +43,32 @@ describe("Page", () => {
     expect(page.orientation).toBe("horizontal");
   });
 
+  it("rotates into a new page with the same ID and swapped dimensions", () => {
+    const original = new Page({ index: 3, width: 100, height: 200 });
+    const rotated = original.rotate();
+
+    expect(rotated).not.toBe(original);
+    expect(rotated).toMatchObject({
+      id: original.id,
+      index: 3,
+      width: 200,
+      height: 100,
+      rotation: 90,
+    });
+    expect(original.rotation).toBe(0);
+  });
+
+  it("rotates counterclockwise to a negative rotation", () => {
+    const page = new Page({ index: 0, width: 1, height: 2 });
+    expect(page.rotate(false).rotation).toBe(-90);
+    expect(page.rotate(false).rotate(false).rotation).toBe(-180);
+  });
+
+  it("gives a copy a new ID", () => {
+    const original = new Page({ index: 0, width: 1, height: 1 });
+    expect(original.copy().id).not.toBe(original.id);
+  });
+
   it("copies into an independent page", () => {
     const original = new Page({ index: 2, width: 100, height: 200 });
     const copy = original.copy();
