@@ -88,6 +88,8 @@ Must be a child of a ViewerContext
     return async ({ result }) => {
       if (result.type === "failure") {
         console.error(result);
+        formElement.disabled = false;
+        (submitter as HTMLButtonElement).disabled = false;
       }
 
       if (result.type === "success") {

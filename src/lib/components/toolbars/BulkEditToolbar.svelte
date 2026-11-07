@@ -41,9 +41,10 @@
         viewer.history.edit({
           action,
           pages: selectedPages,
-          position:
-            // insert after the last selected page
-            viewer.pages.findLastIndex((p) => selectedPages.includes(p.id)) + 1,
+          // insert after the last selected page
+          position: viewer.pages.findLast(({ id }) =>
+            selectedPages.includes(id),
+          )!.id,
         });
     }
   }
