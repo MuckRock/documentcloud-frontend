@@ -1,12 +1,14 @@
 import { describe, it, expect } from "vitest";
 
 import { EditHistory } from "../edit.svelte";
+import { pagesFromSpec } from "$lib/utils/pageSize";
 
 // Seven letter-size pages, indexed 0-6.
 const SPEC = "612.0x792.0:0-6";
 
-function history(spec: string | undefined = SPEC) {
-  return new EditHistory(() => spec);
+function history(spec: string = SPEC) {
+  const pages = pagesFromSpec(spec);
+  return new EditHistory(() => pages);
 }
 
 /** The ID of the page currently at `position` (zero-indexed). */
@@ -26,7 +28,7 @@ describe("EditHistory", () => {
   });
 
   it("has no pages when the document has no page spec", () => {
-    expect(new EditHistory(() => undefined).current).toEqual([]);
+    expect(history("").current).toEqual([]);
   });
 
   describe("rotate", () => {

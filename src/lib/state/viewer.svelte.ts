@@ -67,7 +67,9 @@ export class ViewerState {
 
   // edit history state
   pageSpec = $derived(this.document?.page_spec);
-  history = new EditHistory(() => this.pageSpec);
+  history = new EditHistory(() =>
+    this.pageSpec ? pagesFromSpec(this.pageSpec) : [],
+  );
 
   // The scrolling ancestor of the document
   scrollContainer = $state<HTMLElement>();

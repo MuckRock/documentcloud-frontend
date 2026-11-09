@@ -1,7 +1,6 @@
 import type { Modification, Angle } from "$lib/api/types";
 import type { Page } from "$lib/utils/page.svelte";
 import { normalizeAngle } from "$lib/utils/normalizeAngle";
-import { pagesFromSpec } from "$lib/utils/pageSize";
 
 export type EditAction =
   | {
@@ -50,21 +49,16 @@ const createRanges = (pages: number[]) => {
 };
 
 export class EditHistory {
-  #getPageSpec: () => string | undefined;
-
-  #original = $derived.by(() => {
-    const pageSpec = this.#getPageSpec();
-    return pageSpec ? pagesFromSpec(pageSpec) : [];
-  });
+  #getPages: () => Page[];
 
   entries = $state.raw<Page[][]>([]);
 
   hasEntries = $derived(this.entries.length > 0);
 
-  current = $derived(this.entries.at(-1) ?? this.#original);
+  current = $derived.by(() => this.entries.at(-1) ?? this.#getPages());
 
-  constructor(getPageSpec: () => string | undefined) {
-    this.#getPageSpec = getPageSpec;
+  constructor(getPages: () => Page[]) {
+    this.#getPages = getPages;
   }
 
   edit(edit: EditAction) {
