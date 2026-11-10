@@ -79,7 +79,7 @@
         {@const margin = lanes > 1 ? maxHeight - height : 0}
         <!-- Modifications reorder pages, so the image comes from the source page, not the slot. -->
         {@const src = pageImageUrl(document, oneIndexedPageNumber, size).href}
-        {@const title = `Page ${n + 1}, ${document.title}`}
+        {@const title = `Page ${page_number}, ${document.title}`}
         <div class="page-container">
           <Page pageId={id} {page_number}>
             {#snippet children({ documentHref, selected })}

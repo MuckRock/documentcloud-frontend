@@ -14,13 +14,13 @@ Must be a child of a ViewerContext
   import { _ } from "svelte-i18n";
 
   import PageActions from "./PageActions.svelte";
+  import Checkbox from "$lib/components/inputs/Checkbox.svelte";
+  import EditActionsToolbar from "$lib/components/toolbars/EditActionsToolbar.svelte";
 
   import { pageHashUrl } from "$lib/api/documents";
   import { getViewerState } from "$lib/state/viewer.svelte";
   import { getQuery } from "$lib/utils/search";
   import { getViewerHref } from "$lib/utils/viewer";
-  import Checkbox from "$lib/components/inputs/Checkbox.svelte";
-  import EditActionsToolbar from "$lib/components/toolbars/EditActionsToolbar.svelte";
 
   interface Props {
     page_number: number;
