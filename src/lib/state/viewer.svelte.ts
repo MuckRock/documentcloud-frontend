@@ -178,6 +178,16 @@ export class ViewerState {
     range.onError = (error) => this.#fail(error);
     return this.#open({ range });
   }
+
+  reloadPDF(url: URL): void {
+    this.#task?.destroy();
+    this.#task = null;
+    this.#opening = false;
+    this.#opened = false;
+    this.#retriesOn403Error = 0;
+    this.progress = { loaded: 0, total: 0 };
+    this.pdfModified = null;
+    this.loadPDF(url);
   }
 
   #open(source: { url: URL } | { range: pdfjs.PDFDataRangeTransport }) {
