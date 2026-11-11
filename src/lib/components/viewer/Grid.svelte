@@ -52,6 +52,7 @@
   let containerWidth = $state(0);
 
   let pages = $derived(viewer.pages);
+  let selectedPages = $derived(viewer.selectedPages);
   let scale = $derived(SCALE[size] ?? 1);
   let width = $derived((IMAGE_WIDTHS_MAP.get(size) ?? 180) / scale);
   let maxHeight = $derived(
@@ -63,12 +64,15 @@
       Math.floor((containerWidth - 2 * PADDING + GAP) / (width + GAP)),
     ),
   );
+  let keepMounted = $derived(
+    pages.flatMap((p, i) => (selectedPages.has(p.id) ? [i] : [])),
+  );
 
   const onDragStart: DragDropProps["onDragStart"] = ({ operation }) => {
     const id = operation.source?.id as number;
-    if (!viewer.selectedPages.has(id)) {
-      viewer.selectedPages.clear();
-      viewer.selectedPages.add(id);
+    if (!selectedPages.has(id)) {
+      selectedPages.clear();
+      selectedPages.add(id);
     }
   };
 
@@ -83,7 +87,7 @@
       if (fromIndex !== toIndex) {
         viewer.history.edit({
           action: "move",
-          pages: [...viewer.selectedPages],
+          pages: [...selectedPages],
           position: target.id as number,
         });
       }
@@ -96,6 +100,7 @@
     {#if browser}
       <VMasonry
         getKey={({ id }) => id}
+        {keepMounted}
         {lanes}
         data={pages}
         gap={GAP}

@@ -34,8 +34,11 @@
     switch (action) {
       case "cw":
       case "ccw":
+        viewer.history.edit({ action, pages: selectedPages });
+        break;
       case "delete":
         viewer.history.edit({ action, pages: selectedPages });
+        viewer.selectedPages.clear();
         break;
       case "duplicate":
         viewer.history.edit({
