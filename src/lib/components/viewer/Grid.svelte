@@ -9,10 +9,13 @@
 -->
 <script lang="ts">
   import type { Sizes } from "$lib/api/types";
+  import type { ComponentProps } from "svelte";
 
   import { browser } from "$app/environment";
   import { _ } from "svelte-i18n";
   import { VMasonry } from "virtua/svelte";
+  import { DragDropProvider } from "@dnd-kit/svelte";
+  import { isSortable } from "@dnd-kit/svelte/sortable";
 
   import GridPage from "$lib/components/viewer/GridPage.svelte";
 
@@ -24,6 +27,8 @@
   interface Props {
     size?: Sizes;
   }
+
+  type DragDropProps = ComponentProps<typeof DragDropProvider>;
 
   let { size = "thumbnail" }: Props = $props();
 
@@ -58,43 +63,63 @@
       Math.floor((containerWidth - 2 * PADDING + GAP) / (width + GAP)),
     ),
   );
+
+  const onDragStart: DragDropProps["onDragStart"] = ({ operation }) => {
+    const id = operation.source?.id as number;
+    console.log(id);
+    if (!viewer.selectedPages.has(id)) {
+      viewer.selectedPages.clear();
+      viewer.selectedPages.add(id);
+    }
+  };
+
+  const onDragEnd: DragDropProps["onDragEnd"] = ({ canceled, operation }) => {
+    if (canceled) return;
+    const { source, target } = operation;
+
+    if (isSortable(source) && isSortable(target)) {
+      const fromIndex = source.index;
+      const toIndex = target.index;
+
+      if (fromIndex !== toIndex) {
+        viewer.history.edit({
+          action: "move",
+          pages: [...viewer.selectedPages],
+          position: target.id as number,
+        });
+      }
+    }
+  };
 </script>
 
-<div class="pages" bind:clientWidth={containerWidth}>
-  {#if browser}
-    <VMasonry
-      getKey={({ id }) => id}
-      {lanes}
-      data={pages}
-      gap={GAP}
-      style="padding: {PADDING}px"
-    >
-      {#snippet children(
-        { id, oneIndexedPageNumber, aspectRatio, rotation },
-        n,
-      )}
-        {@const page_number = n + 1}
-        {@const height = width / aspectRatio}
-        {@const margin = lanes > 1 ? maxHeight - height : 0}
-        {@const src = pageImageUrl(
-          document,
-          oneIndexedPageNumber,
-          size,
-          viewer.imageVersion,
-        ).href}
-        <GridPage
-          {id}
-          {page_number}
-          {width}
-          {height}
-          {margin}
-          {rotation}
-          {src}
-        />
-      {/snippet}
-    </VMasonry>
-  {/if}
-</div>
+<DragDropProvider {onDragStart} {onDragEnd}>
+  <div class="pages" bind:clientWidth={containerWidth}>
+    {#if browser}
+      <VMasonry
+        getKey={({ id }) => id}
+        {lanes}
+        data={pages}
+        gap={GAP}
+        style="padding: {PADDING}px"
+      >
+        {#snippet children(
+          { id, oneIndexedPageNumber, aspectRatio, rotation },
+          index,
+        )}
+          {@const height = width / aspectRatio}
+          {@const margin = lanes > 1 ? maxHeight - height : 0}
+          {@const src = pageImageUrl(
+            document,
+            oneIndexedPageNumber,
+            size,
+            viewer.imageVersion,
+          ).href}
+          <GridPage {id} {index} {width} {height} {margin} {rotation} {src} />
+        {/snippet}
+      </VMasonry>
+    {/if}
+  </div>
+</DragDropProvider>
 
 <style>
   .pages {
