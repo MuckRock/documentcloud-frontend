@@ -99,6 +99,10 @@
     position: relative;
   }
 
+  .page-container:focus-visible {
+    outline: none;
+  }
+
   .page-container:global([data-dnd-dragging]):after {
     content: attr(data-drag-count);
     z-index: 1;

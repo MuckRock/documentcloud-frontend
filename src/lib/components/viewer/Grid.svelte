@@ -66,7 +66,6 @@
 
   const onDragStart: DragDropProps["onDragStart"] = ({ operation }) => {
     const id = operation.source?.id as number;
-    console.log(id);
     if (!viewer.selectedPages.has(id)) {
       viewer.selectedPages.clear();
       viewer.selectedPages.add(id);
