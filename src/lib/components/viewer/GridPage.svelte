@@ -1,7 +1,7 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
   import { createSortable } from "@dnd-kit/svelte/sortable";
-  import { Feedback } from "@dnd-kit/dom";
+  import { Feedback, KeyboardSensor, PointerSensor } from "@dnd-kit/dom";
   import { Sync16 } from "svelte-octicons";
 
   import { getViewerState } from "$lib/state/viewer.svelte";
@@ -32,6 +32,10 @@
 
   const sortable = createSortable({
     plugins: [Feedback.configure({ feedback: "clone" })],
+    sensors: [
+      PointerSensor.configure({ preventActivation: () => false }),
+      KeyboardSensor,
+    ],
     get disabled() {
       // Disallow dropping pages within the selected range
       return { draggable: false, droppable: viewer.selectedPages.has(id) };
@@ -83,7 +87,12 @@
   <Page pageId={id} {page_number}>
     {#snippet children({ documentHref, selected })}
       {#if edit}
-        {@render image(selected)}
+        <button
+          tabindex="-1"
+          onclick={({ shiftKey }) => viewer.selectPage(id, shiftKey)}
+        >
+          {@render image(selected)}
+        </button>
       {:else}
         <a href={documentHref}>{@render image()}</a>
       {/if}
@@ -124,6 +133,18 @@
 
   .edit {
     cursor: grab;
+  }
+
+  button {
+    appearance: none;
+    border: none;
+    background: none;
+    cursor: inherit;
+    padding: 0;
+  }
+
+  button:focus-visible {
+    outline: 2px solid var(--blue-4);
   }
 
   a {
