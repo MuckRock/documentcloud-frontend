@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { fireEvent, screen, waitFor } from "@testing-library/svelte";
+import { fireEvent, screen, waitFor, within } from "@testing-library/svelte";
 import { readable } from "svelte/store";
 
 vi.mock("pdfjs-dist/legacy/build/pdf.mjs", () => ({
@@ -17,106 +17,147 @@ vi.mock("$app/stores", () => ({
 }));
 vi.mock("$app/navigation", () => ({ afterNavigate: vi.fn() }));
 
+import type { ComponentProps } from "svelte";
 import type { Document, ViewerMode } from "$lib/api/types";
 import type { ViewerState } from "$lib/state/viewer.svelte";
-import GridPage from "../GridPage.svelte";
-import ViewerProbe from "@/test/helpers/ViewerProbe.svelte";
+import GridPageList from "./GridPageList.svelte";
 import { renderInViewer } from "./renderInViewer";
 import { document } from "@/test/fixtures/documents";
 
-const props = {
-  id: 1,
-  page_number: 1,
-  width: 100,
-  height: 130,
-  margin: 0,
-  rotation: 0,
-  src: "https://assets.documentcloud.org/p1-small.gif",
+const threePages: Document = {
+  ...document,
+  page_count: 3,
+  page_spec: "612.0x792.0:0-2",
 };
 
-function renderPage(
-  overrides: Partial<typeof props> = {},
-  { doc = document, mode = "grid" }: { doc?: Document; mode?: ViewerMode } = {},
+function renderPages(
+  pageProps: ComponentProps<typeof GridPageList>["pageProps"] = {},
+  {
+    doc = threePages,
+    mode = "grid",
+  }: { doc?: Document; mode?: ViewerMode } = {},
 ) {
   let viewer!: ViewerState;
-  const result = renderInViewer(ViewerProbe, {
-    props: {
-      component: GridPage,
-      componentProps: { ...props, ...overrides },
-      onViewer: (v: ViewerState) => (viewer = v),
-    },
+  const result = renderInViewer(GridPageList, {
+    props: { pageProps, onViewer: (v: ViewerState) => (viewer = v) },
     context: { document: doc, mode, loadPdf: false },
   });
-  const img = () => result.container.querySelector("img");
-  return { viewer, img, ...result };
+  return { viewer, ...result };
 }
 
-describe("GridPage", () => {
-  it("links the page image to the page in the document viewer", () => {
-    const { img } = renderPage({ page_number: 3 });
+const page = (n: number) => screen.getByTestId(`page-${n}`);
+const img = (n: number) => page(n).querySelector("img");
+const box = (n: number) =>
+  page(n).querySelector<HTMLElement>(".page-container")!;
 
-    expect(img()).toHaveAttribute("src", props.src);
-    expect(img()!.getAttribute("alt")).toBe(`Page 3, ${document.title}`);
-    expect(img()!.closest("a")).toHaveAttribute(
+describe("GridPage", () => {
+  it("links the page image to its page in the document viewer", () => {
+    renderPages();
+
+    expect(img(3)).toHaveAttribute(
+      "src",
+      "https://assets.documentcloud.org/p3-small.gif",
+    );
+    expect(img(3)).toHaveAttribute("alt", `Page 3, ${document.title}`);
+    expect(img(3)!.closest("a")).toHaveAttribute(
       "href",
       expect.stringContaining("#document/p3"),
     );
   });
 
   it("sizes the thumbnail from its slot", () => {
-    const { container } = renderPage({ width: 120, height: 90, margin: 15 });
-    const box = container.querySelector<HTMLElement>(".page-container")!;
+    renderPages({ width: 120, height: 90, margin: 15 });
 
-    expect(box.style.getPropertyValue("--width")).toBe("120px");
-    expect(box.style.getPropertyValue("--height")).toBe("90px");
-    expect(box.style.getPropertyValue("--margin")).toBe("15px");
+    expect(box(1).style.getPropertyValue("--width")).toBe("120px");
+    expect(box(1).style.getPropertyValue("--height")).toBe("90px");
+    expect(box(1).style.getPropertyValue("--margin")).toBe("15px");
   });
 
   it("turns the image for a quarter rotation", () => {
-    const { img } = renderPage({ rotation: 270 });
+    renderPages({ rotation: 270 });
 
-    expect(img()).toHaveClass("turn");
+    expect(img(1)).toHaveClass("turn");
   });
 
   it("keeps the image upright-sized for a half rotation", () => {
-    const { img } = renderPage({ rotation: 180 });
+    renderPages({ rotation: 180 });
 
-    expect(img()).not.toHaveClass("turn");
+    expect(img(1)).not.toHaveClass("turn");
   });
 
   it("shows a spinner when the image is missing while the document processes", async () => {
-    const { img } = renderPage({}, { doc: { ...document, status: "pending" } });
+    renderPages({}, { doc: { ...threePages, status: "pending" } });
 
-    await fireEvent.error(img()!);
+    await fireEvent.error(img(1)!);
 
-    expect(await screen.findByLabelText("Loading …")).toBeInTheDocument();
-    expect(img()).toBeNull();
+    expect(
+      await within(page(1)).findByLabelText("Loading …"),
+    ).toBeInTheDocument();
+    expect(img(1)).toBeNull();
+    expect(img(2)).not.toBeNull();
   });
 
   it("keeps a failed image when the document is not processing", async () => {
-    const { img } = renderPage();
+    renderPages();
 
-    await fireEvent.error(img()!);
+    await fireEvent.error(img(1)!);
 
     expect(screen.queryByLabelText("Loading …")).toBeNull();
-    expect(img()).not.toBeNull();
+    expect(img(1)).not.toBeNull();
   });
 
   describe("in bulk edit mode", () => {
-    it("does not link the image", () => {
-      const { img } = renderPage({}, { mode: "bulk" });
+    const renderBulk = () => renderPages({}, { mode: "bulk" });
 
-      expect(img()!.closest("a")).toBeNull();
+    const selected = (viewer: ViewerState) =>
+      viewer.pages.flatMap(({ id }, i) =>
+        viewer.selectedPages.has(id) ? [i + 1] : [],
+      );
+
+    it("does not link the image", () => {
+      renderBulk();
+
+      expect(img(1)!.closest("a")).toBeNull();
     });
 
     it("outlines the page when selected", async () => {
-      const { viewer, container } = renderPage({ id: 7 }, { mode: "bulk" });
-      const box = () => container.querySelector(".image");
-      expect(box()).not.toHaveClass("selected");
+      const { viewer } = renderBulk();
+      const image = () => page(2).querySelector(".image");
+      expect(image()).not.toHaveClass("selected");
 
-      viewer.selectedPages.add(7);
+      viewer.selectedPages.add(viewer.pages[1]!.id);
 
-      await waitFor(() => expect(box()).toHaveClass("selected"));
+      await waitFor(() => expect(image()).toHaveClass("selected"));
+    });
+
+    it("selects and deselects a page by clicking its image", async () => {
+      const { viewer } = renderBulk();
+
+      await fireEvent.click(img(2)!);
+      expect(selected(viewer)).toEqual([2]);
+
+      await fireEvent.click(img(2)!);
+      expect(selected(viewer)).toEqual([]);
+    });
+
+    it("selects the pages between two clicked images on shift-click", async () => {
+      const { viewer } = renderBulk();
+
+      await fireEvent.click(img(1)!);
+      await fireEvent.click(img(3)!, { shiftKey: true });
+
+      expect(selected(viewer)).toEqual([1, 2, 3]);
+    });
+
+    it("badges every page with the size of the selection to drag", async () => {
+      const { viewer } = renderBulk();
+
+      viewer.selectedPages.add(viewer.pages[0]!.id);
+      viewer.selectedPages.add(viewer.pages[2]!.id);
+
+      await waitFor(() =>
+        expect(box(2)).toHaveAttribute("data-drag-count", "2"),
+      );
     });
   });
 });

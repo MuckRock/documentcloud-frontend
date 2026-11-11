@@ -4,6 +4,7 @@
 
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import ViewerContext from "../ViewerContext.svelte";
+  import { DragDropProvider } from "@dnd-kit/svelte";
   import GridPage from "../GridPage.svelte";
   import ViewerProbe from "@/test/helpers/ViewerProbe.svelte";
 
@@ -23,7 +24,7 @@
   const width = 180;
   const portrait = {
     id: 1,
-    page_number: 1,
+    index: 0,
     width,
     height: width * (792 / 612),
     margin: 0,
@@ -45,7 +46,9 @@
         if (args.selected) viewer.selectedPages.add(args.page.id);
       }}
     >
-      <GridPage {...args.page} />
+      <DragDropProvider>
+        <GridPage {...args.page} />
+      </DragDropProvider>
     </ViewerProbe>
   </ViewerContext>
 {/snippet}
@@ -60,7 +63,7 @@
     page: {
       ...portrait,
       id: 91,
-      page_number: 91,
+      index: 90,
       height: width * (612 / 792),
       src: pageImageUrl(document, 91, "small").href,
     },
@@ -83,7 +86,7 @@
 />
 
 <Story
-  name="rotated 180°"
+  name="rotated 180 degrees"
   args={{ ...args, page: { ...portrait, rotation: 180 } }}
 />
 

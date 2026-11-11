@@ -132,5 +132,20 @@ describe("Grid", () => {
       // Drawn upright at the slot's swapped size, so the quarter turn fills it.
       expect(firstImage(container)).toHaveClass("turn");
     });
+
+    it("keeps rendering the remaining pages when selected pages are deleted", async () => {
+      const { viewer, container } = renderBulk();
+      await waitFor(() => expect(firstImage(container)).not.toBeNull());
+      const [first, second] = viewer.pages;
+      viewer.selectedPages.add(first!.id);
+      viewer.selectedPages.add(second!.id);
+
+      viewer.history.edit({ action: "delete", pages: [first!.id, second!.id] });
+
+      await waitFor(() =>
+        expect(firstImage(container).getAttribute("alt")).toContain("Page 1"),
+      );
+      expect(firstImage(container).getAttribute("src")).toContain("-p3-");
+    });
   });
 });
