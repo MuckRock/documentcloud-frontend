@@ -77,6 +77,7 @@
   style:--height="{height}px"
   style:--margin="{margin}px"
   style:--rotation="{rotation}deg"
+  data-drag-count={viewer.selectedPages.size}
   {@attach sortable.attach}
 >
   <Page pageId={id} {page_number}>
@@ -95,6 +96,26 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+  }
+
+  .page-container:global([data-dnd-dragging]):after {
+    content: attr(data-drag-count);
+    z-index: 1;
+    position: absolute;
+    top: 0.5rem;
+    right: calc(50% - var(--width) / 2);
+    width: 1.75rem;
+    height: 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    border-radius: 50%;
+    background-color: var(--blue-3);
+    border: 1px solid var(--blue-4);
+    font-weight: bold;
+    letter-spacing: -1px;
   }
 
   .edit {
