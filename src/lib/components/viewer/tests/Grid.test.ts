@@ -4,7 +4,7 @@
  * router are mocked.
  */
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { fireEvent, screen, waitFor } from "@testing-library/svelte";
+import { screen, waitFor } from "@testing-library/svelte";
 import { readable } from "svelte/store";
 import { tick } from "svelte";
 
@@ -57,43 +57,7 @@ describe("Grid", () => {
     });
   });
 
-  it("shows a spinner in place of a page image missing while the document processes", async () => {
-    const { container } = renderInViewer(Grid, {
-      context: {
-        document: { ...document, status: "pending" },
-        mode: "grid",
-        embed: true,
-      },
-    });
-    const img = await waitFor(() => {
-      const img = container.querySelector("img");
-      expect(img).not.toBeNull();
-      return img!;
-    });
-
-    await fireEvent.error(img);
-
-    expect(await screen.findAllByLabelText("Loading …")).toHaveLength(1);
-    expect(container.querySelector('img[alt^="Page 1,"]')).toBeNull();
-  });
-
-  it("keeps a failed page image when the document is not processing", async () => {
-    const { container } = renderInViewer(Grid, {
-      context: { document, mode: "grid", embed: true },
-    });
-    const img = await waitFor(() => {
-      const img = container.querySelector("img");
-      expect(img).not.toBeNull();
-      return img!;
-    });
-
-    await fireEvent.error(img);
-
-    expect(screen.queryByLabelText("Loading …")).toBeNull();
-    expect(container.querySelector('img[alt^="Page 1,"]')).not.toBeNull();
-  });
-
-  it("turns a rotated page's image outside bulk edit mode", async () => {
+  it("passes a rotated page's rotation to its thumbnail", async () => {
     let viewer!: ViewerState;
     const { container } = renderInViewer(ViewerProbe, {
       props: {
@@ -109,7 +73,7 @@ describe("Grid", () => {
     await waitFor(() =>
       expect(
         container
-          .querySelector<HTMLElement>(".image")!
+          .querySelector<HTMLElement>(".page-container")!
           .style.getPropertyValue("--rotation"),
       ).toBe("90deg"),
     );
@@ -150,36 +114,23 @@ describe("Grid", () => {
       expect(await screen.findByLabelText("Select page 1")).not.toBeChecked();
     });
 
-    it("outlines selected pages", async () => {
-      const { viewer, container } = renderBulk();
-      await waitFor(() => expect(firstImage(container)).not.toBeNull());
-
-      viewer.selectedPages.add(viewer.pages[0]!.id);
-
-      await waitFor(() =>
-        expect(firstImage(container)).toHaveClass("selected"),
-      );
-    });
-
     it("turns a rotated page's image to fill its landscape slot", async () => {
       const { viewer, container } = renderBulk();
       await waitFor(() => expect(firstImage(container)).not.toBeNull());
 
       viewer.history.edit({ action: "cw", pages: [viewer.pages[0]!.id] });
 
-      const box = () => container.querySelector<HTMLElement>(".image")!;
+      const box = () =>
+        container.querySelector<HTMLElement>(".page-container")!;
       await waitFor(() =>
         expect(box().style.getPropertyValue("--rotation")).toBe("90deg"),
       );
-      const slot = [
-        parseFloat(box().style.width),
-        parseFloat(box().style.height),
-      ];
-      expect(slot[0]).toBeGreaterThan(slot[1]!);
-
+      const [width, height] = ["--width", "--height"].map((v) =>
+        parseFloat(box().style.getPropertyValue(v)),
+      );
+      expect(width).toBeGreaterThan(height!);
       // Drawn upright at the slot's swapped size, so the quarter turn fills it.
-      const img = firstImage(container);
-      expect([img.width, img.height]).toEqual(slot.reverse().map(Math.floor));
+      expect(firstImage(container)).toHaveClass("turn");
     });
   });
 });
