@@ -20,21 +20,21 @@ export type EditAction =
 
 type PageGroup = { angle: Angle | null; pages: number[] };
 
-const getAngle = (rotation: number): Angle | null => {
+function getAngle(rotation: number): Angle | null {
   const angle = normalizeAngle(rotation);
 
   if (angle === 90) return "cc";
   if (angle === 180) return "hw";
   if (angle === 270) return "ccw";
   return null;
-};
+}
 
 /**
  * Convert an array of page numbers into a page range string.
  * In: [3,4,5,6,6,1,2]
  * Out: "3-6,6,1-2"
  */
-const createRanges = (pages: number[]) => {
+function createRanges(pages: number[]) {
   const runs: number[][] = [];
   while (pages.length > 0) {
     // Find the next page that is not part of the current run
@@ -46,7 +46,7 @@ const createRanges = (pages: number[]) => {
     rest.length === 0 ? first : [first, rest.at(-1)].join("-"),
   );
   return ranges.join(",");
-};
+}
 
 export class EditHistory {
   #getPages: () => Page[];
