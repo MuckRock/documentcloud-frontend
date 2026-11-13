@@ -9,14 +9,15 @@
 -->
 <script lang="ts">
   import type { Sizes } from "$lib/api/types";
+  import type { ComponentProps } from "svelte";
 
   import { browser } from "$app/environment";
   import { _ } from "svelte-i18n";
   import { VMasonry } from "virtua/svelte";
-  import { Sync16 } from "svelte-octicons";
-  import { SvelteSet } from "svelte/reactivity";
+  import { DragDropProvider } from "@dnd-kit/svelte";
+  import { isSortable } from "@dnd-kit/svelte/sortable";
 
-  import Page from "./Page.svelte";
+  import GridPage from "$lib/components/viewer/GridPage.svelte";
 
   import { IMAGE_WIDTHS_MAP } from "@/config/config.js";
   import { pageImageUrl } from "$lib/api/documents";
@@ -26,6 +27,8 @@
   interface Props {
     size?: Sizes;
   }
+
+  type DragDropProps = ComponentProps<typeof DragDropProvider>;
 
   let { size = "thumbnail" }: Props = $props();
 
@@ -49,6 +52,7 @@
   let containerWidth = $state(0);
 
   let pages = $derived(viewer.pages);
+  let selectedPages = $derived(viewer.selectedPages);
   let scale = $derived(SCALE[size] ?? 1);
   let width = $derived((IMAGE_WIDTHS_MAP.get(size) ?? 180) / scale);
   let maxHeight = $derived(
@@ -60,136 +64,69 @@
       Math.floor((containerWidth - 2 * PADDING + GAP) / (width + GAP)),
     ),
   );
-  let edit = $derived(viewer.mode === "bulk");
+  let keepMounted = $derived(
+    pages.flatMap((p, i) => (selectedPages.has(p.id) ? [i] : [])),
+  );
 
-  let pending = $derived(document.status === "pending");
-  const missing = new SvelteSet<string>();
+  const onDragStart: DragDropProps["onDragStart"] = ({ operation }) => {
+    const id = operation.source?.id as number;
+    if (!selectedPages.has(id)) {
+      selectedPages.clear();
+      selectedPages.add(id);
+    }
+  };
 
-  function onError(src: string) {
-    if (pending) missing.add(src);
-  }
+  const onDragEnd: DragDropProps["onDragEnd"] = ({ canceled, operation }) => {
+    if (canceled) return;
+    const { source, target } = operation;
+
+    if (isSortable(source) && isSortable(target)) {
+      const fromIndex = source.index;
+      const toIndex = target.index;
+
+      if (fromIndex !== toIndex) {
+        viewer.history.edit({
+          action: "move",
+          pages: [...selectedPages],
+          position: target.id as number,
+        });
+      }
+    }
+  };
 </script>
 
-<div class="pages" bind:clientWidth={containerWidth}>
-  {#if browser}
-    <VMasonry
-      getKey={({ id }) => id}
-      {lanes}
-      data={pages}
-      gap={GAP}
-      style="padding: {PADDING}px"
-    >
-      {#snippet children(
-        { id, oneIndexedPageNumber, aspectRatio, rotation },
-        n,
-      )}
-        {@const page_number = n + 1}
-        {@const height = width / aspectRatio}
-        {@const margin = lanes > 1 ? maxHeight - height : 0}
-        <!-- Modifications reorder pages, so the image comes from the source page, not the slot. -->
-        {@const src = pageImageUrl(
-          document,
-          oneIndexedPageNumber,
-          size,
-          viewer.imageVersion,
-        ).href}
-        {@const title = `Page ${page_number}, ${document.title}`}
-        <div class="page-container">
-          {#snippet image(selected = false)}
-            {@const quarterTurn = Math.abs(rotation / 90) % 2 === 1}
-            <div
-              class="image"
-              style:--rotation="{rotation}deg"
-              style:width="{width}px"
-              style:height="{height}px"
-              style:margin-bottom="{margin}px"
-            >
-              {#if missing.has(src)}
-                <div
-                  class="image-loading"
-                  class:selected
-                  style:width="{width}px"
-                  style:height="{height}px"
-                  role="img"
-                  aria-label={$_("common.loading")}
-                >
-                  <Sync16 class="spin" fill="var(--gray-4)" />
-                </div>
-              {:else}
-                <img
-                  class:selected
-                  {src}
-                  alt={title}
-                  {title}
-                  width={quarterTurn ? height : width}
-                  height={quarterTurn ? width : height}
-                  loading="lazy"
-                  onerror={() => onError(src)}
-                />
-              {/if}
-            </div>
-          {/snippet}
-          <Page pageId={id} {page_number}>
-            {#snippet children({ documentHref, selected })}
-              {#if edit}
-                {@render image(selected)}
-              {:else}
-                <a href={documentHref}>{@render image()}</a>
-              {/if}
-            {/snippet}
-          </Page>
-        </div>
-      {/snippet}
-    </VMasonry>
-  {/if}
-</div>
+<DragDropProvider {onDragStart} {onDragEnd}>
+  <div class="pages" bind:clientWidth={containerWidth}>
+    {#if browser}
+      <VMasonry
+        getKey={({ id }) => id}
+        {keepMounted}
+        {lanes}
+        data={pages}
+        gap={GAP}
+        style="padding: {PADDING}px"
+      >
+        {#snippet children(
+          { id, oneIndexedPageNumber, aspectRatio, rotation },
+          index,
+        )}
+          {@const height = width / aspectRatio}
+          {@const margin = lanes > 1 ? maxHeight - height : 0}
+          {@const src = pageImageUrl(
+            document,
+            oneIndexedPageNumber,
+            size,
+            viewer.imageVersion,
+          ).href}
+          <GridPage {id} {index} {width} {height} {margin} {rotation} {src} />
+        {/snippet}
+      </VMasonry>
+    {/if}
+  </div>
+</DragDropProvider>
 
 <style>
   .pages {
     height: 100%;
-  }
-
-  .page-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    max-width: 100%;
-    width: 100%;
-  }
-
-  a:hover {
-    text-decoration: underline;
-  }
-
-  img,
-  .image-loading {
-    background-color: var(--white, white);
-    box-shadow: var(--shadow-1);
-  }
-
-  .selected {
-    outline: 2px solid var(--blue-3);
-  }
-
-  .image-loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  a {
-    display: block;
-  }
-
-  .image {
-    position: relative;
-  }
-
-  .image img {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    max-width: none;
-    transform: translate(-50%, -50%) rotate(var(--rotation));
   }
 </style>

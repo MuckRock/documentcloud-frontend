@@ -54,8 +54,14 @@
   }
 
   input {
-    display: none;
-    visibility: hidden;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    border: 0;
   }
 
   span {
@@ -82,7 +88,7 @@
   }
 
   input:focus + span {
-    border: solid 1px var(--primary, #4294f0);
+    box-shadow: 0 0 0 2px var(--blue-2, #b5ceed);
   }
 
   input:checked + span,
@@ -92,7 +98,6 @@
   }
 
   input:checked:focus + span {
-    box-shadow: 0 0 0 2px var(--blue-2, #b5ceed);
     border: solid 1px var(--blue-4, #1367d0);
   }
 
