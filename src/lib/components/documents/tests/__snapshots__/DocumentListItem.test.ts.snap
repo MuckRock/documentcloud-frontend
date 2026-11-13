@@ -17,7 +17,7 @@ exports[`DocumentListItem > renders 1`] = `
           class="svelte-r1qrox"
           height="77.64705882352942px"
           loading="lazy"
-          src="https://s3.documentcloud.org/documents/24002098/pages/quarterly-reports-created-pursuant-to-the-letter-from-the-national-archives-and-records-administration-dated-june-1-2018-p1-thumbnail.gif"
+          src="https://s3.documentcloud.org/documents/24002098/pages/quarterly-reports-created-pursuant-to-the-letter-from-the-national-archives-and-records-administration-dated-june-1-2018-p1-thumbnail.gif?t=1698336823082"
           width="60px"
         />
         <!---->

@@ -18,11 +18,14 @@ import {
 
 // `vi.mock` factories are hoisted above the file, so the mocks they reference
 // must be created with `vi.hoisted`.
-const { getDocument, assetUrl, openSignedRange } = vi.hoisted(() => ({
-  getDocument: vi.fn(),
-  assetUrl: vi.fn(),
-  openSignedRange: vi.fn(),
-}));
+const { getDocument, assetUrl, openSignedRange, pdfModified } = vi.hoisted(
+  () => ({
+    getDocument: vi.fn(),
+    assetUrl: vi.fn(),
+    openSignedRange: vi.fn(),
+    pdfModified: vi.fn(async (): Promise<string | null> => null),
+  }),
+);
 vi.mock("pdfjs-dist/legacy/build/pdf.mjs", () => ({
   // truthy workerSrc so the module-init guard skips `new URL(...)`
   GlobalWorkerOptions: { workerSrc: "mock-worker" },
@@ -30,17 +33,22 @@ vi.mock("pdfjs-dist/legacy/build/pdf.mjs", () => ({
 }));
 vi.mock("$lib/api/documents", () => ({ assetUrl }));
 vi.mock("$lib/utils/pdfRange", () => ({ openSignedRange }));
+vi.mock("$lib/utils/pdfModified", () => ({ pdfModified }));
 
 import { ViewerState } from "$lib/state/viewer.svelte";
 import { PT_TO_PX } from "$lib/utils/pageSize";
 import { Page } from "$lib/utils/page.svelte";
+import {
+  clearPendingLayout,
+  savePendingLayout,
+} from "$lib/state/pendingLayout";
 import documentFixture from "@/test/fixtures/documents/document.json";
 
 const doc = documentFixture as unknown as Document;
 
 /** A fake pdfjs loading task with a controllable promise. */
 function makeTask(promise: Promise<unknown>) {
-  return { promise, onProgress: null as unknown };
+  return { promise, onProgress: null as unknown, destroy: vi.fn() };
 }
 
 // The unrecoverable-error path re-throws inside a `.catch`, producing an
@@ -260,6 +268,92 @@ describe("ViewerState", () => {
     // 1 initial + 5 retries
     await vi.waitFor(() => expect(getDocument).toHaveBeenCalledTimes(6));
     await vi.waitFor(() => expect(v.errors).toContain(err));
+  });
+
+  it("reloadPDF opens the new file even though a PDF is already loaded", () => {
+    getDocument.mockReturnValue(makeTask(Promise.resolve({})));
+    const v = new ViewerState();
+    v.loadPDF(new URL("https://example.com/old.pdf"));
+    v.reloadPDF(new URL("https://example.com/new.pdf"));
+
+    expect(getDocument).toHaveBeenCalledTimes(2);
+    expect(getDocument).toHaveBeenLastCalledWith(
+      expect.objectContaining({ url: new URL("https://example.com/new.pdf") }),
+    );
+  });
+
+  describe("pending modifications", () => {
+    // Page 3 moved to the front and rotated, the rest deleted.
+    const submitted = [
+      new Page({ index: 2, width: 842, height: 595, rotation: 90 }),
+    ];
+
+    beforeEach(() => {
+      clearPendingLayout(doc.id);
+      savePendingLayout(doc, submitted, "original");
+    });
+
+    const layout = (v: ViewerState) =>
+      v.pages.map(({ index, rotation }) => [index, rotation]);
+
+    it("shows the submitted layout while the document processes", () => {
+      const v = new ViewerState();
+      v.document = { ...doc, status: "pending" };
+      expect(layout(v)).toEqual([[2, 90]]);
+    });
+
+    it("shows the document's own pages once processing finishes", () => {
+      const v = new ViewerState();
+      v.document = { ...doc, status: "pending" };
+      v.document = { ...doc, status: "success", page_spec: "842.0x595.0:0" };
+      expect(layout(v)).toEqual([[0, 0]]);
+    });
+
+    it("versions page images by the pre-save updated_at while processing", () => {
+      const v = new ViewerState();
+      v.document = {
+        ...doc,
+        status: "pending",
+        updated_at: "2030-01-01T00:00:00Z",
+      };
+      expect(v.imageVersion).toBe(doc.updated_at);
+    });
+
+    it("versions page images by the document's updated_at once processed", () => {
+      const v = new ViewerState();
+      const updated_at = "2030-01-01T00:00:00Z";
+      v.document = { ...doc, status: "success", updated_at };
+      expect(v.imageVersion).toBe(updated_at);
+    });
+
+    const openPdf = async (modified: string) => {
+      getDocument.mockReturnValue(makeTask(Promise.resolve({})));
+      pdfModified.mockResolvedValueOnce(modified);
+      const v = new ViewerState();
+      v.document = { ...doc, status: "pending", edit_access: true };
+      v.loadPDF(new URL("https://example.com/doc.pdf"));
+      await v.pdf;
+      return v;
+    };
+
+    it("applies the submitted layout to the PDF it was built from", async () => {
+      const v = await openPdf("original");
+      expect(v.hasPendingLayout).toBe(false);
+    });
+
+    it("treats a PDF processing already rewrote as having the layout baked in", async () => {
+      const v = await openPdf("rewritten");
+      expect(v.hasPendingLayout).toBe(true);
+    });
+
+    it("ignores a submitted layout built from a different page spec", () => {
+      const v = new ViewerState();
+      v.document = { ...doc, status: "pending", page_spec: "612.0x792.0:0-1" };
+      expect(layout(v)).toEqual([
+        [0, 0],
+        [1, 0],
+      ]);
+    });
   });
 
   // Zoom is computed here rather than per-page so every page in the document

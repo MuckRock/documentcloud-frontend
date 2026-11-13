@@ -808,18 +808,40 @@ describe("document helper methods", () => {
     );
   });
 
-  test("pageImageUrl", ({ document }) => {
+  test("pageImageUrl versions each size by the document's updated_at", ({
+    document,
+  }) => {
     const page = 1;
-    IMAGE_WIDTHS_ENTRIES.forEach(([size, width]) => {
+    const t = Date.parse(document.updated_at);
+    IMAGE_WIDTHS_ENTRIES.forEach(([size]) => {
       expect(
         documents.pageImageUrl(document, page, size as Sizes),
       ).toStrictEqual(
         new URL(
-          `documents/${document.id}/pages/${document.slug}-p${page}-${size}.gif`,
+          `documents/${document.id}/pages/${document.slug}-p${page}-${size}.gif?t=${t}`,
           document.asset_url,
         ),
       );
     });
+  });
+
+  test("pageImageUrl versions by an earlier updated_at when given one", ({
+    document,
+  }) => {
+    const earlier = "2020-01-01T00:00:00Z";
+    const url = documents.pageImageUrl(document, 1, "thumbnail", earlier);
+    expect(url.searchParams.get("t")).toBe(String(Date.parse(earlier)));
+  });
+
+  test("pageImageUrl leaves the URL unversioned without a valid updated_at", ({
+    document,
+  }) => {
+    const url = documents.pageImageUrl(
+      { ...document, updated_at: "" },
+      1,
+      "thumbnail",
+    );
+    expect(url.search).toBe("");
   });
 
   test("textUrl", ({ document }) => {

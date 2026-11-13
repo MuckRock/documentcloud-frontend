@@ -22,8 +22,10 @@ import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
 import { createContext } from "svelte";
 
 import { assetUrl } from "$lib/api/documents";
+import { pdfModified } from "$lib/utils/pdfModified";
 import { openSignedRange } from "$lib/utils/pdfRange";
 import { EditHistory } from "$lib/state/edit.svelte";
+import { getPendingLayout } from "$lib/state/pendingLayout";
 import { SvelteSet } from "svelte/reactivity";
 import { pagesFromSpec } from "$lib/utils/pageSize";
 
@@ -51,6 +53,8 @@ export class ViewerState {
     new Promise(() => {}),
   );
   progress: DocumentLoadProgress = $state({ loaded: 0, total: 0 });
+  /** `Last-Modified` of the current PDF */
+  pdfModified: Nullable<string> = $state(null);
   zoom: Zoom = $state(1);
 
   // Reference to the currently mounted virtualizer
@@ -68,8 +72,22 @@ export class ViewerState {
 
   // edit history state
   pageSpec = $derived(this.document?.page_spec);
-  history = new EditHistory(() =>
-    this.pageSpec ? pagesFromSpec(this.pageSpec) : [],
+  #pendingLayout = $derived(
+    this.document ? getPendingLayout(this.document) : null,
+  );
+  originalPages = $derived.by(() => {
+    if (!this.document?.page_spec) return [];
+    return this.#pendingLayout?.pages ?? pagesFromSpec(this.document.page_spec);
+  });
+  history = new EditHistory(() => this.originalPages);
+
+  imageVersion = $derived(
+    this.#pendingLayout?.imageVersion ?? this.document?.updated_at,
+  );
+  hasPendingLayout = $derived(
+    !!this.pdfModified &&
+      !!this.#pendingLayout?.pdfModified &&
+      this.pdfModified !== this.#pendingLayout.pdfModified,
   );
   selectedPages = new SvelteSet<number>();
 
@@ -139,19 +157,37 @@ export class ViewerState {
     if (this.#task || this.#opening) return;
 
     const document = this.document;
-    if (!document || document.access === "public") {
-      this.pdf = this.#open({ url });
-      return;
-    }
+    // Only an editor can have a pending layout here
+    const modified = document?.edit_access
+      ? pdfModified(url).then((modified) => (this.pdfModified = modified))
+      : Promise.resolve();
 
-    // Signed private URLs expire before pdf.js has read every page it needs.
+    const pdf =
+      !document || document.access === "public"
+        ? this.#open({ url })
+        : this.#openSigned(url, document);
+    this.pdf = modified.then(() => pdf);
+  }
+
+  /** Signed private URLs expire before pdf.js has read every page it needs. */
+  async #openSigned(url: URL, document: Document) {
     this.#opening = true;
-    this.pdf = openSignedRange(url, () => assetUrl(document)).then((range) => {
-      this.#opening = false;
-      if (!range) return this.#open({ url });
-      range.onError = (error) => this.#fail(error);
-      return this.#open({ range });
-    });
+    const range = await openSignedRange(url, () => assetUrl(document));
+    this.#opening = false;
+    if (!range) return this.#open({ url });
+    range.onError = (error) => this.#fail(error);
+    return this.#open({ range });
+  }
+
+  reloadPDF(url: URL): void {
+    this.#task?.destroy();
+    this.#task = null;
+    this.#opening = false;
+    this.#opened = false;
+    this.#retriesOn403Error = 0;
+    this.progress = { loaded: 0, total: 0 };
+    this.pdfModified = null;
+    this.loadPDF(url);
   }
 
   #open(source: { url: URL } | { range: pdfjs.PDFDataRangeTransport }) {
