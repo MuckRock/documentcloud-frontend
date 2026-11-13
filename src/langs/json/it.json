@@ -374,6 +374,7 @@
     "by": "Nota di {name}"
   },
   "mode": {
+    "modify": "Modifiche",
     "document": "File",
     "text": "Testo",
     "grid": "Pagine",

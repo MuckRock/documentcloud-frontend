@@ -256,7 +256,7 @@ test.describe("deep linking into text mode", () => {
   // when the deep link fires. Wider than the other cases on purpose: a
   // logged-in reading toolbar has more buttons, and below ~1440 it collapses
   // the mode switcher into a dropdown whose links aren't clickable.
-  test.use({ viewport: { width: 1440, height: 900 } });
+  test.use({ viewport: { width: 1600, height: 900 } });
 
   /** Text pages render as `<pre>` blocks once the text response arrives. */
   const textRendered = (page: Page) =>

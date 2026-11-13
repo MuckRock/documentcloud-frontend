@@ -252,6 +252,7 @@
     "selectPage": "Вибрати сторінку {page, number}"
   },
   "mode": {
+    "modify": "Змінити",
     "editing": "Редагувати"
   },
   "editMode": {

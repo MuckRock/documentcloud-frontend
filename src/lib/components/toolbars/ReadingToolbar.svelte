@@ -18,6 +18,7 @@ Must be a child of a ViewerContext
     Note16,
     ChevronDown12,
     Search16,
+    ThreeBars16,
   } from "svelte-octicons";
 
   import Button from "$lib/components/common/Button.svelte";
@@ -76,8 +77,7 @@ Must be a child of a ViewerContext
   let document = $derived(viewer.document!);
   let canWrite = $derived(!viewer.embed && document.edit_access);
   let BREAKPOINTS = $derived({
-    READ_MENU: width > remToPx(52),
-    WRITE_MENU: width < remToPx(37),
+    MENU: width > remToPx(56),
     SEARCH_MENU: width < remToPx(24),
   });
 
@@ -96,7 +96,7 @@ Must be a child of a ViewerContext
 
 <PageToolbar bind:width>
   {#snippet left()}
-    {#if BREAKPOINTS.READ_MENU}
+    {#if BREAKPOINTS.MENU}
       <div class="tabs" role="tablist">
         {#each readModeTabs.entries() as [value, name]}
           <Tab
@@ -153,33 +153,46 @@ Must be a child of a ViewerContext
                 {name}
               </MenuItem>
             {/each}
-            {#if BREAKPOINTS.WRITE_MENU && canWrite}
-              {#each writeModes as [value, name]}
-                <MenuItem
-                  selected={viewer.mode === value}
-                  href={getViewerHref({
-                    document,
-                    mode: value,
-                    embed: viewer.embed,
-                  })}
-                  onclick={close}
-                >
-                  {@const WriteModeIcon = icons[value]}
-                  {#if WriteModeIcon}
-                    {#snippet icon()}<WriteModeIcon />{/snippet}
-                  {/if}
-                  {name}
-                </MenuItem>
-              {/each}
-            {/if}
           </Menu>
         {/snippet}
       </Dropdown>
+      {#if canWrite}
+        <Dropdown position="bottom-start">
+          {#snippet anchor()}
+            <NavItem>
+              {#snippet start()}
+                <ThreeBars16 />
+              {/snippet}
+              {$_("mode.modify")}
+              {#snippet end()}
+                <ChevronDown12 />
+              {/snippet}
+            </NavItem>
+          {/snippet}
+          {#snippet inner({ close })}
+            <Menu>
+              {#each writeModes.entries() as [value, name]}
+                <MenuItem
+                  href={getViewerHref({
+                    document,
+                    mode: getMode(value),
+                    embed: viewer.embed,
+                    query,
+                  })}
+                  onclick={close}
+                >
+                  {name}
+                </MenuItem>
+              {/each}
+            </Menu>
+          {/snippet}
+        </Dropdown>
+      {/if}
     {/if}
   {/snippet}
   {#snippet right()}
     <Flex justify="end">
-      {#if !BREAKPOINTS.WRITE_MENU && canWrite}
+      {#if BREAKPOINTS.MENU && canWrite}
         {#each writeModes as [value, name]}
           <Button
             ghost

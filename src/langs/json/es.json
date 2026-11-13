@@ -374,6 +374,7 @@
     "by": "Segnatura de {name}"
   },
   "mode": {
+    "modify": "Modificar",
     "document": "Archivo",
     "text": "Texto",
     "grid": "P\u00e1ginas",

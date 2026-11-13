@@ -236,6 +236,7 @@
     "selectPage": "Seite {page, number} auswählen"
   },
   "mode": {
+    "modify": "Ändern",
     "editing": "Bearbeiten"
   },
   "editMode": {

@@ -248,6 +248,7 @@
     "selectPage": "Выбрать страницу {page, number}"
   },
   "mode": {
+    "modify": "Изменить",
     "editing": "Редактировать"
   },
   "editMode": {

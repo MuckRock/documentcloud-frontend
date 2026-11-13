@@ -374,6 +374,7 @@
     "by": "Segnato come {name}"
   },
   "mode": {
+    "modify": "Éditer",
     "document": "Fichier",
     "text": "Texte",
     "grid": "Page",
