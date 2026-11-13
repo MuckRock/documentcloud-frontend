@@ -25,7 +25,8 @@
     "selectAll": "Seguir todos",
     "selected": "Seleccionado",
     "resultsCount": "Mostrando {n, number} de {total, number} resultados",
-    "resultsCountShort": "Mostrando {n, number} resultados"
+    "resultsCountShort": "Mostrando {n, number} resultados",
+    "selectPage": "Seleccionar página {page, number}"
   },
   "access": {
     "private": {
@@ -373,12 +374,14 @@
     "by": "Segnatura de {name}"
   },
   "mode": {
+    "modify": "Modificar",
     "document": "Archivo",
     "text": "Texto",
     "grid": "P\u00e1ginas",
     "notes": "Nota",
     "annotating": "Anotar",
-    "redacting": "Redactar"
+    "redacting": "Redactar",
+    "editing": "Editar"
   },
   "zoom": {
     "zoom": "Zoom",
@@ -633,6 +636,20 @@
     "totalCount": "Seg\u00fan {n} {n, plural, one {proceso activo} other {procesos activos}}",
     "download": "Descargar archivo",
     "document": "Este documento está en proceso. Algunas funciones pueden no estar disponibles aún."
+  },
+  "editMode": {
+    "title": "Editar documento",
+    "cancel": "Descartar",
+    "undo": "Deshacer",
+    "confirm": "Guardar",
+    "instructions": "Rota, reordena, duplica y elimina páginas del documento.",
+    "cancelWarning": "Perderás las ediciones no guardadas. ¿Seguro que quieres descartarlas?",
+    "up": "Subir",
+    "down": "Bajar",
+    "cw": "Rotar en sentido horario",
+    "ccw": "Rotar en sentido antihorario",
+    "duplicate": "Duplicar",
+    "delete": "Eliminar"
   },
   "feedback": {
     "title": "Compartir tu retroalimentaci\u00f3n",

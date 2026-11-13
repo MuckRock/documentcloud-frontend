@@ -58,29 +58,62 @@
       Math.floor((containerWidth - 2 * PADDING + GAP) / (width + GAP)),
     ),
   );
+  let edit = $derived(viewer.mode === "bulk");
 </script>
 
 <div class="pages" bind:clientWidth={containerWidth}>
   {#if browser}
-    <VMasonry {lanes} data={pages} gap={GAP} style="padding: {PADDING}px">
-      {#snippet children({ aspectRatio }, n)}
+    <VMasonry
+      getKey={({ id }) => id}
+      {lanes}
+      data={pages}
+      gap={GAP}
+      style="padding: {PADDING}px"
+    >
+      {#snippet children(
+        { id, oneIndexedPageNumber, aspectRatio, rotation },
+        n,
+      )}
         {@const page_number = n + 1}
         {@const height = width / aspectRatio}
         {@const margin = lanes > 1 ? maxHeight - height : 0}
-        {@const src = pageImageUrl(document, page_number, size).href}
+        <!-- Modifications reorder pages, so the image comes from the source page, not the slot. -->
+        {@const src = pageImageUrl(document, oneIndexedPageNumber, size).href}
+        {@const title = `Page ${page_number}, ${document.title}`}
         <div class="page-container">
-          <Page {page_number}>
-            {#snippet children({ documentHref })}
-              <a href={documentHref} style:margin-bottom="{margin}px">
-                <img
-                  {src}
-                  alt="Page {page_number}, {document.title}"
-                  title="Page {page_number}, {document.title}"
-                  width="{width}px"
-                  height="{height}px"
-                  loading="lazy"
-                />
-              </a>
+          <Page pageId={id} {page_number}>
+            {#snippet children({ documentHref, selected })}
+              {#if edit}
+                {@const quarterTurn = Math.abs(rotation / 90) % 2 === 1}
+                <div
+                  class="edit-image"
+                  style:--rotation="{rotation}deg"
+                  style:width="{width}px"
+                  style:height="{height}px"
+                  style:margin-bottom="{margin}px"
+                >
+                  <img
+                    class:selected
+                    {src}
+                    alt={title}
+                    {title}
+                    width={quarterTurn ? height : width}
+                    height={quarterTurn ? width : height}
+                    loading="lazy"
+                  />
+                </div>
+              {:else}
+                <a href={documentHref} style:margin-bottom="{margin}px">
+                  <img
+                    {src}
+                    alt={title}
+                    {title}
+                    {width}
+                    {height}
+                    loading="lazy"
+                  />
+                </a>
+              {/if}
             {/snippet}
           </Page>
         </div>
@@ -109,5 +142,21 @@
   img {
     background-color: var(--white, white);
     box-shadow: var(--shadow-1);
+  }
+
+  .selected {
+    outline: 2px solid var(--blue-3);
+  }
+
+  .edit-image {
+    position: relative;
+  }
+
+  .edit-image img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    max-width: none;
+    transform: translate(-50%, -50%) rotate(var(--rotation));
   }
 </style>

@@ -103,15 +103,21 @@ describe("zoom", () => {
     expect(getDefaultZoom("notes")).toEqual(1);
     expect(getDefaultZoom("annotating")).toEqual("auto");
     expect(getDefaultZoom("redacting")).toEqual("auto");
+    expect(getDefaultZoom("edit")).toEqual("auto");
+    expect(getDefaultZoom("bulk")).toEqual("small");
   });
 
   test("getZoomLevels offers auto plus percentages in page modes", () => {
-    (["document", "annotating", "redacting"] as ViewerMode[]).forEach(
+    (["document", "annotating", "redacting", "edit"] as ViewerMode[]).forEach(
       (mode) => {
         const values = getZoomLevels(mode).map(([value]) => value);
         expect(values).toEqual(["auto", 0.5, 0.75, 1, 1.25, 1.5, 2]);
       },
     );
+  });
+
+  test("getZoomLevels offers the grid's size presets in bulk edit", () => {
+    expect(getZoomLevels("bulk")).toEqual(getZoomLevels("grid"));
   });
 
   test("getZoomLevels includes a custom option in the correct place", () => {
@@ -151,6 +157,7 @@ describe("zoom", () => {
       "text",
       "annotating",
       "redacting",
+      "edit",
     ];
 
     // Test arbitrary numeric zoom values
@@ -167,14 +174,14 @@ describe("zoom", () => {
       });
     });
 
-    // Grid mode uses size-based zoom, so arbitrary numeric values should return undefined
-    arbitraryZoomValues.forEach((zoomValue) => {
-      const url = canonicalUrl(document);
-      url.searchParams.set("zoom", String(zoomValue));
+    // Grid modes use size-based zoom, so arbitrary numeric values should return undefined
+    (["grid", "bulk"] as ViewerMode[]).forEach((mode) => {
+      arbitraryZoomValues.forEach((zoomValue) => {
+        const url = canonicalUrl(document);
+        url.searchParams.set("zoom", String(zoomValue));
 
-      const result = getInitialZoom(url, "grid");
-
-      expect(result).toBeUndefined();
+        expect(getInitialZoom(url, mode)).toBeUndefined();
+      });
     });
 
     // Notes mode doesn't support zoom
@@ -207,7 +214,13 @@ describe("getZoomInOut", () => {
   // that stepping away from "auto" lands on a neighbouring percentage rather
   // than on a fixed index.
   describe("page modes", () => {
-    const modes: ViewerMode[] = ["document", "annotating", "redacting", "text"];
+    const modes: ViewerMode[] = [
+      "document",
+      "annotating",
+      "redacting",
+      "text",
+      "edit",
+    ];
 
     it("steps to the neighbouring levels of the current scale", () => {
       modes.forEach((mode) => {
@@ -248,15 +261,15 @@ describe("getZoomInOut", () => {
     });
   });
 
-  describe("grid mode", () => {
+  describe.each(["grid", "bulk"] as ViewerMode[])("%s mode", (mode) => {
     it("steps through the size presets by index", () => {
-      expect(getZoomInOut("grid", "small", 1)).toEqual(["thumbnail", "normal"]);
-      expect(getZoomInOut("grid", "normal", 1)).toEqual(["small", "large"]);
+      expect(getZoomInOut(mode, "small", 1)).toEqual(["thumbnail", "normal"]);
+      expect(getZoomInOut(mode, "normal", 1)).toEqual(["small", "large"]);
     });
 
     it("returns null at each end of the presets", () => {
-      expect(getZoomInOut("grid", "thumbnail", 1)).toEqual([null, "small"]);
-      expect(getZoomInOut("grid", "large", 1)).toEqual(["normal", null]);
+      expect(getZoomInOut(mode, "thumbnail", 1)).toEqual([null, "small"]);
+      expect(getZoomInOut(mode, "large", 1)).toEqual(["normal", null]);
     });
   });
 

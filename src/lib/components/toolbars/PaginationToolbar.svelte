@@ -18,6 +18,7 @@
   import Portal from "$lib/components/layouts/Portal.svelte";
   import Modal from "$lib/components/layouts/Modal.svelte";
   import NavItem from "$lib/components/common/NavItem.svelte";
+  import BulkEditToolbar from "$lib/components/toolbars/BulkEditToolbar.svelte";
   import Zoom from "../viewer/Zoom.svelte";
 
   import { pageHashUrl, shouldPaginate } from "$lib/api/documents";
@@ -31,9 +32,9 @@
 
   let document = $derived(viewer.document!);
   let sections = $derived(sortedSections(document));
-  let totalPages = $derived(document.page_count);
+  let totalPages = $derived(viewer.pages.length);
   let showPDF = $derived(
-    ["document", "annotating", "redacting"].includes(viewer.mode),
+    ["document", "annotating", "redacting", "edit"].includes(viewer.mode),
   );
   let canEditSections = $derived(!viewer.embed && document.edit_access);
 
@@ -44,7 +45,7 @@
 </script>
 
 <div class="toolbar" bind:clientWidth={width}>
-  <div class="sections">
+  <div class="left">
     {#if showPDF && (sections.length > 0 || canEditSections)}
       <Dropdown position="top-start" --offset="5px">
         {#snippet anchor()}
@@ -96,6 +97,8 @@
           </Menu>
         {/snippet}
       </Dropdown>
+    {:else if viewer.mode === "bulk"}
+      <BulkEditToolbar />
     {/if}
   </div>
 
@@ -145,7 +148,7 @@
   .paginator {
     flex: 1 1 auto;
   }
-  .sections,
+  .left,
   .zoom {
     flex: 1 1 12em;
   }

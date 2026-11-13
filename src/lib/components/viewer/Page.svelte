@@ -6,6 +6,7 @@ Must be a child of a ViewerContext
 
 <script lang="ts">
   import type { Maybe } from "$lib/api/types";
+  import type { EditButton } from "$lib/state/edit.svelte";
 
   import { page } from "$app/state";
 
@@ -13,6 +14,8 @@ Must be a child of a ViewerContext
   import { _ } from "svelte-i18n";
 
   import PageActions from "./PageActions.svelte";
+  import Checkbox from "$lib/components/inputs/Checkbox.svelte";
+  import EditActionsToolbar from "$lib/components/toolbars/EditActionsToolbar.svelte";
 
   import { pageHashUrl } from "$lib/api/documents";
   import { getViewerState } from "$lib/state/viewer.svelte";
@@ -21,6 +24,7 @@ Must be a child of a ViewerContext
 
   interface Props {
     page_number: number;
+    pageId?: number;
     track?: boolean | "once";
     width?: number | undefined;
     title?: Snippet;
@@ -30,6 +34,7 @@ Must be a child of a ViewerContext
 
   let {
     page_number,
+    pageId,
     track = false,
     width = $bindable(undefined),
     title,
@@ -60,6 +65,12 @@ Must be a child of a ViewerContext
       embed: viewer.embed,
       query: getQuery(page.url, "q"),
     }),
+  );
+  let showPageActions = $derived(
+    !viewer.embed && !["edit", "bulk"].includes(viewer.mode),
+  );
+  let selected = $derived(
+    viewer.mode === "bulk" && viewer.selectedPages.has(pageId!),
   );
 
   function watch(el: HTMLElement, once = false): IntersectionObserver {
@@ -106,6 +117,25 @@ Must be a child of a ViewerContext
     if (el) io?.unobserve(el);
   }
 
+  function onEdit(action: EditButton) {
+    switch (action) {
+      case "up":
+      case "down":
+        const index = viewer.pages.findIndex(({ id }) => id === pageId);
+        const offset = action === "up" ? -2 : 1;
+        const position = viewer.pages[index + offset]?.id!;
+        viewer.history.edit({ action: "move", pages: [pageId!], position });
+        break;
+      case "cw":
+      case "ccw":
+      case "delete":
+        viewer.history.edit({ action, pages: [pageId!] });
+        break;
+      case "duplicate":
+        viewer.history.edit({ action, pages: [pageId!], position: pageId! });
+    }
+  }
+
   onMount(() => {
     if (track && container) {
       io = watch(container, track === "once");
@@ -128,15 +158,37 @@ Must be a child of a ViewerContext
     </h4>
 
     {#if !viewer.embed}
-      <PageActions
-        {document}
-        notes={viewer.notes}
-        {page_number}
-        pageWidth={width}
-      />
+      {#if showPageActions}
+        <PageActions
+          {document}
+          notes={viewer.notes}
+          {page_number}
+          pageWidth={width}
+        />
+      {:else if viewer.mode === "bulk"}
+        <div class="check">
+          <Checkbox
+            sronly
+            label={$_("inputs.selectPage", { values: { page: page_number } })}
+            bind:value={
+              () => selected,
+              (v) => viewer.selectedPages[v ? "add" : "delete"](pageId!)
+            }
+          />
+        </div>
+      {:else if viewer.mode === "edit"}
+        <div class="edit-actions">
+          <EditActionsToolbar
+            mode="edit"
+            first={page_number === 1}
+            last={page_number === viewer.pages.length}
+            {onEdit}
+          />
+        </div>
+      {/if}
     {/if}
   </header>
-  {@render children?.({ id, href, visible, documentHref })}
+  {@render children?.({ id, href, visible, documentHref, selected })}
 </div>
 
 <style>
@@ -183,5 +235,17 @@ Must be a child of a ViewerContext
   }
   .title:empty {
     display: none;
+  }
+
+  .check {
+    margin: 5px 0;
+  }
+
+  .edit-actions {
+    background-color: var(--white);
+    border-radius: 0.75rem;
+    box-shadow: var(--shadow-1);
+    padding: 0.25rem;
+    display: flex;
   }
 </style>

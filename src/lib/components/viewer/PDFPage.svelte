@@ -34,6 +34,7 @@ Selectable text can be rendered in one of two ways:
   import { getNotes } from "$lib/utils/viewer";
   import { Page as PageClass } from "$lib/utils/page.svelte";
   import { PT_TO_PX } from "$lib/utils/pageSize";
+  import { normalizeAngle } from "$lib/utils/normalizeAngle";
 
   const viewer = getViewerState();
 
@@ -75,8 +76,16 @@ Selectable text can be rendered in one of two ways:
   // visibility, for loading optimization
   let visible: boolean = $state(false);
 
-  let { width, height, aspectRatio, orientation, index, oneIndexedPageNumber } =
-    $derived(pageData);
+  let {
+    id,
+    width,
+    height,
+    rotation,
+    aspectRatio,
+    orientation,
+    index,
+    oneIndexedPageNumber,
+  } = $derived(pageData);
 
   // Width and height have already been converted from pt to px in `pagesFromSpec`,
   // but the PDF.js render methods use the unconverted pt values, so we need to pass
@@ -97,7 +106,10 @@ Selectable text can be rendered in one of two ways:
     if (!canvas || !page) return;
 
     const context = canvas.getContext("2d");
-    const viewport = page.getViewport({ scale });
+    const viewport = page.getViewport({
+      scale,
+      rotation: normalizeAngle(page.rotate + rotation),
+    });
     const dpr = window?.devicePixelRatio ?? 1;
 
     const transform = dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : undefined;
@@ -131,7 +143,10 @@ Selectable text can be rendered in one of two ways:
 
     if (!page) return;
 
-    const viewport = page.getViewport({ scale });
+    const viewport = page.getViewport({
+      scale,
+      rotation: normalizeAngle(page.rotate + rotation),
+    });
 
     if (textLayer) {
       textLayer.update({ viewport });
@@ -216,6 +231,9 @@ Selectable text can be rendered in one of two ways:
   });
   let document = $derived(viewer.document!);
   let page = $state<Promise<PDFPageProxy>>();
+
+  let viewing = $derived(viewer.mode !== "edit");
+
   // render when anything changes
   // (PDFPage normally only renders when the viewer loads a PDF, but guard `pdf`
   // in case this component ends up in a viewer that never loads a PDF)
@@ -250,6 +268,7 @@ Selectable text can be rendered in one of two ways:
     // reading it only inside the async `.then` below would not register it,
     // and numeric zoom changes (which flow through `pxScale`) wouldn't re-render.
     pxScale;
+    rotation;
     if (!visible || pinching) return;
     Promise.all([viewer.pdf, page]).then(([pdf, page]) => {
       render(page, canvas, pxScale).catch(ignoreCancelled);
@@ -291,9 +310,9 @@ Selectable text can be rendered in one of two ways:
 
 <svelte:document onvisibilitychange={onVisibilityChange} />
 
-<Page {page_number} track bind:width={pageWidth} bind:visible>
+<Page pageId={id} {page_number} track bind:width={pageWidth} bind:visible>
   {#snippet children({ visible })}
-    {#if page_level_notes.length}
+    {#if page_level_notes.length && viewing}
       <div class="page-notes pin-x">
         {#each page_level_notes as note}
           <Note {note} />
@@ -341,7 +360,9 @@ Selectable text can be rendered in one of two ways:
         </div>
       {/if}
 
-      <AnnotationLayer page_number={index} />
+      {#if viewing}
+        <AnnotationLayer page_number={index} />
+      {/if}
 
       {#if redactions_for_page.length > 0 || viewer.mode === "redacting"}
         <RedactionLayer
@@ -426,6 +447,20 @@ Selectable text can be rendered in one of two ways:
     background-color: var(--note-public, mark);
     color: transparent;
     opacity: 0.35;
+  }
+
+  /* pdfjs's TextLayer adds the rotation to a data attribute
+  but never actually applies the transform */
+  .selectable-text:global([data-main-rotation="90"]) {
+    transform: rotate(90deg) translateY(-100%);
+  }
+
+  .selectable-text:global([data-main-rotation="180"]) {
+    transform: rotate(180deg) translate(-100%, -100%);
+  }
+
+  .selectable-text:global([data-main-rotation="270"]) {
+    transform: rotate(270deg) translateX(-100%);
   }
 
   /* Delayed so pages that draw quickly never flash it. */

@@ -84,6 +84,22 @@
   }}
 />
 <Story
+  name="Edit"
+  args={{
+    ...args,
+    mode: "edit",
+    document: { ...document, edit_access: true },
+  }}
+/>
+<Story
+  name="Bulk Edit"
+  args={{
+    ...args,
+    mode: "bulk",
+    document: { ...document, edit_access: true },
+  }}
+/>
+<Story
   name="Search"
   parameters={{
     msw: { handlers: [searchWithin.data] },

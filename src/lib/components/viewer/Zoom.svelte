@@ -78,7 +78,7 @@ Must be a child of a ViewerContext
     </Button>
     <label>
       <span class="sr-only">
-        {#if viewer.mode === "grid"}
+        {#if ["grid", "bulk"].includes(viewer.mode)}
           {$_("zoom.size")}
         {:else}
           {$_("zoom.zoom")}
