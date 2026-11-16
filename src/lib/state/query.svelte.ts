@@ -7,7 +7,7 @@
  */
 
 import type { AddOn } from "$lib/api/types";
-import { APP_URL } from "@/config/embed";
+import { APP_URL } from "@/config/config";
 import { createContext } from "svelte";
 
 export class DocumentQueryState {
