@@ -90,7 +90,7 @@
   }
 </script>
 
-{#if users.length > 0 || project.add_remove_access}
+{#if users.length > 0 || project.edit_access}
   <SidebarGroup name="collaborators">
     {#snippet title()}
       <NavItem>
@@ -103,7 +103,7 @@
 
     {#snippet action()}
       <span>
-        {#if project.add_remove_access}
+        {#if project.edit_access}
           <Button
             ghost
             mode="primary"
@@ -133,7 +133,7 @@
             {getUserName(user.user)}
             {#snippet end()}
               <Flex gap={0}>
-                {#if project.add_remove_access && !isMe(user, me)}
+                {#if project.edit_access && !isMe(user, me)}
                   <Tooltip caption={actions.update}>
                     <Button
                       ghost
@@ -177,20 +177,11 @@
           </NavItem>
         {/if}
       {/each}
-    {:else}
-      <Empty>
-        {$_("projects.collaborators.empty")}
-        {#if project.add_remove_access}
-          <Action title={actions.invite} onclick={() => (show = "invite")}>
-            {$_("projects.collaborators.add")}
-          </Action>
-        {/if}
-      </Empty>
     {/each}
   </SidebarGroup>
 {/if}
 
-{#if show && project.add_remove_access}
+{#if show && project.edit_access}
   <Portal>
     <Modal onclose={hide}>
       {#snippet title()}
