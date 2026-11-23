@@ -426,6 +426,11 @@ Selectable text can be rendered in one of two ways:
     opacity: 0.35;
   }
 
+  .selectable-text :global(::selection) {
+    color: transparent;
+    background: Highlight;
+  }
+
   /* Delayed so pages that draw quickly never flash it. */
   .page-loading {
     position: absolute;
