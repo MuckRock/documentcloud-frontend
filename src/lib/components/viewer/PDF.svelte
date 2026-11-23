@@ -110,6 +110,7 @@
           {#if browser && viewer.width !== undefined}
             <Virtualizer
               data={viewer.pages}
+              getKey={({ id }) => id}
               keepMounted={[Math.max(0, viewer.page - 2)]}
               itemProps={() => ({
                 style: {

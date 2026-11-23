@@ -21,7 +21,7 @@ import {
 async function openSectionsModal(page: Page) {
   const form = page.locator(".dialog form");
   await expect(async () => {
-    await page.locator(".sections .anchor").click();
+    await page.locator(".left .anchor", { hasText: "Sections" }).click();
     await page
       .getByRole("button", { name: /^(Add Sections|Edit Sections)$/ })
       .click();
@@ -217,7 +217,7 @@ test("section links navigate to the section's page", async ({
     await expect(targetEl).not.toBeInViewport();
 
     // Open the Sections dropdown and click the section link.
-    await page.locator(".sections .anchor").click();
+    await page.locator(".left .anchor", { hasText: "Sections" }).click();
     await page.getByRole("menuitem", { name: "Deep section" }).click();
 
     // It navigates: the hash updates and the page scrolls into view.

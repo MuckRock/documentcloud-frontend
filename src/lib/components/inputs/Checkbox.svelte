@@ -9,6 +9,7 @@
     value?: boolean;
     indeterminate?: boolean;
     label?: string;
+    sronly?: boolean;
   }
 
   let {
@@ -17,6 +18,7 @@
     value = $bindable(false),
     indeterminate = $bindable(false),
     label = "",
+    sronly = false,
     ...rest
   }: Props = $props();
 </script>
@@ -37,7 +39,11 @@
       <Dash16 />
     {/if}
   </span>
-  {label}
+  {#if sronly}
+    <span class="sr-only">{label}</span>
+  {:else}
+    {label}
+  {/if}
 </label>
 
 <style>

@@ -26,6 +26,7 @@ Must be a child of a ViewerContext
   import PaginationToolbar from "../toolbars/PaginationToolbar.svelte";
   import ReadingToolbar from "../toolbars/ReadingToolbar.svelte";
   import RedactionToolbar from "../toolbars/RedactionToolbar.svelte";
+  import EditToolbar from "../toolbars/EditToolbar.svelte";
 
   // state
   import { getViewerState } from "$lib/state/viewer.svelte";
@@ -37,8 +38,10 @@ Must be a child of a ViewerContext
   let embed = $derived(viewer.embed);
   let mode = $derived(viewer.mode);
   let showPDF = $derived(
-    ["document", "annotating", "redacting"].includes(viewer.mode),
+    ["document", "annotating", "redacting", "edit"].includes(viewer.mode),
   );
+  let showEdit = $derived(["edit", "bulk"].includes(viewer.mode));
+  let showGrid = $derived(["grid", "bulk"].includes(viewer.mode));
   let loading = $derived(
     viewer.progress.total > 0 ? viewer.loadingProgress : null,
   );
@@ -73,6 +76,8 @@ Must be a child of a ViewerContext
           <AnnotationToolbar />
         {:else if !embed && mode === "redacting"}
           <RedactionToolbar />
+        {:else if !embed && showEdit}
+          <EditToolbar />
         {:else}
           <ReadingToolbar />
         {/if}
@@ -95,7 +100,7 @@ Must be a child of a ViewerContext
       <PDF />
     {:else if mode === "text"}
       <Text />
-    {:else if mode === "grid"}
+    {:else if showGrid}
       <Grid />
     {:else if mode === "notes"}
       <Notes />

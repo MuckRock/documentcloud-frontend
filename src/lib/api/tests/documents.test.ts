@@ -884,8 +884,14 @@ describe("document helper methods", () => {
   });
 
   test("shouldPreload", () => {
-    const yes: ViewerMode[] = ["annotating", "document", "notes", "redacting"];
-    const no: ViewerMode[] = ["grid", "text"];
+    const yes: ViewerMode[] = [
+      "annotating",
+      "document",
+      "notes",
+      "redacting",
+      "edit",
+    ];
+    const no: ViewerMode[] = ["grid", "text", "bulk"];
 
     yes.forEach((mode) => {
       expect(documents.shouldPreload(mode)).toBeTruthy();
@@ -897,8 +903,14 @@ describe("document helper methods", () => {
   });
 
   test("shouldPaginate", () => {
-    const yes: ViewerMode[] = ["annotating", "document", "redacting", "text"];
-    const no: ViewerMode[] = ["grid", "notes"];
+    const yes: ViewerMode[] = [
+      "annotating",
+      "document",
+      "redacting",
+      "text",
+      "edit",
+    ];
+    const no: ViewerMode[] = ["grid", "notes", "bulk"];
 
     yes.forEach((mode) => {
       expect(documents.shouldPaginate(mode)).toBeTruthy();
