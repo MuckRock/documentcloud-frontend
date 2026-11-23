@@ -1,7 +1,9 @@
 import type { Nullable, ProjectUser, User } from "$lib/api/types";
 
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, within } from "@testing-library/svelte";
+import { fireEvent, render, screen, within } from "@testing-library/svelte";
+
+vi.mock("$app/forms", () => ({ enhance: () => ({}) }));
 
 vi.mock("$app/state", () => ({
   page: { data: {} as { me?: Nullable<User> } },
@@ -64,5 +66,75 @@ describe("Collaborators — self vs. other member controls", () => {
     // neither row belongs to a signed-out "me", so nothing is excluded as self
     expect(screen.getAllByTitle("Change Access")).toHaveLength(2);
     expect(screen.getAllByTitle("Remove Collaborator")).toHaveLength(2);
+  });
+});
+
+describe("Collaborators — managing collaborators requires edit_access", () => {
+  const adminOnly = {
+    ...editableProject,
+    edit_access: true,
+    add_remove_access: false,
+  };
+  const editorOnly = {
+    ...editableProject,
+    edit_access: false,
+    add_remove_access: true,
+  };
+
+  it("lets a user with edit_access open the invite form", async () => {
+    page.data.me = me;
+
+    render(Collaborators, { props: { project: adminOnly, users: members } });
+
+    await fireEvent.click(screen.getByRole("button", { name: "Invite" }));
+
+    expect(
+      screen.getByRole("heading", { name: "Invite Collaborators" }),
+    ).toBeInTheDocument();
+  });
+
+  it("lets a user with edit_access open the change-access form", async () => {
+    page.data.me = me;
+
+    render(Collaborators, { props: { project: adminOnly, users: members } });
+
+    await fireEvent.click(screen.getByTitle("Change Access"));
+
+    expect(
+      screen.getByRole("heading", { name: "Change Access" }),
+    ).toBeInTheDocument();
+  });
+
+  it("lets a user with edit_access open the remove form", async () => {
+    page.data.me = me;
+
+    render(Collaborators, { props: { project: adminOnly, users: members } });
+
+    await fireEvent.click(screen.getByTitle("Remove Collaborator"));
+
+    expect(
+      screen.getByRole("heading", { name: "Remove Collaborator" }),
+    ).toBeInTheDocument();
+  });
+
+  it("hides invite, change-access and remove controls from an editor who only has add_remove_access", () => {
+    page.data.me = me;
+
+    render(Collaborators, { props: { project: editorOnly, users: members } });
+
+    expect(
+      screen.queryByRole("button", { name: "Invite" }),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByTitle("Change Access")).not.toBeInTheDocument();
+    expect(screen.queryByTitle("Remove Collaborator")).not.toBeInTheDocument();
+  });
+
+  it("shows the collaborators panel on a project with no members when the user has edit_access", () => {
+    page.data.me = me;
+
+    render(Collaborators, { props: { project: adminOnly, users: [] } });
+
+    expect(screen.getByText("Collaborators")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Invite" })).toBeInTheDocument();
   });
 });
