@@ -7,6 +7,7 @@
     name?: undefined | string;
     disabled?: boolean;
     value?: boolean;
+    defaultValue?: boolean;
     indeterminate?: boolean;
     label?: string;
   }
@@ -15,6 +16,7 @@
     name = undefined,
     disabled = false,
     value = $bindable(false),
+    defaultValue = undefined,
     indeterminate = $bindable(false),
     label = "",
     ...rest
@@ -27,6 +29,7 @@
     type="checkbox"
     {name}
     {disabled}
+    defaultChecked={defaultValue}
     bind:checked={value}
     bind:indeterminate
   />
