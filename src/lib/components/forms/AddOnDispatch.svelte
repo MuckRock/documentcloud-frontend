@@ -101,7 +101,9 @@
     // prefill values from search params
     new URLSearchParams(page.url.searchParams).forEach((v, k) => {
       if (k in properties) {
-        $values[k] = v;
+        // A bound checkbox treats any non-empty string, including "false", as checked.
+        $values[k] =
+          objectify(properties[k]).type === "boolean" ? v === "true" : v;
       }
     });
   });
