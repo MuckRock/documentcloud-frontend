@@ -20,7 +20,7 @@
 
   let keepMounted = $derived.by(() => {
     const MOUNTED = 200;
-    const pageCount = viewer.pageSizes.length;
+    const pageCount = viewer.pages.length;
     const start = Math.max(
       0,
       Math.min(viewer.page - 1 - MOUNTED / 2, pageCount - MOUNTED),

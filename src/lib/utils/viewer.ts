@@ -23,11 +23,6 @@ interface ViewerHrefOptions {
   query?: string;
 }
 
-/**
- * Multiplier to convert PDF points (1/72 inch) to CSS pixels (1/96 inch)
- */
-export const PT_TO_PX = 96 / 72;
-
 export function getViewerHref(options: ViewerHrefOptions = {}) {
   const {
     document,
@@ -80,38 +75,6 @@ export function fitPage(
   const { clientWidth, clientHeight } = container;
 
   return scale === "width" ? clientWidth / width : clientHeight / height;
-}
-
-/**
- * Parse page_spec into width and height of each page
- *
- * @param pageSpec A string encoding page dimensions in a compact format
- * @returns an array of [width, height] tuples
- */
-export function pageSizes(pageSpec: string): [width: number, height: number][] {
-  // Handle empty page spec
-  if (pageSpec.trim().length == 0) return [];
-
-  const parts = pageSpec.split(";");
-  return parts.reduce((sizes, part) => {
-    const [size, range] = part?.split(":");
-    const [width, height] =
-      size?.split("x").map((d) => parseFloat(d) * PT_TO_PX) ?? [];
-
-    range?.split(",").forEach((rangePart) => {
-      if (rangePart.includes("-")) {
-        const [start, end] = rangePart.split("-").map((x) => parseInt(x, 10));
-        for (let page = start ?? 0; page <= (end ?? 0); page++) {
-          sizes[page] = [width, height];
-        }
-      } else {
-        const page = parseInt(rangePart, 10);
-        sizes[page] = [width, height];
-      }
-    });
-
-    return sizes;
-  }, Array(parts.length));
 }
 
 /**

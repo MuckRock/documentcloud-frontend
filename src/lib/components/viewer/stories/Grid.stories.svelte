@@ -33,6 +33,22 @@
   </ViewerContext>
 {/snippet}
 
+<!-- Page 2 is given a legal-size spec so rows hold pages of unequal height;
+     its image is stretched to fit. -->
+<Story
+  name="mixed page heights"
+  args={{
+    ...args,
+    context: {
+      ...args.context,
+      document: {
+        ...document,
+        page_spec: "612.0x792.0:0,2-89,128;612.0x1008.0:1;792.0x612.0:90-127",
+      },
+    },
+  }}
+/>
+
 <Story
   name="thumbnail"
   args={{ ...args, context: { ...args.context, zoom: "thumbnail" } }}

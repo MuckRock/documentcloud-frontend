@@ -57,6 +57,8 @@ vi.mock("$app/navigation", () => ({ afterNavigate: vi.fn() }));
 import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
 import PDFPage from "../PDFPage.svelte";
 import { renderInViewer } from "./renderInViewer";
+import { Page } from "$lib/utils/page.svelte";
+import { PT_TO_PX } from "$lib/utils/pageSize";
 import { document } from "@/test/fixtures/documents";
 
 /** A fake pdf.js page whose render settles only when the test says so. */
@@ -81,9 +83,13 @@ function makePage() {
   };
 }
 
+function letterPage() {
+  return new Page({ index: 0, width: 816, height: 1056 });
+}
+
 function renderPage() {
   return renderInViewer(PDFPage, {
-    props: { page_number: 1, scale: 1, width: 612, height: 792 },
+    props: { page_number: 1, page: letterPage(), scale: 1 },
     context: { document, mode: "document" },
   });
 }
@@ -166,8 +172,9 @@ describe("PDFPage", () => {
     });
 
     it("stays hidden while a drawn page re-renders at a new zoom", async () => {
+      const pageData = letterPage();
       const { container, rerender } = renderInViewer(PDFPage, {
-        props: { page_number: 1, scale: 1, width: 612, height: 792 },
+        props: { page_number: 1, page: pageData, scale: 1 },
         context: { document, mode: "document" },
       });
       await waitFor(() => expect(page.render).toHaveBeenCalled());
@@ -181,7 +188,7 @@ describe("PDFPage", () => {
         cancel: vi.fn(),
       });
       await rerender({
-        childProps: { page_number: 1, scale: 2, width: 612, height: 792 },
+        childProps: { page_number: 1, page: pageData, scale: 2 },
       });
       await waitFor(() => expect(page.render).toHaveBeenCalledTimes(2));
 
@@ -227,5 +234,22 @@ describe("PDFPage", () => {
 
     expect(canvas.width).toBe(0);
     expect(canvas.height).toBe(0);
+  });
+  it("sizes a placeholder page from pdf.js in pixels when page_spec is missing", async () => {
+    const pageData = new Page({ index: 0, width: 0, height: 0 });
+    const { container } = renderInViewer(PDFPage, {
+      props: { page_number: 1, page: pageData, scale: 1 },
+      context: { document, mode: "document" },
+    });
+
+    // the mock pdf.js page is 612x792pt
+    await waitFor(() => expect(pageData.width).toBe(612 * PT_TO_PX));
+    expect(pageData.height).toBe(792 * PT_TO_PX);
+    const box = container.querySelector<HTMLElement>(".page-container")!;
+    await waitFor(() =>
+      expect(box.style.getPropertyValue("--width")).toBe(
+        `${Math.floor(612 * PT_TO_PX)}px`,
+      ),
+    );
   });
 });

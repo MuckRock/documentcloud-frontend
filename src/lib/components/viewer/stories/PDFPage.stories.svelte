@@ -11,7 +11,8 @@
     "pdfjs-dist/legacy/build/pdf.worker.mjs",
     import.meta.url,
   ).href;
-  import { pageSizes } from "$lib/utils/pageSize";
+  import { pagesFromSpec } from "$lib/utils/pageSize";
+  import { Page } from "$lib/utils/page.svelte";
 
   import doc from "@/test/fixtures/documents/examples/the-santa-anas.json";
   import textPositions from "@/test/fixtures/documents/examples/the-santa-anas-p1.position.json";
@@ -28,35 +29,28 @@
     parameters: { layout: "centered" },
   });
 
-  const sizes = pageSizes(document.page_spec!);
-  const [width, height] = sizes[0]!;
+  const pages = pagesFromSpec(document.page_spec!);
+  const pageData = pages[0]!;
   const query = "los angeles";
   const url = new URL(pdfFile, import.meta.url);
 </script>
 
-<!-- PDFPage always renders at a numeric scale now; the viewer resolves "auto"
-     to one before passing it down. -->
+<!-- The viewer resolves "auto" zoom to a number before passing `scale` down. -->
 <Story name="full size" parameters={{ layout: "fullscreen" }} asChild>
   <ViewerContext {document} {notes} asset_url={url}>
-    <PdfPage page_number={1} scale={1} {width} {height} />
+    <PdfPage page_number={1} page={pageData} scale={1} />
   </ViewerContext>
 </Story>
 
 <Story name="embedded text" asChild>
   <ViewerContext {document} {notes} asset_url={url}>
-    <PdfPage page_number={1} scale={1.5} {width} {height} />
+    <PdfPage page_number={1} page={pageData} scale={1.5} />
   </ViewerContext>
 </Story>
 
 <Story name="server text" asChild>
   <ViewerContext {document} {notes} asset_url={url}>
-    <PdfPage
-      page_number={1}
-      scale={1.5}
-      text={textPositions}
-      {width}
-      {height}
-    />
+    <PdfPage page_number={1} page={pageData} scale={1.5} text={textPositions} />
   </ViewerContext>
 </Story>
 
@@ -80,12 +74,23 @@
   <ViewerContext {document} {notes} asset_url={url}>
     <p>Query: {query}</p>
     <p>URL: {page.url}</p>
-    <PdfPage page_number={1} scale={1.5} {width} {height} />
+    <PdfPage page_number={1} page={pageData} scale={1.5} />
+  </ViewerContext>
+</Story>
+
+<!-- With no page_spec, the page starts at 0x0 and takes its size from pdf.js. -->
+<Story name="size from pdf.js" asChild>
+  <ViewerContext {document} {notes} asset_url={url}>
+    <PdfPage
+      page_number={1}
+      page={new Page({ index: 0, width: 0, height: 0 })}
+      scale={1}
+    />
   </ViewerContext>
 </Story>
 
 <Story name="long section start" parameters={{ layout: "fullscreen" }} asChild>
   <ViewerContext {document} {notes} asset_url={url}>
-    <PdfPage page_number={1} scale={1} {width} {height} />
+    <PdfPage page_number={1} page={pageData} scale={1} />
   </ViewerContext>
 </Story>

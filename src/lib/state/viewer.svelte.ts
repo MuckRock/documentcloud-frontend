@@ -23,7 +23,7 @@ import { createContext } from "svelte";
 
 import { assetUrl } from "$lib/api/documents";
 import { openSignedRange } from "$lib/utils/pdfRange";
-import { pageSizes } from "$lib/utils/viewer";
+import { pagesFromSpec } from "$lib/utils/pageSize";
 
 if (!pdfjs.GlobalWorkerOptions.workerSrc) {
   pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -81,10 +81,10 @@ export class ViewerState {
   // state and deriveds for zoom calculations
   // regardless of zoom mode, we always calculate auto zoom scale to display in select menu
   width = $state<number>();
-  pageSizes = $derived(
-    this.document?.page_spec ? pageSizes(this.document.page_spec) : [],
+  pages = $derived(
+    this.document?.page_spec ? pagesFromSpec(this.document.page_spec) : [],
   );
-  maxPageWidth = $derived(Math.max(...this.pageSizes.map(([w]) => w)));
+  maxPageWidth = $derived(Math.max(...this.pages.map(({ width }) => width)));
   autoZoomScale = $derived.by(() => {
     if (!this.width) return 1;
     return Math.min(1, this.width / this.maxPageWidth);
