@@ -659,17 +659,26 @@ export function pageUrl(document: Document, page: number): URL {
  * @param {import('./types').Document} document
  * @param {number} page number, 1-indexed
  * @param {import('./types').sizes} size
+ * @param {string} updatedAt
  * @returns {URL}
  */
 export function pageImageUrl(
   document: Document,
   page: number,
   size: Sizes,
+  updatedAt: string = document.updated_at,
 ): URL {
-  return new URL(
+  const url = new URL(
     `documents/${document.id}/pages/${document.slug}-p${page}-${size}.gif`,
     document.asset_url,
   );
+
+  const updated = Date.parse(updatedAt);
+  if (!Number.isNaN(updated)) {
+    url.searchParams.set("t", updated.toString());
+  }
+
+  return url;
 }
 
 /**

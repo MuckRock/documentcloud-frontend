@@ -4,8 +4,10 @@ Must be a child of a ViewerContext
 
 <script lang="ts">
   import type { WriteMode } from "$lib/api/types";
+  import type { SubmitFunction } from "@sveltejs/kit";
 
   import { page } from "$app/state";
+  import { enhance } from "$app/forms";
 
   import { _ } from "svelte-i18n";
   import {
@@ -34,8 +36,8 @@ Must be a child of a ViewerContext
   import { getViewerState } from "$lib/state/viewer.svelte";
   import { goto, invalidate } from "$app/navigation";
   import { canonicalUrl } from "$lib/api/documents";
-  import { enhance } from "$app/forms";
-  import type { SubmitFunction } from "@sveltejs/kit";
+  import { load } from "$lib/components/processing/ProcessContext.svelte";
+  import { savePendingLayout } from "$lib/state/pendingLayout";
 
   let { query = getQuery(page.url, "q") } = $props();
 
@@ -93,7 +95,10 @@ Must be a child of a ViewerContext
       }
 
       if (result.type === "success") {
+        savePendingLayout(document, viewer.history.current, viewer.pdfModified);
         await invalidate(`document:${document.id}`);
+        viewer.history.discard();
+        load();
         goto(gotoURL);
       }
     };

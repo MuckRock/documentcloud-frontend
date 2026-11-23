@@ -23,6 +23,7 @@ import { get, type Writable } from "svelte/store";
 import { SvelteMap, SvelteSet } from "svelte/reactivity";
 import { isDefined } from "$lib/utils";
 import { getApiResponse } from "$lib/utils/api";
+import { clearPendingLayout } from "$lib/state/pendingLayout";
 
 interface Args {
   query?: Maybe<string>;
@@ -249,10 +250,15 @@ export class SearchResultsState<
 
   handleFinished(finished: Set<number>) {
     for (const docId of finished) {
+      clearPendingLayout(docId);
       const id = String(docId);
       const doc = this.visible.get(id);
       if (doc && "status" in doc && doc.status !== "success") {
-        this.visible.set(id, { ...doc, status: "success" });
+        this.visible.set(id, {
+          ...doc,
+          status: "success",
+          updated_at: new Date().toISOString(),
+        });
       }
     }
   }

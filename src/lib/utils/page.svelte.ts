@@ -45,11 +45,15 @@ export class Page {
   }
 
   copy() {
-    return new Page({
+    return new Page(this.toJSON());
+  }
+
+  toJSON() {
+    return {
       index: this.index,
       width: this.width,
       height: this.height,
       rotation: this.rotation,
-    });
+    };
   }
 }

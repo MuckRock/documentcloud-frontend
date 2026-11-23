@@ -87,6 +87,14 @@ Selectable text can be rendered in one of two ways:
     oneIndexedPageNumber,
   } = $derived(pageData);
 
+  // After the PDF has been rewritten on the server but before the document is
+  // done processing, we need to rely on the PDF rather than stored layout data
+  // for page index and rotation.
+  let pageNumber = $derived(
+    viewer.hasPendingLayout ? page_number : oneIndexedPageNumber,
+  );
+  let pdfRotation = $derived(viewer.hasPendingLayout ? 0 : rotation);
+
   // Width and height have already been converted from pt to px in `pagesFromSpec`,
   // but the PDF.js render methods use the unconverted pt values, so we need to pass
   // them a converted scale
@@ -108,7 +116,7 @@ Selectable text can be rendered in one of two ways:
     const context = canvas.getContext("2d");
     const viewport = page.getViewport({
       scale,
-      rotation: normalizeAngle(page.rotate + rotation),
+      rotation: normalizeAngle(page.rotate + pdfRotation),
     });
     const dpr = window?.devicePixelRatio ?? 1;
 
@@ -145,7 +153,7 @@ Selectable text can be rendered in one of two ways:
 
     const viewport = page.getViewport({
       scale,
-      rotation: normalizeAngle(page.rotate + rotation),
+      rotation: normalizeAngle(page.rotate + pdfRotation),
     });
 
     if (textLayer) {
@@ -239,9 +247,7 @@ Selectable text can be rendered in one of two ways:
   // in case this component ends up in a viewer that never loads a PDF)
   $effect(() => {
     if (!visible || !viewer.pdf || page) return;
-    page = Promise.resolve(viewer.pdf).then((pdf) =>
-      pdf.getPage(oneIndexedPageNumber),
-    );
+    page = Promise.resolve(viewer.pdf).then((pdf) => pdf.getPage(pageNumber));
   });
 
   // handle 0 sizing when page_spec is unavailable
@@ -268,7 +274,7 @@ Selectable text can be rendered in one of two ways:
     // reading it only inside the async `.then` below would not register it,
     // and numeric zoom changes (which flow through `pxScale`) wouldn't re-render.
     pxScale;
-    rotation;
+    pdfRotation;
     if (!visible || pinching) return;
     Promise.all([viewer.pdf, page]).then(([pdf, page]) => {
       render(page, canvas, pxScale).catch(ignoreCancelled);

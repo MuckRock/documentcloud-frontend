@@ -13,6 +13,8 @@
   import { browser } from "$app/environment";
   import { _ } from "svelte-i18n";
   import { VMasonry } from "virtua/svelte";
+  import { Sync16 } from "svelte-octicons";
+  import { SvelteSet } from "svelte/reactivity";
 
   import Page from "./Page.svelte";
 
@@ -59,6 +61,13 @@
     ),
   );
   let edit = $derived(viewer.mode === "bulk");
+
+  let pending = $derived(document.status === "pending");
+  const missing = new SvelteSet<string>();
+
+  function onError(src: string) {
+    if (pending) missing.add(src);
+  }
 </script>
 
 <div class="pages" bind:clientWidth={containerWidth}>
@@ -78,41 +87,54 @@
         {@const height = width / aspectRatio}
         {@const margin = lanes > 1 ? maxHeight - height : 0}
         <!-- Modifications reorder pages, so the image comes from the source page, not the slot. -->
-        {@const src = pageImageUrl(document, oneIndexedPageNumber, size).href}
+        {@const src = pageImageUrl(
+          document,
+          oneIndexedPageNumber,
+          size,
+          viewer.imageVersion,
+        ).href}
         {@const title = `Page ${page_number}, ${document.title}`}
         <div class="page-container">
+          {#snippet image(selected = false)}
+            {@const quarterTurn = Math.abs(rotation / 90) % 2 === 1}
+            <div
+              class="image"
+              style:--rotation="{rotation}deg"
+              style:width="{width}px"
+              style:height="{height}px"
+              style:margin-bottom="{margin}px"
+            >
+              {#if missing.has(src)}
+                <div
+                  class="image-loading"
+                  class:selected
+                  style:width="{width}px"
+                  style:height="{height}px"
+                  role="img"
+                  aria-label={$_("common.loading")}
+                >
+                  <Sync16 class="spin" fill="var(--gray-4)" />
+                </div>
+              {:else}
+                <img
+                  class:selected
+                  {src}
+                  alt={title}
+                  {title}
+                  width={quarterTurn ? height : width}
+                  height={quarterTurn ? width : height}
+                  loading="lazy"
+                  onerror={() => onError(src)}
+                />
+              {/if}
+            </div>
+          {/snippet}
           <Page pageId={id} {page_number}>
             {#snippet children({ documentHref, selected })}
               {#if edit}
-                {@const quarterTurn = Math.abs(rotation / 90) % 2 === 1}
-                <div
-                  class="edit-image"
-                  style:--rotation="{rotation}deg"
-                  style:width="{width}px"
-                  style:height="{height}px"
-                  style:margin-bottom="{margin}px"
-                >
-                  <img
-                    class:selected
-                    {src}
-                    alt={title}
-                    {title}
-                    width={quarterTurn ? height : width}
-                    height={quarterTurn ? width : height}
-                    loading="lazy"
-                  />
-                </div>
+                {@render image(selected)}
               {:else}
-                <a href={documentHref} style:margin-bottom="{margin}px">
-                  <img
-                    {src}
-                    alt={title}
-                    {title}
-                    {width}
-                    {height}
-                    loading="lazy"
-                  />
-                </a>
+                <a href={documentHref}>{@render image()}</a>
               {/if}
             {/snippet}
           </Page>
@@ -139,7 +161,8 @@
     text-decoration: underline;
   }
 
-  img {
+  img,
+  .image-loading {
     background-color: var(--white, white);
     box-shadow: var(--shadow-1);
   }
@@ -148,11 +171,21 @@
     outline: 2px solid var(--blue-3);
   }
 
-  .edit-image {
+  .image-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  a {
+    display: block;
+  }
+
+  .image {
     position: relative;
   }
 
-  .edit-image img {
+  .image img {
     position: absolute;
     top: 50%;
     left: 50%;

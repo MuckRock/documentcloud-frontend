@@ -20,6 +20,7 @@ layouts, stories, and tests.
   import { pageFromHash, pdfUrl, shouldPaginate } from "$lib/api/documents";
   import { noteFromHash } from "$lib/api/notes";
   import { scrollToId } from "$lib/utils/scroll";
+  import { clearPendingLayout } from "$lib/state/pendingLayout";
 
   import { ViewerState, setViewerState } from "$lib/state/viewer.svelte";
 
@@ -87,6 +88,18 @@ layouts, stories, and tests.
   // so re-seeding them here would clobber in-view interactions (zoom, page).
   $effect(() => {
     viewer.document = document;
+  });
+
+  // Processing rewrites the PDF in place, so the copy pdf.js opened is stale once it finishes.
+  let wasPending = false;
+  $effect(() => {
+    const pending = document.status === "pending";
+    if (!pending) clearPendingLayout(document.id);
+    if (wasPending && !pending && loadPdf) {
+      viewer.assetUrl = asset_url;
+      viewer.reloadPDF(asset_url);
+    }
+    wasPending = pending;
   });
 
   $effect(() => {

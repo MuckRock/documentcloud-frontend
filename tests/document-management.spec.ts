@@ -129,6 +129,11 @@ test("modify a document", async ({ page, processedDoc }) => {
   // Saving leaves edit mode, and the fixture's single 612x792pt page comes back
   // landscape once reprocessed.
   await expect(page).not.toHaveURL(/mode=edit/);
+
+  // While processing, a reload still shows the saved layout, not the old page spec.
+  await page.reload();
+  await expect(firstPage.locator(".page-container")).toHaveClass(/horizontal/);
+
   await expect
     .poll(
       async () => {

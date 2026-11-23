@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { writable } from "svelte/store";
 
 import { SearchResultsState } from "$lib/state/search.svelte";
+import { getPendingLayout, savePendingLayout } from "$lib/state/pendingLayout";
 import searchFixture from "@/test/fixtures/documents/search-highlight.json";
 
 const fixture = searchFixture as unknown as DocumentResults;
@@ -215,6 +216,32 @@ describe("SearchResultsState", () => {
       search.handleFinished(new Set([Number(id)]));
 
       expect(search.visible.get(id)!.status).toBe("success");
+    });
+
+    it("moves updated_at forward so page images load the reprocessed versions", () => {
+      const id = [...search.visible.keys()][0]!;
+      const doc = search.visible.get(id)!;
+      search.visible.set(id, { ...doc, status: "pending" });
+
+      search.handleFinished(new Set([Number(id)]));
+
+      expect(Date.parse(search.visible.get(id)!.updated_at)).toBeGreaterThan(
+        Date.parse(doc.updated_at),
+      );
+    });
+
+    it("forgets a pending layout so a later reprocess does not reapply it", () => {
+      const id = [...search.visible.keys()][0]!;
+      const pending = {
+        ...(search.visible.get(id) as Document),
+        status: "pending" as const,
+      };
+      savePendingLayout(pending, [], null);
+      expect(getPendingLayout(pending)).not.toBeNull();
+
+      search.handleFinished(new Set([Number(id)]));
+
+      expect(getPendingLayout(pending)).toBeNull();
     });
 
     it("does not overwrite already-successful docs", () => {
