@@ -4,6 +4,7 @@ import type {
   DocumentResults,
   DocumentText,
   DocumentUpload,
+  Modification,
   Pending,
   Redaction,
   Sizes,
@@ -634,6 +635,72 @@ describe("document write methods", () => {
         method: "POST",
       },
     );
+  });
+});
+
+describe("document modifications", () => {
+  const modifications: Modification[] = [
+    { page: "1-6,0", modifications: [] },
+    { page: "0", modifications: [{ type: "rotate", angle: "cc" }] },
+  ];
+
+  test("documents.modify posts the modifications with the CSRF token", async ({
+    document,
+  }) => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 201,
+      async json() {
+        return modifications;
+      },
+    });
+
+    const { data, error } = await documents.modify(
+      document.id,
+      modifications,
+      "token",
+      mockFetch,
+    );
+
+    expect(error).toBeUndefined();
+    expect(data).toStrictEqual(modifications);
+    expect(mockFetch).toHaveBeenCalledWith(
+      new URL(`documents/${document.id}/modifications/`, BASE_API_URL),
+      {
+        body: JSON.stringify(modifications),
+        credentials: "include",
+        headers: {
+          "Content-type": "application/json",
+          Referer: APP_URL,
+          "X-CSRFToken": "token",
+        },
+        method: "POST",
+      },
+    );
+  });
+
+  test("documents.modify returns the API's validation error", async ({
+    document,
+  }) => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: false,
+      status: 400,
+      statusText: "Bad Request",
+      async json() {
+        return { page: ["Invalid page range"] };
+      },
+    });
+
+    const { data, error } = await documents.modify(
+      document.id,
+      modifications,
+      "token",
+      mockFetch,
+    );
+
+    expect(data).toBeUndefined();
+    expect(error?.status).toBe(400);
+    expect(error?.errors).toEqual({ page: ["Invalid page range"] });
   });
 });
 
