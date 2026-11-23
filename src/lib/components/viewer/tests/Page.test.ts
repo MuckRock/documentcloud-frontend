@@ -158,6 +158,18 @@ describe("Page in edit mode", () => {
     expect(viewer.selectedPages.size).toBe(0);
   });
 
+  it("selects the pages between two checkboxes on shift-click", async () => {
+    const viewer = renderPages("bulk");
+
+    await fireEvent.click(page(1).getByLabelText("Select page 1"));
+    await fireEvent.click(page(3).getByLabelText("Select page 3"), {
+      shiftKey: true,
+    });
+
+    expect(viewer.selectedPages.size).toBe(3);
+    expect(page(2).getByLabelText("Select page 2")).toBeChecked();
+  });
+
   it("checks pages selected elsewhere, like the select-all box", async () => {
     const viewer = renderPages("bulk");
 

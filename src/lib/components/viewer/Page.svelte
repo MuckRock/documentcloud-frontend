@@ -72,6 +72,7 @@ Must be a child of a ViewerContext
   let selected = $derived(
     viewer.mode === "bulk" && viewer.selectedPages.has(pageId!),
   );
+  let selectMultiple = $state(false);
 
   function watch(el: HTMLElement, once = false): IntersectionObserver {
     const io = new IntersectionObserver(
@@ -170,9 +171,9 @@ Must be a child of a ViewerContext
           <Checkbox
             sronly
             label={$_("inputs.selectPage", { values: { page: page_number } })}
+            onclick={(e) => (selectMultiple = e.shiftKey)}
             bind:value={
-              () => selected,
-              (v) => viewer.selectedPages[v ? "add" : "delete"](pageId!)
+              () => selected, () => viewer.selectPage(pageId!, selectMultiple)
             }
           />
         </div>

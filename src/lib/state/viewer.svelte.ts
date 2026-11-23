@@ -91,6 +91,26 @@ export class ViewerState {
   );
   selectedPages = new SvelteSet<number>();
 
+  selectPage = (id: number, multiple = false) => {
+    const { pages, selectedPages } = this;
+    if (selectedPages.has(id)) {
+      return selectedPages.delete(id);
+    }
+
+    const first = pages.findIndex((p) => selectedPages.has(p.id));
+    if (!multiple || first === -1) {
+      return selectedPages.add(id);
+    }
+
+    const index = pages.findIndex((p) => p.id === id);
+    const last = pages.findLastIndex((p) => selectedPages.has(p.id));
+    const anchor = index < last ? first : last;
+
+    pages
+      .slice(Math.min(anchor, index), Math.max(anchor, index) + 1)
+      .forEach((p) => selectedPages.add(p.id));
+  };
+
   // The scrolling ancestor of the document
   scrollContainer = $state<HTMLElement>();
   innerContainer = $state<HTMLElement>();

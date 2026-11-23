@@ -356,6 +356,87 @@ describe("ViewerState", () => {
     });
   });
 
+  describe("selectPage", () => {
+    function viewer() {
+      const v = new ViewerState();
+      v.document = doc;
+      return v;
+    }
+
+    const click = (v: ViewerState, index: number, shift = false) =>
+      v.selectPage(v.pages[index]!.id, shift);
+
+    const selected = (v: ViewerState) =>
+      v.pages.flatMap(({ id }, i) => (v.selectedPages.has(id) ? [i] : []));
+
+    it("selects a page, and deselects it when clicked again", () => {
+      const v = viewer();
+
+      click(v, 2);
+      expect(selected(v)).toEqual([2]);
+
+      click(v, 2);
+      expect(selected(v)).toEqual([]);
+    });
+
+    it("adds pages one at a time without shift", () => {
+      const v = viewer();
+
+      click(v, 1);
+      click(v, 4);
+
+      expect(selected(v)).toEqual([1, 4]);
+    });
+
+    it("selects only the shift-clicked page when nothing is selected", () => {
+      const v = viewer();
+
+      click(v, 3, true);
+
+      expect(selected(v)).toEqual([3]);
+    });
+
+    it("selects through a later page from the last selected page on shift-click", () => {
+      const v = viewer();
+
+      click(v, 0);
+      click(v, 2);
+      click(v, 5, true);
+
+      expect(selected(v)).toEqual([0, 2, 3, 4, 5]);
+    });
+
+    it("selects back to the first selected page on shift-click of an earlier page", () => {
+      const v = viewer();
+
+      click(v, 4);
+      click(v, 6);
+      click(v, 1, true);
+
+      expect(selected(v)).toEqual([1, 2, 3, 4, 6]);
+    });
+
+    it("fills in from the first selected page on shift-click inside the selection", () => {
+      const v = viewer();
+
+      click(v, 1);
+      click(v, 5);
+      click(v, 3, true);
+
+      expect(selected(v)).toEqual([1, 2, 3, 5]);
+    });
+
+    it("deselects only a selected page on shift-click", () => {
+      const v = viewer();
+
+      click(v, 1);
+      click(v, 4, true);
+      click(v, 2, true);
+
+      expect(selected(v)).toEqual([1, 3, 4]);
+    });
+  });
+
   // Zoom is computed here rather than per-page so every page in the document
   // renders at one uniform scale. The fixture's page_spec is
   // "595.0x842.0:0-6" — seven A4 pages 595pt wide.

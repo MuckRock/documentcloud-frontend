@@ -123,6 +123,16 @@ describe("BulkEditToolbar", () => {
     expect(indexes(viewer)).toEqual([1, 2, 3]);
   });
 
+  it("clears the selection after deleting", async () => {
+    const viewer = renderToolbar();
+    select(viewer, 0, 4);
+
+    await fireEvent.click(await screen.findByLabelText("Delete"));
+
+    expect(viewer.selectedPages.size).toBe(0);
+    expect(screen.getByLabelText("Delete")).toBeDisabled();
+  });
+
   it("inserts duplicates after the last selected page", async () => {
     const viewer = renderToolbar();
     select(viewer, 1, 3);
