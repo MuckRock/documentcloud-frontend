@@ -13,6 +13,7 @@
   import Action from "$lib/components/common/Action.svelte";
   import { getViewerState } from "$lib/state/viewer.svelte";
   import { redactions } from "$lib/components/viewer/RedactionLayer.svelte";
+  import { getTextRects, type Rect } from "$lib/utils/selection";
   import { goto } from "$app/navigation";
   import { getViewerHref } from "$lib/utils/viewer";
 
@@ -50,7 +51,7 @@
     window.getSelection()?.removeAllRanges();
   }
 
-  function getBounds({ left, right, top, bottom }: DOMRect) {
+  function getBounds({ left, right, top, bottom }: Rect) {
     const r = pageRef.getBoundingClientRect();
 
     const clamp = (n: number) => Math.min(1, Math.max(0, n));
@@ -80,7 +81,7 @@
   function addRedactions() {
     goto(getViewerHref({ document, mode: "redacting" }));
 
-    const rects = [...selection.getClientRects()].filter((r) => r.width > 0);
+    const rects = getTextRects(selection);
     const newRedactions = rects.map((r) => ({ ...getBounds(r), page_number }));
 
     $redactions = [...$redactions, ...newRedactions];
