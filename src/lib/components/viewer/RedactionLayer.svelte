@@ -136,11 +136,6 @@ So this layer is only showing unsaved redactions.
   onMount(() => {
     // restore from local storage
     saveStore(pending, KEY, { storage: localStorage });
-
-    // before unmounting the component, clear the current redactions
-    return () => {
-      clear();
-    };
   });
 </script>
 
