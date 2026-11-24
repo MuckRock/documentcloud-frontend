@@ -3,7 +3,7 @@
  * or memory grows with every page scrolled past.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { waitFor, within } from "@testing-library/svelte";
+import { fireEvent, screen, waitFor, within } from "@testing-library/svelte";
 import { readable } from "svelte/store";
 
 const { getDocument, textLayers } = vi.hoisted(() => ({
@@ -52,12 +52,13 @@ vi.mock("$app/state", () => ({
     url: new URL("https://www.documentcloud.org/documents/2622-doc/"),
   },
 }));
-vi.mock("$app/navigation", () => ({ afterNavigate: vi.fn() }));
+vi.mock("$app/navigation", () => ({ afterNavigate: vi.fn(), goto: vi.fn() }));
 
 import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
 import PDFPage from "../PDFPage.svelte";
 import { renderInViewer } from "./renderInViewer";
 import { document } from "@/test/fixtures/documents";
+import { stubTextLayout } from "@/test/helpers/stubTextLayout";
 
 /** A fake pdf.js page whose render settles only when the test says so. */
 function makePage() {
@@ -81,10 +82,12 @@ function makePage() {
   };
 }
 
-function renderPage() {
+function renderPage(
+  context: Partial<Parameters<typeof renderInViewer>[1]["context"]> = {},
+) {
   return renderInViewer(PDFPage, {
     props: { page_number: 1, scale: 1, width: 612, height: 792 },
-    context: { document, mode: "document" },
+    context: { document, mode: "document", ...context },
   });
 }
 
@@ -227,5 +230,60 @@ describe("PDFPage", () => {
 
     expect(canvas.width).toBe(0);
     expect(canvas.height).toBe(0);
+  });
+
+  describe("selection toolbar", () => {
+    let unstub: () => void;
+    beforeEach(() => (unstub = stubTextLayout()));
+    afterEach(() => {
+      unstub();
+      window.getSelection()!.removeAllRanges();
+    });
+
+    /** Select a word in the page's text layer, as a user's drag would. */
+    async function selectText(container: HTMLElement) {
+      const layer = await waitFor(() => {
+        const el = container.querySelector(".selectable-text");
+        expect(el).not.toBeNull();
+        return el!;
+      });
+      // pdf.js is mocked, so fill the text layer it would have rendered.
+      layer.innerHTML = '<span data-box="20,40">Hello</span>';
+
+      const range = window.document.createRange();
+      range.selectNodeContents(layer.querySelector("span")!.firstChild!);
+      window.getSelection()!.addRange(range);
+      await fireEvent.pointerUp(window.document);
+    }
+
+    it("offers to annotate or redact a selection to editors", async () => {
+      const { container } = renderPage();
+
+      await selectText(container);
+
+      expect(screen.getByRole("button", { name: "Redact" })).toBeVisible();
+    });
+
+    it("hides from readers without edit access", async () => {
+      const { container } = renderPage({
+        document: { ...document, edit_access: false },
+      });
+
+      await selectText(container);
+
+      expect(
+        screen.queryByRole("button", { name: "Redact" }),
+      ).not.toBeInTheDocument();
+    });
+
+    it("hides in an embed", async () => {
+      const { container } = renderPage({ embed: true });
+
+      await selectText(container);
+
+      expect(
+        screen.queryByRole("button", { name: "Redact" }),
+      ).not.toBeInTheDocument();
+    });
   });
 });

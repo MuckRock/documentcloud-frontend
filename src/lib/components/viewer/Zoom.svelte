@@ -32,8 +32,10 @@ Must be a child of a ViewerContext
     getZoomInOut(viewer.mode, viewer.zoom, viewer.scale),
   );
 
+  let defaultZoom = $derived(getDefaultZoom(viewer.mode));
+
   $effect(() => {
-    viewer.zoom = initial || getDefaultZoom(viewer.mode);
+    viewer.zoom = initial || defaultZoom;
   });
 </script>
 
