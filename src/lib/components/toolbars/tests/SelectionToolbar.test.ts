@@ -103,20 +103,6 @@ describe("SelectionToolbar", () => {
     expect(screen.getByRole("button", { name: "Redact" })).toBeVisible();
   });
 
-  it("renders nothing for readers without edit access", () => {
-    renderToolbar(select([0, 0], [1, 5]), {
-      document: { ...document, edit_access: false },
-    });
-
-    expect(screen.queryByRole("button")).not.toBeInTheDocument();
-  });
-
-  it("renders nothing in an embed", () => {
-    renderToolbar(select([0, 0], [1, 5]), { embed: true });
-
-    expect(screen.queryByRole("button")).not.toBeInTheDocument();
-  });
-
   it("starts a note covering the selection, in page fractions", async () => {
     renderToolbar(select([0, 0], [1, 5]));
 

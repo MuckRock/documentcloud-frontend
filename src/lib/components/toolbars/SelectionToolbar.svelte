@@ -31,7 +31,6 @@
   let coords = $state<{ x: number; y: number }>();
 
   let document = $derived(viewer.document!);
-  let canEdit = $derived(!viewer.embed && viewer.document?.edit_access);
 
   $effect(() => {
     if (!toolbar) return;
@@ -90,23 +89,21 @@
   }
 </script>
 
-{#if canEdit}
-  <div
-    class="toolbar"
-    bind:this={toolbar}
-    style:--left="{coords?.x}px"
-    style:--top="{coords?.y}px"
-    in:fade={{ delay: 200, duration: 100 }}
-  >
-    <Action icon={Comment16} onclick={addAnnotation}>
-      {$_("mode.annotating")}
-    </Action>
+<div
+  class="toolbar"
+  bind:this={toolbar}
+  style:--left="{coords?.x}px"
+  style:--top="{coords?.y}px"
+  in:fade={{ delay: 200, duration: 100 }}
+>
+  <Action icon={Comment16} onclick={addAnnotation}>
+    {$_("mode.annotating")}
+  </Action>
 
-    <Action icon={EyeClosed16} onclick={addRedactions}>
-      {$_("mode.redacting")}
-    </Action>
-  </div>
-{/if}
+  <Action icon={EyeClosed16} onclick={addRedactions}>
+    {$_("mode.redacting")}
+  </Action>
+</div>
 
 <style>
   .toolbar {

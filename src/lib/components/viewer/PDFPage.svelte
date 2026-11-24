@@ -294,6 +294,8 @@ Selectable text can be rendered in one of two ways:
     getNotes(viewer.notes)[page_number - 1]?.filter((n) => isPageLevel(n)) ??
       [],
   );
+
+  let canEdit = $derived(!viewer.embed && viewer.document?.edit_access);
 </script>
 
 <svelte:document onvisibilitychange={onVisibilityChange} />
@@ -366,7 +368,7 @@ Selectable text can be rendered in one of two ways:
         />
       {/if}
 
-      {#if currentSelection}
+      {#if canEdit && currentSelection}
         <SelectionToolbar
           page_number={page_number - 1}
           selection={currentSelection}
