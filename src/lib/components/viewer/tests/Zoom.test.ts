@@ -8,6 +8,7 @@
  * SvelteKit router.
  */
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { flushSync } from "svelte";
 import { screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { readable } from "svelte/store";
@@ -40,7 +41,13 @@ vi.mock("$app/state", () => ({
     },
   },
 }));
-vi.mock("$app/navigation", () => ({ afterNavigate: vi.fn() }));
+// ViewerContext applies a new mode in afterNavigate, so tests replay it.
+const { navigated } = vi.hoisted(() => ({
+  navigated: [] as Array<() => void>,
+}));
+vi.mock("$app/navigation", () => ({
+  afterNavigate: (fn: () => void) => navigated.push(fn),
+}));
 
 import Zoom from "../Zoom.svelte";
 import { renderInViewer } from "./renderInViewer";
@@ -67,8 +74,16 @@ function renderZoom(mode: string, zoom?: string) {
   return renderInViewer(Zoom, { context: { document, mode: mode as any } });
 }
 
+/** Navigate to another mode, as following a mode link would. */
+function switchMode(view: ReturnType<typeof renderZoom>, mode: string): void {
+  view.rerender({ context: { document, notes: [], mode: mode as any } });
+  navigated.forEach((fn) => fn());
+  flushSync();
+}
+
 beforeEach(() => {
   pageUrl.current = DOC_URL;
+  navigated.length = 0;
 });
 
 describe("Zoom", () => {
@@ -191,6 +206,31 @@ describe("Zoom", () => {
 
       expect(screen.getByRole("combobox")).toHaveValue("large");
       expect(zoomIn()).toBeDisabled();
+    });
+  });
+
+  describe("switching modes", () => {
+    it.each(["annotating", "redacting"])(
+      "keeps the zoom when entering %s mode",
+      async (mode) => {
+        const user = userEvent.setup();
+        const view = renderZoom("document");
+        await user.click(zoomIn());
+
+        switchMode(view, mode);
+
+        expect(screen.getByRole("combobox")).toHaveValue("1.25");
+      },
+    );
+
+    it("resets to the grid default when the zoom scale changes", async () => {
+      const user = userEvent.setup();
+      const view = renderZoom("document");
+      await user.click(zoomIn());
+
+      switchMode(view, "grid");
+
+      expect(screen.getByRole("combobox")).toHaveValue("small");
     });
   });
 });
