@@ -25,6 +25,7 @@ Selectable text can be rendered in one of two ways:
   import Note from "../notes/Note.svelte";
   import Page from "./Page.svelte";
   import RedactionLayer, { pending, redactions } from "./RedactionLayer.svelte";
+  import SelectionToolbar from "$lib/components/toolbars/SelectionToolbar.svelte";
 
   // writable ui
   import { highlight } from "$lib/utils/search";
@@ -32,6 +33,7 @@ Selectable text can be rendered in one of two ways:
   import { getViewerState } from "$lib/state/viewer.svelte";
   import { getQuery } from "$lib/utils/search";
   import { getNotes, PT_TO_PX } from "$lib/utils/viewer";
+  import { selection } from "$lib/utils/selection";
 
   const viewer = getViewerState();
 
@@ -79,6 +81,9 @@ Selectable text can be rendered in one of two ways:
   // but the PDF.js render methods use the unconverted pt values, so we need to pass
   // them a converted scale
   let pxScale = $derived(scale * PT_TO_PX);
+
+  // Range of currently selected text within the page
+  let currentSelection = $state<Range | null>(null);
 
   async function render(
     page: Maybe<PDFPageProxy>,
@@ -207,6 +212,10 @@ Selectable text can be rendered in one of two ways:
     }
   }
 
+  function setSelection(selection: Range | null) {
+    currentSelection = selection;
+  }
+
   let pageWidth: Maybe<number> = $state();
   $effect(() => {
     query = getQuery(pageState.url, "q");
@@ -323,7 +332,11 @@ Selectable text can be rendered in one of two ways:
       {/if}
 
       {#if text.length > 0}
-        <div bind:this={textContainer} class="selectable-text">
+        <div
+          bind:this={textContainer}
+          class="selectable-text"
+          {@attach selection(setSelection)}
+        >
           {#each text as word}
             <span
               role="presentation"
@@ -334,7 +347,11 @@ Selectable text can be rendered in one of two ways:
           {/each}
         </div>
       {:else}
-        <div bind:this={textContainer} class="selectable-text embedded">
+        <div
+          bind:this={textContainer}
+          class="selectable-text embedded"
+          {@attach selection(setSelection)}
+        >
           <!-- pdfjs.renderTextLayer will fill this in -->
         </div>
       {/if}
@@ -346,6 +363,14 @@ Selectable text can be rendered in one of two ways:
           page_number={page_number - 1}
           active={viewer.mode === "redacting"}
           id={document.id.toString()}
+        />
+      {/if}
+
+      {#if currentSelection}
+        <SelectionToolbar
+          page_number={page_number - 1}
+          selection={currentSelection}
+          pageRef={textContainer}
         />
       {/if}
     </div>
