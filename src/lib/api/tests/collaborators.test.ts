@@ -55,7 +55,7 @@ describe("manage project users", () => {
     );
   });
 
-  test("collaborators.add", async ({ project, users, me }) => {
+  test("collaborators.add by email", async ({ project, users, me }) => {
     const mockFetch = vi.fn().mockImplementation(async (endpoint, options) => {
       // this doesn't have uniform expansion but I think that's ok for now
       const updated = [...users.results, { user: me, access: "admin" }];
@@ -96,6 +96,30 @@ describe("manage project users", () => {
         },
         method: "POST",
       },
+    );
+  });
+
+  test("collaborators.add by user id", async ({ project, me }) => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 201,
+      json: async () => ({ user: me, access: "edit" }),
+    });
+
+    const { data } = await collaborators.add(
+      project.id,
+      { user: me.id, access: "edit" },
+      "token",
+      mockFetch,
+    );
+
+    expect(data).toEqual({ user: me, access: "edit" });
+    expect(mockFetch).toHaveBeenCalledWith(
+      new URL(`projects/${project.id}/users/`, BASE_API_URL),
+      expect.objectContaining({
+        body: JSON.stringify({ user: me.id, access: "edit" }),
+        method: "POST",
+      }),
     );
   });
 

@@ -341,7 +341,8 @@
     },
     "invite": {
       "label": "Invitar colaboradores",
-      "message": "Introduce el correo electr\u00f3nico de un usuario existente de DocumentCloud. Si no tienen una cuenta, h\u00e1gales registrarse <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud\">aqu\u00ed por free</a>, y luego preg\u00fantelos para que inicies sesi\u00f3n en DocumentCloud al menos una vez."
+      "search": "Buscar un usuario...",
+      "message": "Busca un usuario existente de DocumentCloud por nombre o correo electr\u00f3nico. Si no tienen una cuenta, h\u00e1gales registrarse <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud\">aqu\u00ed por free</a>, y luego preg\u00fantelos para que inicies sesi\u00f3n en DocumentCloud al menos una vez."
     },
     "access": {
       "admin": {

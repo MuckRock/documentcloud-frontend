@@ -407,7 +407,8 @@
     },
     "invite": {
       "label": "Invite Collaborators",
-      "message": "Enter the email of an existing DocumentCloud user. If they don't have an account, have them register <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud\">here for free</a>, and then ask them to log in to DocumentCloud at least once."
+      "search": "Search for a user...",
+      "message": "Search for an existing DocumentCloud user by name or email. If they don't have an account, have them register <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://accounts.muckrock.com/accounts/signup/?intent=documentcloud\">here for free</a>, and then ask them to log in to DocumentCloud at least once."
     },
     "access": {
       "admin": {
